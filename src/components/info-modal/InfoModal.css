@@ -1,0 +1,3 @@
+.close-button svg path, .submit-button svg path {
+    fill: rgb(var(--color-light-text)) !important;
+}

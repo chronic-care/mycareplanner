@@ -1,0 +1,114 @@
+html {
+    --color-dark: 0, 0, 255;
+    --color-dark: 31, 57, 61;
+    /* --color-dark: 143,136,63; */
+    /* --color-dark: 40, 44, 52; */
+    --color-light-text: 255, 255, 255;
+}
+
+h1, h2, h3 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h3 {
+    text-align: center;
+}
+
+@media screen and (min-width: 450px) {
+    #root {
+        display: flex;
+        justify-content: center;
+    }
+    .app {
+        max-width: 500px;
+    }
+}
+
+.app {
+    text-align: center;
+}
+/* Ipad specific media queries */
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+    .app {
+      overflow: scroll;
+      -webkit-overflow-scrolling:touch;
+    }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+    .app {
+      overflow: scroll;
+      -webkit-overflow-scrolling:touch;
+    }
+}
+
+.app-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .app-logo {
+        animation: app-logo-spin infinite 20s linear;
+    }
+}
+
+.app-header {
+    /* background-color: rgba(var(--color-dark), 1); */
+    background-color: rgba(var(--color-light-text), 1);
+    display: flex;
+    /* flex-direction: column; */
+    align-items:flex-end;
+    justify-content: flex-start;
+    font-size: calc(10px + 2vmin);
+    color: rgba(var(--color-light-text), 1);
+    height: 60px;
+}
+.app-header .mypain-header-logo {
+    height: 100%;
+}
+.app-header p {
+    margin: 0;
+    margin-left: 5px;
+    font-size: smaller;
+    color: var(--color-light-text)
+}
+
+.continue-button {
+    background-color: rgba(var(--color-dark), .10) !important;
+    border-color: var(--color-dark) !important;
+    font-size: calc(4px + 2vmin);
+    color: rgba(var(--color-dark), 1) !important;
+    margin-bottom: 20px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.app .options, .app .options button {
+    margin: 5px;
+}
+
+.response-container {
+    max-width: 100%;
+    word-break: break-all;
+}
+
+.hidden {
+    display: none;
+}
+
+svg path {
+    fill: rgba(var(--color-dark), 1) !important;
+}
+
+.patient-container {
+    color: var(--color-dark);
+    border: 1px solid #000000;
+    padding: 10px;
+    border-radius: 0 0 5px 5px;
+}

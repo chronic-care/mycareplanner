@@ -1,0 +1,110 @@
+{
+    "resourceType": "ValueSet",
+    "id": "2.16.840.1.113883.3.526.2.215",
+    "meta": {
+        "versionId": "17",
+        "lastUpdated": "2020-12-03T12:11:36.000-05:00"
+    },
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h3>Value Set Contents</h3><p>This value set contains 12 concepts</p><p>All codes from system <code>http://loinc.org</code></p><table class=\"codes\"><tr><td><b>Code</b></td><td><b>Display</b></td></tr><tr><td><a name=\"http---loinc.org-10508-0\"> </a><a href=\"http://details.loinc.org/LOINC/10508-0.html\">10508-0</a></td><td>Prostate specific Ag [Presence] in Tissue by Immune stain</td></tr><tr><td><a name=\"http---loinc.org-10886-0\"> </a><a href=\"http://details.loinc.org/LOINC/10886-0.html\">10886-0</a></td><td>Prostate Specific Ag Free [Mass/volume] in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-12841-3\"> </a><a href=\"http://details.loinc.org/LOINC/12841-3.html\">12841-3</a></td><td>Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-15323-9\"> </a><a href=\"http://details.loinc.org/LOINC/15323-9.html\">15323-9</a></td><td>Prostate specific Ag/Prostate volume calculated from height, width and length</td></tr><tr><td><a name=\"http---loinc.org-15324-7\"> </a><a href=\"http://details.loinc.org/LOINC/15324-7.html\">15324-7</a></td><td>Prostate specific Ag/Prostate volume calculated from planimetry</td></tr><tr><td><a name=\"http---loinc.org-15325-4\"> </a><a href=\"http://details.loinc.org/LOINC/15325-4.html\">15325-4</a></td><td>Prostate specific Ag/Prostate volume calculated</td></tr><tr><td><a name=\"http---loinc.org-19195-7\"> </a><a href=\"http://details.loinc.org/LOINC/19195-7.html\">19195-7</a></td><td>Prostate specific Ag [Units/volume] in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-19201-3\"> </a><a href=\"http://details.loinc.org/LOINC/19201-3.html\">19201-3</a></td><td>Prostate Specific Ag Free [Units/volume] in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-2857-1\"> </a><a href=\"http://details.loinc.org/LOINC/2857-1.html\">2857-1</a></td><td>Prostate specific Ag [Mass/volume] in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-33667-7\"> </a><a href=\"http://details.loinc.org/LOINC/33667-7.html\">33667-7</a></td><td>Prostate specific Ag.protein bound [Mass/volume] in Serum or Plasma</td></tr><tr><td><a name=\"http---loinc.org-34611-4\"> </a><a href=\"http://details.loinc.org/LOINC/34611-4.html\">34611-4</a></td><td>Prostate specific Ag [Mass/volume] in Urine</td></tr><tr><td><a name=\"http---loinc.org-35741-8\"> </a><a href=\"http://details.loinc.org/LOINC/35741-8.html\">35741-8</a></td><td>Prostate specific Ag [Mass/volume] in Serum or Plasma by Detection limit &lt;= 0.01 ng/mL</td></tr></table></div>"
+    },
+    "url": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.2.215",
+    "version": "20170504",
+    "name": "ProstateSpecificAntigenTest",
+    "title": "Prostate Specific Antigen Test",
+    "description": "This value set contains concepts that represent prostate specific antigen (PSA) test.",
+    "status": "active",
+    "date": "2017-05-04T01:00:13-04:00",
+    "publisher": "Mathematica",
+    "expansion": {
+        "identifier": "urn:uuid:9f78c91a-73ce-422a-a6e5-146a07707651",
+        "timestamp": "2020-12-23T18:17:43-05:00",
+        "total": 12,
+        "offset": 0,
+        "parameter": [
+            {
+                "name": "count",
+                "valueInteger": 1000
+            },
+            {
+                "name": "offset",
+                "valueInteger": 0
+            }
+        ],
+        "contains": [
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "10508-0",
+                "display": "Prostate specific Ag [Presence] in Tissue by Immune stain"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "10886-0",
+                "display": "Prostate Specific Ag Free [Mass/volume] in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "12841-3",
+                "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "15323-9",
+                "display": "Prostate specific Ag/Prostate volume calculated from height, width and length"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "15324-7",
+                "display": "Prostate specific Ag/Prostate volume calculated from planimetry"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "15325-4",
+                "display": "Prostate specific Ag/Prostate volume calculated"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "19195-7",
+                "display": "Prostate specific Ag [Units/volume] in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "19201-3",
+                "display": "Prostate Specific Ag Free [Units/volume] in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "2857-1",
+                "display": "Prostate specific Ag [Mass/volume] in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "33667-7",
+                "display": "Prostate specific Ag.protein bound [Mass/volume] in Serum or Plasma"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "34611-4",
+                "display": "Prostate specific Ag [Mass/volume] in Urine"
+            },
+            {
+                "system": "http://loinc.org",
+                "version": "2.68",
+                "code": "35741-8",
+                "display": "Prostate specific Ag [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL"
+            }
+        ]
+    }
+}

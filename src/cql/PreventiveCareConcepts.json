@@ -1,0 +1,224 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "EnableAnnotations,EnableLocators,EnableResultTypes",
+         "type" : "CqlToElmInfo"
+      }, {
+         "type" : "Annotation",
+         "s" : {
+            "r" : "12",
+            "s" : [ {
+               "value" : [ "","library PreventiveCareConcepts version '1.0.0'" ]
+            } ]
+         }
+      } ],
+      "identifier" : {
+         "id" : "PreventiveCareConcepts",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1"
+         } ]
+      },
+      "codeSystems" : {
+         "def" : [ {
+            "localId" : "1",
+            "locator" : "5:1-5:38",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+            "name" : "LOINC",
+            "id" : "http://loinc.org",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "1",
+                  "s" : [ {
+                     "value" : [ "// ## Code Systems ##","codesystem ","\"LOINC\"",": ","'http://loinc.org'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "2",
+            "locator" : "6:1-6:48",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+            "name" : "SNOMED-CT",
+            "id" : "http://snomed.info/sct",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "2",
+                  "s" : [ {
+                     "value" : [ "","codesystem ","\"SNOMED-CT\"",": ","'http://snomed.info/sct'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "3",
+            "locator" : "7:1-7:52",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+            "name" : "Race",
+            "id" : "urn:oid:2.16.840.1.113883.6.238",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "3",
+                  "s" : [ {
+                     "value" : [ "","codesystem ","\"Race\"",": ","'urn:oid:2.16.840.1.113883.6.238'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "localId" : "4",
+            "locator" : "12:1-12:111",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Prostate Specific Antigen Test",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.2.215",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "4",
+                  "s" : [ {
+                     "value" : [ "// ## Value sets ##\n\n// Value sets from VSAC","valueset ","\"Prostate Specific Antigen Test\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.2.215'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "localId" : "6",
+            "locator" : "23:1-23:90",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Black or African American",
+            "id" : "2054-5",
+            "display" : "Black or African American",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "6",
+                  "s" : [ {
+                     "value" : [ "// Value sets not available in VSAC, included via expanded FHIR ValueSet resources\n\n\n// ## Individual codes ##\n\n// list individual codes from code systems used directly in the CQL logic. Individual codes are used when there is\n// a single code from a particular vocabulary standard used to represent a clinical concept. It is considered\n// best-practice not to create value sets containing a single code.","code ","\"Black or African American\"",": ","'2054-5'"," from " ]
+                  }, {
+                     "r" : "5",
+                     "s" : [ {
+                        "value" : [ "\"Race\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Black or African American'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "5",
+               "locator" : "23:49-23:54",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "Race"
+            }
+         }, {
+            "localId" : "8",
+            "locator" : "24:1-24:50",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "White",
+            "id" : "2106-3",
+            "display" : "White",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "8",
+                  "s" : [ {
+                     "value" : [ "","code ","\"White\"",": ","'2106-3'"," from " ]
+                  }, {
+                     "r" : "7",
+                     "s" : [ {
+                        "value" : [ "\"Race\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'White'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "7",
+               "locator" : "24:29-24:34",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "Race"
+            }
+         }, {
+            "localId" : "10",
+            "locator" : "27:1-27:95",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Prostate cancer",
+            "id" : "254900004",
+            "display" : "Carcinoma of prostate (disorder)",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "10",
+                  "s" : [ {
+                     "value" : [ "// TODO investigate value sets for these terms","code ","\"Prostate cancer\"",": ","'254900004'"," from " ]
+                  }, {
+                     "r" : "9",
+                     "s" : [ {
+                        "value" : [ "\"SNOMED-CT\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Carcinoma of prostate (disorder)'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "9",
+               "locator" : "27:42-27:52",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "SNOMED-CT"
+            }
+         }, {
+            "localId" : "12",
+            "locator" : "28:1-28:126",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Family history of prostate cancer",
+            "id" : "414205003",
+            "display" : "Family history of prostate cancer (situation)",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "12",
+                  "s" : [ {
+                     "value" : [ "","code ","\"Family history of prostate cancer\"",": ","'414205003'"," from " ]
+                  }, {
+                     "r" : "11",
+                     "s" : [ {
+                        "value" : [ "\"SNOMED-CT\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Family history of prostate cancer (situation)'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "11",
+               "locator" : "28:60-28:70",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "SNOMED-CT"
+            }
+         } ]
+      }
+   }
+}
+

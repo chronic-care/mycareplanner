@@ -1,0 +1,66 @@
+{
+  "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.2.215": {
+    "20170504": [
+      {
+        "code": "10508-0",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "10886-0",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "12841-3",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "15323-9",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "15324-7",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "15325-4",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "19195-7",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "19201-3",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "2857-1",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "33667-7",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "34611-4",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      },
+      {
+        "code": "35741-8",
+        "system": "http://loinc.org",
+        "version": "2.68"
+      }
+    ]
+  }
+}

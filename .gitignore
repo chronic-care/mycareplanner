@@ -1,0 +1,22 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Other files #
+######################
+node_modules/*
+build/*
+client-ids/*
+.env.local
+.DS_Store
+.idea/
+.DS_Store
+
+# CQL execution results
+input/tests/results/*

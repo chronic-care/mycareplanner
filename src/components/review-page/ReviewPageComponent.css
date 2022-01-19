@@ -1,0 +1,29 @@
+.question-response-container {
+    margin-top: 15px;
+    border-top: 1px solid lightgray;
+    padding-top: 15px;
+    /* text-align: left; */
+    padding: 1em;
+}
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+    .question-response-container {
+      overflow: scroll;
+      -webkit-overflow-scrolling:touch; 
+    }
+  }
+  
+  @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+    .question-response-container {
+      overflow: scroll;
+      -webkit-overflow-scrolling:touch; 
+    }
+  }
+
+.question-response-container>h6, .text-response-question {
+    text-align: left;
+}
+
+.text-response-answer {
+    border: 1px solid lightgray;
+    background: rgba(0,0,0,.05);
+}

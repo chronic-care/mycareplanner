@@ -1,0 +1,2320 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "EnableAnnotations,EnableLocators,EnableResultTypes",
+         "type" : "CqlToElmInfo"
+      }, {
+         "type" : "Annotation",
+         "s" : {
+            "r" : "127",
+            "s" : [ {
+               "value" : [ "/*\n  The Preventive Care logic library supports decision-making on preventive care screening for Prostate Cancer.\n*/","library ProstateCancerScreening version '1.0.0'" ]
+            } ]
+         }
+      } ],
+      "identifier" : {
+         "id" : "ProstateCancerScreening",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1"
+         }, {
+            "localId" : "1",
+            "locator" : "7:1-7:26",
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "1",
+                  "s" : [ {
+                     "value" : [ "","using " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "FHIR" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'4.0.1'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localId" : "2",
+            "locator" : "9:1-9:54",
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "2",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "FHIRHelpers" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'4.0.1'"," called ","FHIRHelpers" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "3",
+            "locator" : "10:1-10:52",
+            "localIdentifier" : "C3F",
+            "path" : "CDSConnectCommons",
+            "version" : "1.0.0",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "3",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "CDSConnectCommons" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'1.0.0'"," called ","C3F" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "4",
+            "locator" : "11:1-11:57",
+            "localIdentifier" : "PCC",
+            "path" : "PreventiveCareConcepts",
+            "version" : "1.0.0",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "4",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "PreventiveCareConcepts" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'1.0.0'"," called ","PCC" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "5",
+            "locator" : "12:1-12:54",
+            "localIdentifier" : "Data",
+            "path" : "PreventiveCareData",
+            "version" : "1.0.0",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "5",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "PreventiveCareData" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'1.0.0'"," called ","Data" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "locator" : "14:1-14:15",
+            "name" : "Patient"
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "locator" : "14:1-14:15",
+            "name" : "Patient",
+            "context" : "Patient",
+            "expression" : {
+               "type" : "SingletonFrom",
+               "operand" : {
+                  "locator" : "14:1-14:15",
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve"
+               }
+            }
+         }, {
+            "localId" : "14",
+            "locator" : "19:1-21:40",
+            "name" : "Prostate cancer conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "14",
+                  "s" : [ {
+                     "value" : [ "/* Data Elements */\n\n// TOOD For Hx, this should not be limited to active conditions","define ","\"Prostate cancer conditions\"",":\n  " ]
+                  }, {
+                     "r" : "13",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "7",
+                           "s" : [ {
+                              "r" : "6",
+                              "s" : [ {
+                                 "s" : [ {
+                                    "value" : [ "Data",".","\"All active conditions\"" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","C" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "12",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "12",
+                           "s" : [ {
+                              "r" : "9",
+                              "s" : [ {
+                                 "r" : "8",
+                                 "s" : [ {
+                                    "value" : [ "C" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "9",
+                                 "s" : [ {
+                                    "value" : [ "code" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","~"," " ]
+                           }, {
+                              "r" : "11",
+                              "s" : [ {
+                                 "r" : "10",
+                                 "s" : [ {
+                                    "value" : [ "PCC" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "11",
+                                 "s" : [ {
+                                    "value" : [ "\"Prostate cancer\"" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "13",
+               "locator" : "20:3-21:40",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "7",
+                  "locator" : "20:3-20:32",
+                  "alias" : "C",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "6",
+                     "locator" : "20:3-20:30",
+                     "name" : "All active conditions",
+                     "libraryName" : "Data",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "12",
+                  "locator" : "21:5-21:40",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Equivalent",
+                  "operand" : [ {
+                     "name" : "ToConcept",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "operand" : [ {
+                        "localId" : "9",
+                        "locator" : "21:11-21:16",
+                        "resultTypeName" : "{http://hl7.org/fhir}CodeableConcept",
+                        "path" : "code",
+                        "scope" : "C",
+                        "type" : "Property"
+                     } ]
+                  }, {
+                     "type" : "ToConcept",
+                     "operand" : {
+                        "localId" : "11",
+                        "locator" : "21:20-21:40",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+                        "name" : "Prostate cancer",
+                        "libraryName" : "PCC",
+                        "type" : "CodeRef"
+                     }
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "17",
+            "locator" : "23:1-25:62",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has family history of prostate cancer",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "17",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Has family history of prostate cancer\"",":\n  /* exists([FamilyMemberHistory.condition.code: PCC.\"Prostate cancer\"]) */\n  " ]
+                  }, {
+                     "r" : "16",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "15",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "15",
+                           "s" : [ {
+                              "value" : [ "[","Condition",": " ]
+                           }, {
+                              "s" : [ {
+                                 "value" : [ "PCC",".","\"Family history of prostate cancer\"" ]
+                              } ]
+                           }, {
+                              "value" : [ "]" ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "16",
+               "locator" : "25:3-25:62",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "15",
+                  "locator" : "25:9-25:62",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "~",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "type" : "ToList",
+                     "operand" : {
+                        "locator" : "25:22-25:60",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+                        "name" : "Family history of prostate cancer",
+                        "libraryName" : "PCC",
+                        "type" : "CodeRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "21",
+            "locator" : "27:1-28:67",
+            "name" : "PSA Observations",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "21",
+                  "s" : [ {
+                     "value" : [ "","define ","\"PSA Observations\"",":\n  " ]
+                  }, {
+                     "r" : "20",
+                     "s" : [ {
+                        "r" : "18",
+                        "s" : [ {
+                           "value" : [ "C3F" ]
+                        } ]
+                     }, {
+                        "value" : [ "." ]
+                     }, {
+                        "r" : "20",
+                        "s" : [ {
+                           "value" : [ "Verified","(" ]
+                        }, {
+                           "r" : "19",
+                           "s" : [ {
+                              "value" : [ "[","Observation",": " ]
+                           }, {
+                              "s" : [ {
+                                 "value" : [ "PCC",".","\"Prostate Specific Antigen Test\"" ]
+                              } ]
+                           }, {
+                              "value" : [ "]" ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Observation",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "20",
+               "locator" : "28:3-28:67",
+               "name" : "Verified",
+               "libraryName" : "C3F",
+               "type" : "FunctionRef",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Observation",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "19",
+                  "locator" : "28:16-28:66",
+                  "dataType" : "{http://hl7.org/fhir}Observation",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "28:30-28:65",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Prostate Specific Antigen Test",
+                     "libraryName" : "PCC",
+                     "type" : "ValueSetRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "24",
+            "locator" : "32:1-33:40",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has prostate cancer Hx",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "24",
+                  "s" : [ {
+                     "value" : [ "/* Intermediate Data Elements */","define ","\"Has prostate cancer Hx\"",":\n  " ]
+                  }, {
+                     "r" : "23",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "22",
+                        "s" : [ {
+                           "value" : [ "( " ]
+                        }, {
+                           "r" : "22",
+                           "s" : [ {
+                              "value" : [ "\"Prostate cancer conditions\"" ]
+                           } ]
+                        }, {
+                           "value" : [ " )" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "23",
+               "locator" : "33:3-33:40",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "22",
+                  "locator" : "33:9-33:40",
+                  "name" : "Prostate cancer conditions",
+                  "type" : "ExpressionRef",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "28",
+            "locator" : "35:1-36:36",
+            "resultTypeName" : "{http://hl7.org/fhir}Observation",
+            "name" : "Last PSA",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "28",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Last PSA\"",":\n  " ]
+                  }, {
+                     "r" : "27",
+                     "s" : [ {
+                        "r" : "25",
+                        "s" : [ {
+                           "value" : [ "C3F" ]
+                        } ]
+                     }, {
+                        "value" : [ "." ]
+                     }, {
+                        "r" : "27",
+                        "s" : [ {
+                           "value" : [ "MostRecent","(" ]
+                        }, {
+                           "r" : "26",
+                           "s" : [ {
+                              "value" : [ "\"PSA Observations\"" ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "27",
+               "locator" : "36:3-36:36",
+               "resultTypeName" : "{http://hl7.org/fhir}Observation",
+               "name" : "MostRecent",
+               "libraryName" : "C3F",
+               "type" : "FunctionRef",
+               "operand" : [ {
+                  "localId" : "26",
+                  "locator" : "36:18-36:35",
+                  "name" : "PSA Observations",
+                  "type" : "ExpressionRef",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "33",
+            "locator" : "38:1-39:37",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+            "name" : "Last PSA value",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "33",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Last PSA value\"",":\n  " ]
+                  }, {
+                     "r" : "32",
+                     "s" : [ {
+                        "r" : "31",
+                        "s" : [ {
+                           "r" : "29",
+                           "s" : [ {
+                              "value" : [ "C3F" ]
+                           } ]
+                        }, {
+                           "value" : [ "." ]
+                        }, {
+                           "r" : "31",
+                           "s" : [ {
+                              "value" : [ "QuantityValue","(" ]
+                           }, {
+                              "r" : "30",
+                              "s" : [ {
+                                 "value" : [ "\"Last PSA\"" ]
+                              } ]
+                           }, {
+                              "value" : [ ")" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "." ]
+                     }, {
+                        "r" : "32",
+                        "s" : [ {
+                           "value" : [ "value" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "32",
+               "locator" : "39:3-39:37",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+               "path" : "value",
+               "type" : "Property",
+               "source" : {
+                  "localId" : "31",
+                  "locator" : "39:3-39:31",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                  "name" : "QuantityValue",
+                  "libraryName" : "C3F",
+                  "type" : "FunctionRef",
+                  "operand" : [ {
+                     "localId" : "30",
+                     "locator" : "39:21-39:30",
+                     "resultTypeName" : "{http://hl7.org/fhir}Observation",
+                     "name" : "Last PSA",
+                     "type" : "ExpressionRef"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "37",
+            "locator" : "41:1-42:26",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+            "name" : "Last PSA date",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "37",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Last PSA date\"",":\n  " ]
+                  }, {
+                     "r" : "36",
+                     "s" : [ {
+                        "r" : "34",
+                        "s" : [ {
+                           "value" : [ "C3F" ]
+                        } ]
+                     }, {
+                        "value" : [ "." ]
+                     }, {
+                        "r" : "36",
+                        "s" : [ {
+                           "value" : [ "FindDate","(" ]
+                        }, {
+                           "r" : "35",
+                           "s" : [ {
+                              "value" : [ "\"Last PSA\"" ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "36",
+               "locator" : "42:3-42:26",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+               "name" : "FindDate",
+               "libraryName" : "C3F",
+               "type" : "FunctionRef",
+               "operand" : [ {
+                  "localId" : "35",
+                  "locator" : "42:16-42:25",
+                  "resultTypeName" : "{http://hl7.org/fhir}Observation",
+                  "name" : "Last PSA",
+                  "type" : "ExpressionRef"
+               } ]
+            }
+         }, {
+            "localId" : "40",
+            "locator" : "44:1-45:28",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has PSA test",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "40",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Has PSA test\"",":\n  " ]
+                  }, {
+                     "r" : "39",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "38",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "38",
+                           "s" : [ {
+                              "value" : [ "\"PSA Observations\"" ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "39",
+               "locator" : "45:3-45:28",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "38",
+                  "locator" : "45:9-45:28",
+                  "name" : "PSA Observations",
+                  "type" : "ExpressionRef",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "44",
+            "locator" : "47:1-48:32",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "No PSA test results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "44",
+                  "s" : [ {
+                     "value" : [ "","define ","\"No PSA test results\"",":\n  " ]
+                  }, {
+                     "r" : "43",
+                     "s" : [ {
+                        "value" : [ "not " ]
+                     }, {
+                        "r" : "42",
+                        "s" : [ {
+                           "value" : [ "exists" ]
+                        }, {
+                           "r" : "41",
+                           "s" : [ {
+                              "value" : [ "(" ]
+                           }, {
+                              "r" : "41",
+                              "s" : [ {
+                                 "value" : [ "\"PSA Observations\"" ]
+                              } ]
+                           }, {
+                              "value" : [ ")" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "43",
+               "locator" : "48:3-48:32",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Not",
+               "operand" : {
+                  "localId" : "42",
+                  "locator" : "48:7-48:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Exists",
+                  "operand" : {
+                     "localId" : "41",
+                     "locator" : "48:13-48:32",
+                     "name" : "PSA Observations",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "50",
+            "locator" : "50:1-51:61",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has PSA within one year",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "50",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Has PSA within one year\"",":\n  " ]
+                  }, {
+                     "r" : "49",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "48",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "48",
+                           "s" : [ {
+                              "r" : "45",
+                              "s" : [ {
+                                 "value" : [ "C3F" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "48",
+                              "s" : [ {
+                                 "value" : [ "ObservationLookBack","(" ]
+                              }, {
+                                 "r" : "46",
+                                 "s" : [ {
+                                    "value" : [ "\"PSA Observations\"" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "47",
+                                 "s" : [ {
+                                    "value" : [ "1 ","year" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "49",
+               "locator" : "51:3-51:61",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "48",
+                  "locator" : "51:9-51:61",
+                  "name" : "ObservationLookBack",
+                  "libraryName" : "C3F",
+                  "type" : "FunctionRef",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "operand" : [ {
+                     "localId" : "46",
+                     "locator" : "51:34-51:51",
+                     "name" : "PSA Observations",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "localId" : "47",
+                     "locator" : "51:54-51:59",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                     "value" : 1,
+                     "unit" : "year",
+                     "type" : "Quantity"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "56",
+            "locator" : "53:1-54:61",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has PSA within two years",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "56",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Has PSA within two years\"",":\n  " ]
+                  }, {
+                     "r" : "55",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "54",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "54",
+                           "s" : [ {
+                              "r" : "51",
+                              "s" : [ {
+                                 "value" : [ "C3F" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "54",
+                              "s" : [ {
+                                 "value" : [ "ObservationLookBack","(" ]
+                              }, {
+                                 "r" : "52",
+                                 "s" : [ {
+                                    "value" : [ "\"PSA Observations\"" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "53",
+                                 "s" : [ {
+                                    "value" : [ "2 ","year" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "55",
+               "locator" : "54:3-54:61",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "54",
+                  "locator" : "54:9-54:61",
+                  "name" : "ObservationLookBack",
+                  "libraryName" : "C3F",
+                  "type" : "FunctionRef",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "operand" : [ {
+                     "localId" : "52",
+                     "locator" : "54:34-54:51",
+                     "name" : "PSA Observations",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "localId" : "53",
+                     "locator" : "54:54-54:59",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                     "value" : 2,
+                     "unit" : "year",
+                     "type" : "Quantity"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "67",
+            "locator" : "56:1-58:43",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Has high PSA value",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "67",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Has high PSA value\"",":\n  " ]
+                  }, {
+                     "r" : "66",
+                     "s" : [ {
+                        "value" : [ "exists" ]
+                     }, {
+                        "r" : "65",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "65",
+                           "s" : [ {
+                              "s" : [ {
+                                 "r" : "58",
+                                 "s" : [ {
+                                    "r" : "57",
+                                    "s" : [ {
+                                       "s" : [ {
+                                          "value" : [ "\"PSA Observations\"" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ " ","C" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ "\n    " ]
+                           }, {
+                              "r" : "64",
+                              "s" : [ {
+                                 "value" : [ "where " ]
+                              }, {
+                                 "r" : "64",
+                                 "s" : [ {
+                                    "r" : "62",
+                                    "s" : [ {
+                                       "r" : "61",
+                                       "s" : [ {
+                                          "r" : "59",
+                                          "s" : [ {
+                                             "value" : [ "C3F" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ "." ]
+                                       }, {
+                                          "r" : "61",
+                                          "s" : [ {
+                                             "value" : [ "QuantityValue","(" ]
+                                          }, {
+                                             "r" : "60",
+                                             "s" : [ {
+                                                "value" : [ "C" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ")" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "62",
+                                       "s" : [ {
+                                          "value" : [ "value" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "r" : "63",
+                                    "value" : [ " ",">"," ","4.0" ]
+                                 } ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ")" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "66",
+               "locator" : "57:3-58:43",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "65",
+                  "locator" : "57:9-58:43",
+                  "type" : "Query",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Observation",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "source" : [ {
+                     "localId" : "58",
+                     "locator" : "57:10-57:29",
+                     "alias" : "C",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "expression" : {
+                        "localId" : "57",
+                        "locator" : "57:10-57:27",
+                        "name" : "PSA Observations",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Observation",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }
+                  } ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "localId" : "64",
+                     "locator" : "58:5-58:42",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "Greater",
+                     "operand" : [ {
+                        "localId" : "62",
+                        "locator" : "58:11-58:36",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "path" : "value",
+                        "type" : "Property",
+                        "source" : {
+                           "localId" : "61",
+                           "locator" : "58:11-58:30",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                           "name" : "QuantityValue",
+                           "libraryName" : "C3F",
+                           "type" : "FunctionRef",
+                           "operand" : [ {
+                              "localId" : "60",
+                              "locator" : "58:29",
+                              "resultTypeName" : "{http://hl7.org/fhir}Observation",
+                              "name" : "C",
+                              "type" : "AliasRef"
+                           } ]
+                        }
+                     }, {
+                        "localId" : "63",
+                        "locator" : "58:40-58:42",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "value" : "4.0",
+                        "type" : "Literal"
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "localId" : "71",
+            "locator" : "60:1-61:24",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Last PSA value is high",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "71",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Last PSA value is high\"",":\n  " ]
+                  }, {
+                     "r" : "70",
+                     "s" : [ {
+                        "r" : "68",
+                        "s" : [ {
+                           "value" : [ "\"Last PSA value\"" ]
+                        } ]
+                     }, {
+                        "r" : "69",
+                        "value" : [ " ",">"," ","4.0" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "70",
+               "locator" : "61:3-61:24",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Greater",
+               "operand" : [ {
+                  "localId" : "68",
+                  "locator" : "61:3-61:18",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "name" : "Last PSA value",
+                  "type" : "ExpressionRef"
+               }, {
+                  "localId" : "69",
+                  "locator" : "61:22-61:24",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "value" : "4.0",
+                  "type" : "Literal"
+               } ]
+            }
+         }, {
+            "localId" : "82",
+            "locator" : "65:1-68:36",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Who to Alert?",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "82",
+                  "s" : [ {
+                     "value" : [ "/* Inclusion Criteria */","define ","\"Who to Alert?\"",":\n  " ]
+                  }, {
+                     "r" : "81",
+                     "s" : [ {
+                        "r" : "78",
+                        "s" : [ {
+                           "r" : "73",
+                           "s" : [ {
+                              "r" : "72",
+                              "s" : [ {
+                                 "value" : [ "Data" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "73",
+                              "s" : [ {
+                                 "value" : [ "\"Patient is male\"" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n    and " ]
+                        }, {
+                           "r" : "77",
+                           "s" : [ {
+                              "r" : "74",
+                              "s" : [ {
+                                 "value" : [ "AgeInYears","()" ]
+                              } ]
+                           }, {
+                              "r" : "75",
+                              "value" : [ " between ","55"," and ","70" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    and " ]
+                     }, {
+                        "r" : "80",
+                        "s" : [ {
+                           "value" : [ "not " ]
+                        }, {
+                           "r" : "79",
+                           "s" : [ {
+                              "value" : [ "\"Has prostate cancer Hx\"" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "81",
+               "locator" : "66:3-68:36",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "And",
+               "operand" : [ {
+                  "localId" : "78",
+                  "locator" : "66:3-67:38",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "And",
+                  "operand" : [ {
+                     "localId" : "73",
+                     "locator" : "66:3-66:24",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Patient is male",
+                     "libraryName" : "Data",
+                     "type" : "ExpressionRef"
+                  }, {
+                     "localId" : "77",
+                     "locator" : "67:9-67:38",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "And",
+                     "operand" : [ {
+                        "type" : "GreaterOrEqual",
+                        "operand" : [ {
+                           "localId" : "74",
+                           "locator" : "67:9-67:20",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "precision" : "Year",
+                           "type" : "CalculateAge",
+                           "operand" : {
+                              "path" : "birthDate.value",
+                              "type" : "Property",
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef"
+                              }
+                           }
+                        }, {
+                           "localId" : "75",
+                           "locator" : "67:30-67:31",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "55",
+                           "type" : "Literal"
+                        } ]
+                     }, {
+                        "type" : "LessOrEqual",
+                        "operand" : [ {
+                           "localId" : "74",
+                           "locator" : "67:9-67:20",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "precision" : "Year",
+                           "type" : "CalculateAge",
+                           "operand" : {
+                              "path" : "birthDate.value",
+                              "type" : "Property",
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef"
+                              }
+                           }
+                        }, {
+                           "localId" : "76",
+                           "locator" : "67:37-67:38",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "70",
+                           "type" : "Literal"
+                        } ]
+                     } ]
+                  } ]
+               }, {
+                  "localId" : "80",
+                  "locator" : "68:9-68:36",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "localId" : "79",
+                     "locator" : "68:13-68:36",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Has prostate cancer Hx",
+                     "type" : "ExpressionRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "89",
+            "locator" : "70:1-74:5",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Recommend Screening?",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "89",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Recommend Screening?\"",":\n  " ]
+                  }, {
+                     "r" : "88",
+                     "s" : [ {
+                        "r" : "83",
+                        "s" : [ {
+                           "value" : [ "\"Who to Alert?\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    and " ]
+                     }, {
+                        "r" : "87",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "87",
+                           "s" : [ {
+                              "r" : "84",
+                              "s" : [ {
+                                 "value" : [ "\"No PSA test results\"" ]
+                              } ]
+                           }, {
+                              "value" : [ "\n      or " ]
+                           }, {
+                              "r" : "86",
+                              "s" : [ {
+                                 "value" : [ "not " ]
+                              }, {
+                                 "r" : "85",
+                                 "s" : [ {
+                                    "value" : [ "\"Has PSA within two years\"" ]
+                                 } ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n    )" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "88",
+               "locator" : "71:3-74:5",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "And",
+               "operand" : [ {
+                  "localId" : "83",
+                  "locator" : "71:3-71:17",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "name" : "Who to Alert?",
+                  "type" : "ExpressionRef"
+               }, {
+                  "localId" : "87",
+                  "locator" : "72:9-74:5",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Or",
+                  "operand" : [ {
+                     "localId" : "84",
+                     "locator" : "72:10-72:30",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "No PSA test results",
+                     "type" : "ExpressionRef"
+                  }, {
+                     "localId" : "86",
+                     "locator" : "73:10-73:39",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "Not",
+                     "operand" : {
+                        "localId" : "85",
+                        "locator" : "73:14-73:39",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "name" : "Has PSA within two years",
+                        "type" : "ExpressionRef"
+                     }
+                  } ]
+               } ]
+            }
+         }, {
+            "localId" : "111",
+            "locator" : "89:1-95:32",
+            "name" : "Patient Information",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "111",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Information\"",":\n  " ]
+                  }, {
+                     "r" : "110",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "107",
+                           "s" : [ {
+                              "r" : "106",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "106",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "105",
+                                    "s" : [ {
+                                       "value" : [ "if " ]
+                                    }, {
+                                       "r" : "94",
+                                       "s" : [ {
+                                          "value" : [ "\"No PSA test results\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n      then " ]
+                                    }, {
+                                       "r" : "95",
+                                       "s" : [ {
+                                          "value" : [ "'You have never had a PSA test'" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n    else\n      " ]
+                                    }, {
+                                       "r" : "104",
+                                       "s" : [ {
+                                          "r" : "101",
+                                          "s" : [ {
+                                             "r" : "99",
+                                             "s" : [ {
+                                                "r" : "96",
+                                                "s" : [ {
+                                                   "value" : [ "'Your last PSA value was '" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ " + " ]
+                                             }, {
+                                                "r" : "98",
+                                                "s" : [ {
+                                                   "value" : [ "ToString","(" ]
+                                                }, {
+                                                   "r" : "97",
+                                                   "s" : [ {
+                                                      "value" : [ "\"Last PSA value\"" ]
+                                                   } ]
+                                                }, {
+                                                   "value" : [ ")" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ " + " ]
+                                          }, {
+                                             "r" : "100",
+                                             "s" : [ {
+                                                "value" : [ "' on '" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ " + " ]
+                                       }, {
+                                          "r" : "103",
+                                          "s" : [ {
+                                             "value" : [ "ToString","(" ]
+                                          }, {
+                                             "r" : "102",
+                                             "s" : [ {
+                                                "value" : [ "\"Last PSA date\"" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ")" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "109",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "109",
+                           "s" : [ {
+                              "r" : "108",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "110",
+               "locator" : "90:3-95:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "107",
+                  "locator" : "90:3-95:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "106",
+                     "locator" : "90:3-95:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "105",
+                        "locator" : "91:5-94:98",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "If",
+                        "condition" : {
+                           "localId" : "94",
+                           "locator" : "91:8-91:28",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "name" : "No PSA test results",
+                           "type" : "ExpressionRef"
+                        },
+                        "then" : {
+                           "localId" : "95",
+                           "locator" : "92:12-92:42",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "You have never had a PSA test",
+                           "type" : "Literal"
+                        },
+                        "else" : {
+                           "localId" : "104",
+                           "locator" : "94:7-94:98",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "Concatenate",
+                           "operand" : [ {
+                              "localId" : "101",
+                              "locator" : "94:7-94:70",
+                              "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "Concatenate",
+                              "operand" : [ {
+                                 "localId" : "99",
+                                 "locator" : "94:7-94:61",
+                                 "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "Concatenate",
+                                 "operand" : [ {
+                                    "localId" : "96",
+                                    "locator" : "94:7-94:32",
+                                    "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "Your last PSA value was ",
+                                    "type" : "Literal"
+                                 }, {
+                                    "localId" : "98",
+                                    "locator" : "94:36-94:61",
+                                    "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "ToString",
+                                    "operand" : {
+                                       "localId" : "97",
+                                       "locator" : "94:45-94:60",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Decimal",
+                                       "name" : "Last PSA value",
+                                       "type" : "ExpressionRef"
+                                    }
+                                 } ]
+                              }, {
+                                 "localId" : "100",
+                                 "locator" : "94:65-94:70",
+                                 "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : " on ",
+                                 "type" : "Literal"
+                              } ]
+                           }, {
+                              "localId" : "103",
+                              "locator" : "94:74-94:98",
+                              "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "ToString",
+                              "operand" : {
+                                 "localId" : "102",
+                                 "locator" : "94:83-94:97",
+                                 "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "name" : "Last PSA date",
+                                 "type" : "ExpressionRef"
+                              }
+                           } ]
+                        }
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "109",
+                  "locator" : "95:11-95:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "95:17-95:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "108",
+                        "locator" : "95:17-95:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "119",
+            "locator" : "97:1-100:32",
+            "name" : "Patient Decision",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "119",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Decision\"",":\n  " ]
+                  }, {
+                     "r" : "118",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "115",
+                           "s" : [ {
+                              "r" : "114",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "114",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "113",
+                                    "s" : [ {
+                                       "value" : [ "'Screening for prostate cancer has both potential benefits and harms. Whether you should be screened for prostate cancer is a personal decision. It depends on how worried you are about prostate cancer versus how worried you are about the harms of testing.'" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "117",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "117",
+                           "s" : [ {
+                              "r" : "116",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "118",
+               "locator" : "98:3-100:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "115",
+                  "locator" : "98:3-100:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "114",
+                     "locator" : "98:3-100:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "113",
+                        "locator" : "99:5-99:260",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Screening for prostate cancer has both potential benefits and harms. Whether you should be screened for prostate cancer is a personal decision. It depends on how worried you are about prostate cancer versus how worried you are about the harms of testing.",
+                        "type" : "Literal"
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "117",
+                  "locator" : "100:11-100:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "100:17-100:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "116",
+                        "locator" : "100:17-100:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "127",
+            "locator" : "102:1-105:32",
+            "name" : "Patient Recommendation",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "127",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Recommendation\"",":\n  " ]
+                  }, {
+                     "r" : "126",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "123",
+                           "s" : [ {
+                              "r" : "122",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "122",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "121",
+                                    "s" : [ {
+                                       "value" : [ "'Guidelines say that men aged 55 to 69 years should talk with their doctor every 2 years and decide if they want to be screened.'" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "125",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "125",
+                           "s" : [ {
+                              "r" : "124",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "126",
+               "locator" : "103:3-105:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "123",
+                  "locator" : "103:3-105:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "122",
+                     "locator" : "103:3-105:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "121",
+                        "locator" : "104:5-104:133",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Guidelines say that men aged 55 to 69 years should talk with their doctor every 2 years and decide if they want to be screened.",
+                        "type" : "Literal"
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "125",
+                  "locator" : "105:11-105:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "105:17-105:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "124",
+                        "locator" : "105:17-105:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "131",
+            "locator" : "78:1-87:1",
+            "name" : "ScreeningSummary",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "131",
+                  "s" : [ {
+                     "value" : [ "/* Screening Summary */","define ","ScreeningSummary",": " ]
+                  }, {
+                     "r" : "130",
+                     "s" : [ {
+                        "value" : [ "{\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "notifyPatient",": " ]
+                        }, {
+                           "r" : "90",
+                           "s" : [ {
+                              "value" : [ "\"Who to Alert?\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "recommendScreening",": " ]
+                        }, {
+                           "r" : "91",
+                           "s" : [ {
+                              "value" : [ "\"Recommend Screening?\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "name",": " ]
+                        }, {
+                           "r" : "92",
+                           "s" : [ {
+                              "value" : [ "'Prostate Cancer Screening'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "title",": " ]
+                        }, {
+                           "r" : "93",
+                           "s" : [ {
+                              "value" : [ "'Decide If Prostate Cancer Screening Is Right for You'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "information",": " ]
+                        }, {
+                           "r" : "112",
+                           "s" : [ {
+                              "value" : [ "\"Patient Information\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "decision",": " ]
+                        }, {
+                           "r" : "120",
+                           "s" : [ {
+                              "value" : [ "\"Patient Decision\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "recommendation",": " ]
+                        }, {
+                           "r" : "128",
+                           "s" : [ {
+                              "value" : [ "\"Patient Recommendation\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "questionnaire",": " ]
+                        }, {
+                           "r" : "129",
+                           "s" : [ {
+                              "value" : [ "'mpc-prostate-cancer'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n}" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "TupleTypeSpecifier",
+               "element" : [ {
+                  "name" : "notifyPatient",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "recommendScreening",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "name",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "title",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "information",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "decision",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "recommendation",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "questionnaire",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               } ]
+            },
+            "expression" : {
+               "localId" : "130",
+               "locator" : "78:26-87:1",
+               "type" : "Tuple",
+               "resultTypeSpecifier" : {
+                  "type" : "TupleTypeSpecifier",
+                  "element" : [ {
+                     "name" : "notifyPatient",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "recommendScreening",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "name",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "title",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "information",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "decision",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "recommendation",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "questionnaire",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  } ]
+               },
+               "element" : [ {
+                  "name" : "notifyPatient",
+                  "value" : {
+                     "localId" : "90",
+                     "locator" : "79:18-79:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Who to Alert?",
+                     "type" : "ExpressionRef"
+                  }
+               }, {
+                  "name" : "recommendScreening",
+                  "value" : {
+                     "localId" : "91",
+                     "locator" : "80:23-80:44",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Recommend Screening?",
+                     "type" : "ExpressionRef"
+                  }
+               }, {
+                  "name" : "name",
+                  "value" : {
+                     "localId" : "92",
+                     "locator" : "81:9-81:35",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "Prostate Cancer Screening",
+                     "type" : "Literal"
+                  }
+               }, {
+                  "name" : "title",
+                  "value" : {
+                     "localId" : "93",
+                     "locator" : "82:10-82:63",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "Decide If Prostate Cancer Screening Is Right for You",
+                     "type" : "Literal"
+                  }
+               }, {
+                  "name" : "information",
+                  "value" : {
+                     "localId" : "112",
+                     "locator" : "83:16-83:36",
+                     "name" : "Patient Information",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "decision",
+                  "value" : {
+                     "localId" : "120",
+                     "locator" : "84:13-84:30",
+                     "name" : "Patient Decision",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "recommendation",
+                  "value" : {
+                     "localId" : "128",
+                     "locator" : "85:19-85:42",
+                     "name" : "Patient Recommendation",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "questionnaire",
+                  "value" : {
+                     "localId" : "129",
+                     "locator" : "86:18-86:38",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "mpc-prostate-cancer",
+                     "type" : "Literal"
+                  }
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

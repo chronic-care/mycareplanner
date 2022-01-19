@@ -1,0 +1,16 @@
+{
+  "resourceType": "Patient",
+  "id": "Under-50",
+  "active": true,
+  "name": [
+    {
+      "text": "Meghan Anderson",
+      "family": "Anderson",
+      "given": [
+        "Meghan"
+      ]
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1974-01-14"
+}

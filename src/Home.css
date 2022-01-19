@@ -1,0 +1,70 @@
+.home-view {
+    min-height: 80vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-around; */
+    text-align: left;
+}
+
+/* Ipad specific media queries */
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+    .home-view {
+      max-height: 1024px;
+    }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+    .home-view {
+      max-height: 768px;
+    }
+}
+
+.title {
+    padding: 10px;
+    margin: auto;
+    display:flex; 
+    justify-content:center;
+}
+
+.subheadline {
+    margin: auto;
+    margin-bottom: 5px;
+    justify-content:center;
+}
+
+.home-view p {
+    font-size: 1rem;
+}
+
+.home-view .tagline-text {
+    font-style: italic;
+}
+
+.app-title-container {
+    text-align: left !important;
+}
+
+.app-title-container .mypain-title {
+    justify-content: flex-start;
+}
+
+.welcome {
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.btn-outline-secondary {
+    color: #000;
+    border-color: #000;
+    background-color: lightgray;
+}
+
+.next-button {
+    width: 30%;
+    align-self: center;
+    color: #000000 !important;
+    margin-top: 1rem;
+}

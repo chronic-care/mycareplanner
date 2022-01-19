@@ -1,0 +1,204 @@
+{
+  "http://fhir.org/guides/utah-edu/lcs-cds/ValueSet/currentsmoker": {
+    "20210604": [
+      {
+        "code": "449868002",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428041000124106",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428071000124103",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428061000124105",
+        "system": "http://snomed.info/sct"
+      }
+    ]
+  },
+  "http://hl7.org/fhir/us/core/ValueSet/us-core-observation-smokingstatus": {
+    "3.1.0": [
+      {
+        "code": "449868002",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428041000124106",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "8517006",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "266919005",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "77176002",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "266927001",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428071000124103",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "428061000124105",
+        "system": "http://snomed.info/sct"
+      }
+    ]
+  },
+  "http://fhir.org/guides/utah-edu/lcs-cds/ValueSet/chest-ct-proc-code": {
+    "20210604": [
+      {
+        "code": "G0297",
+        "system": "http://www.ama-assn.org/go/cpt"
+      },
+      {
+        "code": "71250",
+        "system": "http://www.ama-assn.org/go/cpt"
+      },
+      {
+        "code": "71270",
+        "system": "http://www.ama-assn.org/go/cpt"
+      }
+    ]
+  },
+  "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1116.89": {
+    "2013": [
+      {
+        "code": "162.2",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "162.3",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "162.4",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "162.5",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "162.8",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "162.9",
+        "system": "http://hl7.org/fhir/sid/icd-9-cm",
+        "version": "2013"
+      },
+      {
+        "code": "C34.00",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.01",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.02",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.10",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.11",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.12",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.2",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.30",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.31",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.32",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.80",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.81",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.82",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.90",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.91",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      },
+      {
+        "code": "C34.92",
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "version": "2020"
+      }
+    ]
+  },
+  "http://fhir.org/guides/utah-edu/lcs-cds/ValueSet/conditionclinical": {
+    "20210604": [
+      {
+        "code": "active",
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+      },
+      {
+        "code": "recurrence",
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+      },
+      {
+        "code": "relapse",
+        "system": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+      }
+    ]
+  }
+}

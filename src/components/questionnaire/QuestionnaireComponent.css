@@ -1,0 +1,31 @@
+.questionnaire {
+  text-align: center;
+}
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+  .questionnaire {
+    overflow: scroll;
+    -webkit-overflow-scrolling:touch; 
+  }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+  .questionnaire {
+    overflow: scroll;
+    -webkit-overflow-scrolling:touch; 
+  }
+}
+
+.submit-confirmation-text {
+  text-align: left;
+  padding: 0;
+}
+
+.submit-confirmation-text p {
+  padding: 1em;
+  background: #f2f2f2;
+}
+
+.edit-button {
+  display: flex;
+  position: absolute;
+}

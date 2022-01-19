@@ -1,0 +1,3456 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorOptions" : "EnableAnnotations,EnableLocators,EnableResultTypes",
+         "type" : "CqlToElmInfo"
+      }, {
+         "type" : "Annotation",
+         "s" : {
+            "r" : "175",
+            "s" : [ {
+               "value" : [ "","library BreastCancerScreening version '1.0.0'" ]
+            } ]
+         }
+      } ],
+      "identifier" : {
+         "id" : "BreastCancerScreening",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1"
+         }, {
+            "localId" : "1",
+            "locator" : "3:1-3:26",
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "1",
+                  "s" : [ {
+                     "value" : [ "","using " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "FHIR" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'4.0.1'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localId" : "2",
+            "locator" : "5:1-5:54",
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "2",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "FHIRHelpers" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'4.0.1'"," called ","FHIRHelpers" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "3",
+            "locator" : "6:1-6:44",
+            "localIdentifier" : "FC",
+            "path" : "FHIRCommon",
+            "version" : "4.0.1",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "3",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "FHIRCommon" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'4.0.1'"," called ","FC" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "4",
+            "locator" : "7:1-7:54",
+            "localIdentifier" : "Data",
+            "path" : "PreventiveCareData",
+            "version" : "1.0.0",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "4",
+                  "s" : [ {
+                     "value" : [ "","include " ]
+                  }, {
+                     "s" : [ {
+                        "value" : [ "PreventiveCareData" ]
+                     } ]
+                  }, {
+                     "value" : [ " version ","'1.0.0'"," called ","Data" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "localId" : "5",
+            "locator" : "10:1-10:112",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Bilateral Mastectomy",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1005",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "5",
+                  "s" : [ {
+                     "value" : [ "// Breast Cancer Screening","valueset ","\"Bilateral Mastectomy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1005'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "6",
+            "locator" : "11:1-11:123",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "History of bilateral mastectomy",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1068",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "6",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"History of bilateral mastectomy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1068'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "7",
+            "locator" : "12:1-12:103",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Mammography",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.108.12.1018",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "7",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Mammography\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.108.12.1018'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "8",
+            "locator" : "13:1-13:119",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Status Post Left Mastectomy",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1069",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "8",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Status Post Left Mastectomy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1069'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "9",
+            "locator" : "14:1-14:120",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Status Post Right Mastectomy",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1070",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "9",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Status Post Right Mastectomy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1070'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "10",
+            "locator" : "15:1-15:118",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Unilateral Mastectomy Left",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1133",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "10",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Unilateral Mastectomy Left\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1133'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "11",
+            "locator" : "16:1-16:119",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Unilateral Mastectomy Right",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1134",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "11",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Unilateral Mastectomy Right\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1134'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "12",
+            "locator" : "17:1-17:137",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Unilateral Mastectomy, Unspecified Laterality",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1071",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "12",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Unilateral Mastectomy, Unspecified Laterality\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1071'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "13",
+            "locator" : "18:1-18:96",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Left",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.122.12.1036",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "13",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Left\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.122.12.1036'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "14",
+            "locator" : "19:1-19:97",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+            "name" : "Right",
+            "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.122.12.1035",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "14",
+                  "s" : [ {
+                     "value" : [ "","valueset ","\"Right\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.122.12.1035'" ]
+                  } ]
+               }
+            } ]
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "locator" : "21:1-21:15",
+            "name" : "Patient"
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "locator" : "21:1-21:15",
+            "name" : "Patient",
+            "context" : "Patient",
+            "expression" : {
+               "type" : "SingletonFrom",
+               "operand" : {
+                  "locator" : "21:1-21:15",
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve"
+               }
+            }
+         }, {
+            "localId" : "26",
+            "locator" : "24:1-26:77",
+            "name" : "Mammography diagnostic report",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "26",
+                  "s" : [ {
+                     "value" : [ "/* Data Elements */","define ","\"Mammography diagnostic report\"",":\n  " ]
+                  }, {
+                     "r" : "25",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "16",
+                           "s" : [ {
+                              "r" : "15",
+                              "s" : [ {
+                                 "r" : "15",
+                                 "s" : [ {
+                                    "value" : [ "[","DiagnosticReport",": " ]
+                                 }, {
+                                    "s" : [ {
+                                       "value" : [ "\"Mammography\"" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "]" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Mammogram" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "24",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "24",
+                           "s" : [ {
+                              "r" : "18",
+                              "s" : [ {
+                                 "r" : "17",
+                                 "s" : [ {
+                                    "value" : [ "Mammogram" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "18",
+                                 "s" : [ {
+                                    "value" : [ "status" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " in " ]
+                           }, {
+                              "r" : "23",
+                              "s" : [ {
+                                 "value" : [ "{ " ]
+                              }, {
+                                 "r" : "19",
+                                 "s" : [ {
+                                    "value" : [ "'final'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "20",
+                                 "s" : [ {
+                                    "value" : [ "'amended'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "21",
+                                 "s" : [ {
+                                    "value" : [ "'corrected'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "22",
+                                 "s" : [ {
+                                    "value" : [ "'appended'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ " }" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "25",
+               "locator" : "25:3-26:77",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "16",
+                  "locator" : "25:3-25:45",
+                  "alias" : "Mammogram",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "15",
+                     "locator" : "25:3-25:35",
+                     "dataType" : "{http://hl7.org/fhir}DiagnosticReport",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/DiagnosticReport",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "codes" : {
+                        "locator" : "25:22-25:34",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Mammography",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "24",
+                  "locator" : "26:5-26:77",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "In",
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "operand" : [ {
+                        "localId" : "18",
+                        "locator" : "26:11-26:26",
+                        "resultTypeName" : "{http://hl7.org/fhir}DiagnosticReportStatus",
+                        "path" : "status",
+                        "scope" : "Mammogram",
+                        "type" : "Property"
+                     } ]
+                  }, {
+                     "localId" : "23",
+                     "locator" : "26:31-26:77",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "19",
+                        "locator" : "26:33-26:39",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "final",
+                        "type" : "Literal"
+                     }, {
+                        "localId" : "20",
+                        "locator" : "26:42-26:50",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "amended",
+                        "type" : "Literal"
+                     }, {
+                        "localId" : "21",
+                        "locator" : "26:53-26:63",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "corrected",
+                        "type" : "Literal"
+                     }, {
+                        "localId" : "22",
+                        "locator" : "26:66-26:75",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "appended",
+                        "type" : "Literal"
+                     } ]
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "36",
+            "locator" : "28:1-32:58",
+            "name" : "Right Mastectomy Diagnosis",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "36",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Right Mastectomy Diagnosis\"",":\n\t" ]
+                  }, {
+                     "r" : "35",
+                     "s" : [ {
+                        "r" : "27",
+                        "s" : [ {
+                           "value" : [ "[","Condition",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "\"Status Post Right Mastectomy\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ "\n\tunion\n\t" ]
+                     }, {
+                        "r" : "34",
+                        "s" : [ {
+                           "s" : [ {
+                              "r" : "29",
+                              "s" : [ {
+                                 "r" : "28",
+                                 "s" : [ {
+                                    "r" : "28",
+                                    "s" : [ {
+                                       "value" : [ "[","Condition",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Unilateral Mastectomy, Unspecified Laterality\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " ","UnilateralMastectomyDiagnosis" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n\t\t\t" ]
+                        }, {
+                           "r" : "33",
+                           "s" : [ {
+                              "value" : [ "where " ]
+                           }, {
+                              "r" : "33",
+                              "s" : [ {
+                                 "r" : "31",
+                                 "s" : [ {
+                                    "r" : "30",
+                                    "s" : [ {
+                                       "value" : [ "UnilateralMastectomyDiagnosis" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "." ]
+                                 }, {
+                                    "r" : "31",
+                                    "s" : [ {
+                                       "value" : [ "bodySite" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " in " ]
+                              }, {
+                                 "r" : "32",
+                                 "s" : [ {
+                                    "value" : [ "\"Right\"" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "35",
+               "locator" : "29:2-32:58",
+               "type" : "Union",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "27",
+                  "locator" : "29:2-29:44",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "29:14-29:43",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Status Post Right Mastectomy",
+                     "type" : "ValueSetRef"
+                  }
+               }, {
+                  "localId" : "34",
+                  "locator" : "31:2-32:58",
+                  "type" : "Query",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "source" : [ {
+                     "localId" : "29",
+                     "locator" : "31:2-31:91",
+                     "alias" : "UnilateralMastectomyDiagnosis",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "expression" : {
+                        "localId" : "28",
+                        "locator" : "31:2-31:61",
+                        "dataType" : "{http://hl7.org/fhir}Condition",
+                        "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                        "codeProperty" : "code",
+                        "codeComparator" : "in",
+                        "type" : "Retrieve",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        },
+                        "codes" : {
+                           "locator" : "31:14-31:60",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                           "name" : "Unilateral Mastectomy, Unspecified Laterality",
+                           "type" : "ValueSetRef"
+                        }
+                     }
+                  } ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "localId" : "33",
+                     "locator" : "32:4-32:58",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "AnyInValueSet",
+                     "codes" : {
+                        "type" : "Query",
+                        "source" : [ {
+                           "alias" : "X",
+                           "expression" : {
+                              "localId" : "31",
+                              "locator" : "32:10-32:47",
+                              "path" : "bodySite",
+                              "scope" : "UnilateralMastectomyDiagnosis",
+                              "type" : "Property",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}CodeableConcept",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        } ],
+                        "return" : {
+                           "distinct" : false,
+                           "expression" : {
+                              "name" : "ToConcept",
+                              "libraryName" : "FHIRHelpers",
+                              "type" : "FunctionRef",
+                              "operand" : [ {
+                                 "name" : "X",
+                                 "type" : "AliasRef"
+                              } ]
+                           }
+                        }
+                     },
+                     "valueset" : {
+                        "localId" : "32",
+                        "locator" : "32:52-32:58",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Right",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "44",
+            "locator" : "34:1-36:65",
+            "name" : "Right Mastectomy Procedure",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "44",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Right Mastectomy Procedure\"",":\n  " ]
+                  }, {
+                     "r" : "43",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "38",
+                           "s" : [ {
+                              "r" : "37",
+                              "s" : [ {
+                                 "r" : "37",
+                                 "s" : [ {
+                                    "value" : [ "[","Procedure",": " ]
+                                 }, {
+                                    "s" : [ {
+                                       "value" : [ "\"Unilateral Mastectomy Right\"" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "]" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","UnilateralMastectomyRightPerformed" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "42",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "42",
+                           "s" : [ {
+                              "r" : "40",
+                              "s" : [ {
+                                 "r" : "39",
+                                 "s" : [ {
+                                    "value" : [ "UnilateralMastectomyRightPerformed" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "40",
+                                 "s" : [ {
+                                    "value" : [ "status" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","="," " ]
+                           }, {
+                              "r" : "41",
+                              "s" : [ {
+                                 "value" : [ "'completed'" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Procedure",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "43",
+               "locator" : "35:3-36:65",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Procedure",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "38",
+                  "locator" : "35:3-35:79",
+                  "alias" : "UnilateralMastectomyRightPerformed",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Procedure",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "37",
+                     "locator" : "35:3-35:44",
+                     "dataType" : "{http://hl7.org/fhir}Procedure",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Procedure",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Procedure",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "codes" : {
+                        "locator" : "35:15-35:43",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Unilateral Mastectomy Right",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "42",
+                  "locator" : "36:5-36:65",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Equal",
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "operand" : [ {
+                        "localId" : "40",
+                        "locator" : "36:11-36:51",
+                        "resultTypeName" : "{http://hl7.org/fhir}ProcedureStatus",
+                        "path" : "status",
+                        "scope" : "UnilateralMastectomyRightPerformed",
+                        "type" : "Property"
+                     } ]
+                  }, {
+                     "localId" : "41",
+                     "locator" : "36:55-36:65",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "completed",
+                     "type" : "Literal"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "52",
+            "locator" : "38:1-40:64",
+            "name" : "Left Mastectomy Procedure",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "52",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Left Mastectomy Procedure\"",":\n  " ]
+                  }, {
+                     "r" : "51",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "46",
+                           "s" : [ {
+                              "r" : "45",
+                              "s" : [ {
+                                 "r" : "45",
+                                 "s" : [ {
+                                    "value" : [ "[","Procedure",": " ]
+                                 }, {
+                                    "s" : [ {
+                                       "value" : [ "\"Unilateral Mastectomy Left\"" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "]" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","UnilateralMastectomyLeftPerformed" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    " ]
+                     }, {
+                        "r" : "50",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "50",
+                           "s" : [ {
+                              "r" : "48",
+                              "s" : [ {
+                                 "r" : "47",
+                                 "s" : [ {
+                                    "value" : [ "UnilateralMastectomyLeftPerformed" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "48",
+                                 "s" : [ {
+                                    "value" : [ "status" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","="," " ]
+                           }, {
+                              "r" : "49",
+                              "s" : [ {
+                                 "value" : [ "'completed'" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Procedure",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "51",
+               "locator" : "39:3-40:64",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Procedure",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "46",
+                  "locator" : "39:3-39:77",
+                  "alias" : "UnilateralMastectomyLeftPerformed",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Procedure",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "45",
+                     "locator" : "39:3-39:43",
+                     "dataType" : "{http://hl7.org/fhir}Procedure",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Procedure",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Procedure",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "codes" : {
+                        "locator" : "39:15-39:42",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Unilateral Mastectomy Left",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "50",
+                  "locator" : "40:5-40:64",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Equal",
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "operand" : [ {
+                        "localId" : "48",
+                        "locator" : "40:11-40:50",
+                        "resultTypeName" : "{http://hl7.org/fhir}ProcedureStatus",
+                        "path" : "status",
+                        "scope" : "UnilateralMastectomyLeftPerformed",
+                        "type" : "Property"
+                     } ]
+                  }, {
+                     "localId" : "49",
+                     "locator" : "40:54-40:64",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "completed",
+                     "type" : "Literal"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "62",
+            "locator" : "42:1-46:57",
+            "name" : "Left Mastectomy",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "62",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Left Mastectomy\"",":\n  " ]
+                  }, {
+                     "r" : "61",
+                     "s" : [ {
+                        "r" : "53",
+                        "s" : [ {
+                           "value" : [ "[","Condition",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "\"Status Post Left Mastectomy\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ "\n  union\n\t" ]
+                     }, {
+                        "r" : "60",
+                        "s" : [ {
+                           "s" : [ {
+                              "r" : "55",
+                              "s" : [ {
+                                 "r" : "54",
+                                 "s" : [ {
+                                    "r" : "54",
+                                    "s" : [ {
+                                       "value" : [ "[","Condition",": " ]
+                                    }, {
+                                       "s" : [ {
+                                          "value" : [ "\"Unilateral Mastectomy, Unspecified Laterality\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "]" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " ","UnilateralMastectomyDiagnosis" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n\t\t\t" ]
+                        }, {
+                           "r" : "59",
+                           "s" : [ {
+                              "value" : [ "where " ]
+                           }, {
+                              "r" : "59",
+                              "s" : [ {
+                                 "r" : "57",
+                                 "s" : [ {
+                                    "r" : "56",
+                                    "s" : [ {
+                                       "value" : [ "UnilateralMastectomyDiagnosis" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "." ]
+                                 }, {
+                                    "r" : "57",
+                                    "s" : [ {
+                                       "value" : [ "bodySite" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " in " ]
+                              }, {
+                                 "r" : "58",
+                                 "s" : [ {
+                                    "value" : [ "\"Left\"" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "61",
+               "locator" : "43:3-46:57",
+               "type" : "Union",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "53",
+                  "locator" : "43:3-43:44",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "43:15-43:43",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Status Post Left Mastectomy",
+                     "type" : "ValueSetRef"
+                  }
+               }, {
+                  "localId" : "60",
+                  "locator" : "45:2-46:57",
+                  "type" : "Query",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "source" : [ {
+                     "localId" : "55",
+                     "locator" : "45:2-45:91",
+                     "alias" : "UnilateralMastectomyDiagnosis",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "expression" : {
+                        "localId" : "54",
+                        "locator" : "45:2-45:61",
+                        "dataType" : "{http://hl7.org/fhir}Condition",
+                        "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                        "codeProperty" : "code",
+                        "codeComparator" : "in",
+                        "type" : "Retrieve",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        },
+                        "codes" : {
+                           "locator" : "45:14-45:60",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                           "name" : "Unilateral Mastectomy, Unspecified Laterality",
+                           "type" : "ValueSetRef"
+                        }
+                     }
+                  } ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "localId" : "59",
+                     "locator" : "46:4-46:57",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "AnyInValueSet",
+                     "codes" : {
+                        "type" : "Query",
+                        "source" : [ {
+                           "alias" : "X",
+                           "expression" : {
+                              "localId" : "57",
+                              "locator" : "46:10-46:47",
+                              "path" : "bodySite",
+                              "scope" : "UnilateralMastectomyDiagnosis",
+                              "type" : "Property",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}CodeableConcept",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        } ],
+                        "return" : {
+                           "distinct" : false,
+                           "expression" : {
+                              "name" : "ToConcept",
+                              "libraryName" : "FHIRHelpers",
+                              "type" : "FunctionRef",
+                              "operand" : [ {
+                                 "name" : "X",
+                                 "type" : "AliasRef"
+                              } ]
+                           }
+                        }
+                     },
+                     "valueset" : {
+                        "localId" : "58",
+                        "locator" : "46:52-46:57",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Left",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "64",
+            "locator" : "48:1-49:48",
+            "name" : "Bilateral Mastectomy Diagnosis",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "64",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Bilateral Mastectomy Diagnosis\"",":\n  " ]
+                  }, {
+                     "r" : "63",
+                     "s" : [ {
+                        "value" : [ "[","Condition",": " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "\"History of bilateral mastectomy\"" ]
+                        } ]
+                     }, {
+                        "value" : [ "]" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "63",
+               "locator" : "49:3-49:48",
+               "dataType" : "{http://hl7.org/fhir}Condition",
+               "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+               "codeProperty" : "code",
+               "codeComparator" : "in",
+               "type" : "Retrieve",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "codes" : {
+                  "locator" : "49:15-49:47",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                  "name" : "History of bilateral mastectomy",
+                  "type" : "ValueSetRef"
+               }
+            }
+         }, {
+            "localId" : "72",
+            "locator" : "51:1-53:58",
+            "name" : "Bilateral Mastectomy Procedure",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "72",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Bilateral Mastectomy Procedure\"",":\n  " ]
+                  }, {
+                     "r" : "71",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "66",
+                           "s" : [ {
+                              "r" : "65",
+                              "s" : [ {
+                                 "r" : "65",
+                                 "s" : [ {
+                                    "value" : [ "[","Procedure",": " ]
+                                 }, {
+                                    "s" : [ {
+                                       "value" : [ "\"Bilateral Mastectomy\"" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "]" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","BilateralMastectomyPerformed" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n  \t" ]
+                     }, {
+                        "r" : "70",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "70",
+                           "s" : [ {
+                              "r" : "68",
+                              "s" : [ {
+                                 "r" : "67",
+                                 "s" : [ {
+                                    "value" : [ "BilateralMastectomyPerformed" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "." ]
+                              }, {
+                                 "r" : "68",
+                                 "s" : [ {
+                                    "value" : [ "status" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ " ","="," " ]
+                           }, {
+                              "r" : "69",
+                              "s" : [ {
+                                 "value" : [ "'completed'" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Procedure",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "71",
+               "locator" : "52:3-53:58",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Procedure",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "66",
+                  "locator" : "52:3-52:66",
+                  "alias" : "BilateralMastectomyPerformed",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Procedure",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "65",
+                     "locator" : "52:3-52:37",
+                     "dataType" : "{http://hl7.org/fhir}Procedure",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Procedure",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Procedure",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "codes" : {
+                        "locator" : "52:15-52:36",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                        "name" : "Bilateral Mastectomy",
+                        "type" : "ValueSetRef"
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "70",
+                  "locator" : "53:4-53:58",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Equal",
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "operand" : [ {
+                        "localId" : "68",
+                        "locator" : "53:10-53:44",
+                        "resultTypeName" : "{http://hl7.org/fhir}ProcedureStatus",
+                        "path" : "status",
+                        "scope" : "BilateralMastectomyPerformed",
+                        "type" : "Property"
+                     } ]
+                  }, {
+                     "localId" : "69",
+                     "locator" : "53:48-53:58",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "completed",
+                     "type" : "Literal"
+                  } ]
+               }
+            }
+         }, {
+            "localId" : "78",
+            "locator" : "56:1-57:35",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Age 40 through 49",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "78",
+                  "s" : [ {
+                     "value" : [ "/* Intermediate Data Elements */","define ","\"Age 40 through 49\"",":\n   " ]
+                  }, {
+                     "r" : "77",
+                     "s" : [ {
+                        "r" : "73",
+                        "s" : [ {
+                           "value" : [ "AgeInYears","()" ]
+                        } ]
+                     }, {
+                        "value" : [ " in " ]
+                     }, {
+                        "r" : "76",
+                        "s" : [ {
+                           "r" : "74",
+                           "value" : [ "Interval[","40",", ","49","]" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "77",
+               "locator" : "57:4-57:35",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "In",
+               "operand" : [ {
+                  "localId" : "73",
+                  "locator" : "57:4-57:15",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "precision" : "Year",
+                  "type" : "CalculateAge",
+                  "operand" : {
+                     "path" : "birthDate.value",
+                     "type" : "Property",
+                     "source" : {
+                        "name" : "Patient",
+                        "type" : "ExpressionRef"
+                     }
+                  }
+               }, {
+                  "localId" : "76",
+                  "locator" : "57:20-57:35",
+                  "lowClosed" : true,
+                  "highClosed" : true,
+                  "type" : "Interval",
+                  "resultTypeSpecifier" : {
+                     "type" : "IntervalTypeSpecifier",
+                     "pointType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "low" : {
+                     "localId" : "74",
+                     "locator" : "57:29-57:30",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "40",
+                     "type" : "Literal"
+                  },
+                  "high" : {
+                     "localId" : "75",
+                     "locator" : "57:33-57:34",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "49",
+                     "type" : "Literal"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "84",
+            "locator" : "59:1-60:35",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Age 50 through 74",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "84",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Age 50 through 74\"",":\n   " ]
+                  }, {
+                     "r" : "83",
+                     "s" : [ {
+                        "r" : "79",
+                        "s" : [ {
+                           "value" : [ "AgeInYears","()" ]
+                        } ]
+                     }, {
+                        "value" : [ " in " ]
+                     }, {
+                        "r" : "82",
+                        "s" : [ {
+                           "r" : "80",
+                           "value" : [ "Interval[","50",", ","74","]" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "83",
+               "locator" : "60:4-60:35",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "In",
+               "operand" : [ {
+                  "localId" : "79",
+                  "locator" : "60:4-60:15",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "precision" : "Year",
+                  "type" : "CalculateAge",
+                  "operand" : {
+                     "path" : "birthDate.value",
+                     "type" : "Property",
+                     "source" : {
+                        "name" : "Patient",
+                        "type" : "ExpressionRef"
+                     }
+                  }
+               }, {
+                  "localId" : "82",
+                  "locator" : "60:20-60:35",
+                  "lowClosed" : true,
+                  "highClosed" : true,
+                  "type" : "Interval",
+                  "resultTypeSpecifier" : {
+                     "type" : "IntervalTypeSpecifier",
+                     "pointType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "low" : {
+                     "localId" : "80",
+                     "locator" : "60:29-60:30",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "50",
+                     "type" : "Literal"
+                  },
+                  "high" : {
+                     "localId" : "81",
+                     "locator" : "60:33-60:34",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "74",
+                     "type" : "Literal"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "94",
+            "locator" : "62:1-65:3",
+            "resultTypeName" : "{http://hl7.org/fhir}DiagnosticReport",
+            "name" : "Most recent mammogram",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "94",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Most recent mammogram\"",":\n  " ]
+                  }, {
+                     "r" : "93",
+                     "s" : [ {
+                        "value" : [ "Last","(" ]
+                     }, {
+                        "r" : "92",
+                        "s" : [ {
+                           "s" : [ {
+                              "r" : "86",
+                              "s" : [ {
+                                 "r" : "85",
+                                 "s" : [ {
+                                    "s" : [ {
+                                       "value" : [ "\"Mammography diagnostic report\"" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " ","R" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n    " ]
+                        }, {
+                           "r" : "91",
+                           "s" : [ {
+                              "value" : [ "sort by " ]
+                           }, {
+                              "r" : "90",
+                              "s" : [ {
+                                 "r" : "89",
+                                 "s" : [ {
+                                    "value" : [ "(" ]
+                                 }, {
+                                    "r" : "89",
+                                    "s" : [ {
+                                       "r" : "87",
+                                       "s" : [ {
+                                          "value" : [ "FHIRHelpers" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "89",
+                                       "s" : [ {
+                                          "value" : [ "ToDateTime","(" ]
+                                       }, {
+                                          "r" : "88",
+                                          "s" : [ {
+                                             "value" : [ "issued" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ ")" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n  )" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "93",
+               "locator" : "63:3-65:3",
+               "resultTypeName" : "{http://hl7.org/fhir}DiagnosticReport",
+               "type" : "Last",
+               "source" : {
+                  "localId" : "92",
+                  "locator" : "63:8-64:44",
+                  "type" : "Query",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "source" : [ {
+                     "localId" : "86",
+                     "locator" : "63:8-63:40",
+                     "alias" : "R",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "expression" : {
+                        "localId" : "85",
+                        "locator" : "63:8-63:38",
+                        "name" : "Mammography diagnostic report",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }
+                  } ],
+                  "relationship" : [ ],
+                  "sort" : {
+                     "localId" : "91",
+                     "locator" : "64:5-64:44",
+                     "by" : [ {
+                        "localId" : "90",
+                        "locator" : "64:13-64:44",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                        "direction" : "asc",
+                        "type" : "ByExpression",
+                        "expression" : {
+                           "localId" : "89",
+                           "locator" : "64:13-64:44",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "operand" : [ {
+                              "localId" : "88",
+                              "locator" : "64:37-64:42",
+                              "resultTypeName" : "{http://hl7.org/fhir}instant",
+                              "name" : "issued",
+                              "type" : "IdentifierRef"
+                           } ]
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "localId" : "98",
+            "locator" : "67:1-68:44",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Never had a mammogram",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "98",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Never had a mammogram\"",":\n  " ]
+                  }, {
+                     "r" : "97",
+                     "s" : [ {
+                        "value" : [ "not " ]
+                     }, {
+                        "r" : "96",
+                        "s" : [ {
+                           "value" : [ "exists " ]
+                        }, {
+                           "r" : "95",
+                           "s" : [ {
+                              "value" : [ "\"Mammography diagnostic report\"" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "97",
+               "locator" : "68:3-68:44",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Not",
+               "operand" : {
+                  "localId" : "96",
+                  "locator" : "68:7-68:44",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Exists",
+                  "operand" : {
+                     "localId" : "95",
+                     "locator" : "68:14-68:44",
+                     "name" : "Mammography diagnostic report",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "110",
+            "locator" : "70:1-73:3",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Had mammogram in past two years",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "110",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Had mammogram in past two years\"",":\n  " ]
+                  }, {
+                     "r" : "109",
+                     "s" : [ {
+                        "value" : [ "exists " ]
+                     }, {
+                        "r" : "108",
+                        "s" : [ {
+                           "value" : [ "(" ]
+                        }, {
+                           "r" : "108",
+                           "s" : [ {
+                              "s" : [ {
+                                 "r" : "100",
+                                 "s" : [ {
+                                    "r" : "99",
+                                    "s" : [ {
+                                       "s" : [ {
+                                          "value" : [ "\"Mammography diagnostic report\"" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ " ","M" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ "\n    " ]
+                           }, {
+                              "r" : "107",
+                              "s" : [ {
+                                 "value" : [ "where " ]
+                              }, {
+                                 "r" : "107",
+                                 "s" : [ {
+                                    "r" : "104",
+                                    "s" : [ {
+                                       "r" : "101",
+                                       "s" : [ {
+                                          "value" : [ "FC" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "104",
+                                       "s" : [ {
+                                          "value" : [ "ToInterval","(" ]
+                                       }, {
+                                          "r" : "103",
+                                          "s" : [ {
+                                             "r" : "102",
+                                             "s" : [ {
+                                                "value" : [ "M" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "." ]
+                                          }, {
+                                             "r" : "103",
+                                             "s" : [ {
+                                                "value" : [ "effective" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ ")" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ " " ]
+                                 }, {
+                                    "r" : "107",
+                                    "s" : [ {
+                                       "value" : [ "ends " ]
+                                    }, {
+                                       "r" : "106",
+                                       "s" : [ {
+                                          "value" : [ "2 ","year" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ " or less before" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ " " ]
+                                 }, {
+                                    "r" : "105",
+                                    "s" : [ {
+                                       "value" : [ "Today","()" ]
+                                    } ]
+                                 } ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n  )" ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "109",
+               "locator" : "71:3-73:3",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Exists",
+               "operand" : {
+                  "localId" : "108",
+                  "locator" : "71:10-73:3",
+                  "type" : "Query",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "source" : [ {
+                     "localId" : "100",
+                     "locator" : "71:11-71:43",
+                     "alias" : "M",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "expression" : {
+                        "localId" : "99",
+                        "locator" : "71:11-71:41",
+                        "name" : "Mammography diagnostic report",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}DiagnosticReport",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }
+                  } ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "localId" : "107",
+                     "locator" : "72:5-72:71",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "And",
+                     "operand" : [ {
+                        "locator" : "72:43-72:56",
+                        "type" : "In",
+                        "operand" : [ {
+                           "locator" : "72:38-72:41",
+                           "type" : "End",
+                           "operand" : {
+                              "localId" : "104",
+                              "locator" : "72:11-72:36",
+                              "name" : "ToInterval",
+                              "libraryName" : "FC",
+                              "type" : "FunctionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "IntervalTypeSpecifier",
+                                 "pointType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              },
+                              "operand" : [ {
+                                 "localId" : "103",
+                                 "locator" : "72:25-72:35",
+                                 "path" : "effective",
+                                 "scope" : "M",
+                                 "type" : "Property",
+                                 "resultTypeSpecifier" : {
+                                    "type" : "ChoiceTypeSpecifier",
+                                    "choice" : [ {
+                                       "name" : "{http://hl7.org/fhir}dateTime",
+                                       "type" : "NamedTypeSpecifier"
+                                    }, {
+                                       "name" : "{http://hl7.org/fhir}Period",
+                                       "type" : "NamedTypeSpecifier"
+                                    } ]
+                                 }
+                              } ]
+                           }
+                        }, {
+                           "type" : "Interval",
+                           "low" : {
+                              "type" : "ToDateTime",
+                              "operand" : {
+                                 "path" : "low",
+                                 "type" : "Property",
+                                 "source" : {
+                                    "locator" : "72:43-72:56",
+                                    "lowClosed" : true,
+                                    "highClosed" : false,
+                                    "type" : "Interval",
+                                    "resultTypeSpecifier" : {
+                                       "type" : "IntervalTypeSpecifier",
+                                       "pointType" : {
+                                          "name" : "{urn:hl7-org:elm-types:r1}Date",
+                                          "type" : "NamedTypeSpecifier"
+                                       }
+                                    },
+                                    "low" : {
+                                       "locator" : "72:65-72:71",
+                                       "type" : "Subtract",
+                                       "operand" : [ {
+                                          "localId" : "105",
+                                          "locator" : "72:65-72:71",
+                                          "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                          "type" : "Today"
+                                       }, {
+                                          "localId" : "106",
+                                          "locator" : "72:43-72:48",
+                                          "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                          "value" : 2,
+                                          "unit" : "year",
+                                          "type" : "Quantity"
+                                       } ]
+                                    },
+                                    "high" : {
+                                       "localId" : "105",
+                                       "locator" : "72:65-72:71",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "Today"
+                                    }
+                                 }
+                              }
+                           },
+                           "lowClosedExpression" : {
+                              "path" : "lowClosed",
+                              "type" : "Property",
+                              "source" : {
+                                 "locator" : "72:43-72:56",
+                                 "lowClosed" : true,
+                                 "highClosed" : false,
+                                 "type" : "Interval",
+                                 "resultTypeSpecifier" : {
+                                    "type" : "IntervalTypeSpecifier",
+                                    "pointType" : {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 },
+                                 "low" : {
+                                    "locator" : "72:65-72:71",
+                                    "type" : "Subtract",
+                                    "operand" : [ {
+                                       "localId" : "105",
+                                       "locator" : "72:65-72:71",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "Today"
+                                    }, {
+                                       "localId" : "106",
+                                       "locator" : "72:43-72:48",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                       "value" : 2,
+                                       "unit" : "year",
+                                       "type" : "Quantity"
+                                    } ]
+                                 },
+                                 "high" : {
+                                    "localId" : "105",
+                                    "locator" : "72:65-72:71",
+                                    "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                    "type" : "Today"
+                                 }
+                              }
+                           },
+                           "high" : {
+                              "type" : "ToDateTime",
+                              "operand" : {
+                                 "path" : "high",
+                                 "type" : "Property",
+                                 "source" : {
+                                    "locator" : "72:43-72:56",
+                                    "lowClosed" : true,
+                                    "highClosed" : false,
+                                    "type" : "Interval",
+                                    "resultTypeSpecifier" : {
+                                       "type" : "IntervalTypeSpecifier",
+                                       "pointType" : {
+                                          "name" : "{urn:hl7-org:elm-types:r1}Date",
+                                          "type" : "NamedTypeSpecifier"
+                                       }
+                                    },
+                                    "low" : {
+                                       "locator" : "72:65-72:71",
+                                       "type" : "Subtract",
+                                       "operand" : [ {
+                                          "localId" : "105",
+                                          "locator" : "72:65-72:71",
+                                          "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                          "type" : "Today"
+                                       }, {
+                                          "localId" : "106",
+                                          "locator" : "72:43-72:48",
+                                          "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                          "value" : 2,
+                                          "unit" : "year",
+                                          "type" : "Quantity"
+                                       } ]
+                                    },
+                                    "high" : {
+                                       "localId" : "105",
+                                       "locator" : "72:65-72:71",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "Today"
+                                    }
+                                 }
+                              }
+                           },
+                           "highClosedExpression" : {
+                              "path" : "highClosed",
+                              "type" : "Property",
+                              "source" : {
+                                 "locator" : "72:43-72:56",
+                                 "lowClosed" : true,
+                                 "highClosed" : false,
+                                 "type" : "Interval",
+                                 "resultTypeSpecifier" : {
+                                    "type" : "IntervalTypeSpecifier",
+                                    "pointType" : {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 },
+                                 "low" : {
+                                    "locator" : "72:65-72:71",
+                                    "type" : "Subtract",
+                                    "operand" : [ {
+                                       "localId" : "105",
+                                       "locator" : "72:65-72:71",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                       "type" : "Today"
+                                    }, {
+                                       "localId" : "106",
+                                       "locator" : "72:43-72:48",
+                                       "resultTypeName" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                       "value" : 2,
+                                       "unit" : "year",
+                                       "type" : "Quantity"
+                                    } ]
+                                 },
+                                 "high" : {
+                                    "localId" : "105",
+                                    "locator" : "72:65-72:71",
+                                    "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                                    "type" : "Today"
+                                 }
+                              }
+                           }
+                        } ]
+                     }, {
+                        "locator" : "72:43-72:56",
+                        "type" : "Not",
+                        "operand" : {
+                           "locator" : "72:43-72:56",
+                           "type" : "IsNull",
+                           "operand" : {
+                              "localId" : "105",
+                              "locator" : "72:65-72:71",
+                              "resultTypeName" : "{urn:hl7-org:elm-types:r1}Date",
+                              "type" : "Today"
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "localId" : "118",
+            "locator" : "80:1-83:45",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Inclusion Criteria",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "118",
+                  "s" : [ {
+                     "value" : [ "/* Inclusion Criteria */","define ","\"Inclusion Criteria\"",":\n  " ]
+                  }, {
+                     "r" : "117",
+                     "s" : [ {
+                        "r" : "114",
+                        "s" : [ {
+                           "r" : "112",
+                           "s" : [ {
+                              "r" : "111",
+                              "s" : [ {
+                                 "value" : [ "Data" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "112",
+                              "s" : [ {
+                                 "value" : [ "\"Patient is female\"" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n  \tand " ]
+                        }, {
+                           "r" : "113",
+                           "s" : [ {
+                              "value" : [ "\"Age 40 through 49\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n    and " ]
+                     }, {
+                        "r" : "116",
+                        "s" : [ {
+                           "value" : [ "not " ]
+                        }, {
+                           "r" : "115",
+                           "s" : [ {
+                              "value" : [ "\"Had mammogram in past two years\"" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "117",
+               "locator" : "81:3-83:45",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "And",
+               "operand" : [ {
+                  "localId" : "114",
+                  "locator" : "81:3-82:26",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "And",
+                  "operand" : [ {
+                     "localId" : "112",
+                     "locator" : "81:3-81:26",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Patient is female",
+                     "libraryName" : "Data",
+                     "type" : "ExpressionRef"
+                  }, {
+                     "localId" : "113",
+                     "locator" : "82:8-82:26",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Age 40 through 49",
+                     "type" : "ExpressionRef"
+                  } ]
+               }, {
+                  "localId" : "116",
+                  "locator" : "83:9-83:45",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "localId" : "115",
+                     "locator" : "83:13-83:45",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Had mammogram in past two years",
+                     "type" : "ExpressionRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "137",
+            "locator" : "86:1-90:43",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Exclusion Criteria",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "137",
+                  "s" : [ {
+                     "value" : [ "/* Exclusion Criteria */","define ","\"Exclusion Criteria\"",":\n  " ]
+                  }, {
+                     "r" : "136",
+                     "s" : [ {
+                        "r" : "133",
+                        "s" : [ {
+                           "r" : "130",
+                           "s" : [ {
+                              "value" : [ "(" ]
+                           }, {
+                              "r" : "130",
+                              "s" : [ {
+                                 "r" : "124",
+                                 "s" : [ {
+                                    "value" : [ "(" ]
+                                 }, {
+                                    "r" : "124",
+                                    "s" : [ {
+                                       "r" : "121",
+                                       "s" : [ {
+                                          "value" : [ "exists " ]
+                                       }, {
+                                          "r" : "120",
+                                          "s" : [ {
+                                             "value" : [ "\"Right Mastectomy Diagnosis\"" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ " or " ]
+                                    }, {
+                                       "r" : "123",
+                                       "s" : [ {
+                                          "value" : [ "exists " ]
+                                       }, {
+                                          "r" : "122",
+                                          "s" : [ {
+                                             "value" : [ "\"Right Mastectomy Procedure\"" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              }, {
+                                 "value" : [ "\n      and " ]
+                              }, {
+                                 "r" : "129",
+                                 "s" : [ {
+                                    "value" : [ "(" ]
+                                 }, {
+                                    "r" : "129",
+                                    "s" : [ {
+                                       "r" : "126",
+                                       "s" : [ {
+                                          "value" : [ "exists " ]
+                                       }, {
+                                          "r" : "125",
+                                          "s" : [ {
+                                             "value" : [ "\"Left Mastectomy\"" ]
+                                          } ]
+                                       } ]
+                                    }, {
+                                       "value" : [ " or " ]
+                                    }, {
+                                       "r" : "128",
+                                       "s" : [ {
+                                          "value" : [ "exists " ]
+                                       }, {
+                                          "r" : "127",
+                                          "s" : [ {
+                                             "value" : [ "\"Left Mastectomy Procedure\"" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              } ]
+                           }, {
+                              "value" : [ ")" ]
+                           } ]
+                        }, {
+                           "value" : [ "\n\tor " ]
+                        }, {
+                           "r" : "132",
+                           "s" : [ {
+                              "value" : [ "exists " ]
+                           }, {
+                              "r" : "131",
+                              "s" : [ {
+                                 "value" : [ "\"Bilateral Mastectomy Diagnosis\"" ]
+                              } ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n\tor " ]
+                     }, {
+                        "r" : "135",
+                        "s" : [ {
+                           "value" : [ "exists " ]
+                        }, {
+                           "r" : "134",
+                           "s" : [ {
+                              "value" : [ "\"Bilateral Mastectomy Procedure\"" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "136",
+               "locator" : "87:3-90:43",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "Or",
+               "operand" : [ {
+                  "localId" : "133",
+                  "locator" : "87:3-89:43",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Or",
+                  "operand" : [ {
+                     "localId" : "130",
+                     "locator" : "87:3-88:75",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "And",
+                     "operand" : [ {
+                        "localId" : "124",
+                        "locator" : "87:4-87:79",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "Or",
+                        "operand" : [ {
+                           "localId" : "121",
+                           "locator" : "87:5-87:39",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "type" : "Exists",
+                           "operand" : {
+                              "localId" : "120",
+                              "locator" : "87:12-87:39",
+                              "name" : "Right Mastectomy Diagnosis",
+                              "type" : "ExpressionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}Condition",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        }, {
+                           "localId" : "123",
+                           "locator" : "87:44-87:78",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "type" : "Exists",
+                           "operand" : {
+                              "localId" : "122",
+                              "locator" : "87:51-87:78",
+                              "name" : "Right Mastectomy Procedure",
+                              "type" : "ExpressionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}Procedure",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        } ]
+                     }, {
+                        "localId" : "129",
+                        "locator" : "88:11-88:74",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "Or",
+                        "operand" : [ {
+                           "localId" : "126",
+                           "locator" : "88:12-88:35",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "type" : "Exists",
+                           "operand" : {
+                              "localId" : "125",
+                              "locator" : "88:19-88:35",
+                              "name" : "Left Mastectomy",
+                              "type" : "ExpressionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}Condition",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        }, {
+                           "localId" : "128",
+                           "locator" : "88:40-88:73",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "type" : "Exists",
+                           "operand" : {
+                              "localId" : "127",
+                              "locator" : "88:47-88:73",
+                              "name" : "Left Mastectomy Procedure",
+                              "type" : "ExpressionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}Procedure",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }
+                        } ]
+                     } ]
+                  }, {
+                     "localId" : "132",
+                     "locator" : "89:5-89:43",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "Exists",
+                     "operand" : {
+                        "localId" : "131",
+                        "locator" : "89:12-89:43",
+                        "name" : "Bilateral Mastectomy Diagnosis",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }
+                  } ]
+               }, {
+                  "localId" : "135",
+                  "locator" : "90:5-90:43",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Exists",
+                  "operand" : {
+                     "localId" : "134",
+                     "locator" : "90:12-90:43",
+                     "name" : "Bilateral Mastectomy Procedure",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Procedure",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "141",
+            "locator" : "76:1-77:51",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+            "name" : "Recommend Screening",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "141",
+                  "s" : [ {
+                     "value" : [ "/* Recommendations */","define ","\"Recommend Screening\"",":\n  " ]
+                  }, {
+                     "r" : "140",
+                     "s" : [ {
+                        "r" : "119",
+                        "s" : [ {
+                           "value" : [ "\"Inclusion Criteria\"" ]
+                        } ]
+                     }, {
+                        "value" : [ " and " ]
+                     }, {
+                        "r" : "139",
+                        "s" : [ {
+                           "value" : [ "not " ]
+                        }, {
+                           "r" : "138",
+                           "s" : [ {
+                              "value" : [ "\"Exclusion Criteria\"" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "expression" : {
+               "localId" : "140",
+               "locator" : "77:3-77:51",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+               "type" : "And",
+               "operand" : [ {
+                  "localId" : "119",
+                  "locator" : "77:3-77:22",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "name" : "Inclusion Criteria",
+                  "type" : "ExpressionRef"
+               }, {
+                  "localId" : "139",
+                  "locator" : "77:28-77:51",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "localId" : "138",
+                     "locator" : "77:32-77:51",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Exclusion Criteria",
+                     "type" : "ExpressionRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "159",
+            "locator" : "105:1-111:32",
+            "name" : "Patient Information",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "159",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Information\"",":\n  " ]
+                  }, {
+                     "r" : "158",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "155",
+                           "s" : [ {
+                              "r" : "154",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "154",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "153",
+                                    "s" : [ {
+                                       "value" : [ "if " ]
+                                    }, {
+                                       "r" : "146",
+                                       "s" : [ {
+                                          "value" : [ "\"Never had a mammogram\"" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n      then " ]
+                                    }, {
+                                       "r" : "147",
+                                       "s" : [ {
+                                          "value" : [ "'You have never had a mammogram'" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "\n    else\n      " ]
+                                    }, {
+                                       "r" : "152",
+                                       "s" : [ {
+                                          "r" : "148",
+                                          "s" : [ {
+                                             "value" : [ "'Your last mammogram test was '" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ " + " ]
+                                       }, {
+                                          "r" : "151",
+                                          "s" : [ {
+                                             "value" : [ "ToString","(" ]
+                                          }, {
+                                             "r" : "150",
+                                             "s" : [ {
+                                                "r" : "149",
+                                                "s" : [ {
+                                                   "value" : [ "\"Most recent mammogram\"" ]
+                                                } ]
+                                             }, {
+                                                "value" : [ "." ]
+                                             }, {
+                                                "r" : "150",
+                                                "s" : [ {
+                                                   "value" : [ "effective" ]
+                                                } ]
+                                             } ]
+                                          }, {
+                                             "value" : [ ")" ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "157",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "157",
+                           "s" : [ {
+                              "r" : "156",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "158",
+               "locator" : "106:3-111:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "155",
+                  "locator" : "106:3-111:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "154",
+                     "locator" : "106:3-111:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "153",
+                        "locator" : "107:5-110:83",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "If",
+                        "condition" : {
+                           "localId" : "146",
+                           "locator" : "107:8-107:30",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                           "name" : "Never had a mammogram",
+                           "type" : "ExpressionRef"
+                        },
+                        "then" : {
+                           "localId" : "147",
+                           "locator" : "108:12-108:43",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "You have never had a mammogram",
+                           "type" : "Literal"
+                        },
+                        "else" : {
+                           "localId" : "152",
+                           "locator" : "110:7-110:83",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "Concatenate",
+                           "operand" : [ {
+                              "localId" : "148",
+                              "locator" : "110:7-110:37",
+                              "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Your last mammogram test was ",
+                              "type" : "Literal"
+                           }, {
+                              "localId" : "151",
+                              "locator" : "110:41-110:83",
+                              "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "ToString",
+                              "operand" : {
+                                 "name" : "ToDateTime",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "operand" : [ {
+                                    "asType" : "{http://hl7.org/fhir}dateTime",
+                                    "type" : "As",
+                                    "operand" : {
+                                       "localId" : "150",
+                                       "locator" : "110:50-110:82",
+                                       "path" : "effective",
+                                       "type" : "Property",
+                                       "resultTypeSpecifier" : {
+                                          "type" : "ChoiceTypeSpecifier",
+                                          "choice" : [ {
+                                             "name" : "{http://hl7.org/fhir}dateTime",
+                                             "type" : "NamedTypeSpecifier"
+                                          }, {
+                                             "name" : "{http://hl7.org/fhir}Period",
+                                             "type" : "NamedTypeSpecifier"
+                                          } ]
+                                       },
+                                       "source" : {
+                                          "localId" : "149",
+                                          "locator" : "110:50-110:72",
+                                          "resultTypeName" : "{http://hl7.org/fhir}DiagnosticReport",
+                                          "name" : "Most recent mammogram",
+                                          "type" : "ExpressionRef"
+                                       }
+                                    }
+                                 } ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "157",
+                  "locator" : "111:11-111:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "111:17-111:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "156",
+                        "locator" : "111:17-111:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "167",
+            "locator" : "113:1-116:32",
+            "name" : "Patient Decision",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "167",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Decision\"",":\n  " ]
+                  }, {
+                     "r" : "166",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "163",
+                           "s" : [ {
+                              "r" : "162",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "162",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "161",
+                                    "s" : [ {
+                                       "value" : [ "'The decision to start screening for breast cancer in women prior to the age of 50 years should be an individual one. Women who place a higher value on the potential benefit than the harms may choose to begin screening between the ages of 40 and 49 years.'" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "165",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "165",
+                           "s" : [ {
+                              "r" : "164",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "166",
+               "locator" : "114:3-116:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "163",
+                  "locator" : "114:3-116:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "162",
+                     "locator" : "114:3-116:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "161",
+                        "locator" : "115:5-115:260",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "The decision to start screening for breast cancer in women prior to the age of 50 years should be an individual one. Women who place a higher value on the potential benefit than the harms may choose to begin screening between the ages of 40 and 49 years.",
+                        "type" : "Literal"
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "165",
+                  "locator" : "116:11-116:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "116:17-116:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "164",
+                        "locator" : "116:17-116:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "175",
+            "locator" : "118:1-121:32",
+            "name" : "Patient Recommendation",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "175",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Patient Recommendation\"",":\n  " ]
+                  }, {
+                     "r" : "174",
+                     "s" : [ {
+                        "s" : [ {
+                           "r" : "171",
+                           "s" : [ {
+                              "r" : "170",
+                              "s" : [ {
+                                 "value" : [ "(" ]
+                              }, {
+                                 "r" : "170",
+                                 "s" : [ {
+                                    "value" : [ "List{\n    " ]
+                                 }, {
+                                    "r" : "169",
+                                    "s" : [ {
+                                       "value" : [ "'For women who are at average risk for breast cancer, most of the benefit of mammography results from screening every two years during ages 50 to 74 years. Guidelines recommend that younger women talk with their doctor to decide when to start screening.'" ]
+                                    } ]
+                                 }, {
+                                    "value" : [ "\n  }" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           }, {
+                              "value" : [ " ","Text" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ " " ]
+                     }, {
+                        "r" : "173",
+                        "s" : [ {
+                           "value" : [ "where " ]
+                        }, {
+                           "r" : "173",
+                           "s" : [ {
+                              "r" : "172",
+                              "s" : [ {
+                                 "value" : [ "Text" ]
+                              } ]
+                           }, {
+                              "value" : [ " is not null" ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "174",
+               "locator" : "119:3-121:32",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "171",
+                  "locator" : "119:3-121:9",
+                  "alias" : "Text",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "170",
+                     "locator" : "119:3-121:4",
+                     "type" : "List",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     },
+                     "element" : [ {
+                        "localId" : "169",
+                        "locator" : "120:5-120:258",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "For women who are at average risk for breast cancer, most of the benefit of mammography results from screening every two years during ages 50 to 74 years. Guidelines recommend that younger women talk with their doctor to decide when to start screening.",
+                        "type" : "Literal"
+                     } ]
+                  }
+               } ],
+               "relationship" : [ ],
+               "where" : {
+                  "localId" : "173",
+                  "locator" : "121:11-121:32",
+                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type" : "Not",
+                  "operand" : {
+                     "locator" : "121:17-121:32",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "IsNull",
+                     "operand" : {
+                        "localId" : "172",
+                        "locator" : "121:17-121:20",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "name" : "Text",
+                        "type" : "AliasRef"
+                     }
+                  }
+               }
+            }
+         }, {
+            "localId" : "179",
+            "locator" : "94:1-103:1",
+            "name" : "ScreeningSummary",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "179",
+                  "s" : [ {
+                     "value" : [ "/* Screening Summary */","define ","ScreeningSummary",": " ]
+                  }, {
+                     "r" : "178",
+                     "s" : [ {
+                        "value" : [ "{\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "notifyPatient",": " ]
+                        }, {
+                           "r" : "142",
+                           "s" : [ {
+                              "value" : [ "\"Recommend Screening\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "recommendScreening",": " ]
+                        }, {
+                           "r" : "143",
+                           "s" : [ {
+                              "value" : [ "\"Recommend Screening\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "name",": " ]
+                        }, {
+                           "r" : "144",
+                           "s" : [ {
+                              "value" : [ "'Breast Cancer Screening'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "title",": " ]
+                        }, {
+                           "r" : "145",
+                           "s" : [ {
+                              "value" : [ "'Decide When You Want to Start Breast Cancer Screening'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "information",": " ]
+                        }, {
+                           "r" : "160",
+                           "s" : [ {
+                              "value" : [ "\"Patient Information\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "decision",": " ]
+                        }, {
+                           "r" : "168",
+                           "s" : [ {
+                              "value" : [ "\"Patient Decision\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "recommendation",": " ]
+                        }, {
+                           "r" : "176",
+                           "s" : [ {
+                              "value" : [ "\"Patient Recommendation\"" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ ",\n  " ]
+                     }, {
+                        "s" : [ {
+                           "value" : [ "questionnaire",": " ]
+                        }, {
+                           "r" : "177",
+                           "s" : [ {
+                              "value" : [ "'mpc-breast-cancer'" ]
+                           } ]
+                        } ]
+                     }, {
+                        "value" : [ "\n}" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "TupleTypeSpecifier",
+               "element" : [ {
+                  "name" : "notifyPatient",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "recommendScreening",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "name",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "title",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }, {
+                  "name" : "information",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "decision",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "recommendation",
+                  "elementType" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }
+               }, {
+                  "name" : "questionnaire",
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               } ]
+            },
+            "expression" : {
+               "localId" : "178",
+               "locator" : "94:26-103:1",
+               "type" : "Tuple",
+               "resultTypeSpecifier" : {
+                  "type" : "TupleTypeSpecifier",
+                  "element" : [ {
+                     "name" : "notifyPatient",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "recommendScreening",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "name",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "title",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "information",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "decision",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "recommendation",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "questionnaire",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  } ]
+               },
+               "element" : [ {
+                  "name" : "notifyPatient",
+                  "value" : {
+                     "localId" : "142",
+                     "locator" : "95:18-95:38",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Recommend Screening",
+                     "type" : "ExpressionRef"
+                  }
+               }, {
+                  "name" : "recommendScreening",
+                  "value" : {
+                     "localId" : "143",
+                     "locator" : "96:23-96:43",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
+                     "name" : "Recommend Screening",
+                     "type" : "ExpressionRef"
+                  }
+               }, {
+                  "name" : "name",
+                  "value" : {
+                     "localId" : "144",
+                     "locator" : "97:9-97:33",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "Breast Cancer Screening",
+                     "type" : "Literal"
+                  }
+               }, {
+                  "name" : "title",
+                  "value" : {
+                     "localId" : "145",
+                     "locator" : "98:10-98:64",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "Decide When You Want to Start Breast Cancer Screening",
+                     "type" : "Literal"
+                  }
+               }, {
+                  "name" : "information",
+                  "value" : {
+                     "localId" : "160",
+                     "locator" : "99:16-99:36",
+                     "name" : "Patient Information",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "decision",
+                  "value" : {
+                     "localId" : "168",
+                     "locator" : "100:13-100:30",
+                     "name" : "Patient Decision",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "recommendation",
+                  "value" : {
+                     "localId" : "176",
+                     "locator" : "101:19-101:42",
+                     "name" : "Patient Recommendation",
+                     "type" : "ExpressionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               }, {
+                  "name" : "questionnaire",
+                  "value" : {
+                     "localId" : "177",
+                     "locator" : "102:18-102:36",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "mpc-breast-cancer",
+                     "type" : "Literal"
+                  }
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

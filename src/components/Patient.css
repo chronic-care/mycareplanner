@@ -1,0 +1,69 @@
+.patient-view {
+    min-height: 80vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-around; */
+    text-align: left;
+    line-height: 1.3;
+}
+
+/* Ipad specific media queries */
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+    .patient-view {
+      max-height: 1024px;
+    }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+    .patient-view {
+      max-height: 768px;
+    }
+}
+.patient-view p {
+    font-size: 1rem;
+}
+
+.patient-view .tagline-text {
+    font-style: italic;
+}
+
+.app-title-container {
+    text-align: left !important;
+}
+
+.app-title-container .mypain-title {
+    justify-content: flex-start;
+}
+
+.welcome {
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.btn-outline-secondary {
+    color: #000;
+    border-color: #000;
+    background-color: lightgray;
+}
+
+/* .plan-button btn-primary {
+    width: 50%;
+    align-self: center;
+} */
+
+.next-button {
+    width: 50%;
+    align-self: center;
+    color: #000000 !important;
+    margin-top: 1rem;
+}
+
+.plan-button {
+    width: 60%;
+    margin: auto;
+    display:flex; 
+    justify-content:center;
+}

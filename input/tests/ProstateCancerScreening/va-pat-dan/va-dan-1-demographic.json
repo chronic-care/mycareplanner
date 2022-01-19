@@ -1,0 +1,115 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "request": {
+        "method": "PUT",
+        "url": "Patient/va-pat-dan"
+      },
+      "resource": {
+        "resourceType": "Patient",
+        "id": "va-pat-dan",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Dan Smith</div>"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race",
+            "extension": [
+              {
+                "url" : "ombCategory",
+                "valueCoding" : {
+                  "system" : "urn:oid:2.16.840.1.113883.6.238",
+                  "code" : "2106-3",
+                  "display" : "White"
+                }
+              },
+              {
+                "url" : "text",
+                "valueString" : "White"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity",
+            "extension" : [
+              {
+                "url" : "ombCategory",
+                "valueCoding" : {
+                  "system" : "urn:oid:2.16.840.1.113883.6.238",
+                  "code" : "2186-5",
+                  "display" : "Not Hispanic or Latino"
+                }
+              },
+              {
+                "url" : "text",
+                "valueString" : "Not Hispanic or Latino"
+              }
+            ]
+          },
+          {
+            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+            "valueCode": "M"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://va.gov/fhir/NamingSystem/identifier",
+            "value": "VA-101"
+          },
+          {
+            "system": "http://www.demohospital.org/identifiers/test",
+            "value": "demo"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "McDaniels",
+            "given": [
+              "Dan"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1952-10-07",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "555-555-2002",
+            "use": "mobile"
+          },
+          {
+            "system": "email",
+            "value": "dan@woohoo.com"
+          }
+        ],
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "3009 17th Street"
+            ],
+            "city": "Salem",
+            "postalCode": "24153",
+            "state": "VA",
+            "country": "USA"
+          }
+        ],
+        "generalPractitioner": [
+          {
+            "reference": "Practitioner/va-prac-visn6-francis",
+            "display": "Dr. Francis, MD"
+          }
+        ]
+      }
+    }
+  ]
+}
