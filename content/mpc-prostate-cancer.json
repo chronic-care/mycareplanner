@@ -1,0 +1,576 @@
+{
+    "id": "mpc-prostate-cancer",
+    "meta": {
+        "versionId": "0.1.0",
+        "profile": [
+            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7",
+            "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-shareablequestionnaire"
+        ]
+    },
+    "extension": [ {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeCapability",
+        "valueString": "shareable"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeCapability",
+        "valueString": "publishable"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeRepresentationLevel",
+        "valueString": "narrative"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeCapability",
+        "valueString": "computable"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeRepresentationLevel",
+        "valueString": "structured"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeCapability",
+        "valueString": "executable"
+    }, {
+        "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-knowledgeRepresentationLevel",
+        "valueString": "executable"
+    } ],
+    "status": "active",
+    "title": "Prostate Cancer Screening Questionnaire",
+    "resourceType": "Questionnaire",
+    "item": [
+        {
+            "type": "display",
+            "linkId": "learn-more-intro",
+            "text": "What Tests Are Used to Screen for Prostate Cancer?<br/><br/>Screening for prostate cancer is a blood test called the prostate-specific antigen or PSA test. A high PSA level can be a sign of prostate cancer. However, other things like an enlarged prostate or swelling of the prostate also cause a high PSA level. A biopsy of the prostate is necessary to make the diagnosis of cancer.",
+            "prefix": "Learn More"
+        },
+        {
+            "type": "display",
+            "linkId": "learn-more-video",
+            "text": "Watch a 3-minute video about the PSA testing. We’d like to suggest you watch the video to help you prepare for your upcoming visit. This video can help you prepare to ask questions that are important to you when you visit with your provider. <br/> <br/> <a id=\"youtube\" value=\"YqticruOZ7U\"></a>",
+            "prefix": "Learn More"
+        },
+        {
+            "type": "display",
+            "linkId": "learn-more-uspstf",
+            "text": "See a picture of what happens to 1,000 men who chose to get a PSA test. It shows you how many men benefit from screening – don’t die from prostate cancer. And it shows you how many men are harmed – false positives and complications from treatment.<br/> <br/> <img width=\"100%\" src=\"https://www.cdc.gov/cancer/prostate/images/prostate-decision-guide-300.jpg\"/> <a id=\"website\" value=\"https://www.uspreventiveservicestaskforce.org/Home/GetFileByID/3795\"></a> ",
+            "prefix": "Learn More"
+        },
+        {
+            "type": "choice",
+            "code": [
+                {
+                    "code": "mpc-do-next",
+                    "display": "What do you want to do next?",
+                    "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                }
+            ],
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/uv/StructureDefinition/cpg-answerValueSetSource",
+                    "valueCanonical": "http://fhir.org/guides/preventive-care/ValueSet/next-step-types"
+                }
+            ],
+            "required": true,
+            "linkId": "1",
+            "text": "What do you want to do next?",
+            "prefix": "Next Steps",
+            "answerOption": [
+                {
+                    "valueCoding": {
+                        "code": "more-thought",
+                        "display": "I want to give it more thought",
+                        "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "get-test",
+                        "display": "I want to get a PSA test",
+                        "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                    }
+                },
+                {
+                    "valueCoding": {
+                        "code": "do-not-want-test",
+                        "display": "I do not want to get a PSA test",
+                        "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "code": [
+                {
+                    "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes",
+                    "code": "next-step",
+                    "display": "What do you want to do next?"
+                }
+            ],
+            "required": false,
+            "linkId": "2",
+            "text": "How do you feel about your decision?",
+            "prefix": "Next Steps",
+            "item": [
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "x",
+                            "display": "Know benefits",
+                            "system": "mpc codesystem"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL2949-7"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "2.1",
+                    "text": "I know the benefits of getting a PSA test.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Neutral",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Agree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly agree",
+                                "system": "http://loinc.org"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "x",
+                            "display": "Know risks",
+                            "system": "mpc codesystem"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL2949-7"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "2.2",
+                    "text": "I know the risks of getting a PSA test.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Neutral",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Agree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly agree",
+                                "system": "http://loinc.org"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "x",
+                            "display": "Clear on what matters to me",
+                            "system": "mpc codesystem"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL2949-7"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "2.3",
+                    "text": "I am clear about which benefits and risks matter most to me.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Neutral",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Agree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly agree",
+                                "system": "http://loinc.org"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "x",
+                            "display": "Have support",
+                            "system": "mpc codesystem"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL2949-7"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "2.4",
+                    "text": "I have enough support and advice to make a decision about getting a PSA test.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Neutral",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Agree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly agree",
+                                "system": "http://loinc.org"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "x",
+                            "display": "Sure about choice",
+                            "system": "mpc codesystem"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL2949-7"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "2.5",
+                    "text": "I feel sure about the best choice for me.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Disagree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Neutral",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Agree",
+                                "system": "http://loinc.org"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "x",
+                                "display": "Strongly agree",
+                                "system": "http://loinc.org"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+          "linkId": "3",
+          "required": true,
+          "code": [
+            {
+              "system": "http://example.org/questionnaires",
+              "code": "Discuss at next appointment"
+            }
+          ],
+          "prefix": "Next Steps",
+          "text": "Would you like to discuss prostate cancer screening at your next appointment? MyPreventiveCare can let your provider know what you want.",
+          "type": "boolean"
+        },
+        {
+            "type": "group",
+            "code": [
+                {
+                    "code": "mpc-feedback",
+                    "display": "Feedback about your use of MyPreventiveCare",
+                    "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                }
+            ],
+            "required": false,
+            "linkId": "15",
+            "text": "Please indicate your level of agreement with the following statement:",
+            "prefix": "Feedback",
+            "item": [
+                {
+                    "type": "choice",
+                    "code": [
+                        {
+                            "code": "mpq-1063",
+                            "display": "Please indicate your level of agreement with the following statement: Using the MyPreventiveCare tool has helped me begin preparing for a conversation with my provider about making health decisions.",
+                            "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://hl7.org/fhir/questionnaire-item-control",
+                                        "code": "drop-down",
+                                        "display": "Drop down"
+                                    }
+                                ],
+                                "text": "Drop down"
+                            }
+                        },
+                        {
+                            "url": "http://hl7.org/fhir/uv/cpg/StructureDefinition/cpg-answerValueSetSource",
+                            "valueCanonical": "http://loinc.org/vs/LL1606-4"
+                        }
+                    ],
+                    "required": false,
+                    "linkId": "15.1",
+                    "text": "Using the MyPreventiveCare tool has helped me begin preparing for a conversation with my provider about making health decisions.",
+                    "answerOption": [
+                        {
+                            "valueCoding": {
+                                "code": "LA15238-1",
+                                "display": "Disagree a lot",
+                                "system": "https://loinc.org/LL1606-4/"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA15239-9",
+                                "display": "Disagree a little",
+                                "system": "https://loinc.org/LL1606-4/"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA15240-7",
+                                "display": "Neither agree nor disagree",
+                                "system": "https://loinc.org/LL1606-4/"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA15241-5",
+                                "display": "Agree a little",
+                                "system": "https://loinc.org/LL1606-4/"
+                            }
+                        },
+                        {
+                            "valueCoding": {
+                                "code": "LA15242-3",
+                                "display": "Agree a lot",
+                                "system": "https://loinc.org/LL1606-4/"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "code": [
+                {
+                    "code": "mpq-1064",
+                    "display": "Do you have any other feedback or thoughts to share on your use of MyPreventiveCare?",
+                    "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                },
+                {
+                    "code": "mpc-feedback",
+                    "display": "Feedback on your use of MyPreventiveCare",
+                    "system": "http://fhir.org/guides/preventive-care/CodeSystem/mpc-questionnaire-codes"
+                }
+            ],
+            "required": false,
+            "linkId": "16",
+            "text": "Do you have any other feedback or thoughts to share on your use of MyPreventiveCare?",
+            "prefix": "Feedback"
+        }
+    ]
+}
