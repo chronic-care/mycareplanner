@@ -1,15 +1,16 @@
-import '../Patient.css';
+import '../../Home.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FHIRData } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
 import { Condition } from '../../fhir-types/fhir-r4';
 
 interface ConditionListProps {
-    history?: any,
+  history?: any,
 }
 
 interface ConditionListState {
-  conditions?: [Condition]
+  fhirData?: FHIRData
 }
 
 export class ConditionList extends React.Component<ConditionListProps, ConditionListState> {
@@ -22,20 +23,27 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
   }
 
   public render(): JSX.Element {
-    let conditions = this.state.conditions
+    let conditions = this.state.fhirData?.conditions
 
     return (
-      <div className="patient-view">
-        <h3>Health Issues</h3>
+      <div className="home-view">
+        <table className="menu"><tr>
+          <td className="menu"><Link to='/'>Home</Link></td>
+          <td className="menu"><Link to={{ pathname: '/goals', state: { fhirData: this.state.fhirData }}}>Goals</Link></td>
+          <td className="menu">Health Issues</td>
+          <td className="menu"><Link to={{ pathname: '/medications', state: { fhirData: this.state.fhirData }}}>Medications</Link></td>
+          <td className="menu"><Link to={{ pathname: '/observations', state: { fhirData: this.state.fhirData }}}>Health Status</Link></td>
+        </tr></table>
 
-        <ul>
-          {conditions?.map((cond, idx) => (
-            <li key={idx.toString()}><Link to={{
-              pathname: '/condition',
-              state: { condition: cond }
-            }}>{cond.code?.text}</Link>
-            </li>))}
-        </ul>
+        <div className="welcome">
+          <h4 className="title">Health Issues</h4>
+
+          <table>
+            {conditions?.map((cond, idx) => (
+              <tr><td>{cond.code?.text}</td><td>&nbsp;</td><td><i>Learn&nbsp;More</i></td></tr>
+              ))}
+          </table>
+        </div>
       </div>
     )
   }

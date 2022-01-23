@@ -37,6 +37,10 @@
     font-size: 1rem;
 }
 
+.home-view ul {
+    justify-content: left;
+}
+
 .home-view .tagline-text {
     font-style: italic;
 }
@@ -53,7 +57,30 @@
     display: flex;
     text-align: left;
     flex-direction: column;
-    justify-content: center;
+    justify-content: left;
+}
+
+table {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+th, td {
+    padding: 5px;
+}
+
+table tr:nth-child(odd) {
+    background: #f0f0f0;
+}
+  
+table tr:nth-child(even) {
+    background: #fff;
+}
+
+.menu {
+    border: 2px solid gray;
+    background-color: gainsboro;
+    padding: 10px;
 }
 
 .btn-outline-secondary {

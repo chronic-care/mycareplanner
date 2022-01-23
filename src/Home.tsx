@@ -33,9 +33,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         <div className="welcome">
             <h4 className="title">Welcome to My Care Planner!</h4>
             <p>My Care Planner is a tool to help you and your care team work together to keep you healthy. It is a completely personalized way to see what steps you’ve already taken and what else you can do to check for and prevent illnesses.</p>
-            <p>My Care Planner doesn’t just tell you what <i>people</i> should do to stay healthy – it is all about what <i>you</i> need to stay healthy.</p>
             {(patient === undefined) ? '' :
-                <p className="subheadline">Recommendations for<br/><b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}</p>
+                <p className="subheadline"><b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}</p>
             }
         </div>
         {(this.props.fhirData === undefined)
@@ -59,25 +58,28 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 </ul>
             }
 
-          <h5>My Clinical Data</h5>
-          <ul>
-          <li>{this.props.fhirData?.carePlans?.length ?? 0} Care Plans</li>
-          <li>{this.props.fhirData?.goals?.length ?? 0} Health Goals</li>
-          <li><Link to={{ pathname: '/conditions', state: { conditions: this.props.fhirData.conditions }
-            }}>{(this.props.fhirData?.conditions?.length ?? 0) + ' Health Issues'}</Link>
-          </li>
-          <li>{this.props.fhirData?.medications?.length ?? 0} Medications (active, 5 years)</li>
-          <li>{this.props.fhirData?.serviceRequests?.length ?? 0} Service Requests (active, 5 years)</li>
-          <li>{this.props.fhirData?.immunizations?.length ?? 0} Immunizations</li>
-          <li>{this.props.fhirData?.procedures?.length ?? 0} Procedures</li>
-          <li>{this.props.fhirData?.diagnosticReports?.length ?? 0} Diagnostic Reports</li>
-          <li>{this.props.fhirData?.vitalSigns?.length ?? 0} Vital Signs (1 year)</li>
-          <li><Link to={{ pathname: '/observations', state: { observations: this.props.fhirData.labResults }
-            }}>{(this.props.fhirData?.labResults?.length ?? 0) + ' Lab Results'}</Link>
-          </li>
-          <li>{this.props.fhirData?.socialHistory?.length ?? 0} Social History</li>
-          <li>{this.props.fhirData?.surveyResults?.length ?? 0} Survey Results</li>
-          </ul>
+          <h5>My Health Record</h5>
+
+          <Link to={{ pathname: '/goals', state: { fhirData: this.props.fhirData }}}>Health Goals </Link> 
+            [{this.props.fhirData?.goals?.length ?? 0}]<br/>
+          <Link to={{ pathname: '/conditions', state: { fhirData: this.props.fhirData }}}>Health Issues </Link> 
+            [{this.props.fhirData?.conditions?.length ?? 0}]<br/>
+          <Link to={{ pathname: '/medications', state: { fhirData: this.props.fhirData }}}>Medications </Link> 
+            [{(this.props.fhirData?.medications?.length ?? 0)}] (5 years)<br/>
+          Immunizations [{this.props.fhirData?.immunizations?.length ?? 0}]<br/>
+
+          Care Plan Activities [{this.props.fhirData?.serviceRequests?.length ?? 0}]<br/>
+
+          Assessment Responses [{this.props.fhirData?.surveyResults?.length ?? 0}]<br/>
+          <Link to={{ pathname: '/observations', state: { fhirData: this.props.fhirData }}}>Lab Results </Link>
+            [{(this.props.fhirData?.labResults?.length ?? 0)}]<br/>
+          Vital Signs [{this.props.fhirData?.vitalSigns?.length ?? 0}] (last 100)<br/>
+          
+          {/* {this.props.fhirData?.carePlans?.length ?? 0} Care Plans<br/> */}
+          {/* {this.props.fhirData?.socialHistory?.length ?? 0} Social History<br/> */}
+          {/* {this.props.fhirData?.procedures?.length ?? 0} Procedures<br/> */}
+          {/* {this.props.fhirData?.diagnosticReports?.length ?? 0} Diagnostic Reports<br/> */}
+          
         </div>
         }
       </div>

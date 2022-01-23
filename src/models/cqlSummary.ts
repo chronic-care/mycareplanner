@@ -38,3 +38,15 @@ export interface ScreeningSummary {
 export interface NextStepsSummary {
   nextSteps: [String],
 }
+
+export interface ObservationSummary {
+  DisplayName: String,
+  ConceptName: String,
+  Date: String,
+  ResultText: String,
+  ResultValue: number,
+  ResultUnits: String,
+  ReferenceRange: String,
+  Interpretation: String | null,
+  Flag: Boolean
+}

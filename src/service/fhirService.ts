@@ -22,7 +22,7 @@ const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
 // const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
-const carePlanPath = 'CarePlan?status=active';
+const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
 const goalsPath = 'Goal?lifecycle-status=active';
 const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
 const immunizationsPath = 'Immunization';
@@ -32,9 +32,12 @@ const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + ge
 const serviceRequestPath = 'ServiceRequest?status=active';
 const proceduresPath = 'Procedure';
 const diagnosticReportPath = 'DiagnosticReport';
-const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(oneYearAgo);
+// const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
+const vitalSignsPath = 'Observation?category=vital-signs&_count=100';
 const socialHistoryPath = 'Observation?category=social-history';
-const surveyResultsPath = 'Observation?category=survey';
+
+// category=survey returns 400 error from Epic, so include another category recognized by Epic
+const surveyResultsPath = 'Observation?category=survey,functional-mental-status';
 
 const fhirOptions: fhirclient.FhirOptions = {
   pageLimit: 0,

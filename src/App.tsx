@@ -10,6 +10,8 @@ import { getFHIRData } from './service/fhirService';
 import { getPatientSummary, executeScreenings } from './service/cqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 import { ConditionList } from "./components/summaries/ConditionList";
+import { GoalList } from "./components/summaries/GoalList";
+import { MedicationList } from "./components/summaries/MedicationList";
 import { ObservationList } from "./components/summaries/ObservationList";
 import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHandler";
 import { ConfirmationPage } from './components/confirmation-page/ConfirmationPage'
@@ -52,6 +54,8 @@ export default class App extends React.Component<AppProps, AppState> {
             <Switch>
                 <Route path="/decision" component= { ScreeningDecision }/>
                 <Route path="/conditions" component= { ConditionList }/>
+                <Route path="/goals" component= { GoalList }/>
+                <Route path="/medications" component= { MedicationList }/>
                 <Route path="/observations" component= { ObservationList }/>
                 <Route path="/questionnaire" component= { QuestionnaireHandler }/>
                 <Route path='/confirmation' component= { ConfirmationPage } />
