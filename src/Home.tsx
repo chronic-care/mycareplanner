@@ -64,9 +64,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             [{this.props.fhirData?.goals?.length ?? 0}]<br/>
           <Link to={{ pathname: '/conditions', state: { fhirData: this.props.fhirData }}}>Health Issues </Link> 
             [{this.props.fhirData?.conditions?.length ?? 0}]<br/>
+          <Link to={{ pathname: '/immunizations', state: { fhirData: this.props.fhirData }}}>Immunizations </Link> 
+            [{(this.props.fhirData?.immunizations?.length ?? 0)}]<br/>
           <Link to={{ pathname: '/medications', state: { fhirData: this.props.fhirData }}}>Medications </Link> 
-            [{(this.props.fhirData?.medications?.length ?? 0)}] (5 years)<br/>
-          Immunizations [{this.props.fhirData?.immunizations?.length ?? 0}]<br/>
+            [{(this.props.fhirData?.medications?.length ?? 0)}]<br/>
 
           Care Plan Activities [{this.props.fhirData?.serviceRequests?.length ?? 0}]<br/>
 

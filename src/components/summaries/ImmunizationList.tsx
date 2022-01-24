@@ -3,19 +3,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
-import { MedicationRequest } from '../../fhir-types/fhir-r4';
+import { Immunization } from '../../fhir-types/fhir-r4';
 
-interface MedicationListProps {
+interface ImmunizationListProps {
   history?: any,
 }
 
-interface MedicationListState {
+interface ImmunizationListState {
   fhirData?: FHIRData
 }
 
-export class MedicationList extends React.Component<MedicationListProps, MedicationListState> {
+export class ImmunizationList extends React.Component<ImmunizationListProps, ImmunizationListState> {
 
-  constructor(props: MedicationListProps) {
+  constructor(props: ImmunizationListProps) {
     super(props);
     this.state = {
       ...this.props.history.location.state
@@ -23,21 +23,23 @@ export class MedicationList extends React.Component<MedicationListProps, Medicat
   }
 
   public render(): JSX.Element {
-    let medications = this.state.fhirData?.medications
+    let immunizations = this.state.fhirData?.immunizations
 
     return (
       <div className="home-view">
         <div className="welcome">
-          <h4 className="title">Medications</h4>
+          <h4 className="title">Immunizations</h4>
 
           <table>
-            {medications?.map((med, idx) => (
+            {immunizations?.map((med, idx) => (
               <tr>
               <td>
               <table>
-                <tr><td colSpan={2}><b>{med.medicationCodeableConcept?.text ?? med.medicationReference?.display ?? "No text"}</b></td></tr>
-                <tr><td>Authored on: {med.authoredOn}</td><td>By: {med.requester?.display}</td></tr>
-                <tr><td colSpan={2}>{med.dosageInstruction?.[0].text}</td></tr>
+                <tr><td><b>{med.vaccineCode?.text ?? "No text"}</b></td></tr>
+                <tr><td>Administered on: {med.occurrenceDateTime}</td></tr>
+                {(med.location === undefined) ? '' :
+                  <tr><td>Location: {med.location?.display}</td></tr>
+                }
                 {med.note?.map((note, idx) => (
                   <tr><td colSpan={2}>Note: {note.text}</td></tr>
                 ))}

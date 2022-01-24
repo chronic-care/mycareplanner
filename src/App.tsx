@@ -11,6 +11,7 @@ import { getPatientSummary, executeScreenings } from './service/cqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { GoalList } from "./components/summaries/GoalList";
+import { ImmunizationList } from "./components/summaries/ImmunizationList";
 import { MedicationList } from "./components/summaries/MedicationList";
 import { ObservationList } from "./components/summaries/ObservationList";
 import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHandler";
@@ -55,6 +56,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path="/decision" component= { ScreeningDecision }/>
                 <Route path="/conditions" component= { ConditionList }/>
                 <Route path="/goals" component= { GoalList }/>
+                <Route path="/immunizations" component= { ImmunizationList }/>
                 <Route path="/medications" component= { MedicationList }/>
                 <Route path="/observations" component= { ObservationList }/>
                 <Route path="/questionnaire" component= { QuestionnaireHandler }/>

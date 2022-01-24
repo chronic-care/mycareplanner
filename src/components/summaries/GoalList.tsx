@@ -40,7 +40,7 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
                 <tr><td>Start: {goal.startDate}</td><td>Due: {goal.target?.[0].dueDate}</td></tr>
                 <tr><td colSpan={2}>Author: {goal.expressedBy?.display}</td></tr>
                 {goal.note?.map((note, idx) => (
-                  <td colSpan={2}>Note: {note.text}</td>
+                  <tr><td colSpan={2}>Note: {note.text}</td></tr>
                 ))}
               </table>
               

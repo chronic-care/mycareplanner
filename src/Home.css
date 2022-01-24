@@ -69,11 +69,11 @@ th, td {
     padding: 5px;
 }
 
-table tr:nth-child(odd) {
+.highlighted table tr:nth-child(odd) {
     background: #f0f0f0;
 }
   
-table tr:nth-child(even) {
+.highlighted table tr:nth-child(even) {
     background: #fff;
 }
 

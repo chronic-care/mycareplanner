@@ -25,7 +25,7 @@ const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
 const goalsPath = 'Goal?lifecycle-status=active';
 const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
-const immunizationsPath = 'Immunization';
+const immunizationsPath = 'Immunization?status=completed';
 const labResultsPath = 'Observation?category=laboratory';
 const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(fiveYearsAgo);
 // const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(fiveYearsAgo);
