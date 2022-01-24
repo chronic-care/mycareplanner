@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c8b396ae4e3ccace1ad5500613d88987",
+    "revision": "584b075b2ce162e68a10e8cddb93e9f7",
     "url": "/mcc-patient-v2/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/mcc-patient-v2/static/css/5.68166d20.chunk.css"
   },
   {
-    "revision": "260cbe83a6a8684a1867",
+    "revision": "77eab70480afdefade3e",
     "url": "/mcc-patient-v2/static/css/main.ec6725bd.chunk.css"
   },
   {
@@ -24,12 +24,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/mcc-patient-v2/static/js/5.a10174f0.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "b9690a2baeca14739ec8",
-    "url": "/mcc-patient-v2/static/js/launch.d3d6f63f.chunk.js"
+    "revision": "15884115ed3e61f0e354",
+    "url": "/mcc-patient-v2/static/js/launch.2d539d3f.chunk.js"
   },
   {
-    "revision": "260cbe83a6a8684a1867",
-    "url": "/mcc-patient-v2/static/js/main.4cc3b095.chunk.js"
+    "revision": "77eab70480afdefade3e",
+    "url": "/mcc-patient-v2/static/js/main.44f37511.chunk.js"
   },
   {
     "revision": "b065afcc63ec18322fb5",
