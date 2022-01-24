@@ -1,6 +1,6 @@
 import FHIR from 'fhirclient';
 import { fhirclient } from 'fhirclient/lib/types';
-import { Resource, Patient, Practitioner, CarePlan, Condition, DiagnosticReport, Goal, Observation,
+import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, Condition, DiagnosticReport, Goal, Observation,
         Procedure, Immunization, MedicationRequest, ServiceRequest } from '../fhir-types/fhir-r4';
 import { FHIRData } from '../models/fhirResources';
 import { format } from 'date-fns';
@@ -53,7 +53,12 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   const patient: Patient = await client.patient.read() as Patient;
   const pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined;
-  const practitioner: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
+  const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
+
+  const patientPath = 'Patient/' + client.getPatientId();
+  const fhirUserPath = client.getFhirUser();
+  const fhirUser: Practitioner | Patient | RelatedPerson | undefined = fhirUserPath ? await client.request(fhirUserPath) : undefined;
+  const caregiverName: String | undefined = (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
 
   // Authentication form allows patient to un-select individual types from allowed scope
   const carePlans = (hasScope('CarePlan.read')
@@ -104,8 +109,10 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   // });
 
   return {
+    fhirUser,
+    caregiverName,
     patient,
-    practitioner,
+    patientPCP,
     carePlans,
     conditions,
     diagnosticReports,

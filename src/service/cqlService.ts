@@ -16,7 +16,7 @@ function getBundleEntries(resources?: [Resource]) {
 function getPatientSource(data: FHIRData): unknown {
   const fhirBundle = {
     resourceType: 'Bundle',
-    entry: [{ resource: data.patient }, { resource: data.practitioner },
+    entry: [{ resource: data.patient }, { resource: data.patientPCP },
       ...getBundleEntries(data.conditions),
       ...getBundleEntries(data.procedures),
       ...getBundleEntries(data.diagnosticReports),
@@ -37,7 +37,7 @@ function getPatientSource(data: FHIRData): unknown {
 export const getPatientSummary = (fhirData: FHIRData): PatientSummary => {
   const fhirBundle = {
     resourceType: 'Bundle',
-    entry: [{ resource: fhirData.patient }, { resource: fhirData.practitioner }]
+    entry: [{ resource: fhirData.patient }, { resource: fhirData.patientPCP }]
   };
 
   const patientSource = cqlfhir.PatientSource.FHIRv401();

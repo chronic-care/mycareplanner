@@ -1,12 +1,12 @@
 // import { fhirclient } from 'fhirclient/lib/types';
-import { Resource, CarePlan, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
-  Observation, Patient, Practitioner, Procedure } from '../fhir-types/fhir-r4';
+import { CarePlan, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
+  Observation, Patient, Practitioner, Procedure, RelatedPerson } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
-  // patient: fhirclient.FHIR.Patient,
-  // practitioner?: fhirclient.FHIR.Practitioner,
+  fhirUser?: Practitioner | Patient | RelatedPerson | undefined,
+  caregiverName?: String,
   patient: Patient,
-  practitioner?: Practitioner,
+  patientPCP?: Practitioner,
   carePlans?: [CarePlan],
   conditions?: [Condition],
   diagnosticReports?: [DiagnosticReport],

@@ -25,6 +25,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   }
 
   public render(): JSX.Element {
+    let fhirData = this.props.fhirData
     let patient = this.props.patientSummary;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
 
@@ -33,8 +34,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         <div className="welcome">
             <h4 className="title">Welcome to My Care Planner!</h4>
             <p>My Care Planner is a tool to help you and your care team work together to keep you healthy. It is a completely personalized way to see what steps you’ve already taken and what else you can do to check for and prevent illnesses.</p>
+            
+            {(fhirData?.caregiverName === undefined) ? '' :
+                <p className="subheadline">Caregiver <b>{fhirData?.caregiverName}</b></p>
+            }
             {(patient === undefined) ? '' :
-                <p className="subheadline"><b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}</p>
+                <p className="subheadline">
+                  {(fhirData?.caregiverName === undefined) ? '' : 'Patient '}
+                  <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}
+                </p>
             }
         </div>
         {(this.props.fhirData === undefined)

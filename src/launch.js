@@ -1,6 +1,6 @@
 import FHIR from 'fhirclient';
 
-const epicScope = "launch openid patient/Patient.read patient/Practitioner.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
+const epicScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
 
 FHIR.oauth2.authorize([
     {
@@ -8,14 +8,14 @@ FHIR.oauth2.authorize([
         issMatch: /\bgw.interop.community\/CarePlanning\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-        scope: "launch launch/patient patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
+        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
     },
     {
         // Logica sandbox
         issMatch: /\blogicahealth\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_logica,
-        scope: "launch launch/patient patient/Patient.read patient/Practitioner.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
+        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
     },
     {
         // Cerner sandbox
