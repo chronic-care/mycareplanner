@@ -1,7 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from "react";
-import {Switch, Route } from "react-router-dom";
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 import Home from "./Home";
 import { FHIRData } from './models/fhirResources';
@@ -53,6 +55,63 @@ export default class App extends React.Component<AppProps, AppState> {
             </header>
 
             <Switch>
+                <Route path="/goals">
+                    <GoalList {...this.state} />
+                </Route>
+                <Route path="/decision" component= { ScreeningDecision } />
+                <Route path="/questionnaire" component= { QuestionnaireHandler } />
+                <Route path='/confirmation' component= { ConfirmationPage } />
+                <Route path="/error" component= { ErrorPage } />
+
+                <Route path="/">
+                    <Tabs>
+                        <TabList>
+                            <Tab>Home</Tab>
+                            <Tab>Goals</Tab>
+                            <Tab>Health Issues</Tab>
+                            <Tab>Medications</Tab>
+                            <Tab>More...</Tab>
+                        </TabList>
+                        <TabPanel>
+                            <Home {...this.state} />
+                        </TabPanel>
+                        <TabPanel>
+                            <GoalList {...this.state} />
+                        </TabPanel>
+                        <TabPanel>
+                            <ConditionList {...this.state} />
+                        </TabPanel>
+                        <TabPanel>
+                            <MedicationList {...this.state} />
+                        </TabPanel>
+                        <TabPanel>
+                            <Tabs>
+                                <TabList>
+                                    <Tab>Immunizations</Tab>
+                                    <Tab>Test Results</Tab>
+                                    <Tab>Vitals</Tab>
+                                    <Tab>Treatment Plan</Tab>
+                                </TabList>
+                                <TabPanel>
+                                    <ImmunizationList {...this.state} />
+                                </TabPanel>
+                                <TabPanel>
+                                    <ObservationList {...this.state} />
+                                </TabPanel>
+                                <TabPanel>
+                                    <h4 className="title">Vitals</h4>
+                                </TabPanel>
+                                <TabPanel>
+                                    <h4 className="title">Treatment Plan</h4>
+                                </TabPanel>
+                            </Tabs>
+                        </TabPanel>
+                    </Tabs>
+                </Route> 
+            </Switch>
+
+            {/* 
+            <Switch>
                 <Route path="/decision" component= { ScreeningDecision }/>
                 <Route path="/conditions" component= { ConditionList }/>
                 <Route path="/goals" component= { GoalList }/>
@@ -63,14 +122,12 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path='/confirmation' component= { ConfirmationPage } />
                 <Route path="/error" component= { ErrorPage }/>
 
-                {/* <Route path="/about" component= { Home }/> */}
-
-                {/* If none of the previous routes render anything,
-                    this route acts as a fallback. */}
                 <Route path="/">
                     <Home {...this.state} />
-                </Route>
+                </Route> 
             </Switch>
+            */}
+
             </div>
         )
     }

@@ -6,11 +6,12 @@ import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
 import { Observation } from '../../fhir-types/fhir-r4';
 
 interface ObservationListProps {
-    history?: any,
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface ObservationListState {
-  fhirData?: FHIRData
 }
 
 export class ObservationList extends React.Component<ObservationListProps, ObservationListState> {
@@ -18,12 +19,11 @@ export class ObservationList extends React.Component<ObservationListProps, Obser
   constructor(props: ObservationListProps) {
     super(props);
     this.state = {
-      ...this.props.history.location.state
     };
   }
 
   public render(): JSX.Element {
-    let observations = this.state.fhirData?.labResults
+    let observations = this.props.fhirData?.labResults
 
     return (
       <div className="home-view">

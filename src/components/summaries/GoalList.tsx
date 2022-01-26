@@ -7,11 +7,12 @@ import { Goal } from '../../fhir-types/fhir-r4';
 import { First } from 'react-bootstrap/esm/PageItem';
 
 interface GoalListProps {
-  history?: any,
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface GoalListState {
-  fhirData?: FHIRData
 }
 
 export class GoalList extends React.Component<GoalListProps, GoalListState> {
@@ -19,12 +20,11 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
   constructor(props: GoalListProps) {
     super(props);
     this.state = {
-      ...this.props.history.location.state
     };
   }
 
   public render(): JSX.Element {
-    let goals = this.state.fhirData?.goals
+    let goals = this.props.fhirData?.goals
 
     return (
       <div className="home-view">

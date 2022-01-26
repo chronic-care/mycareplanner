@@ -6,11 +6,12 @@ import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
 import { Condition } from '../../fhir-types/fhir-r4';
 
 interface ConditionListProps {
-  history?: any,
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface ConditionListState {
-  fhirData?: FHIRData
 }
 
 export class ConditionList extends React.Component<ConditionListProps, ConditionListState> {
@@ -18,23 +19,14 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
   constructor(props: ConditionListProps) {
     super(props);
     this.state = {
-      ...this.props.history.location.state
     };
   }
 
   public render(): JSX.Element {
-    let conditions = this.state.fhirData?.conditions
+    let conditions = this.props.fhirData?.conditions
 
     return (
       <div className="home-view">
-        <table className="menu"><tr>
-          <td className="menu"><Link to='/'>Home</Link></td>
-          <td className="menu"><Link to={{ pathname: '/goals', state: { fhirData: this.state.fhirData }}}>Goals</Link></td>
-          <td className="menu">Health Issues</td>
-          <td className="menu"><Link to={{ pathname: '/medications', state: { fhirData: this.state.fhirData }}}>Medications</Link></td>
-          <td className="menu"><Link to={{ pathname: '/observations', state: { fhirData: this.state.fhirData }}}>Health Status</Link></td>
-        </tr></table>
-
         <div className="welcome">
           <h4 className="title">Health Issues</h4>
 

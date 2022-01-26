@@ -32,12 +32,14 @@
         "react-dom": "^16.13.1",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.1",
+        "react-tabs": "^3.2.3",
         "react-youtube": "^7.13.0"
     },
     "devDependencies": {
         "@rescripts/cli": "^0.0.13",
         "@rescripts/utilities": "^0.0.6",
         "@types/react-router-dom": "^5.1.6",
+        "@types/react-tabs": "^2.3.4",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "gh-pages": "^3.1.0",

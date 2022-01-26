@@ -6,11 +6,12 @@ import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
 import { Immunization } from '../../fhir-types/fhir-r4';
 
 interface ImmunizationListProps {
-  history?: any,
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface ImmunizationListState {
-  fhirData?: FHIRData
 }
 
 export class ImmunizationList extends React.Component<ImmunizationListProps, ImmunizationListState> {
@@ -18,12 +19,11 @@ export class ImmunizationList extends React.Component<ImmunizationListProps, Imm
   constructor(props: ImmunizationListProps) {
     super(props);
     this.state = {
-      ...this.props.history.location.state
     };
   }
 
   public render(): JSX.Element {
-    let immunizations = this.state.fhirData?.immunizations
+    let immunizations = this.props.fhirData?.immunizations
 
     return (
       <div className="home-view">

@@ -6,11 +6,12 @@ import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
 import { MedicationRequest } from '../../fhir-types/fhir-r4';
 
 interface MedicationListProps {
-  history?: any,
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface MedicationListState {
-  fhirData?: FHIRData
 }
 
 export class MedicationList extends React.Component<MedicationListProps, MedicationListState> {
@@ -18,12 +19,11 @@ export class MedicationList extends React.Component<MedicationListProps, Medicat
   constructor(props: MedicationListProps) {
     super(props);
     this.state = {
-      ...this.props.history.location.state
     };
   }
 
   public render(): JSX.Element {
-    let medications = this.state.fhirData?.medications
+    let medications = this.props.fhirData?.medications
 
     return (
       <div className="home-view">
