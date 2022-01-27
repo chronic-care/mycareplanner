@@ -5,6 +5,8 @@ import { Switch, Route } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
+import { Task } from './fhir-types/fhir-r4';
+
 import Home from "./Home";
 import { FHIRData } from './models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './models/cqlSummary';
@@ -15,7 +17,8 @@ import { ConditionList } from "./components/summaries/ConditionList";
 import { GoalList } from "./components/summaries/GoalList";
 import { ImmunizationList } from "./components/summaries/ImmunizationList";
 import { MedicationList } from "./components/summaries/MedicationList";
-import { ObservationList } from "./components/summaries/ObservationList";
+import { LabResultList } from "./components/summaries/LabResultList";
+import { VitalsList } from "./components/summaries/VitalsList";
 import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHandler";
 import { ConfirmationPage } from './components/confirmation-page/ConfirmationPage'
 import { ErrorPage } from "./components/error-page/ErrorPage";
@@ -27,7 +30,8 @@ interface AppProps {
 interface AppState {
   fhirData?: FHIRData,
   patientSummary?: PatientSummary,
-  screenings?: [ScreeningSummary]
+  screenings?: [ScreeningSummary],
+  tasks?: [Task],
   ErrorMessage?: string
 }
 
@@ -44,6 +48,7 @@ export default class App extends React.Component<AppProps, AppState> {
             this.setState({ fhirData: data })
             this.setState({ patientSummary: getPatientSummary(data) })
             this.setState({ screenings: executeScreenings(data) })
+            this.setState({ tasks: undefined })
         })
     }
 
@@ -68,8 +73,8 @@ export default class App extends React.Component<AppProps, AppState> {
                         <TabList>
                             <Tab>Home</Tab>
                             <Tab>Goals</Tab>
-                            <Tab>Health Issues</Tab>
-                            <Tab>Medications</Tab>
+                            <Tab>Concerns</Tab>
+                            <Tab>Meds</Tab>
                             <Tab>More...</Tab>
                         </TabList>
                         <TabPanel>
@@ -88,21 +93,22 @@ export default class App extends React.Component<AppProps, AppState> {
                             <Tabs>
                                 <TabList>
                                     <Tab>Immunizations</Tab>
-                                    <Tab>Test Results</Tab>
+                                    <Tab>Lab Results</Tab>
                                     <Tab>Vitals</Tab>
-                                    <Tab>Treatment Plan</Tab>
+                                    <Tab>Plan</Tab>
                                 </TabList>
                                 <TabPanel>
                                     <ImmunizationList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <ObservationList {...this.state} />
+                                    <LabResultList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Vitals</h4>
+                                    <VitalsList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
                                     <h4 className="title">Treatment Plan</h4>
+                                    <p>Coming soon...</p>
                                 </TabPanel>
                             </Tabs>
                         </TabPanel>

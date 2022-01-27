@@ -3,13 +3,15 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData } from './models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './models/cqlSummary';
+import { Task } from './fhir-types/fhir-r4';
 import BusySpinner from './components/busy-spinner/BusySpinner';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
     fhirData?: FHIRData,
     patientSummary?: PatientSummary,
-    screenings?: [ScreeningSummary]
+    screenings?: [ScreeningSummary],
+    tasks?: [Task] | undefined
 }
 
 interface HomeState {
@@ -28,6 +30,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     let fhirData = this.props.fhirData
     let patient = this.props.patientSummary;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
+    let tasks = this.props.tasks;
 
     return (
       <div className="home-view">
@@ -40,7 +43,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             }
             {(patient === undefined) ? '' :
                 <p className="subheadline">
-                  {(fhirData?.caregiverName === undefined) ? '' : 'Patient '}
+                  {(fhirData?.caregiverName === undefined) ? '' : 'for '}
                   <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}
                 </p>
             }
@@ -53,8 +56,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         : <div>
 
             <h5>My Tasks</h5>
+            <p>You have no tasks today!</p>
+
+            <h5>Preventive Care</h5>
             {(screenings !== undefined && screenings.length === 0)
-                ? <p>You have no tasks today!</p>
+                ? <p>You have no screenings due!</p>
                 : <ul>
                     {screenings?.map((s, idx) => (
                     <li key={idx.toString()}><Link to={{
@@ -66,8 +72,18 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 </ul>
             }
 
-          <h5>My Health Record</h5>
+          <h5>Health Record</h5>
+          <p>Select one of the tabs above to review your health records.</p>
 
+          Health Goals [{this.props.fhirData?.goals?.length ?? '?'} records]<br/>
+          Health Concerns [{this.props.fhirData?.conditions?.length ?? '?'}]<br/>
+          Medications [{this.props.fhirData?.medications?.length ?? '?'}]<br/>
+          Immunizations [{this.props.fhirData?.immunizations?.length ?? '?'}]<br/>
+          Lab Results [{this.props.fhirData?.labResults?.length ?? '?'}]<br/>
+          Vitals [{this.props.fhirData?.vitalSigns?.length ?? '?'}]<br/>
+          Treatment Plan [{this.props.fhirData?.serviceRequests?.length ?? '?'}]<br/>
+
+          {/*
           <Link to={{ pathname: '/goals', state: { fhirData: this.props.fhirData }}}>Health Goals </Link> 
             [{this.props.fhirData?.goals?.length ?? 0}]<br/>
           <Link to={{ pathname: '/conditions', state: { fhirData: this.props.fhirData }}}>Health Issues </Link> 
@@ -83,6 +99,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           <Link to={{ pathname: '/observations', state: { fhirData: this.props.fhirData }}}>Lab Results </Link>
             [{(this.props.fhirData?.labResults?.length ?? 0)}]<br/>
           Vital Signs [{this.props.fhirData?.vitalSigns?.length ?? 0}] (last 100)<br/>
+          */ }
           
           {/* {this.props.fhirData?.carePlans?.length ?? 0} Care Plans<br/> */}
           {/* {this.props.fhirData?.socialHistory?.length ?? 0} Social History<br/> */}
