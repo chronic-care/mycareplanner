@@ -60,7 +60,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <h5>Preventive Care</h5>
             {(screenings !== undefined && screenings.length === 0)
-                ? <p>You have no screenings due!</p>
+                ? <p>You have no screenings due.</p>
                 : <ul>
                     {screenings?.map((s, idx) => (
                     <li key={idx.toString()}><Link to={{

@@ -25,7 +25,11 @@ const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 // const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
 const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
 const goalsPath = 'Goal?lifecycle-status=active';
-const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
+
+// Epic allows multiple category codes only >= Aug 2021 release
+// const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
+const conditionsPath = 'Condition?category=problem-list-item&clinical-status=active';
+
 const immunizationsPath = 'Immunization?status=completed';
 const labResultsPath = 'Observation?category=laboratory';
 const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(fiveYearsAgo);
@@ -125,10 +129,12 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   const socialHistory = (hasScope('Observation.read')
     ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject) 
     : undefined) as [Observation];
-  console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
-  const surveyResults = (hasScope('Observation.read')
-    ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as [Observation];
+
+  // console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
+  // const surveyResults = (hasScope('Observation.read')
+  //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject) 
+  //   : undefined) as [Observation];
+  const surveyResults = undefined
 
   // console.log('Vitals request: ' + new Date().toLocaleTimeString())
   // const vitalSigns = (hasScope('Observation.read')
