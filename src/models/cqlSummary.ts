@@ -19,9 +19,9 @@ export interface PatientSummary {
   fullName: String,
   age: String,
   gender: String,
-  birthSex: String,
-  race: String,
-  pcpName: String,
+  birthSex?: String | undefined,
+  race?: String | undefined,
+  pcpName?: String | undefined,
 }
 
 export interface ScreeningSummary {
@@ -44,9 +44,9 @@ export interface ObservationSummary {
   ConceptName: String,
   Date: String,
   ResultText: String,
-  ResultValue: number,
-  ResultUnits: String,
-  ReferenceRange: String,
-  Interpretation: String | null,
-  Flag: Boolean
+  ResultValue?: number | undefined,
+  ResultUnits?: String | undefined,
+  ReferenceRange?: String | undefined,
+  Interpretation?: String | undefined,
+  Flag?: Boolean | undefined
 }
