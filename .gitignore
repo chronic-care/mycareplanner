@@ -10,6 +10,7 @@ Thumbs.db
 
 # Other files #
 ######################
+yarn.lock
 node_modules/*
 build/*
 client-ids/*
