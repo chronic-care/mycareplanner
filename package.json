@@ -1,8 +1,8 @@
 {
-    "name": "mcc-patient-v2",
+    "name": "mycareplanner",
     "version": "2.0.0",
     "private": true,
-    "homepage": "https://chronic-care.github.io/mcc-patient-v2",
+    "homepage": "https://chronic-care.github.io/mycareplanner",
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.29",
         "@fortawesome/free-regular-svg-icons": "^5.13.1",

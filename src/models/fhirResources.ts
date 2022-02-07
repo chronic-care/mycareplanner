@@ -23,14 +23,23 @@ export interface FHIRData {
 
 
 export function displayDate(dateString?: string): string | undefined {
-  let date = dateString === undefined ? undefined
-    : new Date(dateString!) as Date
-  return date === undefined ? undefined :
-    date.toLocaleDateString("en-US", {
+  if (dateString === undefined) {
+    return undefined
+  }
+  else {
+    // If time is not included, then parse only Year Month Day parts
+    // In JavaScript, January is 0. Subtract 1 from month Int.
+    var parts = dateString!.split('-');
+    var jsDate: Date = (dateString?.includes('T'))
+      ? new Date(dateString!)
+      : new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+
+    return jsDate.toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "2-digit"
       })
+  }
 }
 
 export function displayValue(obs: Observation): string | undefined {

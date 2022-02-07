@@ -1,5 +1,5 @@
 
-import { Patient } from '../fhir-types/fhir-r4';
+import { Annotation, Patient } from '../fhir-types/fhir-r4';
 
 export interface CQLLibrary {
   // cql.Library reference
@@ -42,11 +42,13 @@ export interface NextStepsSummary {
 export interface ObservationSummary {
   DisplayName: String,
   ConceptName: String,
-  Date: String,
+  Date?: string,
   ResultText: String,
   ResultValue?: number | undefined,
   ResultUnits?: String | undefined,
   ReferenceRange?: String | undefined,
   Interpretation?: String | undefined,
-  Flag?: Boolean | undefined
+  Flag?: Boolean | undefined,
+  Performer?: String | undefined,
+  Notes?: Annotation[],
 }

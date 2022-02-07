@@ -156,12 +156,8 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   //   console.log(JSON.stringify(resource));
   // });
 
-  // console.log("FHIRData labs: ");
-  // labResults?.forEach(function (resource) {
-  //   console.log(JSON.stringify(resource));
-  // });
-  // console.log("FHIRData vitals: ");
-  // console.log(JSON.stringify(vitalSigns?.[0]));
+  // console.log("LabResults Bundle: ");
+  // console.log(JSON.stringify(await client.patient.request(labResultsPath, fhirOptions)))
 
   return {
     fhirUser,

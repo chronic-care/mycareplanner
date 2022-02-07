@@ -1,7 +1,8 @@
 import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayDate, displayValue } from '../../models/fhirResources';
-import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary';
+import { getLabResultSummary } from '../../service/mccCqlService';
 
 interface LabResultListProps {
   fhirData?: FHIRData,
@@ -10,6 +11,7 @@ interface LabResultListProps {
 }
 
 interface LabResultListState {
+  labResultSummary?: [ObservationSummary]
 }
 
 export class LabResultList extends React.Component<LabResultListProps, LabResultListState> {
@@ -20,8 +22,14 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
     };
   }
 
+  componentDidMount() {
+    console.time('getLabResultSummary()')
+    this.setState({ labResultSummary: getLabResultSummary(this.props.fhirData) })
+    console.timeEnd('getLabResultSummary()')
+  }
+
   public render(): JSX.Element {
-    let observations = this.props.fhirData?.labResults
+    let observations = this.state.labResultSummary
 
     return (
       <div className="home-view">
@@ -33,16 +41,21 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
               <tr key={idx}>
               <td>
               <table><tbody>
-                <tr><td colSpan={2}><b>{obs.code?.text ?? obs.code?.coding?.[0]?.display ?? "No text"}</b></td></tr>
                 <tr>
-                  {/* <td align="left">{obs.valueQuantity?.value ?? obs.valueCodeableConcept?.text ?? obs.valueString} {obs.valueQuantity?.unit}</td> */}
-                  <td align="left">{displayValue(obs) ?? 'No value'}</td>
-                  <td align="right">{displayDate(obs.effectiveDateTime) ?? displayDate(obs.issued)}</td>
+                  <td colSpan={3}><b>{obs.DisplayName}</b></td>
+                  <td align="right"><i>Learn&nbsp;More</i></td>
                 </tr>
-                <tr><td colSpan={2}>Ordered by: {obs.performer?.[0]?.display ?? 'Unknown'}</td></tr>
-                {obs.note?.map((note, idx) => (
-                  <tr key={idx}><td colSpan={2}>Note: {note.text}</td></tr>
-                ))}
+                <tr>
+                  <td colSpan={2} align="left">{obs.ResultText}</td>
+                  <td colSpan={2} align="right">{displayDate(obs.Date)}</td>
+                </tr>
+                <tr>
+                  <td colSpan={3}>{obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange}</td>
+                  <td align="right">{obs.Interpretation}</td>
+                </tr>
+                {/* {obs.Notes?.map((note, idx) => (
+                  <tr key={idx}><td colSpan={2}>Note: {note}</td></tr>
+                ))} */}
               </tbody></table>
               </td>
               </tr>

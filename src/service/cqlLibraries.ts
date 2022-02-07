@@ -1,21 +1,21 @@
 // @ts-ignore
 import cql from 'cql-execution';
 
-import FHIRHelpers from '../cql/FHIRHelpers.json';
-import FHIRCommon from '../cql/FHIRCommon.json';
-import CDSConnectCommons from '../cql/CDSConnectCommons.json';
-import PreventiveCareConcepts from '../cql/PreventiveCareConcepts.json';
-import PreventiveCareData from '../cql/PreventiveCareData.json';
-import PreventiveCareSummary from '../cql/PreventiveCareSummary.json';
-import PatientSummary from '../cql/PatientSummary.json';
+import FHIRHelpers from '../cql/mpc/FHIRHelpers.json';
+import FHIRCommon from '../cql/mpc/FHIRCommon.json';
+import CDSConnectCommons from '../cql/mpc/CDSConnectCommons.json';
+import PreventiveCareConcepts from '../cql/mpc/PreventiveCareConcepts.json';
+import PreventiveCareData from '../cql/mpc/PreventiveCareData.json';
+import PreventiveCareSummary from '../cql/mpc/PreventiveCareSummary.json';
+import PatientSummary from '../cql/mpc/PatientSummary.json';
 
-import BreastCancerScreening from '../cql/BreastCancerScreening.json';
-import ColonCancerScreening from '../cql/ColonCancerScreening.json';
-import LungCancerScreening from '../cql/LungCancerScreening.json';
-import LungCancerSummary from '../cql/LungCancerSummary.json';
-import ProstateCancerScreening from '../cql/ProstateCancerScreening.json';
+import BreastCancerScreening from '../cql/mpc/BreastCancerScreening.json';
+import ColonCancerScreening from '../cql/mpc/ColonCancerScreening.json';
+import LungCancerScreening from '../cql/mpc/LungCancerScreening.json';
+import LungCancerSummary from '../cql/mpc/LungCancerSummary.json';
+import ProstateCancerScreening from '../cql/mpc/ProstateCancerScreening.json';
 
-import valueSetDB from '../cql/valueset-db.json';
+import valueSetDB from '../cql/mpc/valueset-db.json';
 
 const getPatientSummaryLibrary = () => new cql.Library(PreventiveCareSummary, new cql.Repository({
     PreventiveCareData,
