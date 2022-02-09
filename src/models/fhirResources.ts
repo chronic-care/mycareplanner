@@ -23,7 +23,7 @@ export interface FHIRData {
 
 
 export function displayDate(dateString?: string): string | undefined {
-  if (dateString === undefined) {
+  if (dateString === undefined || dateString === null) {
     return undefined
   }
   else {

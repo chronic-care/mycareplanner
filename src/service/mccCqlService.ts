@@ -5,9 +5,9 @@ import cqlfhir from 'cql-exec-fhir';
 
 import { Resource } from '../fhir-types/fhir-r4';
 import { FHIRData } from '../models/fhirResources';
-import { ObservationSummary } from '../models/cqlSummary';
+import { ConditionSummary, ObservationSummary } from '../models/cqlSummary';
 
-import { mccLabResultsLibrary, mccCodeService } from './mccCqlLibraries';
+import { mccConditionsLibrary, mccLabResultsLibrary, mccCodeService } from './mccCqlLibraries';
 
 function getBundleEntries(resources?: [Resource]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
@@ -30,6 +30,17 @@ function getPatientSource(data: FHIRData): unknown {
   patientSource.loadBundles([fhirBundle]);
 
   return patientSource;
+}
+
+export const getConditionSummary = (fhirData?: FHIRData): [ConditionSummary] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource);
+
+  // console.log("CQL Results: " + JSON.stringify(extractedSummary));
+  console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary));
+
+  return extractedSummary.ConditionSummary;
 }
 
 export const getLabResultSummary = (fhirData?: FHIRData): [ObservationSummary] | undefined => {

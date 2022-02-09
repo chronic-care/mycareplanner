@@ -39,6 +39,16 @@ export interface NextStepsSummary {
   nextSteps: [String],
 }
 
+export interface ConditionSummary {
+  Category?: String,
+  ConceptName: String,
+  RecordedDate?: string,
+  AssertedDate?: string,
+  OnsetDate?: string,
+  Notes?: String[],
+  LearnMore?: string
+}
+
 export interface ObservationSummary {
   DisplayName: String,
   ConceptName: String,
@@ -50,5 +60,6 @@ export interface ObservationSummary {
   Interpretation?: String | undefined,
   Flag?: Boolean | undefined,
   Performer?: String | undefined,
-  Notes?: Annotation[],
+  Notes?: String[],
+  LearnMore?: string
 }

@@ -1,5 +1,6 @@
 import '../../Home.css';
 import React from 'react';
+import { Link } from "react-router-dom";
 import { FHIRData, displayDate, displayValue } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary';
 import { getLabResultSummary } from '../../service/mccCqlService';
@@ -43,7 +44,8 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
               <table><tbody>
                 <tr>
                   <td colSpan={3}><b>{obs.DisplayName}</b></td>
-                  <td align="right"><i>Learn&nbsp;More</i></td>
+                  <td align="right">{obs.LearnMore === undefined ? '' :
+                    <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(obs.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
                 </tr>
                 <tr>
                   <td colSpan={2} align="left">{obs.ResultText}</td>
@@ -54,7 +56,7 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
                   <td align="right">{obs.Interpretation}</td>
                 </tr>
                 {/* {obs.Notes?.map((note, idx) => (
-                  <tr key={idx}><td colSpan={2}>Note: {note}</td></tr>
+                  <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
                 ))} */}
               </tbody></table>
               </td>

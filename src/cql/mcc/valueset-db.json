@@ -1824,6 +1824,50 @@
       }
     ]
   },
+  "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.151": {
+    "20200425": [
+      {
+        "code": "1751-7",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "2862-1",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "54347-0",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "61151-7",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "61152-5",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "62234-0",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "62235-7",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "77148-5",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      }
+    ]
+  },
   "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.6929.3.1000": {
     "20190531": [
       {
@@ -2314,6 +2358,35 @@
         "code": "I16.9",
         "system": "http://hl7.org/fhir/sid/icd-10-cm",
         "version": "2022"
+      }
+    ]
+  },
+  "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.111": {
+    "20200407": [
+      {
+        "code": "14682-9",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "2160-0",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "38483-4",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "59826-8",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "77140-2",
+        "system": "http://loinc.org",
+        "version": "2.71"
       }
     ]
   },
@@ -5219,6 +5292,20 @@
         "code": "999996",
         "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
         "version": "01012022"
+      }
+    ]
+  },
+  "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.139": {
+    "20200407": [
+      {
+        "code": "14647-2",
+        "system": "http://loinc.org",
+        "version": "2.71"
+      },
+      {
+        "code": "2093-3",
+        "system": "http://loinc.org",
+        "version": "2.71"
       }
     ]
   },
