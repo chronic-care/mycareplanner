@@ -17,9 +17,9 @@ const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
 export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM')}`;
 const today: Date = new Date()
 const oneDay = 24*3600*1000
-const threeMonthsAgo = new Date(today.getTime() - (365/4 * oneDay))
-const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
-const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
+// const threeMonthsAgo = new Date(today.getTime() - (365/4 * oneDay))
+// const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
+// const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
 // const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
@@ -65,7 +65,7 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as [Observation] )
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as [Observation] )
 
-  vitals = vitals.filter(v => v != undefined)
+  vitals = vitals.filter(v => v !== undefined)
   return vitals
 }
 

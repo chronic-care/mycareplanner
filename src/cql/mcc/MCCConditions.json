@@ -166,7 +166,7 @@
                         }, {
                            "r" : "7",
                            "s" : [ {
-                              "value" : [ "'All Active Conditions'" ]
+                              "value" : [ "'Active Conditions'" ]
                            } ]
                         }, {
                            "value" : [ "\n  )" ]
@@ -300,10 +300,10 @@
                   }
                }, {
                   "localId" : "7",
-                  "locator" : "16:5-16:27",
+                  "locator" : "16:5-16:23",
                   "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                  "value" : "All Active Conditions",
+                  "value" : "Active Conditions",
                   "type" : "Literal"
                } ]
             }

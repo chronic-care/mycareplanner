@@ -1,6 +1,4 @@
 
-import { Annotation, Patient } from '../fhir-types/fhir-r4';
-
 export interface CQLLibrary {
   // cql.Library reference
   library: any,
@@ -35,10 +33,6 @@ export interface ScreeningSummary {
   questionnaire: String,
 }
 
-export interface NextStepsSummary {
-  nextSteps: [String],
-}
-
 export interface ConditionSummary {
   Category?: String,
   ConceptName: String,
@@ -46,7 +40,36 @@ export interface ConditionSummary {
   AssertedDate?: string,
   OnsetDate?: string,
   Notes?: String[],
+  HasGoal?: GoalSummary[],
   LearnMore?: string
+}
+
+export interface GoalSummary {
+  Category?: string | undefined,
+  Description: string,
+  ExpressedBy?: string | undefined,
+  StartDate?: string | undefined,
+  Target?: GoalTarget[] | undefined,
+  Addresses?: ConditionSummary[] | undefined,
+  Notes?: string[] | undefined,
+  LearnMore?: string | undefined
+}
+
+export interface GoalTarget {
+  DueDate?: string | undefined,
+  DisplayName?: string | undefined,
+  Value?: string | undefined,
+  LastResult?: ObservationSummary | undefined,
+}
+
+export interface MedicationSummary {
+  Category?: string | undefined,
+  ConceptName: string,
+  AuthoredOn?: string | undefined,
+  Requester?: string | undefined,
+  DosageInstruction?: string | undefined,
+  Notes?: String[] | undefined,
+  LearnMore?: string | undefined
 }
 
 export interface ObservationSummary {

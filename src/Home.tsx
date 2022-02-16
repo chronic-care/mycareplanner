@@ -56,7 +56,17 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         : <div>
 
             <h5>My Tasks</h5>
-            <p>You have no tasks today!</p>
+            {(tasks === undefined)
+                ? <p>You have no tasks today!</p>
+                : <ul>
+                    {tasks?.map((task, idx) => (
+                    <li key={idx.toString()}><Link to={{
+                            pathname: '/task', 
+                            state: { patientSummary: this.props.patientSummary, task: task }
+                        }}>{task.description}</Link>
+                    </li>))}
+                </ul>
+            }
 
             <h5>Preventive Care</h5>
             {(screenings !== undefined && screenings.length === 0)

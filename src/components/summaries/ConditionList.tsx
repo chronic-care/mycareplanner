@@ -46,7 +46,7 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
                 </tr>
                 <tr>
                   <td colSpan={3}>Added on: {displayDate(cond.RecordedDate) ?? displayDate(cond.OnsetDate)}</td>
-                  <td align="right">{cond.LearnMore === undefined ? '' :
+                  <td align="right">{cond.LearnMore === undefined || cond.LearnMore === null ? '' :
                     <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(cond.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
                 </tr>
                 {cond.Notes?.map((note) => (

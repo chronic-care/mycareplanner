@@ -1,7 +1,7 @@
 import '../../Home.css';
 import React from 'react';
 import { Link } from "react-router-dom";
-import { FHIRData, displayDate, displayValue } from '../../models/fhirResources';
+import { FHIRData, displayDate } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary';
 import { getLabResultSummary } from '../../service/mccCqlService';
 
@@ -44,7 +44,7 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
               <table><tbody>
                 <tr>
                   <td colSpan={3}><b>{obs.DisplayName}</b></td>
-                  <td align="right">{obs.LearnMore === undefined ? '' :
+                  <td align="right">{obs.LearnMore === undefined || obs.LearnMore === null ? '' :
                     <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(obs.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
                 </tr>
                 <tr>

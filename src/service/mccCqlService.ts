@@ -5,9 +5,9 @@ import cqlfhir from 'cql-exec-fhir';
 
 import { Resource } from '../fhir-types/fhir-r4';
 import { FHIRData } from '../models/fhirResources';
-import { ConditionSummary, ObservationSummary } from '../models/cqlSummary';
+import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } from '../models/cqlSummary';
 
-import { mccConditionsLibrary, mccLabResultsLibrary, mccCodeService } from './mccCqlLibraries';
+import { mccCodeService, mccConditionsLibrary, mccGoalsLibrary, mccLabResultsLibrary, mccMedicationsLibrary, mccVitalSignsLibrary } from './mccCqlLibraries';
 
 function getBundleEntries(resources?: [Resource]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
@@ -39,8 +39,16 @@ export const getConditionSummary = (fhirData?: FHIRData): [ConditionSummary] | u
 
   // console.log("CQL Results: " + JSON.stringify(extractedSummary));
   console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary));
-
   return extractedSummary.ConditionSummary;
+}
+
+export const getGoalSummary = (fhirData?: FHIRData): [GoalSummary] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource);
+
+  console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary));
+  return extractedSummary.GoalSummary;
 }
 
 export const getLabResultSummary = (fhirData?: FHIRData): [ObservationSummary] | undefined => {
@@ -48,10 +56,26 @@ export const getLabResultSummary = (fhirData?: FHIRData): [ObservationSummary] |
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccLabResultsLibrary, mccCodeService, patientSource);
 
-  // console.log("CQL Results: " + JSON.stringify(extractedSummary));
   console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary));
-
   return extractedSummary.LabResultSummary;
+}
+
+export const getMedicationSummary = (fhirData?: FHIRData): [MedicationSummary] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccMedicationsLibrary, mccCodeService, patientSource);
+
+  console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary));
+  return extractedSummary.MedicationSummary;
+}
+
+export const getVitalSignSummary = (fhirData?: FHIRData): [ObservationSummary] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccVitalSignsLibrary, mccCodeService, patientSource);
+
+  console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary));
+  return extractedSummary.VitalSignsSummary;
 }
 
 const executeLibrary = (library: any, codeService: any, patientSource: any): any => {

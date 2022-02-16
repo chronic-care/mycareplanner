@@ -107,7 +107,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                     <VitalsList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Treatment Plan</h4>
+                                    <h4 className="title">Care Plan Activities</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel>
                             </Tabs>

@@ -2,7 +2,6 @@ import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayDate, displayValue } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
-import { Observation } from '../../fhir-types/fhir-r4';
 
 interface VitalsListProps {
   fhirData?: FHIRData,

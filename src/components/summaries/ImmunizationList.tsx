@@ -1,9 +1,7 @@
 import '../../Home.css';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
-import { Immunization } from '../../fhir-types/fhir-r4';
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,
@@ -24,6 +22,7 @@ export class ImmunizationList extends React.Component<ImmunizationListProps, Imm
 
   public render(): JSX.Element {
     let immunizations = this.props.fhirData?.immunizations
+    // TODO sort by descending date
 
     return (
       <div className="home-view">
@@ -41,7 +40,7 @@ export class ImmunizationList extends React.Component<ImmunizationListProps, Imm
                   <tr><td>Location: {med.location?.display}</td></tr>
                 }
                 {med.note?.map((note, idx) => (
-                  <tr key={idx}><td colSpan={2}>Note: {note.text}</td></tr>
+                  <tr key={idx}><td>Note: {note.text}</td></tr>
                 ))}
               </tbody></table>
               </td>
