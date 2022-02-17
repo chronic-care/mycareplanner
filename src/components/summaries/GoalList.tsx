@@ -40,19 +40,28 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
             {goals?.map((goal, idx) => (
               <tr key={idx}>
               <td>
-              <table><tbody>
+              <table>
+                <tbody>
                 <tr>
-                  <td colSpan={3}><b>{goal.Description}</b></td>
-                  <td align="right">{goal.LearnMore === null ? '' :
-                    <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(goal.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
+                  <td colSpan={2}><b>{goal.Description}</b></td>
                 </tr>
                 <tr>
-                  <td colSpan={2}>Start: {displayDate(goal.StartDate)}</td>
-                  <td colSpan={2}>{goal.Target === null || goal.Target?.[0]?.DueDate === null ? '' : 'Due: ' + displayDate(goal.Target?.[0]?.DueDate)}</td>
+                  <td>{goal.ExpressedBy}</td>
+                  <td>Start: {displayDate(goal.StartDate)}</td>
                 </tr>
-                <tr><td colSpan={4}>Author: {goal.ExpressedBy}</td></tr>
+                {goal.Target === null || (goal.Target?.[0]?.DueDate === null && goal.Target?.[0]?.TargetValue === null) ? <tr/> :
+                  <tr>
+                    <td>{goal.Target?.[0]?.TargetValue === null ? '' : 'Target: ' + goal.Target?.[0]?.TargetValue}</td>
+                    <td>{goal.Target?.[0]?.DueDate === null ? '' : 'Due: ' + displayDate(goal.Target?.[0]?.DueDate)}</td>
+                  </tr>}
+                {goal.Target === null || goal.Target?.[0]?.LastResult === null ? <tr/> :
+                  <tr>
+                    <td colSpan={2}>Last Value: {goal.Target?.[0]?.LastResult?.ResultText ?? '?'} on {displayDate(goal.Target?.[0]?.LastResult?.Date)}</td>
+                  </tr>}
+                {goal.LearnMore === null ? <tr/> :
+                  <tr><td colSpan={2}><Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(goal.LearnMore);}}><i>Learn&nbsp;More</i></Link></td></tr>}
                 {goal.Notes?.map((note, idx) => (
-                  <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
+                  <tr key={idx}><td colSpan={2}>Note: {note}</td></tr>
                 ))}
               </tbody></table>
               

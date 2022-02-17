@@ -58,7 +58,7 @@ export interface GoalSummary {
 export interface GoalTarget {
   DueDate?: string | undefined,
   DisplayName?: string | undefined,
-  Value?: string | undefined,
+  TargetValue?: string | undefined,
   LastResult?: ObservationSummary | undefined,
 }
 
