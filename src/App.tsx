@@ -72,34 +72,45 @@ export default class App extends React.Component<AppProps, AppState> {
                     <Tabs>
                         <TabList>
                             <Tab>Home</Tab>
-                            <Tab>Goals</Tab>
-                            <Tab>Concerns</Tab>
-                            <Tab>Meds</Tab>
-                            <Tab>More...</Tab>
+                            <Tab>Care Plan</Tab>
+                            <Tab>Health Status</Tab>
+                            <Tab>Team</Tab>
                         </TabList>
+
                         <TabPanel>
                             <Home {...this.state} />
                         </TabPanel>
                         <TabPanel>
-                            <GoalList {...this.state} />
-                        </TabPanel>
-                        <TabPanel>
-                            <ConditionList {...this.state} />
-                        </TabPanel>
-                        <TabPanel>
-                            <MedicationList {...this.state} />
+                            <Tabs>
+                                <TabList>
+                                    <Tab>Goals</Tab>
+                                    <Tab>Concerns</Tab>
+                                    <Tab>Medications</Tab>
+                                    <Tab>Tasks</Tab>
+                                </TabList>
+                                <TabPanel>
+                                    <GoalList {...this.state} />
+                                </TabPanel>
+                                <TabPanel>
+                                    <ConditionList {...this.state} />
+                                </TabPanel>
+                                <TabPanel>
+                                     <MedicationList {...this.state} />
+                                </TabPanel>
+                                <TabPanel>
+                                    <h4 className="title">Care Plan Tasks</h4>
+                                    <p>Coming soon...</p>
+                                </TabPanel>
+                            </Tabs>
                         </TabPanel>
                         <TabPanel>
                             <Tabs>
                                 <TabList>
-                                    <Tab>Immunizations</Tab>
-                                    <Tab>Lab Results</Tab>
+                                    <Tab>Tests</Tab>
                                     <Tab>Vitals</Tab>
-                                    <Tab>Plan</Tab>
+                                    <Tab>Surveys</Tab>
+                                    <Tab>Immunizations</Tab>
                                 </TabList>
-                                <TabPanel>
-                                    <ImmunizationList {...this.state} />
-                                </TabPanel>
                                 <TabPanel>
                                     <LabResultList {...this.state} />
                                 </TabPanel>
@@ -107,10 +118,17 @@ export default class App extends React.Component<AppProps, AppState> {
                                     <VitalsList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Care Plan Activities</h4>
+                                    <h4 className="title">Assessment Surveys</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel>
+                                <TabPanel>
+                                    <ImmunizationList {...this.state} />
+                                </TabPanel>
                             </Tabs>
+                        </TabPanel>
+                        <TabPanel>
+                            <h4 className="title">Care Team</h4>
+                            <p>Coming soon...</p>
                         </TabPanel>
                     </Tabs>
                 </Route> 
