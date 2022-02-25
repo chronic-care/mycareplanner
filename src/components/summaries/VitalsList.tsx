@@ -28,6 +28,7 @@ export class VitalsList extends React.Component<VitalsListProps, VitalsListState
         <div className="welcome">
           <h4 className="title">Vitals</h4>
 
+            {observations === undefined ? <p>No records found.</p> :
             <table><tbody>
             {observations?.map((obs, idx) => (
               <tr key={idx}>
@@ -48,6 +49,7 @@ export class VitalsList extends React.Component<VitalsListProps, VitalsListState
               </tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )

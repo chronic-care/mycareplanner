@@ -37,6 +37,7 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
         <div className="welcome">
           <h4 className="title">Current Health Issues</h4>
 
+          {conditions === undefined ? <p>No records found.</p> :
           <table><tbody>
             {conditions?.map((cond, idx) => (
               <tr key={idx}><td>
@@ -56,6 +57,7 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
               </td></tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )

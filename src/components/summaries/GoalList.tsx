@@ -11,7 +11,7 @@ interface GoalListProps {
 }
 
 interface GoalListState {
-  goalSummary?: [GoalSummary]
+  goalSummary?: GoalSummary[]
 }
 
 export class GoalList extends React.Component<GoalListProps, GoalListState> {
@@ -36,6 +36,7 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
         <div className="welcome">
           <h4 className="title">Health Goals</h4>
 
+          {goals === undefined || goals?.length === 0 ? <p>No records found.</p> :
           <table><tbody>
             {goals?.map((goal, idx) => (
               <tr key={idx}>
@@ -79,6 +80,7 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
               </tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )

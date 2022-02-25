@@ -29,6 +29,7 @@ export class ImmunizationList extends React.Component<ImmunizationListProps, Imm
         <div className="welcome">
           <h4 className="title">Immunizations</h4>
 
+          {immunizations === undefined ? <p>No records found.</p> :
           <table><tbody>
             {immunizations?.map((med, idx) => (
               <tr key={idx}>
@@ -47,6 +48,7 @@ export class ImmunizationList extends React.Component<ImmunizationListProps, Imm
               </tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )

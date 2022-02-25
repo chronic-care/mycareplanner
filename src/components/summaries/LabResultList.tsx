@@ -12,7 +12,7 @@ interface LabResultListProps {
 }
 
 interface LabResultListState {
-  labResultSummary?: [ObservationSummary]
+  labResultSummary?: ObservationSummary[]
 }
 
 export class LabResultList extends React.Component<LabResultListProps, LabResultListState> {
@@ -37,6 +37,7 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
         <div className="welcome">
           <h4 className="title">Lab Results</h4>
 
+          {observations === undefined || observations?.length === 0 ? <p>No records found.</p> :
             <table><tbody>
             {observations?.map((obs, idx) => (
               <tr key={idx}>
@@ -63,6 +64,7 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
               </tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )

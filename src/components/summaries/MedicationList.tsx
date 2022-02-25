@@ -12,7 +12,7 @@ interface MedicationListProps {
 }
 
 interface MedicationListState {
-  medicationSummary?: [MedicationSummary]
+  medicationSummary?: MedicationSummary[]
 }
 
 export class MedicationList extends React.Component<MedicationListProps, MedicationListState> {
@@ -37,6 +37,7 @@ export class MedicationList extends React.Component<MedicationListProps, Medicat
         <div className="welcome">
           <h4 className="title">Medications</h4>
 
+          {medications === undefined || medications?.length === 0 ? <p>No records found.</p> :
           <table><tbody>
             {medications?.map((med, idx) => (
               <tr key={idx}>
@@ -57,6 +58,7 @@ export class MedicationList extends React.Component<MedicationListProps, Medicat
               </tr>
               ))}
           </tbody></table>
+          }
         </div>
       </div>
     )
