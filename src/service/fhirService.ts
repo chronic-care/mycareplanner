@@ -38,7 +38,8 @@ const serviceRequestPath = 'ServiceRequest?status=active';
 const proceduresPath = 'Procedure';
 const diagnosticReportPath = 'DiagnosticReport';
 // const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
-const vitalSignsPath = 'Observation?category=vital-signs_count=500';  // Epic defaults to count=1000
+// const vitalSignsPath = 'Observation?category=vital-signs&_count=500';  // Epic defaults to count=1000
+const vitalSignsPath = 'Observation?category=vital-signs&code=85354-9,8867-4,59408-5,2708-6,8310-5,29463-7,8302-2,39156-5&_count=100';  // Epic defaults to count=1000
 const socialHistoryPath = 'Observation?category=social-history';
 
 // category=survey returns 400 error from Epic, so include another category recognized by Epic
@@ -51,7 +52,8 @@ const fhirOptions: fhirclient.FhirOptions = {
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
   var vitals: Observation[] = []
   // codes are ordered by preference for presentation: BP, Heart rate, O2 sat, temp, weight, height, BMI
-  const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
+  // const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
+  const vitalsCodes = ['85354-9', '29463-7']
   const queryPaths = vitalsCodes.map(code => {
     return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_count=1'
   })
@@ -59,11 +61,11 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as [Observation] )
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as [Observation] )
 
   vitals = vitals.filter(v => v !== undefined)
   return vitals
@@ -86,7 +88,7 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   const fhirUser: Practitioner | Patient | RelatedPerson | undefined = fhirUserPath ? await client.request(fhirUserPath) : undefined;
   const caregiverName: String | undefined = (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
 
-  console.time('Observation queries')
+  console.time('FHIR queries')
 
   // Authentication form allows patient to un-select individual types from allowed scope
   console.log('CarePlan request: ' + new Date().toLocaleTimeString())
@@ -143,8 +145,8 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   //   : undefined) as [Observation];
   const vitalSigns = undefined
 
-  console.log('All Observation requests finished: ' + new Date().toLocaleTimeString())
-  console.timeEnd('Observation queries')
+  console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
+  console.timeEnd('FHIR queries')
 
   // console.log("FHIRData Patient: " + JSON.stringify(patient));
   // console.log("FHIRData social history: ");

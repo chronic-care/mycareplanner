@@ -49,21 +49,31 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
                   <td>{goal.ExpressedBy}</td>
                   <td>Start: {displayDate(goal.StartDate)}</td>
                 </tr>
-                {goal.Target === null || (goal.Target?.[0]?.DueDate === null && goal.Target?.[0]?.TargetValue === null) ? <tr/> :
-                  <tr>
-                    <td>{goal.Target?.[0]?.TargetValue === null ? '' : 'Target: ' + goal.Target?.[0]?.TargetValue}</td>
-                    <td>{goal.Target?.[0]?.DueDate === null ? '' : 'Due: ' + displayDate(goal.Target?.[0]?.DueDate)}</td>
-                  </tr>}
-                {goal.Target === null || goal.Target?.[0]?.LastResult === null ? <tr/> :
-                  <tr>
-                    <td colSpan={2}>Last Value: {goal.Target?.[0]?.LastResult?.ResultText ?? '?'} on {displayDate(goal.Target?.[0]?.LastResult?.Date)}</td>
-                  </tr>}
+                </tbody>
+
+                {goal.Target?.map((target, idx) => (
+                <tbody>
+                  {(target.DueDate === null && target.TargetValue === null) ? <tr key={idx}/> :
+                    <tr key={idx}>
+                      <td>{target.TargetValue === null ? '' : 'Target: ' + target.TargetValue}</td>
+                      <td>{target.DueDate === null ? '' : 'Due: ' + displayDate(target?.DueDate)}</td>
+                    </tr>}
+
+                  {(target.LastResult === null) ? <tr key={idx}/> :
+                    <tr key={idx}>
+                      <td colSpan={2}>Last Value: {target.LastResult?.ResultText ?? '?'} on {displayDate(target.LastResult?.Date)}</td>
+                    </tr>}
+                </tbody>
+                ))}
+
+                <tbody>
                 {goal.LearnMore === null ? <tr/> :
                   <tr><td colSpan={2}><Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(goal.LearnMore);}}><i>Learn&nbsp;More</i></Link></td></tr>}
                 {goal.Notes?.map((note, idx) => (
                   <tr key={idx}><td colSpan={2}>Note: {note}</td></tr>
                 ))}
-              </tbody></table>
+               </tbody>
+              </table>
               
               </td>
               </tr>

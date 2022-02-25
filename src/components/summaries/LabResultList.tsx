@@ -53,7 +53,7 @@ export class LabResultList extends React.Component<LabResultListProps, LabResult
                 </tr>
                 <tr>
                   <td colSpan={3}>{obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange}</td>
-                  <td align="right">{obs.Interpretation}</td>
+                  <td align="right"><b>{obs.Interpretation}</b></td>
                 </tr>
                 {/* {obs.Notes?.map((note, idx) => (
                   <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
