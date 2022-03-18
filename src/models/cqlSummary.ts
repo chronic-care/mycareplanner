@@ -12,77 +12,77 @@ export interface SummaryData {
 }
 
 export interface PatientSummary {
-  patientId: String,
-  givenName: String,
-  fullName: String,
-  age: String,
-  gender: String,
-  birthSex?: String | undefined,
-  race?: String | undefined,
-  pcpName?: String | undefined,
+  patientId: string,
+  givenName: string,
+  fullName: string,
+  age: string,
+  gender: string,
+  birthSex?: string,
+  race?: string,
+  pcpName?: string,
 }
 
 export interface ScreeningSummary {
-  notifyPatient: Boolean,
-  recommendScreening: Boolean,
-  name: String,
-  title: String,
-  information: [String],
-  decision: [String],
-  recommendation: [String],
-  questionnaire: String,
+  notifyPatient: boolean,
+  recommendScreening: boolean,
+  name: string,
+  title: string,
+  information: string[],
+  decision: string[],
+  recommendation: string[],
+  questionnaire: string[],
 }
 
 export interface ConditionSummary {
-  Category?: String,
-  ConceptName: String,
+  Category?: string,
+  ConceptName: string,
   RecordedDate?: string,
   AssertedDate?: string,
   OnsetDate?: string,
-  Notes?: String[],
+  Notes?: string[],
   HasGoal?: GoalSummary[],
   LearnMore?: string
 }
 
 export interface GoalSummary {
-  Category?: string | undefined,
+  Category?: string,
   Description: string,
-  ExpressedBy?: string | undefined,
-  StartDate?: string | undefined,
-  Target?: GoalTarget[] | undefined,
-  Addresses?: ConditionSummary[] | undefined,
-  Notes?: string[] | undefined,
-  LearnMore?: string | undefined
+  ExpressedBy?: string,
+  StartDate?: string,
+  Target?: GoalTarget[],
+  Addresses?: ConditionSummary[],
+  Notes?: string[],
+  LearnMore?: string
 }
 
 export interface GoalTarget {
-  DueDate?: string | undefined,
-  DisplayName?: string | undefined,
-  TargetValue?: string | undefined,
-  LastResult?: ObservationSummary | undefined,
+  DueDate?: string,
+  DisplayName?: string,
+  TargetValue?: string,
+  LastResult?: ObservationSummary,
 }
 
 export interface MedicationSummary {
-  Category?: string | undefined,
+  Category?: string,
   ConceptName: string,
-  AuthoredOn?: string | undefined,
-  Requester?: string | undefined,
-  DosageInstruction?: string | undefined,
-  Notes?: String[] | undefined,
-  LearnMore?: string | undefined
+  AuthoredOn?: string,
+  Requester?: string,
+  DosageInstruction?: string,
+  Notes?: string[],
+  LearnMore?: string
 }
 
 export interface ObservationSummary {
-  DisplayName: String,
-  ConceptName: String,
+  DisplayName: string,
+  ConceptName: string,
   Date?: string,
-  ResultText: String,
-  ResultValue?: number | undefined,
-  ResultUnits?: String | undefined,
-  ReferenceRange?: String | undefined,
-  Interpretation?: String | undefined,
-  Flag?: Boolean | undefined,
-  Performer?: String | undefined,
-  Notes?: String[],
+  ResultText: string,
+  ResultValue?: number,
+  ResultUnits?: string,
+  ReferenceRange?: string,
+  Interpretation?: string,
+  Flag?: boolean,
+  Performer?: string,
+  Notes?: string[],
   LearnMore?: string
 }

@@ -48,7 +48,8 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
                 </tr>
                 <tr>
                   <td>{goal.ExpressedBy}</td>
-                  <td>Start: {displayDate(goal.StartDate)}</td>
+                  {(goal.StartDate === null) ? <td/> :
+                  <td>Start: {displayDate(goal.StartDate)}</td>}
                 </tr>
                 </tbody>
 

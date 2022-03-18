@@ -1390,30 +1390,30 @@
                } ]
             }
          }, {
-            "localId" : "103",
+            "localId" : "108",
             "locator" : "12:1-22:36",
-            "name" : "Vital Signs Summary",
+            "name" : "VitalSignsSummary",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "103",
+                  "r" : "108",
                   "s" : [ {
-                     "value" : [ "// View summary tuple for each vital sign data element\n","define ","\"Vital Signs Summary\"",": \n  " ]
+                     "value" : [ "// View summary tuple for each vital sign data element\n","define ","VitalSignsSummary",": \n  " ]
                   }, {
-                     "r" : "102",
+                     "r" : "107",
                      "s" : [ {
                         "s" : [ {
-                           "r" : "99",
+                           "r" : "104",
                            "s" : [ {
-                              "r" : "98",
+                              "r" : "103",
                               "s" : [ {
                                  "value" : [ "(" ]
                               }, {
-                                 "r" : "98",
+                                 "r" : "103",
                                  "s" : [ {
-                                    "value" : [ "List {\n//   DE.ReportObservation(VitalSigns.BloodPressure, 'Blood Pressure'),\n    " ]
+                                    "value" : [ "List {\n    " ]
                                  }, {
                                     "r" : "67",
                                     "s" : [ {
@@ -1439,7 +1439,7 @@
                                           }, {
                                              "r" : "65",
                                              "s" : [ {
-                                                "value" : [ "BodyHeight" ]
+                                                "value" : [ "BloodPressure" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1447,7 +1447,7 @@
                                        }, {
                                           "r" : "66",
                                           "s" : [ {
-                                             "value" : [ "'Height'" ]
+                                             "value" : [ "'Blood Pressure'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1480,7 +1480,7 @@
                                           }, {
                                              "r" : "70",
                                              "s" : [ {
-                                                "value" : [ "BodyWeight" ]
+                                                "value" : [ "BodyHeight" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1488,7 +1488,7 @@
                                        }, {
                                           "r" : "71",
                                           "s" : [ {
-                                             "value" : [ "'Weight'" ]
+                                             "value" : [ "'Height'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1521,7 +1521,7 @@
                                           }, {
                                              "r" : "75",
                                              "s" : [ {
-                                                "value" : [ "BodyMassIndex" ]
+                                                "value" : [ "BodyWeight" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1529,7 +1529,7 @@
                                        }, {
                                           "r" : "76",
                                           "s" : [ {
-                                             "value" : [ "'BMI'" ]
+                                             "value" : [ "'Weight'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1562,7 +1562,7 @@
                                           }, {
                                              "r" : "80",
                                              "s" : [ {
-                                                "value" : [ "BodyTemperature" ]
+                                                "value" : [ "BodyMassIndex" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1570,7 +1570,7 @@
                                        }, {
                                           "r" : "81",
                                           "s" : [ {
-                                             "value" : [ "'Temperature'" ]
+                                             "value" : [ "'BMI'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1603,7 +1603,7 @@
                                           }, {
                                              "r" : "85",
                                              "s" : [ {
-                                                "value" : [ "HeartRate" ]
+                                                "value" : [ "BodyTemperature" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1611,7 +1611,7 @@
                                        }, {
                                           "r" : "86",
                                           "s" : [ {
-                                             "value" : [ "'Heart Rate'" ]
+                                             "value" : [ "'Temperature'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1644,7 +1644,7 @@
                                           }, {
                                              "r" : "90",
                                              "s" : [ {
-                                                "value" : [ "OxygenSaturation" ]
+                                                "value" : [ "HeartRate" ]
                                              } ]
                                           } ]
                                        }, {
@@ -1652,7 +1652,7 @@
                                        }, {
                                           "r" : "91",
                                           "s" : [ {
-                                             "value" : [ "'Oxygen Saturation'" ]
+                                             "value" : [ "'Heart Rate'" ]
                                           } ]
                                        }, {
                                           "value" : [ ")" ]
@@ -1685,13 +1685,54 @@
                                           }, {
                                              "r" : "95",
                                              "s" : [ {
-                                                "value" : [ "RespiratoryRate" ]
+                                                "value" : [ "OxygenSaturation" ]
                                              } ]
                                           } ]
                                        }, {
                                           "value" : [ ", " ]
                                        }, {
                                           "r" : "96",
+                                          "s" : [ {
+                                             "value" : [ "'Oxygen Saturation'" ]
+                                          } ]
+                                       }, {
+                                          "value" : [ ")" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ",\n    " ]
+                                 }, {
+                                    "r" : "102",
+                                    "s" : [ {
+                                       "r" : "98",
+                                       "s" : [ {
+                                          "value" : [ "DE" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "102",
+                                       "s" : [ {
+                                          "value" : [ "ReportObservation","(" ]
+                                       }, {
+                                          "r" : "100",
+                                          "s" : [ {
+                                             "r" : "99",
+                                             "s" : [ {
+                                                "value" : [ "VitalSigns" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ "." ]
+                                          }, {
+                                             "r" : "100",
+                                             "s" : [ {
+                                                "value" : [ "RespiratoryRate" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ ", " ]
+                                       }, {
+                                          "r" : "101",
                                           "s" : [ {
                                              "value" : [ "'Respiratory Rate'" ]
                                           } ]
@@ -1712,13 +1753,13 @@
                      }, {
                         "value" : [ " " ]
                      }, {
-                        "r" : "101",
+                        "r" : "106",
                         "s" : [ {
                            "value" : [ "where " ]
                         }, {
-                           "r" : "101",
+                           "r" : "106",
                            "s" : [ {
-                              "r" : "100",
+                              "r" : "105",
                               "s" : [ {
                                  "value" : [ "Result" ]
                               } ]
@@ -1788,11 +1829,32 @@
                         "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                         "type" : "NamedTypeSpecifier"
                      }
+                  }, {
+                     "name" : "Performer",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "Notes",
+                     "elementType" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }, {
+                     "name" : "LearnMore",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
                   } ]
                }
             },
             "expression" : {
-               "localId" : "102",
+               "localId" : "107",
                "locator" : "13:3-22:36",
                "type" : "Query",
                "resultTypeSpecifier" : {
@@ -1853,11 +1915,32 @@
                            "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                            "type" : "NamedTypeSpecifier"
                         }
+                     }, {
+                        "name" : "Performer",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }, {
+                        "name" : "Notes",
+                        "elementType" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }, {
+                        "name" : "LearnMore",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
                      } ]
                   }
                },
                "source" : [ {
-                  "localId" : "99",
+                  "localId" : "104",
                   "locator" : "13:3-22:11",
                   "alias" : "Result",
                   "resultTypeSpecifier" : {
@@ -1918,11 +2001,32 @@
                               "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                               "type" : "NamedTypeSpecifier"
                            }
+                        }, {
+                           "name" : "Performer",
+                           "elementType" : {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }, {
+                           "name" : "Notes",
+                           "elementType" : {
+                              "type" : "ListTypeSpecifier",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }
+                        }, {
+                           "name" : "LearnMore",
+                           "elementType" : {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier"
+                           }
                         } ]
                      }
                   },
                   "expression" : {
-                     "localId" : "98",
+                     "localId" : "103",
                      "locator" : "13:3-22:4",
                      "type" : "List",
                      "resultTypeSpecifier" : {
@@ -1983,11 +2087,189 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         }
                      },
                      "element" : [ {
                         "localId" : "67",
+                        "locator" : "14:5-14:68",
+                        "name" : "ReportObservation",
+                        "libraryName" : "DE",
+                        "type" : "FunctionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "TupleTypeSpecifier",
+                           "element" : [ {
+                              "name" : "DisplayName",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ConceptName",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Date",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ResultText",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ResultValue",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ResultUnits",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ReferenceRange",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Interpretation",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Flag",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           } ]
+                        },
+                        "operand" : [ {
+                           "localId" : "65",
+                           "locator" : "14:26-14:49",
+                           "resultTypeName" : "{http://hl7.org/fhir}Observation",
+                           "path" : "BloodPressure",
+                           "type" : "Property",
+                           "source" : {
+                              "localId" : "64",
+                              "locator" : "14:26-14:35",
+                              "name" : "VitalSigns",
+                              "type" : "ExpressionRef",
+                              "resultTypeSpecifier" : {
+                                 "type" : "TupleTypeSpecifier",
+                                 "element" : [ {
+                                    "name" : "BloodPressure",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "BodyHeight",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "BodyWeight",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "BodyMassIndex",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "BodyTemperature",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "HeartRate",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "OxygenSaturation",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 }, {
+                                    "name" : "RespiratoryRate",
+                                    "elementType" : {
+                                       "name" : "{http://hl7.org/fhir}Observation",
+                                       "type" : "NamedTypeSpecifier"
+                                    }
+                                 } ]
+                              }
+                           }
+                        }, {
+                           "localId" : "66",
+                           "locator" : "14:52-14:67",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Blood Pressure",
+                           "type" : "Literal"
+                        } ]
+                     }, {
+                        "localId" : "72",
                         "locator" : "15:5-15:57",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2048,16 +2330,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "65",
+                           "localId" : "70",
                            "locator" : "15:26-15:46",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "BodyHeight",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "64",
+                              "localId" : "69",
                               "locator" : "15:26-15:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2115,7 +2418,7 @@
                               }
                            }
                         }, {
-                           "localId" : "66",
+                           "localId" : "71",
                            "locator" : "15:49-15:56",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2123,7 +2426,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "72",
+                        "localId" : "77",
                         "locator" : "16:5-16:57",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2184,16 +2487,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "70",
+                           "localId" : "75",
                            "locator" : "16:26-16:46",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "BodyWeight",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "69",
+                              "localId" : "74",
                               "locator" : "16:26-16:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2251,7 +2575,7 @@
                               }
                            }
                         }, {
-                           "localId" : "71",
+                           "localId" : "76",
                            "locator" : "16:49-16:56",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2259,7 +2583,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "77",
+                        "localId" : "82",
                         "locator" : "17:5-17:57",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2320,16 +2644,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "75",
+                           "localId" : "80",
                            "locator" : "17:26-17:49",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "BodyMassIndex",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "74",
+                              "localId" : "79",
                               "locator" : "17:26-17:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2387,7 +2732,7 @@
                               }
                            }
                         }, {
-                           "localId" : "76",
+                           "localId" : "81",
                            "locator" : "17:52-17:56",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2395,7 +2740,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "82",
+                        "localId" : "87",
                         "locator" : "18:5-18:67",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2456,16 +2801,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "80",
+                           "localId" : "85",
                            "locator" : "18:26-18:51",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "BodyTemperature",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "79",
+                              "localId" : "84",
                               "locator" : "18:26-18:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2523,7 +2889,7 @@
                               }
                            }
                         }, {
-                           "localId" : "81",
+                           "localId" : "86",
                            "locator" : "18:54-18:66",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2531,7 +2897,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "87",
+                        "localId" : "92",
                         "locator" : "19:5-19:60",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2592,16 +2958,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "85",
+                           "localId" : "90",
                            "locator" : "19:26-19:45",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "HeartRate",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "84",
+                              "localId" : "89",
                               "locator" : "19:26-19:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2659,7 +3046,7 @@
                               }
                            }
                         }, {
-                           "localId" : "86",
+                           "localId" : "91",
                            "locator" : "19:48-19:59",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2667,7 +3054,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "92",
+                        "localId" : "97",
                         "locator" : "20:5-20:74",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2728,16 +3115,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "90",
+                           "localId" : "95",
                            "locator" : "20:26-20:52",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "OxygenSaturation",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "89",
+                              "localId" : "94",
                               "locator" : "20:26-20:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2795,7 +3203,7 @@
                               }
                            }
                         }, {
-                           "localId" : "91",
+                           "localId" : "96",
                            "locator" : "20:55-20:73",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2803,7 +3211,7 @@
                            "type" : "Literal"
                         } ]
                      }, {
-                        "localId" : "97",
+                        "localId" : "102",
                         "locator" : "21:5-21:72",
                         "name" : "ReportObservation",
                         "libraryName" : "DE",
@@ -2864,16 +3272,37 @@
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
                                  "type" : "NamedTypeSpecifier"
                               }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
                            } ]
                         },
                         "operand" : [ {
-                           "localId" : "95",
+                           "localId" : "100",
                            "locator" : "21:26-21:51",
                            "resultTypeName" : "{http://hl7.org/fhir}Observation",
                            "path" : "RespiratoryRate",
                            "type" : "Property",
                            "source" : {
-                              "localId" : "94",
+                              "localId" : "99",
                               "locator" : "21:26-21:35",
                               "name" : "VitalSigns",
                               "type" : "ExpressionRef",
@@ -2931,7 +3360,7 @@
                               }
                            }
                         }, {
-                           "localId" : "96",
+                           "localId" : "101",
                            "locator" : "21:54-21:71",
                            "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
@@ -2943,7 +3372,7 @@
                } ],
                "relationship" : [ ],
                "where" : {
-                  "localId" : "101",
+                  "localId" : "106",
                   "locator" : "22:13-22:36",
                   "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
                   "type" : "Not",
@@ -2952,7 +3381,7 @@
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
                      "type" : "IsNull",
                      "operand" : {
-                        "localId" : "100",
+                        "localId" : "105",
                         "locator" : "22:19-22:24",
                         "name" : "Result",
                         "type" : "AliasRef",
@@ -3010,6 +3439,27 @@
                               "name" : "Flag",
                               "elementType" : {
                                  "name" : "{urn:hl7-org:elm-types:r1}Boolean",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Performer",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
                                  "type" : "NamedTypeSpecifier"
                               }
                            } ]

@@ -20,6 +20,7 @@ const oneDay = 24*3600*1000
 // const threeMonthsAgo = new Date(today.getTime() - (365/4 * oneDay))
 // const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
 // const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
+const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
 // const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
@@ -31,15 +32,14 @@ const goalsPath = 'Goal?lifecycle-status=active';
 const conditionsPath = 'Condition?category=problem-list-item&clinical-status=active';
 
 const immunizationsPath = 'Immunization?status=completed';
-const labResultsPath = 'Observation?category=laboratory';
-const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(fiveYearsAgo);
-// const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(fiveYearsAgo);
-const serviceRequestPath = 'ServiceRequest?status=active';
+const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo);
+const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo);
+const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(threeYearsAgo);
 const proceduresPath = 'Procedure';
 const diagnosticReportPath = 'DiagnosticReport';
 // const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
 // const vitalSignsPath = 'Observation?category=vital-signs&_count=500';  // Epic defaults to count=1000
-const vitalSignsPath = 'Observation?category=vital-signs&code=85354-9,8867-4,59408-5,2708-6,8310-5,29463-7,8302-2,39156-5&_count=100';  // Epic defaults to count=1000
+const vitalSignsPath = 'Observation?category=vital-signs&code=85354-9,8867-4,59408-5,2708-6,8310-5,29463-7,8302-2,39156-5&_count=500';  // Epic defaults to count=1000
 const socialHistoryPath = 'Observation?category=social-history';
 
 // category=survey returns 400 error from Epic, so include another category recognized by Epic
@@ -50,22 +50,31 @@ const fhirOptions: fhirclient.FhirOptions = {
 };
 
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
+  // Workaround for Epic Sandbox that takes many minutes to request vital-signs, or times out completely
+  if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4') {
+    return []
+  }
+
   var vitals: Observation[] = []
   // codes are ordered by preference for presentation: BP, Heart rate, O2 sat, temp, weight, height, BMI
   // const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
-  const vitalsCodes = ['85354-9', '29463-7']
+  // codes are ordered by preference for presentation: BP, O2 sat, temp, weight, height
+  const vitalsCodes = ['85354-9', '59408-5', '8310-5', '29463-7', '8302-2']
   const queryPaths = vitalsCodes.map(code => {
-    return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_count=1'
+    // Issue: UCHealth returns 400 error if include both category and code.
+    // return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_count=1'
+    return 'Observation?code=http://loinc.org|' + code + '&_count=1'
   })
 
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as [Observation] )
   vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as [Observation] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as [Observation] )
   // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as [Observation] )
   // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as [Observation] )
+  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[7], fhirOptions) as fhirclient.JsonObject) as [Observation] )
 
   vitals = vitals.filter(v => v !== undefined)
   return vitals
@@ -138,12 +147,11 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   //   : undefined) as [Observation];
   const surveyResults = undefined
 
-  // console.log('Vitals request: ' + new Date().toLocaleTimeString())
-  // const vitalSigns = (hasScope('Observation.read')
-  //   ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject) 
-  //   // ? await getVitalSigns(client)
-  //   : undefined) as [Observation];
-  const vitalSigns = undefined
+  console.log('Vitals request: ' + new Date().toLocaleTimeString())
+  const vitalSigns = (hasScope('Observation.read')
+    // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject) 
+    ? await getVitalSigns(client)
+    : undefined) as [Observation];
 
   console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
   console.timeEnd('FHIR queries')

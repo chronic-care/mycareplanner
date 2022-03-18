@@ -44,7 +44,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             {(patient === undefined) ? '' :
                 <p className="subheadline">
                   {(fhirData?.caregiverName === undefined) ? '' : 'for '}
-                  <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age}
+                  {/* <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age} */}
+                  <b>{patient?.fullName}</b> (age {patient?.age})
                 </p>
             }
         </div>

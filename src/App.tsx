@@ -53,10 +53,14 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     public render(): JSX.Element {
+        let patient = this.state.patientSummary;
+
         return (
             <div className="app">
             <header className="app-header">
-                <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/>
+                {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
+                <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner"/>
+                {patient === undefined ? '' : <p>&npsp;&npsp;{patient?.fullName}</p>}
             </header>
 
             <Switch>

@@ -11,6 +11,13 @@ FHIR.oauth2.authorize([
         scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
     },
     {
+        // Meld Synthea test data sandbox
+        issMatch: /\bgw.interop.community\/SyntheaTest2\b/i,
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_meld_synthea,
+        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
+    },
+    {
         // Logica sandbox
         issMatch: /\blogicahealth\b/i,
         redirectUri: "./index.html",
