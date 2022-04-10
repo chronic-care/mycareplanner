@@ -36,6 +36,7 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
       <div className="home-view">
         <div className="welcome">
           <h4 className="title">Current Health Issues</h4>
+          <p><Link to={{ pathname: '/condition-edit', state: { fhirData: this.props.fhirData }}}>Add a Health Concern</Link></p>
 
           {conditions === undefined ? <p>No records found.</p> :
           <table><tbody>

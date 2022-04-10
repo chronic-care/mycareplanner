@@ -83,7 +83,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 </ul>
             }
 
-          <h5>Health Record</h5>
+          {/* <h5>Health Record</h5>
           <p>Select one of the tabs above to review your health records.</p>
 
           Health Goals [{this.props.fhirData?.goals?.length ?? '?'} records]<br/>
@@ -92,7 +92,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           Immunizations [{this.props.fhirData?.immunizations?.length ?? '?'}]<br/>
           Lab Results [{this.props.fhirData?.labResults?.length ?? '?'}]<br/>
           Vitals [{this.props.fhirData?.vitalSigns?.length ?? '?'}]<br/>
-          Treatment Plan [{this.props.fhirData?.serviceRequests?.length ?? '?'}]<br/>
+          Treatment Plan [{this.props.fhirData?.serviceRequests?.length ?? '?'}]<br/> */}
 
           {/*
           <Link to={{ pathname: '/goals', state: { fhirData: this.props.fhirData }}}>Health Goals </Link> 

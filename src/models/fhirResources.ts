@@ -5,7 +5,7 @@ import { CarePlan, Condition, DiagnosticReport, Goal, Immunization, MedicationRe
 export interface FHIRData {
   fhirUser?: Practitioner | Patient | RelatedPerson | undefined,
   caregiverName?: String,
-  patient: Patient,
+  patient?: Patient,
   patientPCP?: Practitioner,
   carePlans?: [CarePlan],
   conditions?: [Condition],

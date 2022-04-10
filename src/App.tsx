@@ -23,11 +23,17 @@ import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHa
 import { ConfirmationPage } from './components/confirmation-page/ConfirmationPage'
 import { ErrorPage } from "./components/error-page/ErrorPage";
 
+import ConditionEditForm from './components/edit-forms/ConditionEditForm';
+import GoalEditForm from './components/edit-forms/GoalEditForm';
+
 interface AppProps {
 
 }
 
 interface AppState {
+  mainTabIndex: number,
+  planTabIndex: number,
+  statusTabIndex: number,
   fhirData?: FHIRData,
   patientSummary?: PatientSummary,
   screenings?: [ScreeningSummary],
@@ -39,6 +45,9 @@ export default class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
+            mainTabIndex: 0,
+            planTabIndex: 0,
+            statusTabIndex: 0,
             fhirData: undefined,
         }
     }
@@ -67,13 +76,19 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path="/goals">
                     <GoalList {...this.state} />
                 </Route>
+                <Route path="/condition-edit" component= { ConditionEditForm } />
+                {/* <Route path="/goal-edit" component= { GoalEditForm } /> */}
+                <Route path="/goal-edit">
+                    <GoalEditForm />
+                </Route>
+
                 <Route path="/decision" component= { ScreeningDecision } />
                 <Route path="/questionnaire" component= { QuestionnaireHandler } />
                 <Route path='/confirmation' component= { ConfirmationPage } />
                 <Route path="/error" component= { ErrorPage } />
 
                 <Route path="/">
-                    <Tabs>
+                    <Tabs selectedIndex={this.state.mainTabIndex} onSelect={(index) => this.setState({ mainTabIndex: index })}>
                         <TabList>
                             <Tab>Home</Tab>
                             <Tab>Care Plan</Tab>
@@ -85,12 +100,12 @@ export default class App extends React.Component<AppProps, AppState> {
                             <Home {...this.state} />
                         </TabPanel>
                         <TabPanel>
-                            <Tabs>
+                            <Tabs selectedIndex={this.state.planTabIndex} onSelect={(index) => this.setState({ planTabIndex: index })}>
                                 <TabList>
                                     <Tab>Goals</Tab>
                                     <Tab>Concerns</Tab>
                                     <Tab>Medications</Tab>
-                                    <Tab>Tasks</Tab>
+                                    <Tab>Activities</Tab>
                                 </TabList>
                                 <TabPanel>
                                     <GoalList {...this.state} />
@@ -108,12 +123,12 @@ export default class App extends React.Component<AppProps, AppState> {
                             </Tabs>
                         </TabPanel>
                         <TabPanel>
-                            <Tabs>
+                            <Tabs selectedIndex={this.state.statusTabIndex} onSelect={(index) => this.setState({ statusTabIndex: index })}>
                                 <TabList>
                                     <Tab>Tests</Tab>
                                     <Tab>Vitals</Tab>
-                                    <Tab>Surveys</Tab>
-                                    <Tab>Immunizations</Tab>
+                                    <Tab>Assessment</Tab>
+                                    <Tab>Immunization</Tab>
                                 </TabList>
                                 <TabPanel>
                                     <LabResultList {...this.state} />
@@ -122,7 +137,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                     <VitalsList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Assessment Surveys</h4>
+                                    <h4 className="title">Assessment Results</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel>
                                 <TabPanel>

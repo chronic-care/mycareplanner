@@ -35,6 +35,7 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
       <div className="home-view">
         <div className="welcome">
           <h4 className="title">Health Goals</h4>
+          <p><Link to={{ pathname: '/goal-edit', state: { fhirData: this.props.fhirData }}}>Add a New Goal</Link></p>
 
           {goals === undefined || goals?.length === 0 ? <p>No records found.</p> :
           <table><tbody>
