@@ -79,7 +79,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path="/condition-edit" component= { ConditionEditForm } />
                 {/* <Route path="/goal-edit" component= { GoalEditForm } /> */}
                 <Route path="/goal-edit">
-                    <GoalEditForm />
+                    <GoalEditForm {...this.state} />
                 </Route>
 
                 <Route path="/decision" component= { ScreeningDecision } />

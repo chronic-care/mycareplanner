@@ -11,120 +11,202 @@ import Typography from '@mui/material/Typography';
 import { fhirclient } from 'fhirclient/lib/types';
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
-import { Goal, Resource, Reference } from '../../fhir-types/fhir-r4';
+import { Goal, Resource, CodeableConcept, Reference } from '../../fhir-types/fhir-r4';
+// import SaveCancelButtons from './SaveCancelButtons'
 
 import { FHIRData } from '../../models/fhirResources';
 import { PatientSummary } from '../../models/cqlSummary';
 
-export function createResource(goal: Goal){
-  return FHIR.oauth2.ready()
-      .then((client: Client) => {
-          const subject: Reference = {reference: 'Patient/'+(client.getPatientId() ?? 'patient-id')}
-          const author: Reference | undefined = client.getFhirUser() ? {reference: client.getFhirUser() ?? 'patient-id'} : undefined
-          goal.subject = subject
-          goal.expressedBy = author
-          console.log('New Goal: ' + JSON.stringify(goal))
-          return client.create(goal as fhirclient.FHIR.Resource)
-      })
-      .then((response) => {
-          return response
-      }).catch(error => {
-          console.log('Cannot create new resource: ' + goal.resourceType + '/' + goal.id + ' error: ', error)
-      });
+interface GoalFormProps {
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary
 }
 
+interface GoalFormState {
+  description?: string | undefined | null
+  startDate?: Date | undefined | null
+  dueDate?: Date | undefined | null
+  subjectRef?: Reference
+  expressedByRef?: Reference
+  achievementStatus?: CodeableConcept
+}
 
-export default function GoalEditForm(fhirData?: FHIRData) {
-  console.log("data=" + JSON.stringify(fhirData))
-  const [startDate, setStartDate] = React.useState<Date | null>(new Date());
-  const [dueDate, setDueDate] = React.useState<Date | null>(null);
+export default class GoalEditForm extends React.Component<GoalFormProps, GoalFormState> {
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  constructor(props: GoalFormProps) {
+    super(props);
+    let hasPatientId = this.props.fhirData?.patient?.id !== undefined
+    let hasUserId = this.props.fhirData?.fhirUser?.id !== undefined
+    this.state = {
+      description: '',
+      startDate: new Date(),
+      dueDate: null,  // must use null instead of undefined for MUI date widget
+      subjectRef: hasPatientId ? {
+        reference: 'Patient/' + this.props.fhirData?.patient?.id,
+        display: this.props.patientSummary?.fullName
+      } : undefined,
+      expressedByRef: hasUserId ? {
+        reference: this.props.fhirData?.fhirUser?.resourceType + '/' + this.props.fhirData?.fhirUser?.id,
+        display: this.props.fhirData?.caregiverName as string ?? this.props.patientSummary?.fullName
+      } : undefined,
+      achievementStatus: {
+        coding: [
+          {
+            system: 'http://terminology.hl7.org/CodeSystem/goal-achievement',
+            code: 'in-progress',
+            display: 'In Progress'
+          }
+        ],
+        text: 'In Progress'
+      }
+    };
+  }
+
+  componentDidMount() {
+    
+  }
+  
+  setDescription(newValue?: string) {
+    this.setState({ description: newValue })
+  }
+
+  setStartDate(newValue?: Date | null | undefined) {
+    // must support null for MUI date widget value
+    let date = newValue === null ? undefined : newValue
+    this.setState({ startDate: date })
+  }
+
+  setDueDate(newValue?: Date | null | undefined) {
+    // must support null for MUI date widget value
+    let date = newValue === null ? undefined : newValue
+    this.setState({ dueDate: date })
+  }
+
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      description: data.get('description'),
-      startDate: startDate,
-      dueDate: dueDate,
-    });
 
-    const description = {text: data.get('description')?.toString() ?? 'No description provided'}
-    const subject = {display: 'App user'}
+    if (this.state.subjectRef === undefined) {
+      return
+    }
+    const description = { text: this.state.description ?? 'No description provided' }
+    const goalTargets = (this.state.dueDate !== undefined) ? [{ dueDate: this.state.dueDate?.toISOString() }] : undefined
+    
     var goal: Goal = {
       resourceType: 'Goal',
       lifecycleStatus: 'active',
+      achievementStatus: this.state.achievementStatus,
       description: description,
-      subject: subject,
+      subject: this.state.subjectRef!,
+      expressedBy: this.state.expressedByRef,
+      startDate: this.state.startDate?.toISOString(),
+      target: goalTargets
     }
-    createResource(goal)
-  };
+    console.log('New Goal: ' + JSON.stringify(goal))
 
-  const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log("Cancel editing");
-  };
+    // reset form for next Goal before async create
+    this.resetFormData()
 
-  return (
-    <React.Fragment>
-    <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Health Goal
-        </Typography>
-        <Grid container spacing={3}>
+    // save to FHIR server
+    this.createResource(goal)
+  }
 
-        <Grid item xs={12}>
-            <TextField
-            required
-            multiline
-            id="description"
-            name="description"
-            label="Description"
-            fullWidth
-            minRows={3}
-            maxRows={5}
-            variant="standard"
-            />
+  handleReset = (event: React.FormEvent<HTMLFormElement>) => {
+    this.resetFormData()
+
+    // go Back
+  }
+
+  resetFormData() {
+    this.setState({
+      description: '',
+      startDate: new Date(), 
+      dueDate: null
+    })
+  }
+
+  public render(): JSX.Element {
+    return (
+      <React.Fragment>
+      <Box component="form" noValidate onSubmit={this.handleSubmit} onReset={this.handleReset} sx={{ mt: 3 }}>
+          <Typography variant="h5" gutterBottom>
+            Health Goal
+          </Typography>
+          <Grid container spacing={3}>
+  
+          <Grid item xs={12}>
+              <TextField
+              value={this.state.description}
+              onChange={(e) => {
+                  this.setDescription(e.target.value);
+              }}
+              required
+              multiline
+              id="description"
+              name="description"
+              label="Description"
+              fullWidth
+              minRows={3}
+              maxRows={5}
+              variant="standard"
+              />
+          </Grid>
+  
+          <Grid item xs={12} sm={6}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                      label="Start Date"
+                      value={this.state.startDate}
+                      onChange={(newValue) => {
+                          this.setStartDate(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
+                  />
+              </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                      label="Due Date"
+                      value={this.state.dueDate}
+                      onChange={(newValue) => {
+                          this.setDueDate(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
+                  />
+              </LocalizationProvider>
+          </Grid>
+  
+          {/* <SaveCancelButtons saveHandler={console.log('save resource handler')} /> */}
+
+          <Grid item xs={12} sm={6}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Save
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Cancel
+            </Button>
+          </Grid>
+  
         </Grid>
+      </Box>
+      </React.Fragment>
+    );
+  }
 
-        <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                    label="Start Date"
-                    value={startDate}
-                    onChange={(newValue) => {
-                        setStartDate(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
-                />
-            </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                    label="Due Date"
-                    value={dueDate}
-                    onChange={(newValue) => {
-                        setDueDate(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
-                />
-            </LocalizationProvider>
-        </Grid>
+  private createResource(resource: Resource) {
+    if (this.state.subjectRef === undefined) { return }
 
-        <Grid item xs={12} sm={6}>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Save
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Cancel
-          </Button>
-        </Grid>
-
-      </Grid>
-    </Box>
-    </React.Fragment>
-  );
+    return FHIR.oauth2.ready()
+        .then((client: Client) => {
+            return client.create(resource as fhirclient.FHIR.Resource)
+        })
+        .then((response) => {
+            return response
+        }).catch(error => {
+            console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+            return
+        });
+  }
 }
