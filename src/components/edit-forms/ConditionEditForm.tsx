@@ -12,13 +12,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { EditFormData } from '../../models/cqlSummary';
-import { FHIRData } from '../../models/fhirResources';
-import { PatientSummary } from '../../models/cqlSummary';
-
-import { fhirclient } from 'fhirclient/lib/types';
-import FHIR from 'fhirclient';
-import Client from 'fhirclient/lib/Client';
-import { Condition, Resource, CodeableConcept, Reference } from '../../fhir-types/fhir-r4';
+import { Condition } from '../../fhir-types/fhir-r4';
 import { createResource, updateResource } from '../../service/fhirService';
 
 export default function ConditionEditForm(formData?: EditFormData) {
@@ -94,7 +88,7 @@ export default function ConditionEditForm(formData?: EditFormData) {
     console.log('New Condition: ' + JSON.stringify(condition))
 
     createResource(condition)
-    
+
     // update FHIRData shared state
 
     history.goBack()

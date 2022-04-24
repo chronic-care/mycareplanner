@@ -81,11 +81,10 @@ export default class App extends React.Component<AppProps, AppState> {
                     <GoalList {...this.state} />
                 </Route>
                 <Route path="/condition-edit">
-                    <ConditionEditForm { ...editFormData } />
+                    <ConditionEditForm {...editFormData} />
                 </Route>
-                {/* <Route path="/condition-edit" render= {(props) => ConditionEditForm(this.state.fhirData, this.state.patientSummary) } /> */}
                 <Route path="/goal-edit">
-                    <GoalEditForm {...this.state} />
+                    <GoalEditForm {...editFormData} />
                 </Route>
 
                 <Route path="/decision" component= { ScreeningDecision } />
