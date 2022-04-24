@@ -1,9 +1,15 @@
+import { FHIRData } from './fhirResources';
 
 export interface CQLLibrary {
   // cql.Library reference
   library: any,
   // cql.CodeService reference
   codeService: any
+}
+
+export interface EditFormData {
+  fhirData?: FHIRData,
+  patientSummary?: PatientSummary
 }
 
 export interface SummaryData {

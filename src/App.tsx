@@ -9,7 +9,7 @@ import { Task } from './fhir-types/fhir-r4';
 
 import Home from "./Home";
 import { FHIRData } from './models/fhirResources';
-import { PatientSummary, ScreeningSummary } from './models/cqlSummary';
+import { PatientSummary, ScreeningSummary, EditFormData } from './models/cqlSummary';
 import { getFHIRData } from './service/fhirService';
 import { getPatientSummary, executeScreenings } from './service/cqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
@@ -63,6 +63,10 @@ export default class App extends React.Component<AppProps, AppState> {
 
     public render(): JSX.Element {
         let patient = this.state.patientSummary;
+        let editFormData: EditFormData = {
+            fhirData: this.state.fhirData,
+            patientSummary: this.state.patientSummary
+        }
 
         return (
             <div className="app">
@@ -76,8 +80,10 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path="/goals">
                     <GoalList {...this.state} />
                 </Route>
-                <Route path="/condition-edit" component= { ConditionEditForm } />
-                {/* <Route path="/goal-edit" component= { GoalEditForm } /> */}
+                <Route path="/condition-edit">
+                    <ConditionEditForm { ...editFormData } />
+                </Route>
+                {/* <Route path="/condition-edit" render= {(props) => ConditionEditForm(this.state.fhirData, this.state.patientSummary) } /> */}
                 <Route path="/goal-edit">
                     <GoalEditForm {...this.state} />
                 </Route>

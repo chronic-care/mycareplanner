@@ -8,7 +8,7 @@ FHIR.oauth2.authorize([
         issMatch: /\bgw.interop.community\/CarePlanning\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
+        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
     },
     {
         // Meld MPC sandbox
@@ -34,9 +34,9 @@ FHIR.oauth2.authorize([
     {
         // Cerner sandbox
         issMatch: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
-        redirectUri: "./index.html",
+        redirectUri: "http://localhost:8000/mycareplanner/index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_cerner,
-        scope: "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read patient/Condition.read patient/Observation.read patient/Procedure.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read"
+        scope: "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read"
     },
     {
         // Epic sandbox

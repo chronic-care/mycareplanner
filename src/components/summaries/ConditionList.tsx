@@ -1,7 +1,7 @@
 import '../../Home.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FHIRData , displayDate} from '../../models/fhirResources';
+import { FHIRData, hasScope , displayDate} from '../../models/fhirResources';
 import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../models/cqlSummary';
 import { getConditionSummary } from '../../service/mccCqlService';
 
@@ -36,7 +36,9 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
       <div className="home-view">
         <div className="welcome">
           <h4 className="title">Current Health Issues</h4>
-          <p><Link to={{ pathname: '/condition-edit', state: { fhirData: this.props.fhirData }}}>Add a Health Concern</Link></p>
+          {hasScope(this.props.fhirData?.clientScope, 'Goal.write') 
+            ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: this.props.fhirData }}}>Add a Health Concern</Link></p>
+            : <p/>} 
 
           {conditions === undefined ? <p>No records found.</p> :
           <table><tbody>

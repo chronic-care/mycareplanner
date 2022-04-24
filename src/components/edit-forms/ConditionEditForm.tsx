@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom'
+
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,22 +11,97 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-export default function ConditionEditForm() {
-  const [onsetDate, setStartDate] = React.useState<Date | null>(new Date());
+import { EditFormData } from '../../models/cqlSummary';
+import { FHIRData } from '../../models/fhirResources';
+import { PatientSummary } from '../../models/cqlSummary';
+
+import { fhirclient } from 'fhirclient/lib/types';
+import FHIR from 'fhirclient';
+import Client from 'fhirclient/lib/Client';
+import { Condition, Resource, CodeableConcept, Reference } from '../../fhir-types/fhir-r4';
+import { createResource, updateResource } from '../../service/fhirService';
+
+export default function ConditionEditForm(formData?: EditFormData) {
+  let history = useHistory()
+  const id = useParams();
+  const [description, setDescription] = React.useState<string | null>('');
+  const [onsetDate, setStartDate] = React.useState<Date | null>(null);
+
+  const fhirData = formData?.fhirData
+  const patientSummary = formData?.patientSummary
+  const hasPatientId = fhirData?.patient?.id !== undefined;
+  const hasUserId = fhirData?.fhirUser?.id !== undefined;
+
+  const subjectRef = hasPatientId ? {
+    reference: 'Patient/' + fhirData?.patient?.id,
+    display: patientSummary?.fullName
+  } : undefined
+  const recorderRef = hasUserId ? {
+    reference: fhirData?.fhirUser?.resourceType + '/' + fhirData?.fhirUser?.id,
+    display: fhirData?.caregiverName as string ?? patientSummary?.fullName
+  } : undefined
+
+  const clinicalStatus = {
+      coding: [
+        {
+          system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
+          code: 'active'
+        }
+      ],
+      text: 'Active'
+    }
+  const verificationStatus = {
+      coding: [
+        {
+          system: 'http://terminology.hl7.org/CodeSystem/condition-ver-status',
+          code: 'confirmed'
+        }
+      ],
+      text: 'Confirmed'
+    }
+  const healthConcernCategory = [
+    {
+      coding: [
+        {
+          system: 'http://hl7.org/fhir/us/core/CodeSystem/condition-category',
+          code: 'health-concern'
+        }
+      ],
+      text: 'Health Concern'
+    }
+  ]
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      description: data.get('description'),
-      onsetDate: onsetDate,
-    });
+    if (subjectRef === undefined) {
+      return
+    }
+
+    const code = { text: description ?? 'No description provided' }
+
+    var condition: Condition = {
+      resourceType: 'Condition',
+      clinicalStatus: clinicalStatus,
+      verificationStatus: verificationStatus,
+      category: healthConcernCategory,
+      code: code,
+      subject: subjectRef!,
+      recorder: recorderRef,
+      asserter: recorderRef,
+      recordedDate: new Date().toISOString(),
+      onsetDateTime: onsetDate?.toISOString()
+    }
+    console.log('New Condition: ' + JSON.stringify(condition))
+
+    createResource(condition)
+    
+    // update FHIRData shared state
+
+    history.goBack()
   };
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log("Cancel editing");
+    history.goBack()
   };
 
   return (
@@ -36,15 +114,19 @@ export default function ConditionEditForm() {
 
         <Grid item xs={12}>
             <TextField
-            required
-            multiline
-            id="description"
-            name="description"
-            label="Description"
-            fullWidth
-            minRows={3}
-            maxRows={5}
-            variant="standard"
+              value={description}
+              onChange={(e) => {
+                  setDescription(e.target.value);
+              }}
+              required
+              multiline
+              id="description"
+              name="description"
+              label="Description"
+              fullWidth
+              minRows={3}
+              maxRows={5}
+              variant="standard"
             />
         </Grid>
 

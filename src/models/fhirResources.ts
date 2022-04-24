@@ -3,22 +3,28 @@ import { CarePlan, Condition, DiagnosticReport, Goal, Immunization, MedicationRe
   Observation, Patient, Practitioner, Procedure, RelatedPerson } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
+  clientScope?: string,
   fhirUser?: Practitioner | Patient | RelatedPerson | undefined,
   caregiverName?: String,
   patient?: Patient,
   patientPCP?: Practitioner,
-  carePlans?: [CarePlan],
-  conditions?: [Condition],
-  diagnosticReports?: [DiagnosticReport],
-  goals?: [Goal],
-  immunizations?: [Immunization],
-  medications?: [MedicationRequest],
-  serviceRequests?: [ServiceRequest],
-  procedures?: [Procedure],
-  labResults?: [Observation],
-  vitalSigns?: [Observation],
-  socialHistory?: [Observation],
-  surveyResults?: [Observation],
+  carePlans?: CarePlan[],
+  conditions?: Condition[],
+  diagnosticReports?: DiagnosticReport[],
+  goals?: Goal[],
+  immunizations?: Immunization[],
+  medications?: MedicationRequest[],
+  serviceRequests?: ServiceRequest[],
+  procedures?: Procedure[],
+  labResults?: Observation[],
+  vitalSigns?: Observation[],
+  socialHistory?: Observation[],
+  surveyResults?: Observation[],
+}
+
+export function hasScope(clientScope: string | undefined, resourceType: string) {
+  // Use lower case for compare - Epic returns, e.g. Condition.Read
+  return clientScope?.toLowerCase().includes(resourceType.toLowerCase())
 }
 
 

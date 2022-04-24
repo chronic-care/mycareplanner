@@ -9,7 +9,7 @@ import { PatientSummary, ScreeningSummary } from '../models/cqlSummary';
 
 import { patientSummaryLibrary, cancerScreeningLibraries, codeService } from './cqlLibraries';
 
-function getBundleEntries(resources?: [Resource]) {
+function getBundleEntries(resources?: Resource[]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
 }
 

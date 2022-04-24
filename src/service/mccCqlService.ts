@@ -9,7 +9,7 @@ import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } 
 
 import { mccCodeService, mccConditionsLibrary, mccGoalsLibrary, mccLabResultsLibrary, mccMedicationsLibrary, mccVitalSignsLibrary } from './mccCqlLibraries';
 
-function getBundleEntries(resources?: [Resource]) {
+function getBundleEntries(resources?: Resource[]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
 }
 
