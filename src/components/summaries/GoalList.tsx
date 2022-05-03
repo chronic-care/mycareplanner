@@ -71,12 +71,18 @@ export class GoalList extends React.Component<GoalListProps, GoalListState> {
                 </tbody>
                 ))}
 
+                <tbody key='addresses'>
+                  {goal.Addresses?.map((concern, idx3) => (
+                    <tr key={'n-'+idx3}><td colSpan={2}>Addresses: {concern.DisplayName}</td></tr>
+                  ))}
+               </tbody>
+
                 <tbody key='notes'>
-                {goal.LearnMore === null ? <tr/> :
-                  <tr><td colSpan={2}><Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(goal.LearnMore);}}><i>Learn&nbsp;More</i></Link></td></tr>}
-                {goal.Notes?.map((note, idx3) => (
-                  <tr key={'n-'+idx3}><td colSpan={2}>Note: {note}</td></tr>
-                ))}
+                  {goal.LearnMore === null ? <tr/> :
+                    <tr><td colSpan={2}><Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(goal.LearnMore);}}><i>Learn&nbsp;More</i></Link></td></tr>}
+                  {goal.Notes?.map((note, idx4) => (
+                    <tr key={'n-'+idx4}><td colSpan={2}>Note: {note}</td></tr>
+                  ))}
                </tbody>
               </table>
               

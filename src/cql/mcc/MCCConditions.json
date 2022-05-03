@@ -6,7 +6,7 @@
       }, {
          "type" : "Annotation",
          "s" : {
-            "r" : "38",
+            "r" : "59",
             "s" : [ {
                "value" : [ "","library MCCConditions version '0.1.0'" ]
             } ]
@@ -132,19 +132,282 @@
                }
             }
          }, {
-            "localId" : "9",
-            "locator" : "12:1-17:3",
+            "localId" : "27",
+            "locator" : "18:1-20:83",
+            "name" : "SelectActiveConditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "27",
+                  "s" : [ {
+                     "value" : [ "// we currently select only 'active' conditions in the server query\n","define function ","SelectActiveConditions","(","conditions"," " ]
+                  }, {
+                     "r" : "8",
+                     "s" : [ {
+                        "value" : [ "List<" ]
+                     }, {
+                        "r" : "7",
+                        "s" : [ {
+                           "value" : [ "Condition" ]
+                        } ]
+                     }, {
+                        "value" : [ ">" ]
+                     } ]
+                  }, {
+                     "value" : [ "):\n  " ]
+                  }, {
+                     "r" : "26",
+                     "s" : [ {
+                        "r" : "26",
+                        "s" : [ {
+                           "s" : [ {
+                              "r" : "10",
+                              "s" : [ {
+                                 "r" : "9",
+                                 "s" : [ {
+                                    "r" : "9",
+                                    "s" : [ {
+                                       "value" : [ "[","Condition","]" ]
+                                    } ]
+                                 } ]
+                              }, {
+                                 "value" : [ " ","C" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ "\n    " ]
+                        }, {
+                           "r" : "25",
+                           "s" : [ {
+                              "value" : [ "sort by " ]
+                           }, {
+                              "r" : "24",
+                              "s" : [ {
+                                 "r" : "23",
+                                 "s" : [ {
+                                    "value" : [ "Coalesce","(" ]
+                                 }, {
+                                    "r" : "18",
+                                    "s" : [ {
+                                       "r" : "17",
+                                       "s" : [ {
+                                          "value" : [ "recordedDate" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "18",
+                                       "s" : [ {
+                                          "value" : [ "value" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ", " ]
+                                 }, {
+                                    "r" : "22",
+                                    "s" : [ {
+                                       "r" : "21",
+                                       "s" : [ {
+                                          "value" : [ "(" ]
+                                       }, {
+                                          "r" : "21",
+                                          "s" : [ {
+                                             "r" : "19",
+                                             "s" : [ {
+                                                "value" : [ "onset" ]
+                                             } ]
+                                          }, {
+                                             "value" : [ " as " ]
+                                          }, {
+                                             "r" : "20",
+                                             "s" : [ {
+                                                "value" : [ "FHIR",".","dateTime" ]
+                                             } ]
+                                          } ]
+                                       }, {
+                                          "value" : [ ")" ]
+                                       } ]
+                                    }, {
+                                       "value" : [ "." ]
+                                    }, {
+                                       "r" : "22",
+                                       "s" : [ {
+                                          "value" : [ "value" ]
+                                       } ]
+                                    } ]
+                                 }, {
+                                    "value" : [ ")" ]
+                                 } ]
+                              }, {
+                                 "value" : [ " descending" ]
+                              } ]
+                           } ]
+                        } ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "26",
+               "locator" : "19:3-20:83",
+               "type" : "Query",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "source" : [ {
+                  "localId" : "10",
+                  "locator" : "19:3-19:15",
+                  "alias" : "C",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "expression" : {
+                     "localId" : "9",
+                     "locator" : "19:3-19:13",
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  }
+               } ],
+               "relationship" : [ ],
+               "sort" : {
+                  "localId" : "25",
+                  "locator" : "20:5-20:83",
+                  "by" : [ {
+                     "localId" : "24",
+                     "locator" : "20:13-20:83",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                     "direction" : "descending",
+                     "type" : "ByExpression",
+                     "expression" : {
+                        "localId" : "23",
+                        "locator" : "20:13-20:72",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type" : "Coalesce",
+                        "operand" : [ {
+                           "localId" : "18",
+                           "locator" : "20:22-20:39",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "path" : "value",
+                           "type" : "Property",
+                           "source" : {
+                              "localId" : "17",
+                              "locator" : "20:22-20:33",
+                              "resultTypeName" : "{http://hl7.org/fhir}dateTime",
+                              "name" : "recordedDate",
+                              "type" : "IdentifierRef"
+                           }
+                        }, {
+                           "localId" : "22",
+                           "locator" : "20:42-20:71",
+                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "path" : "value",
+                           "type" : "Property",
+                           "source" : {
+                              "localId" : "21",
+                              "locator" : "20:42-20:65",
+                              "resultTypeName" : "{http://hl7.org/fhir}dateTime",
+                              "strict" : false,
+                              "type" : "As",
+                              "operand" : {
+                                 "localId" : "19",
+                                 "locator" : "20:43-20:47",
+                                 "name" : "onset",
+                                 "type" : "IdentifierRef",
+                                 "resultTypeSpecifier" : {
+                                    "type" : "ChoiceTypeSpecifier",
+                                    "choice" : [ {
+                                       "name" : "{http://hl7.org/fhir}dateTime",
+                                       "type" : "NamedTypeSpecifier"
+                                    }, {
+                                       "name" : "{http://hl7.org/fhir}Age",
+                                       "type" : "NamedTypeSpecifier"
+                                    }, {
+                                       "name" : "{http://hl7.org/fhir}Period",
+                                       "type" : "NamedTypeSpecifier"
+                                    }, {
+                                       "name" : "{http://hl7.org/fhir}Range",
+                                       "type" : "NamedTypeSpecifier"
+                                    }, {
+                                       "name" : "{http://hl7.org/fhir}string",
+                                       "type" : "NamedTypeSpecifier"
+                                    } ]
+                                 }
+                              },
+                              "asTypeSpecifier" : {
+                                 "localId" : "20",
+                                 "locator" : "20:52-20:64",
+                                 "resultTypeName" : "{http://hl7.org/fhir}dateTime",
+                                 "name" : "{http://hl7.org/fhir}dateTime",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }
+                        } ]
+                     }
+                  } ]
+               }
+            },
+            "operand" : [ {
+               "name" : "conditions",
+               "operandTypeSpecifier" : {
+                  "localId" : "8",
+                  "locator" : "18:51-18:65",
+                  "type" : "ListTypeSpecifier",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "elementType" : {
+                     "localId" : "7",
+                     "locator" : "18:56-18:64",
+                     "resultTypeName" : "{http://hl7.org/fhir}Condition",
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               }
+            } ]
+         }, {
+            "localId" : "31",
+            "locator" : "12:1-15:3",
             "name" : "ConditionSummary",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "9",
+                  "r" : "31",
                   "s" : [ {
                      "value" : [ "// View summary tuple for each condition data element\n","define ","ConditionSummary",":\n  " ]
                   }, {
-                     "r" : "8",
+                     "r" : "30",
                      "s" : [ {
                         "r" : "5",
                         "s" : [ {
@@ -153,18 +416,25 @@
                      }, {
                         "value" : [ "." ]
                      }, {
-                        "r" : "8",
+                        "r" : "30",
                         "s" : [ {
-                           "value" : [ "ReportConditions","(\n    // DE.SelectActiveConditions([Condition]),\n    " ]
+                           "value" : [ "ReportConditions","(\n    " ]
                         }, {
-                           "r" : "6",
+                           "r" : "28",
                            "s" : [ {
-                              "value" : [ "[","Condition","]" ]
+                              "value" : [ "SelectActiveConditions","(" ]
+                           }, {
+                              "r" : "6",
+                              "s" : [ {
+                                 "value" : [ "[","Condition","]" ]
+                              } ]
+                           }, {
+                              "value" : [ ")" ]
                            } ]
                         }, {
-                           "value" : [ ",\n    " ]
+                           "value" : [ ", " ]
                         }, {
-                           "r" : "7",
+                           "r" : "29",
                            "s" : [ {
                               "value" : [ "'Active Conditions'" ]
                            } ]
@@ -210,6 +480,18 @@
                         "type" : "NamedTypeSpecifier"
                      }
                   }, {
+                     "name" : "Recorder",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "Asserter",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
                      "name" : "Notes",
                      "elementType" : {
                         "type" : "ListTypeSpecifier",
@@ -228,8 +510,8 @@
                }
             },
             "expression" : {
-               "localId" : "8",
-               "locator" : "13:3-17:3",
+               "localId" : "30",
+               "locator" : "13:3-15:3",
                "name" : "ReportConditions",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -268,6 +550,18 @@
                            "type" : "NamedTypeSpecifier"
                         }
                      }, {
+                        "name" : "Recorder",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }, {
+                        "name" : "Asserter",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }, {
                         "name" : "Notes",
                         "elementType" : {
                            "type" : "ListTypeSpecifier",
@@ -286,21 +580,34 @@
                   }
                },
                "operand" : [ {
-                  "localId" : "6",
-                  "locator" : "15:5-15:15",
-                  "dataType" : "{http://hl7.org/fhir}Condition",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
-                  "type" : "Retrieve",
+                  "localId" : "28",
+                  "locator" : "14:5-14:39",
+                  "name" : "SelectActiveConditions",
+                  "type" : "FunctionRef",
                   "resultTypeSpecifier" : {
                      "type" : "ListTypeSpecifier",
                      "elementType" : {
                         "name" : "{http://hl7.org/fhir}Condition",
                         "type" : "NamedTypeSpecifier"
                      }
-                  }
+                  },
+                  "operand" : [ {
+                     "localId" : "6",
+                     "locator" : "14:28-14:38",
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "type" : "Retrieve",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }
+                  } ]
                }, {
-                  "localId" : "7",
-                  "locator" : "16:5-16:23",
+                  "localId" : "29",
+                  "locator" : "14:42-14:60",
                   "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
                   "value" : "Active Conditions",
@@ -308,270 +615,9 @@
                } ]
             }
          }, {
-            "localId" : "14",
-            "locator" : "29:1-30:65",
-            "name" : "Anxiety Conditions",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "14",
-                  "s" : [ {
-                     "value" : [ "// FHIR Condition resources for active|recurrence|relapse, confirmed conditions.\n","define ","\"Anxiety Conditions\"",":\n  " ]
-                  }, {
-                     "r" : "13",
-                     "s" : [ {
-                        "r" : "11",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "13",
-                        "s" : [ {
-                           "value" : [ "SelectActiveConditions","(" ]
-                        }, {
-                           "r" : "12",
-                           "s" : [ {
-                              "value" : [ "[","Condition",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Anxiety Conditions\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}Condition",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
-            "expression" : {
-               "localId" : "13",
-               "locator" : "30:3-30:65",
-               "name" : "SelectActiveConditions",
-               "libraryName" : "DE",
-               "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}Condition",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
-               "operand" : [ {
-                  "localId" : "12",
-                  "locator" : "30:29-30:64",
-                  "dataType" : "{http://hl7.org/fhir}Condition",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
-                  "codeProperty" : "code",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}Condition",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "30:41-30:63",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Anxiety Conditions",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
-               } ]
-            }
-         }, {
-            "localId" : "22",
-            "locator" : "32:1-33:83",
-            "name" : "Chronic Kidney Disease Conditions",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "22",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Chronic Kidney Disease Conditions\"",":\n  " ]
-                  }, {
-                     "r" : "21",
-                     "s" : [ {
-                        "r" : "19",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "21",
-                        "s" : [ {
-                           "value" : [ "SelectActiveConditions","(" ]
-                        }, {
-                           "r" : "20",
-                           "s" : [ {
-                              "value" : [ "[","Condition",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Chronic Kidney Disease Type or Cause\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}Condition",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
-            "expression" : {
-               "localId" : "21",
-               "locator" : "33:3-33:83",
-               "name" : "SelectActiveConditions",
-               "libraryName" : "DE",
-               "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}Condition",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
-               "operand" : [ {
-                  "localId" : "20",
-                  "locator" : "33:29-33:82",
-                  "dataType" : "{http://hl7.org/fhir}Condition",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
-                  "codeProperty" : "code",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}Condition",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "33:41-33:81",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Chronic Kidney Disease Type or Cause",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
-               } ]
-            }
-         }, {
-            "localId" : "30",
-            "locator" : "35:1-36:70",
-            "name" : "Hypertension Conditions",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "30",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Hypertension Conditions\"",":\n  " ]
-                  }, {
-                     "r" : "29",
-                     "s" : [ {
-                        "r" : "27",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "29",
-                        "s" : [ {
-                           "value" : [ "SelectActiveConditions","(" ]
-                        }, {
-                           "r" : "28",
-                           "s" : [ {
-                              "value" : [ "[","Condition",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Hypertension Conditions\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}Condition",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
-            "expression" : {
-               "localId" : "29",
-               "locator" : "36:3-36:70",
-               "name" : "SelectActiveConditions",
-               "libraryName" : "DE",
-               "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}Condition",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
-               "operand" : [ {
-                  "localId" : "28",
-                  "locator" : "36:29-36:69",
-                  "dataType" : "{http://hl7.org/fhir}Condition",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
-                  "codeProperty" : "code",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}Condition",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "36:41-36:68",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Hypertension Conditions",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
-               } ]
-            }
-         }, {
             "localId" : "38",
-            "locator" : "39:1-40:87",
-            "name" : "Social Determinants of Health Conditions",
+            "locator" : "41:1-42:62",
+            "name" : "Anxiety Conditions",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ {
@@ -579,34 +625,24 @@
                "s" : {
                   "r" : "38",
                   "s" : [ {
-                     "value" : [ "// Could use Condition.category for SDOH, but using code valueset for consistency with other MCC conditions.\n","define ","\"Social Determinants of Health Conditions\"",":\n  " ]
+                     "value" : [ "// FHIR Condition resources for active|recurrence|relapse, confirmed conditions.\n","define ","\"Anxiety Conditions\"",":\n  " ]
                   }, {
                      "r" : "37",
                      "s" : [ {
-                        "r" : "35",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
+                        "value" : [ "SelectActiveConditions","(" ]
                      }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "37",
+                        "r" : "36",
                         "s" : [ {
-                           "value" : [ "SelectActiveConditions","(" ]
+                           "value" : [ "[","Condition",": " ]
                         }, {
-                           "r" : "36",
                            "s" : [ {
-                              "value" : [ "[","Condition",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Social Determinants of Health Conditions\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
+                              "value" : [ "Cx",".","\"Anxiety Conditions\"" ]
                            } ]
                         }, {
-                           "value" : [ ")" ]
+                           "value" : [ "]" ]
                         } ]
+                     }, {
+                        "value" : [ ")" ]
                      } ]
                   } ]
                }
@@ -620,9 +656,8 @@
             },
             "expression" : {
                "localId" : "37",
-               "locator" : "40:3-40:87",
+               "locator" : "42:3-42:62",
                "name" : "SelectActiveConditions",
-               "libraryName" : "DE",
                "type" : "FunctionRef",
                "resultTypeSpecifier" : {
                   "type" : "ListTypeSpecifier",
@@ -633,7 +668,7 @@
                },
                "operand" : [ {
                   "localId" : "36",
-                  "locator" : "40:29-40:86",
+                  "locator" : "42:26-42:61",
                   "dataType" : "{http://hl7.org/fhir}Condition",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
                   "codeProperty" : "code",
@@ -647,7 +682,235 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "40:41-40:85",
+                     "locator" : "42:38-42:60",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Anxiety Conditions",
+                     "libraryName" : "Cx",
+                     "type" : "ValueSetRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "45",
+            "locator" : "44:1-45:80",
+            "name" : "Chronic Kidney Disease Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "45",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Chronic Kidney Disease Conditions\"",":\n  " ]
+                  }, {
+                     "r" : "44",
+                     "s" : [ {
+                        "value" : [ "SelectActiveConditions","(" ]
+                     }, {
+                        "r" : "43",
+                        "s" : [ {
+                           "value" : [ "[","Condition",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "Cx",".","\"Chronic Kidney Disease Type or Cause\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ ")" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "44",
+               "locator" : "45:3-45:80",
+               "name" : "SelectActiveConditions",
+               "type" : "FunctionRef",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "43",
+                  "locator" : "45:26-45:79",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "45:38-45:78",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Chronic Kidney Disease Type or Cause",
+                     "libraryName" : "Cx",
+                     "type" : "ValueSetRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "52",
+            "locator" : "47:1-48:67",
+            "name" : "Hypertension Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "52",
+                  "s" : [ {
+                     "value" : [ "","define ","\"Hypertension Conditions\"",":\n  " ]
+                  }, {
+                     "r" : "51",
+                     "s" : [ {
+                        "value" : [ "SelectActiveConditions","(" ]
+                     }, {
+                        "r" : "50",
+                        "s" : [ {
+                           "value" : [ "[","Condition",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "Cx",".","\"Hypertension Conditions\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ ")" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "51",
+               "locator" : "48:3-48:67",
+               "name" : "SelectActiveConditions",
+               "type" : "FunctionRef",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "50",
+                  "locator" : "48:26-48:66",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "48:38-48:65",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
+                     "name" : "Hypertension Conditions",
+                     "libraryName" : "Cx",
+                     "type" : "ValueSetRef"
+                  }
+               } ]
+            }
+         }, {
+            "localId" : "59",
+            "locator" : "51:1-52:84",
+            "name" : "Social Determinants of Health Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "59",
+                  "s" : [ {
+                     "value" : [ "// Could use Condition.category for SDOH, but using code valueset for consistency with other MCC conditions.\n","define ","\"Social Determinants of Health Conditions\"",":\n  " ]
+                  }, {
+                     "r" : "58",
+                     "s" : [ {
+                        "value" : [ "SelectActiveConditions","(" ]
+                     }, {
+                        "r" : "57",
+                        "s" : [ {
+                           "value" : [ "[","Condition",": " ]
+                        }, {
+                           "s" : [ {
+                              "value" : [ "Cx",".","\"Social Determinants of Health Conditions\"" ]
+                           } ]
+                        }, {
+                           "value" : [ "]" ]
+                        } ]
+                     }, {
+                        "value" : [ ")" ]
+                     } ]
+                  } ]
+               }
+            } ],
+            "resultTypeSpecifier" : {
+               "type" : "ListTypeSpecifier",
+               "elementType" : {
+                  "name" : "{http://hl7.org/fhir}Condition",
+                  "type" : "NamedTypeSpecifier"
+               }
+            },
+            "expression" : {
+               "localId" : "58",
+               "locator" : "52:3-52:84",
+               "name" : "SelectActiveConditions",
+               "type" : "FunctionRef",
+               "resultTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier"
+                  }
+               },
+               "operand" : [ {
+                  "localId" : "57",
+                  "locator" : "52:26-52:83",
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "resultTypeSpecifier" : {
+                     "type" : "ListTypeSpecifier",
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  },
+                  "codes" : {
+                     "locator" : "52:38-52:82",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Social Determinants of Health Conditions",
                      "libraryName" : "Cx",
@@ -656,122 +919,29 @@
                } ]
             }
          }, {
-            "localId" : "44",
-            "locator" : "19:1-25:3",
+            "localId" : "65",
+            "locator" : "31:1-37:3",
             "name" : "MCCConditionSummary",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "44",
+                  "r" : "65",
                   "s" : [ {
-                     "value" : [ "","define ","MCCConditionSummary",": \n  " ]
+                     "value" : [ "// BUG: this works in VSCode but returns null in JavaScript execution.\n// define function SelectActiveConditions(conditions List<Condition>):\n//   conditions Cond\n//     where (Cond.clinicalStatus ~ FC.\"active\"\n//           or Cond.clinicalStatus ~ FC.\"relapse\"\n//           or Cond.clinicalStatus ~ FC.\"recurrence\")\n//       and Cond.verificationStatus ~ FC.\"confirmed\"\n//     sort by recordedDate.value descending\n","define ","MCCConditionSummary",": \n  " ]
                   }, {
-                     "r" : "43",
+                     "r" : "64",
                      "s" : [ {
                         "value" : [ "flatten " ]
                      }, {
-                        "r" : "42",
+                        "r" : "63",
                         "s" : [ {
                            "value" : [ "{\n    " ]
                         }, {
-                           "r" : "17",
-                           "s" : [ {
-                              "r" : "10",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "17",
-                              "s" : [ {
-                                 "value" : [ "ReportConditions","(" ]
-                              }, {
-                                 "r" : "15",
-                                 "s" : [ {
-                                    "value" : [ "\"Anxiety Conditions\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "16",
-                                 "s" : [ {
-                                    "value" : [ "'Anxiety'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "25",
-                           "s" : [ {
-                              "r" : "18",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "25",
-                              "s" : [ {
-                                 "value" : [ "ReportConditions","(" ]
-                              }, {
-                                 "r" : "23",
-                                 "s" : [ {
-                                    "value" : [ "\"Chronic Kidney Disease Conditions\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "24",
-                                 "s" : [ {
-                                    "value" : [ "'Chronic Kidney Disease'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "33",
-                           "s" : [ {
-                              "r" : "26",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "33",
-                              "s" : [ {
-                                 "value" : [ "ReportConditions","(" ]
-                              }, {
-                                 "r" : "31",
-                                 "s" : [ {
-                                    "value" : [ "\"Hypertension Conditions\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "32",
-                                 "s" : [ {
-                                    "value" : [ "'Hypertension'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
                            "r" : "41",
                            "s" : [ {
-                              "r" : "34",
+                              "r" : "35",
                               "s" : [ {
                                  "value" : [ "DE" ]
                               } ]
@@ -784,12 +954,105 @@
                               }, {
                                  "r" : "39",
                                  "s" : [ {
-                                    "value" : [ "\"Social Determinants of Health Conditions\"" ]
+                                    "value" : [ "\"Anxiety Conditions\"" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
                               }, {
                                  "r" : "40",
+                                 "s" : [ {
+                                    "value" : [ "'Anxiety'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ",\n    " ]
+                        }, {
+                           "r" : "48",
+                           "s" : [ {
+                              "r" : "42",
+                              "s" : [ {
+                                 "value" : [ "DE" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "48",
+                              "s" : [ {
+                                 "value" : [ "ReportConditions","(" ]
+                              }, {
+                                 "r" : "46",
+                                 "s" : [ {
+                                    "value" : [ "\"Chronic Kidney Disease Conditions\"" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "47",
+                                 "s" : [ {
+                                    "value" : [ "'Chronic Kidney Disease'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ",\n    " ]
+                        }, {
+                           "r" : "55",
+                           "s" : [ {
+                              "r" : "49",
+                              "s" : [ {
+                                 "value" : [ "DE" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "55",
+                              "s" : [ {
+                                 "value" : [ "ReportConditions","(" ]
+                              }, {
+                                 "r" : "53",
+                                 "s" : [ {
+                                    "value" : [ "\"Hypertension Conditions\"" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "54",
+                                 "s" : [ {
+                                    "value" : [ "'Hypertension'" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ")" ]
+                              } ]
+                           } ]
+                        }, {
+                           "value" : [ ",\n    " ]
+                        }, {
+                           "r" : "62",
+                           "s" : [ {
+                              "r" : "56",
+                              "s" : [ {
+                                 "value" : [ "DE" ]
+                              } ]
+                           }, {
+                              "value" : [ "." ]
+                           }, {
+                              "r" : "62",
+                              "s" : [ {
+                                 "value" : [ "ReportConditions","(" ]
+                              }, {
+                                 "r" : "60",
+                                 "s" : [ {
+                                    "value" : [ "\"Social Determinants of Health Conditions\"" ]
+                                 } ]
+                              }, {
+                                 "value" : [ ", " ]
+                              }, {
+                                 "r" : "61",
                                  "s" : [ {
                                     "value" : [ "'Social Needs and Risks'" ]
                                  } ]
@@ -839,6 +1102,18 @@
                         "type" : "NamedTypeSpecifier"
                      }
                   }, {
+                     "name" : "Recorder",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
+                     "name" : "Asserter",
+                     "elementType" : {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier"
+                     }
+                  }, {
                      "name" : "Notes",
                      "elementType" : {
                         "type" : "ListTypeSpecifier",
@@ -857,8 +1132,8 @@
                }
             },
             "expression" : {
-               "localId" : "43",
-               "locator" : "20:3-25:3",
+               "localId" : "64",
+               "locator" : "32:3-37:3",
                "type" : "Flatten",
                "resultTypeSpecifier" : {
                   "type" : "ListTypeSpecifier",
@@ -895,6 +1170,18 @@
                            "type" : "NamedTypeSpecifier"
                         }
                      }, {
+                        "name" : "Recorder",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }, {
+                        "name" : "Asserter",
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier"
+                        }
+                     }, {
                         "name" : "Notes",
                         "elementType" : {
                            "type" : "ListTypeSpecifier",
@@ -913,8 +1200,8 @@
                   }
                },
                "operand" : {
-                  "localId" : "42",
-                  "locator" : "20:11-25:3",
+                  "localId" : "63",
+                  "locator" : "32:11-37:3",
                   "type" : "List",
                   "resultTypeSpecifier" : {
                      "type" : "ListTypeSpecifier",
@@ -953,6 +1240,18 @@
                                  "type" : "NamedTypeSpecifier"
                               }
                            }, {
+                              "name" : "Recorder",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Asserter",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
                               "name" : "Notes",
                               "elementType" : {
                                  "type" : "ListTypeSpecifier",
@@ -972,242 +1271,8 @@
                      }
                   },
                   "element" : [ {
-                     "localId" : "17",
-                     "locator" : "21:5-21:56",
-                     "name" : "ReportConditions",
-                     "libraryName" : "DE",
-                     "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "RecordedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AssertedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "OnsetDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
-                     "operand" : [ {
-                        "localId" : "15",
-                        "locator" : "21:25-21:44",
-                        "name" : "Anxiety Conditions",
-                        "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}Condition",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
-                     }, {
-                        "localId" : "16",
-                        "locator" : "21:47-21:55",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Anxiety",
-                        "type" : "Literal"
-                     } ]
-                  }, {
-                     "localId" : "25",
-                     "locator" : "22:5-22:86",
-                     "name" : "ReportConditions",
-                     "libraryName" : "DE",
-                     "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "RecordedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AssertedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "OnsetDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
-                     "operand" : [ {
-                        "localId" : "23",
-                        "locator" : "22:25-22:59",
-                        "name" : "Chronic Kidney Disease Conditions",
-                        "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}Condition",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
-                     }, {
-                        "localId" : "24",
-                        "locator" : "22:62-22:85",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Chronic Kidney Disease",
-                        "type" : "Literal"
-                     } ]
-                  }, {
-                     "localId" : "33",
-                     "locator" : "23:5-23:66",
-                     "name" : "ReportConditions",
-                     "libraryName" : "DE",
-                     "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "RecordedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AssertedDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "OnsetDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
-                     "operand" : [ {
-                        "localId" : "31",
-                        "locator" : "23:25-23:49",
-                        "name" : "Hypertension Conditions",
-                        "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}Condition",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
-                     }, {
-                        "localId" : "32",
-                        "locator" : "23:52-23:65",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Hypertension",
-                        "type" : "Literal"
-                     } ]
-                  }, {
                      "localId" : "41",
-                     "locator" : "24:5-24:93",
+                     "locator" : "33:5-33:56",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -1241,6 +1306,18 @@
                               }
                            }, {
                               "name" : "OnsetDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Recorder",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Asserter",
                               "elementType" : {
                                  "name" : "{urn:hl7-org:elm-types:r1}String",
                                  "type" : "NamedTypeSpecifier"
@@ -1265,8 +1342,8 @@
                      },
                      "operand" : [ {
                         "localId" : "39",
-                        "locator" : "24:25-24:66",
-                        "name" : "Social Determinants of Health Conditions",
+                        "locator" : "33:25-33:44",
+                        "name" : "Anxiety Conditions",
                         "type" : "ExpressionRef",
                         "resultTypeSpecifier" : {
                            "type" : "ListTypeSpecifier",
@@ -1277,7 +1354,277 @@
                         }
                      }, {
                         "localId" : "40",
-                        "locator" : "24:69-24:92",
+                        "locator" : "33:47-33:55",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Anxiety",
+                        "type" : "Literal"
+                     } ]
+                  }, {
+                     "localId" : "48",
+                     "locator" : "34:5-34:86",
+                     "name" : "ReportConditions",
+                     "libraryName" : "DE",
+                     "type" : "FunctionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "element" : [ {
+                              "name" : "Category",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ConceptName",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "RecordedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "AssertedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "OnsetDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Recorder",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Asserter",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           } ]
+                        }
+                     },
+                     "operand" : [ {
+                        "localId" : "46",
+                        "locator" : "34:25-34:59",
+                        "name" : "Chronic Kidney Disease Conditions",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }, {
+                        "localId" : "47",
+                        "locator" : "34:62-34:85",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Chronic Kidney Disease",
+                        "type" : "Literal"
+                     } ]
+                  }, {
+                     "localId" : "55",
+                     "locator" : "35:5-35:66",
+                     "name" : "ReportConditions",
+                     "libraryName" : "DE",
+                     "type" : "FunctionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "element" : [ {
+                              "name" : "Category",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ConceptName",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "RecordedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "AssertedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "OnsetDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Recorder",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Asserter",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           } ]
+                        }
+                     },
+                     "operand" : [ {
+                        "localId" : "53",
+                        "locator" : "35:25-35:49",
+                        "name" : "Hypertension Conditions",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }, {
+                        "localId" : "54",
+                        "locator" : "35:52-35:65",
+                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Hypertension",
+                        "type" : "Literal"
+                     } ]
+                  }, {
+                     "localId" : "62",
+                     "locator" : "36:5-36:93",
+                     "name" : "ReportConditions",
+                     "libraryName" : "DE",
+                     "type" : "FunctionRef",
+                     "resultTypeSpecifier" : {
+                        "type" : "ListTypeSpecifier",
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "element" : [ {
+                              "name" : "Category",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "ConceptName",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "RecordedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "AssertedDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Any",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "OnsetDate",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Recorder",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Asserter",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           }, {
+                              "name" : "Notes",
+                              "elementType" : {
+                                 "type" : "ListTypeSpecifier",
+                                 "elementType" : {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier"
+                                 }
+                              }
+                           }, {
+                              "name" : "LearnMore",
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier"
+                              }
+                           } ]
+                        }
+                     },
+                     "operand" : [ {
+                        "localId" : "60",
+                        "locator" : "36:25-36:66",
+                        "name" : "Social Determinants of Health Conditions",
+                        "type" : "ExpressionRef",
+                        "resultTypeSpecifier" : {
+                           "type" : "ListTypeSpecifier",
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Condition",
+                              "type" : "NamedTypeSpecifier"
+                           }
+                        }
+                     }, {
+                        "localId" : "61",
+                        "locator" : "36:69-36:92",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Social Needs and Risks",

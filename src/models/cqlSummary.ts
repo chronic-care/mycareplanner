@@ -39,12 +39,19 @@ export interface ScreeningSummary {
   questionnaire: string[],
 }
 
+export interface DataElementSummary {
+  DisplayName?: string,
+  // Resource?: Resource,
+}
+
 export interface ConditionSummary {
   Category?: string,
   ConceptName: string,
   RecordedDate?: string,
   AssertedDate?: string,
   OnsetDate?: string,
+  Recorder?: string,
+  Asserter?: string,
   Notes?: string[],
   HasGoal?: GoalSummary[],
   LearnMore?: string
@@ -56,7 +63,7 @@ export interface GoalSummary {
   ExpressedBy?: string,
   StartDate?: string,
   Target?: GoalTarget[],
-  Addresses?: ConditionSummary[],
+  Addresses?: DataElementSummary[],
   Notes?: string[],
   LearnMore?: string
 }

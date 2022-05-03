@@ -38,7 +38,7 @@ export const getConditionSummary = (fhirData?: FHIRData): [ConditionSummary] | u
   const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource);
 
   // console.log("CQL Results: " + JSON.stringify(extractedSummary));
-  console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary));
+  // console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary));
   return extractedSummary.ConditionSummary;
 }
 
@@ -47,7 +47,7 @@ export const getGoalSummary = (fhirData?: FHIRData): [GoalSummary] | undefined =
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource);
 
-  console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary));
+  // console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary));
   return extractedSummary.GoalSummary;
 }
 
@@ -56,7 +56,7 @@ export const getLabResultSummary = (fhirData?: FHIRData): [ObservationSummary] |
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccLabResultsLibrary, mccCodeService, patientSource);
 
-  console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary));
+  // console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary));
   return extractedSummary.LabResultSummary;
 }
 
@@ -65,7 +65,7 @@ export const getMedicationSummary = (fhirData?: FHIRData): [MedicationSummary] |
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccMedicationsLibrary, mccCodeService, patientSource);
 
-  console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary));
+  // console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary));
   return extractedSummary.MedicationSummary;
 }
 
@@ -74,7 +74,7 @@ export const getVitalSignSummary = (fhirData?: FHIRData): [ObservationSummary] |
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccVitalSignsLibrary, mccCodeService, patientSource);
 
-  console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary));
+  // console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary));
   return extractedSummary.VitalSignsSummary;
 }
 

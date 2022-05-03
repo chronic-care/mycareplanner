@@ -49,9 +49,17 @@ export class ConditionList extends React.Component<ConditionListProps, Condition
                   <td colSpan={4}><b>{cond.ConceptName}</b></td>
                 </tr>
                 <tr>
-                  <td colSpan={3}>Added on: {displayDate(cond.RecordedDate) ?? displayDate(cond.OnsetDate)}</td>
+                  <td colSpan={3}>Author: {cond.Recorder ?? cond.Asserter ?? 'Unknown'}</td>
                   <td align="right">{cond.LearnMore === undefined || cond.LearnMore === null ? '' :
                     <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(cond.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
+                </tr>
+                  {(cond.RecordedDate === null && cond.AssertedDate === null) ? <tr/> :
+                    <tr>
+                      <td colSpan={2}>{cond.RecordedDate === null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate)}</td>
+                      <td colSpan={2}>{cond.AssertedDate === null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate)}</td>
+                    </tr>}
+                <tr>
+                  <td colSpan={4}>{cond.OnsetDate === null ? '' : 'When it started: ' + displayDate(cond.OnsetDate)}</td>
                 </tr>
                 {cond.Notes?.map((note) => (
                   <tr><td colSpan={4}>Note: {note}</td></tr>

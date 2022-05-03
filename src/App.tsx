@@ -122,7 +122,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                      <MedicationList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Care Plan Tasks</h4>
+                                    <h4 className="title">Planned Activities (Interventions)</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel>
                             </Tabs>
@@ -132,7 +132,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                 <TabList>
                                     <Tab>Tests</Tab>
                                     <Tab>Vitals</Tab>
-                                    <Tab>Assessment</Tab>
+                                    {/* <Tab>Assessment</Tab> */}
                                     <Tab>Immunization</Tab>
                                 </TabList>
                                 <TabPanel>
@@ -141,10 +141,10 @@ export default class App extends React.Component<AppProps, AppState> {
                                 <TabPanel>
                                     <VitalsList {...this.state} />
                                 </TabPanel>
-                                <TabPanel>
+                                {/* <TabPanel>
                                     <h4 className="title">Assessment Results</h4>
                                     <p>Coming soon...</p>
-                                </TabPanel>
+                                </TabPanel> */}
                                 <TabPanel>
                                     <ImmunizationList {...this.state} />
                                 </TabPanel>

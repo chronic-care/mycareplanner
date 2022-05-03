@@ -133,7 +133,7 @@
             }
          }, {
             "localId" : "9",
-            "locator" : "61:1-62:58",
+            "locator" : "52:1-53:58",
             "name" : "Total Cholesterol Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -183,7 +183,7 @@
             },
             "expression" : {
                "localId" : "8",
-               "locator" : "62:3-62:58",
+               "locator" : "53:3-53:58",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -196,7 +196,7 @@
                },
                "operand" : [ {
                   "localId" : "7",
-                  "locator" : "62:21-62:57",
+                  "locator" : "53:21-53:57",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -210,7 +210,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "62:35-62:56",
+                     "locator" : "53:35-53:56",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Total Cholesterol",
                      "libraryName" : "Cx",
@@ -220,7 +220,7 @@
             }
          }, {
             "localId" : "17",
-            "locator" : "64:1-65:65",
+            "locator" : "55:1-56:65",
             "name" : "High Density Lipoprotein Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -270,7 +270,7 @@
             },
             "expression" : {
                "localId" : "16",
-               "locator" : "65:3-65:65",
+               "locator" : "56:3-56:65",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -283,7 +283,7 @@
                },
                "operand" : [ {
                   "localId" : "15",
-                  "locator" : "65:21-65:64",
+                  "locator" : "56:21-56:64",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -297,7 +297,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "65:35-65:63",
+                     "locator" : "56:35-56:63",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "High Density Lipoprotein",
                      "libraryName" : "Cx",
@@ -307,7 +307,7 @@
             }
          }, {
             "localId" : "25",
-            "locator" : "67:1-68:64",
+            "locator" : "58:1-59:64",
             "name" : "Low Density Lipoprotein Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -357,7 +357,7 @@
             },
             "expression" : {
                "localId" : "24",
-               "locator" : "68:3-68:64",
+               "locator" : "59:3-59:64",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -370,7 +370,7 @@
                },
                "operand" : [ {
                   "localId" : "23",
-                  "locator" : "68:21-68:63",
+                  "locator" : "59:21-59:63",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -384,7 +384,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "68:35-68:62",
+                     "locator" : "59:35-59:62",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Low Density Lipoprotein",
                      "libraryName" : "Cx",
@@ -394,7 +394,7 @@
             }
          }, {
             "localId" : "33",
-            "locator" : "70:1-71:72",
+            "locator" : "61:1-62:72",
             "name" : "Triglyceride Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -444,7 +444,7 @@
             },
             "expression" : {
                "localId" : "32",
-               "locator" : "71:3-71:72",
+               "locator" : "62:3-62:72",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -457,7 +457,7 @@
                },
                "operand" : [ {
                   "localId" : "31",
-                  "locator" : "71:21-71:71",
+                  "locator" : "62:21-62:71",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -471,7 +471,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "71:35-71:70",
+                     "locator" : "62:35-62:70",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Triglyceride Blood Serum Plasma",
                      "libraryName" : "Cx",
@@ -481,7 +481,7 @@
             }
          }, {
             "localId" : "41",
-            "locator" : "73:1-74:55",
+            "locator" : "64:1-65:55",
             "name" : "Hemoglobin A1C Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -531,7 +531,7 @@
             },
             "expression" : {
                "localId" : "40",
-               "locator" : "74:3-74:55",
+               "locator" : "65:3-65:55",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -544,7 +544,7 @@
                },
                "operand" : [ {
                   "localId" : "39",
-                  "locator" : "74:21-74:54",
+                  "locator" : "65:21-65:54",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -558,7 +558,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "74:35-74:53",
+                     "locator" : "65:35-65:53",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Hemoglobin A1C",
                      "libraryName" : "Cx",
@@ -568,7 +568,7 @@
             }
          }, {
             "localId" : "49",
-            "locator" : "76:1-77:77",
+            "locator" : "67:1-68:77",
             "name" : "eGFR Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -618,7 +618,7 @@
             },
             "expression" : {
                "localId" : "48",
-               "locator" : "77:3-77:77",
+               "locator" : "68:3-68:77",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -631,7 +631,7 @@
                },
                "operand" : [ {
                   "localId" : "47",
-                  "locator" : "77:21-77:76",
+                  "locator" : "68:21-68:76",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -645,7 +645,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "77:35-77:75",
+                     "locator" : "68:35-68:75",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Estimated Glomerular Filtration Rate",
                      "libraryName" : "Cx",
@@ -655,7 +655,7 @@
             }
          }, {
             "localId" : "57",
-            "locator" : "79:1-80:54",
+            "locator" : "70:1-71:54",
             "name" : "Serum Albumin Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -705,7 +705,7 @@
             },
             "expression" : {
                "localId" : "56",
-               "locator" : "80:3-80:54",
+               "locator" : "71:3-71:54",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -718,7 +718,7 @@
                },
                "operand" : [ {
                   "localId" : "55",
-                  "locator" : "80:21-80:53",
+                  "locator" : "71:21-71:53",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -732,7 +732,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "80:35-80:52",
+                     "locator" : "71:35-71:52",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Serum Albumin",
                      "libraryName" : "Cx",
@@ -742,7 +742,7 @@
             }
          }, {
             "localId" : "65",
-            "locator" : "82:1-83:57",
+            "locator" : "73:1-74:57",
             "name" : "Serum Creatinine Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -792,7 +792,7 @@
             },
             "expression" : {
                "localId" : "64",
-               "locator" : "83:3-83:57",
+               "locator" : "74:3-74:57",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -805,7 +805,7 @@
                },
                "operand" : [ {
                   "localId" : "63",
-                  "locator" : "83:21-83:56",
+                  "locator" : "74:21-74:56",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -819,7 +819,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "83:35-83:55",
+                     "locator" : "74:35-74:55",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Serum Creatinine",
                      "libraryName" : "Cx",
@@ -829,7 +829,7 @@
             }
          }, {
             "localId" : "73",
-            "locator" : "85:1-86:71",
+            "locator" : "76:1-77:71",
             "name" : "UACR Results",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -879,7 +879,7 @@
             },
             "expression" : {
                "localId" : "72",
-               "locator" : "86:3-86:71",
+               "locator" : "77:3-77:71",
                "name" : "SelectByStatus",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -892,7 +892,7 @@
                },
                "operand" : [ {
                   "localId" : "71",
-                  "locator" : "86:21-86:70",
+                  "locator" : "77:21-77:70",
                   "dataType" : "{http://hl7.org/fhir}Observation",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
                   "codeProperty" : "code",
@@ -906,7 +906,7 @@
                      }
                   },
                   "codes" : {
-                     "locator" : "86:35-86:69",
+                     "locator" : "77:35-77:69",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
                      "name" : "Urine Albumin Creatinine Ratio",
                      "libraryName" : "Cx",
@@ -5374,686 +5374,6 @@
                   "elementType" : {
                      "name" : "{urn:hl7-org:elm-types:r1}Any",
                      "type" : "NamedTypeSpecifier"
-                  }
-               }
-            }
-         }, {
-            "localId" : "168",
-            "locator" : "51:1-57:36",
-            "name" : "CKD Data Elements",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "168",
-                  "s" : [ {
-                     "value" : [ "// DataElement Tuple { DisplayName, ConceptName, SortDate, Resource }\n","define ","\"CKD Data Elements\"",": \n  " ]
-                  }, {
-                     "r" : "167",
-                     "s" : [ {
-                        "s" : [ {
-                           "r" : "164",
-                           "s" : [ {
-                              "r" : "163",
-                              "s" : [ {
-                                 "value" : [ "(" ]
-                              }, {
-                                 "r" : "163",
-                                 "s" : [ {
-                                    "value" : [ "List {\n    " ]
-                                 }, {
-                                    "r" : "144",
-                                    "s" : [ {
-                                       "r" : "139",
-                                       "s" : [ {
-                                          "value" : [ "DE" ]
-                                       } ]
-                                    }, {
-                                       "value" : [ "." ]
-                                    }, {
-                                       "r" : "144",
-                                       "s" : [ {
-                                          "value" : [ "DataElement","(" ]
-                                       }, {
-                                          "r" : "142",
-                                          "s" : [ {
-                                             "r" : "140",
-                                             "s" : [ {
-                                                "value" : [ "DE" ]
-                                             } ]
-                                          }, {
-                                             "value" : [ "." ]
-                                          }, {
-                                             "r" : "142",
-                                             "s" : [ {
-                                                "value" : [ "MostRecent","(" ]
-                                             }, {
-                                                "r" : "141",
-                                                "s" : [ {
-                                                   "value" : [ "\"eGFR Results\"" ]
-                                                } ]
-                                             }, {
-                                                "value" : [ ")" ]
-                                             } ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ", " ]
-                                       }, {
-                                          "r" : "143",
-                                          "s" : [ {
-                                             "value" : [ "'eGFR'" ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ")" ]
-                                       } ]
-                                    } ]
-                                 }, {
-                                    "value" : [ ",\n    " ]
-                                 }, {
-                                    "r" : "150",
-                                    "s" : [ {
-                                       "r" : "145",
-                                       "s" : [ {
-                                          "value" : [ "DE" ]
-                                       } ]
-                                    }, {
-                                       "value" : [ "." ]
-                                    }, {
-                                       "r" : "150",
-                                       "s" : [ {
-                                          "value" : [ "DataElement","(" ]
-                                       }, {
-                                          "r" : "148",
-                                          "s" : [ {
-                                             "r" : "146",
-                                             "s" : [ {
-                                                "value" : [ "DE" ]
-                                             } ]
-                                          }, {
-                                             "value" : [ "." ]
-                                          }, {
-                                             "r" : "148",
-                                             "s" : [ {
-                                                "value" : [ "MostRecent","(" ]
-                                             }, {
-                                                "r" : "147",
-                                                "s" : [ {
-                                                   "value" : [ "\"High Density Lipoprotein Results\"" ]
-                                                } ]
-                                             }, {
-                                                "value" : [ ")" ]
-                                             } ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ", " ]
-                                       }, {
-                                          "r" : "149",
-                                          "s" : [ {
-                                             "value" : [ "'HDL Cholesterol'" ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ")" ]
-                                       } ]
-                                    } ]
-                                 }, {
-                                    "value" : [ ",\n    " ]
-                                 }, {
-                                    "r" : "156",
-                                    "s" : [ {
-                                       "r" : "151",
-                                       "s" : [ {
-                                          "value" : [ "DE" ]
-                                       } ]
-                                    }, {
-                                       "value" : [ "." ]
-                                    }, {
-                                       "r" : "156",
-                                       "s" : [ {
-                                          "value" : [ "DataElement","(" ]
-                                       }, {
-                                          "r" : "154",
-                                          "s" : [ {
-                                             "r" : "152",
-                                             "s" : [ {
-                                                "value" : [ "DE" ]
-                                             } ]
-                                          }, {
-                                             "value" : [ "." ]
-                                          }, {
-                                             "r" : "154",
-                                             "s" : [ {
-                                                "value" : [ "MostRecent","(" ]
-                                             }, {
-                                                "r" : "153",
-                                                "s" : [ {
-                                                   "value" : [ "\"Low Density Lipoprotein Results\"" ]
-                                                } ]
-                                             }, {
-                                                "value" : [ ")" ]
-                                             } ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ", " ]
-                                       }, {
-                                          "r" : "155",
-                                          "s" : [ {
-                                             "value" : [ "'LDL Cholesterol'" ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ")" ]
-                                       } ]
-                                    } ]
-                                 }, {
-                                    "value" : [ ",\n    " ]
-                                 }, {
-                                    "r" : "162",
-                                    "s" : [ {
-                                       "r" : "157",
-                                       "s" : [ {
-                                          "value" : [ "DE" ]
-                                       } ]
-                                    }, {
-                                       "value" : [ "." ]
-                                    }, {
-                                       "r" : "162",
-                                       "s" : [ {
-                                          "value" : [ "DataElement","(" ]
-                                       }, {
-                                          "r" : "160",
-                                          "s" : [ {
-                                             "r" : "158",
-                                             "s" : [ {
-                                                "value" : [ "DE" ]
-                                             } ]
-                                          }, {
-                                             "value" : [ "." ]
-                                          }, {
-                                             "r" : "160",
-                                             "s" : [ {
-                                                "value" : [ "MostRecent","(" ]
-                                             }, {
-                                                "r" : "159",
-                                                "s" : [ {
-                                                   "value" : [ "\"UACR Results\"" ]
-                                                } ]
-                                             }, {
-                                                "value" : [ ")" ]
-                                             } ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ", " ]
-                                       }, {
-                                          "r" : "161",
-                                          "s" : [ {
-                                             "value" : [ "'Urine Albumin Creatinine Ratio'" ]
-                                          } ]
-                                       }, {
-                                          "value" : [ ")" ]
-                                       } ]
-                                    } ]
-                                 }, {
-                                    "value" : [ "\n  }" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           }, {
-                              "value" : [ " ","Result" ]
-                           } ]
-                        } ]
-                     }, {
-                        "value" : [ " " ]
-                     }, {
-                        "r" : "166",
-                        "s" : [ {
-                           "value" : [ "where " ]
-                        }, {
-                           "r" : "166",
-                           "s" : [ {
-                              "r" : "165",
-                              "s" : [ {
-                                 "value" : [ "Result" ]
-                              } ]
-                           }, {
-                              "value" : [ " is not null" ]
-                           } ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "type" : "TupleTypeSpecifier",
-                  "element" : [ {
-                     "name" : "DisplayName",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "ConceptName",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "SortDate",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "Resource",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}Resource",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  } ]
-               }
-            },
-            "expression" : {
-               "localId" : "167",
-               "locator" : "52:3-57:36",
-               "type" : "Query",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "type" : "TupleTypeSpecifier",
-                     "element" : [ {
-                        "name" : "DisplayName",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "ConceptName",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "SortDate",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "Resource",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}Resource",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     } ]
-                  }
-               },
-               "source" : [ {
-                  "localId" : "164",
-                  "locator" : "52:3-57:11",
-                  "alias" : "Result",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "type" : "TupleTypeSpecifier",
-                        "element" : [ {
-                           "name" : "DisplayName",
-                           "elementType" : {
-                              "name" : "{urn:hl7-org:elm-types:r1}String",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }, {
-                           "name" : "ConceptName",
-                           "elementType" : {
-                              "name" : "{urn:hl7-org:elm-types:r1}String",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }, {
-                           "name" : "SortDate",
-                           "elementType" : {
-                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }, {
-                           "name" : "Resource",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}Resource",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        } ]
-                     }
-                  },
-                  "expression" : {
-                     "localId" : "163",
-                     "locator" : "52:3-57:4",
-                     "type" : "List",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
-                     "element" : [ {
-                        "localId" : "144",
-                        "locator" : "53:5-53:57",
-                        "name" : "DataElement",
-                        "libraryName" : "DE",
-                        "type" : "FunctionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        },
-                        "operand" : [ {
-                           "localId" : "142",
-                           "locator" : "53:20-53:48",
-                           "resultTypeName" : "{http://hl7.org/fhir}Observation",
-                           "name" : "MostRecent",
-                           "libraryName" : "DE",
-                           "type" : "FunctionRef",
-                           "operand" : [ {
-                              "localId" : "141",
-                              "locator" : "53:34-53:47",
-                              "name" : "eGFR Results",
-                              "type" : "ExpressionRef",
-                              "resultTypeSpecifier" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{http://hl7.org/fhir}Observation",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           } ]
-                        }, {
-                           "localId" : "143",
-                           "locator" : "53:51-53:56",
-                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                           "value" : "eGFR",
-                           "type" : "Literal"
-                        } ]
-                     }, {
-                        "localId" : "150",
-                        "locator" : "54:5-54:88",
-                        "name" : "DataElement",
-                        "libraryName" : "DE",
-                        "type" : "FunctionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        },
-                        "operand" : [ {
-                           "localId" : "148",
-                           "locator" : "54:20-54:68",
-                           "resultTypeName" : "{http://hl7.org/fhir}Observation",
-                           "name" : "MostRecent",
-                           "libraryName" : "DE",
-                           "type" : "FunctionRef",
-                           "operand" : [ {
-                              "localId" : "147",
-                              "locator" : "54:34-54:67",
-                              "name" : "High Density Lipoprotein Results",
-                              "type" : "ExpressionRef",
-                              "resultTypeSpecifier" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{http://hl7.org/fhir}Observation",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           } ]
-                        }, {
-                           "localId" : "149",
-                           "locator" : "54:71-54:87",
-                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                           "value" : "HDL Cholesterol",
-                           "type" : "Literal"
-                        } ]
-                     }, {
-                        "localId" : "156",
-                        "locator" : "55:5-55:87",
-                        "name" : "DataElement",
-                        "libraryName" : "DE",
-                        "type" : "FunctionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        },
-                        "operand" : [ {
-                           "localId" : "154",
-                           "locator" : "55:20-55:67",
-                           "resultTypeName" : "{http://hl7.org/fhir}Observation",
-                           "name" : "MostRecent",
-                           "libraryName" : "DE",
-                           "type" : "FunctionRef",
-                           "operand" : [ {
-                              "localId" : "153",
-                              "locator" : "55:34-55:66",
-                              "name" : "Low Density Lipoprotein Results",
-                              "type" : "ExpressionRef",
-                              "resultTypeSpecifier" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{http://hl7.org/fhir}Observation",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           } ]
-                        }, {
-                           "localId" : "155",
-                           "locator" : "55:70-55:86",
-                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                           "value" : "LDL Cholesterol",
-                           "type" : "Literal"
-                        } ]
-                     }, {
-                        "localId" : "162",
-                        "locator" : "56:5-56:83",
-                        "name" : "DataElement",
-                        "libraryName" : "DE",
-                        "type" : "FunctionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        },
-                        "operand" : [ {
-                           "localId" : "160",
-                           "locator" : "56:20-56:48",
-                           "resultTypeName" : "{http://hl7.org/fhir}Observation",
-                           "name" : "MostRecent",
-                           "libraryName" : "DE",
-                           "type" : "FunctionRef",
-                           "operand" : [ {
-                              "localId" : "159",
-                              "locator" : "56:34-56:47",
-                              "name" : "UACR Results",
-                              "type" : "ExpressionRef",
-                              "resultTypeSpecifier" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{http://hl7.org/fhir}Observation",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           } ]
-                        }, {
-                           "localId" : "161",
-                           "locator" : "56:51-56:82",
-                           "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                           "value" : "Urine Albumin Creatinine Ratio",
-                           "type" : "Literal"
-                        } ]
-                     } ]
-                  }
-               } ],
-               "relationship" : [ ],
-               "where" : {
-                  "localId" : "166",
-                  "locator" : "57:13-57:36",
-                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
-                  "type" : "Not",
-                  "operand" : {
-                     "locator" : "57:19-57:36",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
-                     "type" : "IsNull",
-                     "operand" : {
-                        "localId" : "165",
-                        "locator" : "57:19-57:24",
-                        "name" : "Result",
-                        "type" : "AliasRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "DisplayName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "SortDate",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Resource",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}Resource",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     }
                   }
                }
             }
