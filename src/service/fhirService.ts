@@ -25,7 +25,8 @@ const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
 // const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
-const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
+// const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
+const carePlanPath = 'CarePlan?category=assess-plan';
 const goalsPath = 'Goal?lifecycle-status=active';
 
 // Epic allows multiple category codes only >= Aug 2021 release

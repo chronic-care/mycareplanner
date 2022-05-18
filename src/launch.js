@@ -39,6 +39,13 @@ FHIR.oauth2.authorize([
         scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
     },
     {
+        // ACF ODH sandbox
+        issMatch: /\bdev-fhirproxy.myodh.org\b/i,
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_acf_odh,
+        scope: "openid offline_access launch launch/patient fhirUser patient/*.read"
+    },
+    {
         // Cerner sandbox
         issMatch: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
         redirectUri: "http://localhost:8000/mycareplanner/index.html",
