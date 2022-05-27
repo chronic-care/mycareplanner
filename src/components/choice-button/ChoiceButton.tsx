@@ -44,7 +44,7 @@ export default class ChoiceButton extends React.Component<any, any> {
 
         return (
             <div className="choice-button-group">
-                <p>{questionnaireItem.text}</p>
+                <p className="question-text">{questionnaireItem.text}</p>
                 <ButtonGroup ref={activeChoiceButton}>
                     {
                         questionnaireItem.answerOption?.map((answerOption: any) => {

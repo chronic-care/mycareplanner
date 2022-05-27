@@ -1,0 +1,1309 @@
+{
+	"resourceType": "Questionnaire",
+	"id": "62337-1",
+	"meta": {
+		"versionId": "4",
+		"lastUpdated": "2022-04-13T19:47:22.495+00:00",
+		"source": "#4Q75pMeTbscwKKwf"
+	},
+	"url": "http://loinc.org/q/62337-1",
+	"name": "PROMIS_item_bank_profile",
+	"title": "PROMIS item bank - 29 profile",
+	"status": "draft",
+	"publisher": "Regenstrief Institute, Inc.",
+	"contact": [ {
+		"name": "Regenstrief Institute, Inc.",
+		"telecom": [ {
+			"system": "url",
+			"value": "http://loinc.org"
+		} ]
+	} ],
+	"copyright": "This content from LOINC® is copyright © 1995-2022 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at https://loinc.org/license/\r\nCopyright © 2010 PROMIS Health Organization or other individuals/entities that have contributed information and materials to Assessment Center, and are being used with the permission of the copyright holders. Use of PROMIS instruments (e.g., item banks, short forms, profile measures) are subject to the PROMIS Terms and Conditions available at: http://www.assessmentcenter.net/TandC.aspx",
+	"code": [ {
+		"system": "http://loinc.org",
+		"code": "62337-1",
+		"display": "PROMIS item bank - 29 profile"
+	} ],
+	"item": [ {
+		"linkId": "47202",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61597-1",
+			"display": "Are you able to do chores such as vacuuming or yard work?"
+		} ],
+		"text": "Are you able to do chores such as vacuuming or yard work?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13921-4",
+				"display": "Without any difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13918-0",
+				"display": "With a little difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13920-6",
+				"display": "With some difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13919-8",
+				"display": "With much difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13912-3",
+				"display": "Unable to do"
+			}
+		} ]
+	}, {
+		"linkId": "47203",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61607-8",
+			"display": "Are you able to go up and down stairs at a normal pace?"
+		} ],
+		"text": "Are you able to go up and down stairs at a normal pace?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13921-4",
+				"display": "Without any difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13918-0",
+				"display": "With a little difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13920-6",
+				"display": "With some difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13919-8",
+				"display": "With much difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13912-3",
+				"display": "Unable to do"
+			}
+		} ]
+	}, {
+		"linkId": "47204",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61609-4",
+			"display": "Are you able to go for a walk of at least 15 minutes?"
+		} ],
+		"text": "Are you able to go for a walk of at least 15 minutes?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13921-4",
+				"display": "Without any difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13918-0",
+				"display": "With a little difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13920-6",
+				"display": "With some difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13919-8",
+				"display": "With much difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13912-3",
+				"display": "Unable to do"
+			}
+		} ]
+	}, {
+		"linkId": "47205",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61635-9",
+			"display": "Are you able to run errands and shop?"
+		} ],
+		"text": "Are you able to run errands and shop?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13921-4",
+				"display": "Without any difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13918-0",
+				"display": "With a little difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13920-6",
+				"display": "With some difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13919-8",
+				"display": "With much difficulty"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13912-3",
+				"display": "Unable to do"
+			}
+		} ]
+	}, {
+		"linkId": "47206",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61923-9",
+			"display": "In the past 7 days - I felt fearful"
+		} ],
+		"text": "In the past 7 days - I felt fearful",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47207",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61941-1",
+			"display": "In the past 7 days - I found it hard to focus on anything other than my anxiety"
+		} ],
+		"text": "In the past 7 days - I found it hard to focus on anything other than my anxiety",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47208",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61942-9",
+			"display": "In the past 7 days - My worries overwhelmed me"
+		} ],
+		"text": "In the past 7 days - My worries overwhelmed me",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47209",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61949-4",
+			"display": "In the past 7 days - I felt uneasy"
+		} ],
+		"text": "In the past 7 days - I felt uneasy",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47210",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61953-6",
+			"display": "In the past 7 days - I felt worthless"
+		} ],
+		"text": "In the past 7 days - I felt worthless",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47211",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61955-1",
+			"display": "In the past 7 days - I felt helpless"
+		} ],
+		"text": "In the past 7 days - I felt helpless",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47212",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61967-6",
+			"display": "In the past 7 days - I felt depressed"
+		} ],
+		"text": "In the past 7 days - I felt depressed",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47213",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61973-4",
+			"display": "In the past 7 days - I felt hopeless"
+		} ],
+		"text": "In the past 7 days - I felt hopeless",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6270-8",
+				"display": "Never"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10066-1",
+				"display": "Rarely"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10082-8",
+				"display": "Sometimes"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10044-8",
+				"display": "Often"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9933-8",
+				"display": "Always"
+			}
+		} ]
+	}, {
+		"linkId": "47214",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61878-5",
+			"display": "During the past 7 days - I feel fatigued"
+		} ],
+		"text": "During the past 7 days - I feel fatigued",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47215",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61882-7",
+			"display": "During the past 7 days - I have trouble starting things because I am tired"
+		} ],
+		"text": "During the past 7 days - I have trouble starting things because I am tired",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47216",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61865-2",
+			"display": "In the past 7 days - How run-down did you feel on average?"
+		} ],
+		"text": "In the past 7 days - How run-down did you feel on average?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47217",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61864-5",
+			"display": "In the past 7 days - How fatigued were you on average?"
+		} ],
+		"text": "In the past 7 days - How fatigued were you on average?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47218",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61987-4",
+			"display": "In the past 7 days - My sleep quality was..."
+		} ],
+		"text": "In the past 7 days - My sleep quality was...",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA9615-1",
+				"display": "Very poor"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA8969-3",
+				"display": "Poor"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA8968-5",
+				"display": "Fair"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA8967-7",
+				"display": "Good"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13913-1",
+				"display": "Very Good"
+			}
+		} ]
+	}, {
+		"linkId": "47219",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61986-6",
+			"display": "In the past 7 days - My sleep was refreshing"
+		} ],
+		"text": "In the past 7 days - My sleep was refreshing",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47220",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61998-1",
+			"display": "In the past 7 days - I had a problem with my sleep"
+		} ],
+		"text": "In the past 7 days - I had a problem with my sleep",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47221",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61999-9",
+			"display": "In the past 7 days - I had difficulty falling asleep"
+		} ],
+		"text": "In the past 7 days - I had difficulty falling asleep",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47222",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "62041-9",
+			"display": "In the past 7 days - I am satisfied with how much work I can do (include work at home)"
+		} ],
+		"text": "In the past 7 days - I am satisfied with how much work I can do (include work at home)",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47223",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "62046-8",
+			"display": "In the past 7 days - I am satisfied with my ability to work (include work at home)"
+		} ],
+		"text": "In the past 7 days - I am satisfied with my ability to work (include work at home)",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47224",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "62050-0",
+			"display": "In the past 7 days - I am satisfied with my ability to do regular personal and household responsibilities"
+		} ],
+		"text": "In the past 7 days - I am satisfied with my ability to do regular personal and household responsibilities",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47225",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "62051-8",
+			"display": "In the past 7 days - I am satisfied with my ability to perform my daily routines"
+		} ],
+		"text": "In the past 7 days - I am satisfied with my ability to perform my daily routines",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47226",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61758-9",
+			"display": "In the past 7 days - How much did pain interfere with your day to day activities?"
+		} ],
+		"text": "In the past 7 days - How much did pain interfere with your day to day activities?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47227",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61769-6",
+			"display": "In the past 7 days - How much did pain interfere with work around the home?"
+		} ],
+		"text": "In the past 7 days - How much did pain interfere with work around the home?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47228",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61773-8",
+			"display": "In the past 7 days - How much did pain interfere with your ability to participate in social activities?"
+		} ],
+		"text": "In the past 7 days - How much did pain interfere with your ability to participate in social activities?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47229",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61775-3",
+			"display": "In the past 7 days - How much did pain interfere with your household chores?"
+		} ],
+		"text": "In the past 7 days - How much did pain interfere with your household chores?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13863-8",
+				"display": "A little bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13909-9",
+				"display": "Somewhat"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13902-4",
+				"display": "Quite a bit"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA13914-9",
+				"display": "Very much"
+			}
+		} ]
+	}, {
+		"linkId": "47230",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "61583-1",
+			"display": "In the past 7 days - How would you rate your pain on average?"
+		} ],
+		"text": "In the past 7 days - How would you rate your pain on average?",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA19102-5",
+				"display": "0 - no pain"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6112-2",
+				"display": "1"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6113-0",
+				"display": "2"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6114-8",
+				"display": "3"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6115-5",
+				"display": "4"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10137-0",
+				"display": "5"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10138-8",
+				"display": "6"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10139-6",
+				"display": "7"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10140-4",
+				"display": "8"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA10141-2",
+				"display": "9"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA21948-7",
+				"display": "10 - worst imaginable pain"
+			}
+		} ]
+	}, {
+		"linkId": "62788",
+		"text": "PROMIS-29 Sleep Disturbance, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62787",
+		"text": "PROMIS-29 Sleep Disturbance, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62786",
+		"text": "PROMIS-29 Satisfaction with Participation in Social Roles, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62785",
+		"text": "PROMIS-29 Satisfaction with Participation in Social Roles, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62784",
+		"text": "PROMIS-29 Physical Function, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62783",
+		"text": "PROMIS-29 Physical Function, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62782",
+		"text": "PROMIS-29 Pain Interference, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62781",
+		"text": "PROMIS-29 Pain Interference, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62780",
+		"text": "PROMIS-29 Fatigue, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62779",
+		"text": "PROMIS-29 Fatigue, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62778",
+		"text": "PROMIS-29 Depression, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62777",
+		"text": "PROMIS-29 Depression, raw score",
+		"type": "decimal"
+	}, {
+		"linkId": "62776",
+		"text": "PROMIS-29 Anxiety, T score",
+		"type": "decimal"
+	}, {
+		"linkId": "62775",
+		"text": "PROMIS-29 Anxiety, raw score",
+		"type": "decimal"
+	} ]
+}

@@ -57,7 +57,21 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         : <div>
 
             <h5>My Tasks</h5>
-            {(tasks === undefined)
+
+          <Link to={{pathname: '/questionnaire', 
+                    state: { patientSummary: this.props.patientSummary, questionnaireId: 'PHQ-4-questionnaire' }
+                  }} ><strong>Mental Health Assessment</strong></Link><br/>
+          <Link to={{pathname: '/questionnaire', 
+                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'PHQ-4-grouped-questionnaire' }
+                    }} ><strong>PHQ-4 grouped</strong></Link><br/>
+          <Link to={{pathname: '/questionnaire', 
+                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'PROMIS-29-questionnaire' }
+                    }} ><strong>Health Assessment</strong></Link><br/>
+          <Link to={{pathname: '/questionnaire', 
+                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'PRAPARE-questionnaire' }
+                    }} ><strong>Social Risk Assessment</strong></Link><br/>
+                    
+            {/* {(tasks === undefined)
                 ? <p>You have no tasks today!</p>
                 : <ul>
                     {tasks?.map((task, idx) => (
@@ -67,7 +81,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                         }}>{task.description}</Link>
                     </li>))}
                 </ul>
-            }
+            } */}
 
             <h5>Preventive Care</h5>
             {(screenings !== undefined && screenings.length === 0)

@@ -1,0 +1,450 @@
+{
+  "status": "draft",
+  "title": "PHQ-4 with groups",
+  "resourceType": "Questionnaire",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire|2.7"
+    ],
+    "tag": [
+      {
+        "code": "lformsVersion: 29.2.1"
+      }
+    ]
+  },
+  "item": [
+		  {
+			  "linkId": "/gad-2",
+			  "code": [
+				{
+				  "code": "gad-2",
+				  "display": "Generalized Anxiety Disorder 2-item (GAD-2)"
+				}
+			  ],
+			  "text": "Anxiety Symptoms",
+			  "type": "group",
+			  "required": false,
+			  "item": [
+				{
+				  "type": "choice",
+				  "code": [
+					{
+					  "code": "69725-0",
+					  "display": "Feeling nervous, anxious or on edge",
+					  "system": "http://loinc.org"
+					}
+				  ],
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+					  "valueCodeableConcept": {
+						"coding": [
+						  {
+							"system": "http://hl7.org/fhir/questionnaire-item-control",
+							"code": "drop-down",
+							"display": "Drop down"
+						  }
+						],
+						"text": "Drop down"
+					  }
+					}
+				  ],
+				  "required": false,
+				  "linkId": "/69725-0",
+				  "text": "Feeling nervous, anxious or on edge",
+				  "answerOption": [
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "0"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 0
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6568-5",
+						"display": "Not at all"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "1"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 1
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6569-3",
+						"display": "Several days"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "2"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 2
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6570-1",
+						"display": "More than half the days"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "3"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 3
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6571-9",
+						"display": "Nearly every day"
+					  }
+					},
+					{
+						"valueCoding": {
+							"system": "http://loinc.org",
+							"code": "LA30122-8",
+							"display": "I choose not to answer this question"
+						}
+					}
+				  ]
+				},
+				{
+				  "type": "choice",
+				  "code": [
+					{
+					  "code": "68509-9",
+					  "display": "Over the past 2 weeks have you not been able to stop or control worrying",
+					  "system": "http://loinc.org"
+					}
+				  ],
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+					  "valueCodeableConcept": {
+						"coding": [
+						  {
+							"system": "http://hl7.org/fhir/questionnaire-item-control",
+							"code": "drop-down",
+							"display": "Drop down"
+						  }
+						],
+						"text": "Drop down"
+					  }
+					}
+				  ],
+				  "required": false,
+				  "linkId": "/68509-9",
+				  "text": "Over the past 2 weeks have you not been able to stop or control worrying",
+				  "answerOption": [
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "0"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 0
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6568-5",
+						"display": "Not at all"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "1"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 1
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6569-3",
+						"display": "Several days"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "2"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 2
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA18938-3",
+						"display": "More days than not"
+					  }
+					},
+					{
+					  "extension": [
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+						  "valueString": "3"
+						},
+						{
+						  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+						  "valueDecimal": 3
+						}
+					  ],
+					  "valueCoding": {
+						"code": "LA6571-9",
+						"display": "Nearly every day"
+					  }
+					},
+					{
+						"valueCoding": {
+							"system": "http://loinc.org",
+							"code": "LA30122-8",
+							"display": "I choose not to answer this question"
+						}
+					}
+				  ]
+				}
+			]
+		},
+		{
+			"linkId": "/52498-3",
+			"code": [
+			  {
+				"system": "http://loinc.org",
+				"code": "52498-3",
+				"display": "Patient Health Questionnaire 2 item (PHQ-2)"
+			  }
+			],
+			"text": "Depressive Symptoms",
+			"type": "group",
+			"required": false,
+			"item": [
+			{
+			  "type": "choice",
+			  "code": [
+				{
+				  "code": "44250-9",
+				  "display": "Little interest or pleasure in doing things",
+				  "system": "http://loinc.org"
+				}
+			  ],
+			  "extension": [
+				{
+				  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+				  "valueCodeableConcept": {
+					"coding": [
+					  {
+						"system": "http://hl7.org/fhir/questionnaire-item-control",
+						"code": "drop-down",
+						"display": "Drop down"
+					  }
+					],
+					"text": "Drop down"
+				  }
+				}
+			  ],
+			  "required": false,
+			  "linkId": "/44250-9",
+			  "text": "Little interest or pleasure in doing things",
+			  "answerOption": [
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "0"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 0
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6568-5",
+					"display": "Not at all"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "1"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 1
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6569-3",
+					"display": "Several days"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "2"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 2
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6570-1",
+					"display": "More than half the days"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "3"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 3
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6571-9",
+					"display": "Nearly every day"
+				  }
+				},
+				{
+					   "valueCoding": {
+						   "system": "http://loinc.org",
+						   "code": "LA30122-8",
+						   "display": "I choose not to answer this question"
+					   }
+				   }
+			  ]
+			},
+			{
+			  "type": "choice",
+			  "code": [
+				{
+				  "code": "44255-8",
+				  "display": "Feeling down, depressed, or hopeless",
+				  "system": "http://loinc.org"
+				}
+			  ],
+			  "extension": [
+				{
+				  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+				  "valueCodeableConcept": {
+					"coding": [
+					  {
+						"system": "http://hl7.org/fhir/questionnaire-item-control",
+						"code": "drop-down",
+						"display": "Drop down"
+					  }
+					],
+					"text": "Drop down"
+				  }
+				}
+			  ],
+			  "required": false,
+			  "linkId": "/44255-8",
+			  "text": "Feeling down, depressed, or hopeless",
+			  "answerOption": [
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "0"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 0
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6568-5",
+					"display": "Not at all"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "1"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 1
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6569-3",
+					"display": "Several days"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "2"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 2
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6570-1",
+					"display": "More than half the days"
+				  }
+				},
+				{
+				  "extension": [
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-optionPrefix",
+					  "valueString": "3"
+					},
+					{
+					  "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+					  "valueDecimal": 3
+					}
+				  ],
+				  "valueCoding": {
+					"code": "LA6571-9",
+					"display": "Nearly every day"
+				  }
+				},
+				{
+					   "valueCoding": {
+						   "system": "http://loinc.org",
+						   "code": "LA30122-8",
+						   "display": "I choose not to answer this question"
+					   }
+				   }
+			  ]
+			}
+		  ]
+		}
+      ]
+}

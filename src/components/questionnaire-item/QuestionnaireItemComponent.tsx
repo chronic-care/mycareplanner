@@ -2,10 +2,10 @@ import React, { createRef } from 'react';
 import { QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../fhir-types/fhir-r4';
 import './QuestionnaireItemComponent.css';
 import { Card, Button } from 'react-bootstrap';
-import MultiSelectButtonComponent from '../multi-select-button/MultiSelectButton';
+// import MultiSelectButtonComponent from '../multi-select-button/MultiSelectButton';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ChoiceButton from '../choice-button/ChoiceButton';
+import ChoiceDropDown from '../choice-button/ChoiceDropDown';
 import parser from 'html-react-parser';
 import YouTube from 'react-youtube';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -22,7 +22,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
       showReview: false,
       questionnaireResponse: {
         linkId: props.QuestionnaireItem.linkId,
-        text: props.QuestionnaireItem.prefix + ": " + props.QuestionnaireItem.text,
+        text: (props.QuestionnaireItem.prefix !== undefined ? props.QuestionnaireItem.prefix + ": " : "") + props.QuestionnaireItem.text,
         item: [],
       }
     }
@@ -125,9 +125,8 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
 
     const options = {
       replace: (domNode: any) => {
-        // psa-video
+        // embedded YouTube video
         if (domNode?.next?.attribs?.id === 'youtube' && domNode?.next?.attribs?.value !== undefined) {
-          // return <iframe title="Flat Tire Video" ref={this.vidRef} width="100%" height="200" src="https://www.youtube.com/embed/QWcr9J3MLfo" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" onEnded={recordWebsiteVisit} allowFullScreen></iframe>
           let youtubeId = domNode?.next?.attribs?.value
           return <YouTube
             id="youtube-video"
@@ -136,7 +135,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             opts={vidOptions}
             onEnd={recordWebsiteVisit}
           />
-        // psa-benefits-link
+        // website link
         } else if (domNode?.next?.attribs?.id === 'website' && domNode?.next?.attribs?.value !== undefined) {
           let website = domNode?.next?.attribs?.value
           return <a id="replace" className="d-flex justify-content-center mt-1" target="_blank" 
@@ -160,16 +159,16 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                   onClick={(event: any) => this.handlePreviousQuestionScroll(this.props.QuestionnaireItem.linkId)} />
               </Button>
             )}
-          <div className="prefix-text">
+          { this.props.QuestionnaireItem.prefix !== undefined ? <div className="prefix-text">
             <h3>{this.props.QuestionnaireItem.prefix}</h3>
-          </div>
+          </div> : <div/> }
           <div className="progress-circle">
             <CircularProgressbar value={percentage(this.props.QuestionnaireItem.linkId, this.props.length)} text={percentage(this.props.QuestionnaireItem.linkId, this.props.length) + '%'} />
           </div>
         </div>
-        <div className="description-text">
-          <div> {parser(text, options)}</div>
-        </div>
+        { this.props.QuestionnaireItem.type === "group" ? <div className="description-text">
+          <h4> {parser(text, options)}</h4>
+        </div> : <div/> }
         <div>
           {
             this.props.QuestionnaireItem.type === "boolean" ?
@@ -183,18 +182,18 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
               </div>
               : this.props.QuestionnaireItem.type === "choice" ?
                 <div className="choice-type">
-                  {this.populateChoice(this.props)}
+                  {this.populateChoice(this.props.QuestionnaireItem)}
                 </div>
-                : this.props.QuestionnaireItem.type === "quantity" ?
+                : (this.props.QuestionnaireItem.type === "quantity" || this.props.QuestionnaireItem.type === "decimal") ?
                   <div className="quantity-type">
-                    <input type="text" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} /> days
+                    <input type="text" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
                     </div>
                   : this.props.QuestionnaireItem.type === "group" ?
                     <div className="open-choice-type">
-                      {this.populateGroupType(this.props)}
+                      {this.populateGroupType(this.props.QuestionnaireItem)}
                     </div>
 
-                    : this.props.QuestionnaireItem.type === "text" ?
+                    : (this.props.QuestionnaireItem.type === "text" || this.props.QuestionnaireItem.type === "string") ?
                       <div className="text-type">
                         <textarea placeholder="Type your answer here......"
                           onChange={(event) => {
@@ -219,7 +218,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
 
 
   // public populateChoice(props: { QuestionnaireItem: QuestionnaireItem, onChange: (item: QuestionnaireItem, answer?: QuestionnaireResponseItemAnswer[]) => void }) {
-  public populateChoice(props: any) {
+  public populateChoice(item: QuestionnaireItem) {
 
 
     let receiveData = (childData: QuestionnaireItem, answer: string) => {
@@ -248,7 +247,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             questionnaireResponse
           }
         }, () => {
-          props.onChange(this.state.questionnaireResponse);
+          this.props.onChange(this.state.questionnaireResponse);
         })
       }
 
@@ -265,12 +264,12 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     }
 
     return (
-      <ChoiceButton parentCallback={receiveData} key={JSON.stringify(props.QuestionnaireItem)} {...props.QuestionnaireItem}></ChoiceButton>
+      <ChoiceDropDown parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceDropDown>
 
     );
   }
 
-  public populateGroupType(props: any) {
+  public populateGroupType(groupItem: QuestionnaireItem) {
 
     let receiveData = (childData: QuestionnaireResponseItem, answer: any) => {
       let childResponse: QuestionnaireResponseItem = {
@@ -295,7 +294,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           }
 
         }, () => {
-          props.onChange(this.state.questionnaireResponse);
+          this.props.onChange(this.state.questionnaireResponse);
         })
       } else if (stateQuestionnaireResponse.item!.some(checkResponseArray)) {
 
@@ -307,38 +306,83 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           }
 
         }, () => {
-          props.onChange(this.state.questionnaireResponse);
+          this.props.onChange(this.state.questionnaireResponse);
         })
       }
 
     }
 
-    if (props.QuestionnaireItem.code![0].code === 'pain-location' || props.QuestionnaireItem.code![0].code === 'about-my-treatments') {
-      return (
-        <div>
-          {
-            props.QuestionnaireItem.item?.map((item: any) => {
-              return (
-                <MultiSelectButtonComponent sectionCode={props.QuestionnaireItem.code![0].code} parentCallback={receiveData} key={JSON.stringify(item)}  {...item}>{item.answerOption}</MultiSelectButtonComponent>
-              )
-            })
-          }
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          {
-            props.QuestionnaireItem.item?.map((item: QuestionnaireItemAnswerOption) => {
-              return (
-                <ChoiceButton parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceButton>
-              )
-            })
-
-          }
-        </div>
-      )
-    }
+    return (
+    <div>
+    {
+      groupItem.item?.map((nestedItem: QuestionnaireItem) => {
+    return (
+      <div key={JSON.stringify(nestedItem)}>
+      {
+        nestedItem.type === "boolean" ?
+          <div className="boolean-type">
+            <p className="question-text">{nestedItem.text}</p>
+            <div className="radio-button">
+              <input type="radio" name={nestedItem.linkId} onChange={() => this.props.onChange(nestedItem, [{ valueBoolean: true }])} /> <label htmlFor={nestedItem.linkId}> Yes</label>
+            </div>
+            <div className="radio-button">
+              <input type="radio" name={nestedItem.linkId} onChange={() => this.props.onChange(nestedItem, [{ valueBoolean: false }])} /><label htmlFor={nestedItem.linkId}> No</label>
+            </div>
+          </div>
+          : nestedItem.type === "choice" ?
+            <div className="choice-type">
+                 { this.populateChoice(nestedItem) }
+            </div>
+            : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
+              <div className="quantity-type">
+                <p className="question-text">{nestedItem.text}</p>
+                <input type="text" onChange={(event) => this.props.onChange(nestedItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
+                </div>
+                : (nestedItem.type === "text" || nestedItem.type === "string") ?
+                  <div className="text-type">
+                    <p className="question-text">{nestedItem.text}</p>
+                    <textarea placeholder="Type your answer here......"
+                      onChange={(event) => {
+                        this.props.processTextResponse(nestedItem, JSON.stringify({ valueString: event.target.value }))
+                      }}
+                    />
+                  </div>
+                  : <div></div>
+      }
+    </div>
+    )
+    })
   }
+  </div>
+      )
+    
+    // if (props.QuestionnaireItem.code![0].code === 'pain-location' || props.QuestionnaireItem.code![0].code === 'about-my-treatments') {
+    //   return (
+    //     <div>
+    //       {
+    //         props.QuestionnaireItem.item?.map((item: any) => {
+    //           return (
+    //             <MultiSelectButtonComponent sectionCode={props.QuestionnaireItem.code![0].code} parentCallback={receiveData} key={JSON.stringify(item)}  {...item}>{item.answerOption}</MultiSelectButtonComponent>
+    //           )
+    //         })
+    //       }
+    //     </div>
+    //   );
+    // } else {
+      // return (
+      //   <div>
+      //     {
+      //       props.QuestionnaireItem.item?.map((item: QuestionnaireItemAnswerOption) => {
+      //         return (
+      //           <ChoiceButton parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceButton>
+      //         )
+      //       })
 
+      //     }
+      //   </div>
+      // )
+    // }
+  // }
+
+}
 }

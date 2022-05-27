@@ -1,3 +1,11 @@
 .choice-button-group {
     margin-bottom: 1rem;
 }
+p.question-text {
+    margin-bottom: .5rem;
+}
+.dropdown-item {
+    width: 400px;
+    white-space: normal;
+    word-break: break-word;
+}
