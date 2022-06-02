@@ -1,0 +1,176 @@
+{
+	"resourceType": "Questionnaire",
+	"id": "69724-3",
+	"meta": {
+		"versionId": "4",
+		"lastUpdated": "2022-04-13T19:47:22.495+00:00",
+		"source": "#4Q75pMeTbscwKKwf"
+	},
+	"url": "http://loinc.org/q/69724-3",
+	"name": "Patient_health_questionnaire_item",
+	"title": "Patient health questionnaire 4 item",
+	"status": "draft",
+	"publisher": "Regenstrief Institute, Inc.",
+	"contact": [ {
+		"name": "Regenstrief Institute, Inc.",
+		"telecom": [ {
+			"system": "url",
+			"value": "http://loinc.org"
+		} ]
+	} ],
+	"copyright": "This content from LOINC® is copyright © 1995-2022 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at https://loinc.org/license/\r\nCopyright © Pfizer Inc. All rights reserved. Developed by Drs. Robert L. Spitzer, Janet B.W. Williams, Kurt Kroenke and colleagues, with an educational grant from Pfizer Inc. No permission required to reproduce, translate, display or distribute.",
+	"code": [ {
+		"system": "http://loinc.org",
+		"code": "69724-3",
+		"display": "Patient health questionnaire 4 item"
+	} ],
+	"item": [ {
+		"linkId": "57491",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "69725-0",
+			"display": "Feeling nervous, anxious or on edge"
+		} ],
+		"prefix": "PHQ4_01",
+		"text": "Feeling nervous, anxious or on edge",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6569-3",
+				"display": "Several days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6570-1",
+				"display": "More than half the days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6571-9",
+				"display": "Nearly every day"
+			}
+		} ]
+	}, {
+		"linkId": "57490",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "68509-9",
+			"display": "Over the past 2 weeks have you not been able to stop or control worrying"
+		} ],
+		"prefix": "PHQ4_02",
+		"text": "Over the past 2 weeks have you not been able to stop or control worrying",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6569-3",
+				"display": "Several days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA18938-3",
+				"display": "More days than not"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6571-9",
+				"display": "Nearly every day"
+			}
+		} ]
+	}, {
+		"linkId": "57489",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "44250-9",
+			"display": "Little interest or pleasure in doing things"
+		} ],
+		"prefix": "PHQ4_03",
+		"text": "Little interest or pleasure in doing things",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6569-3",
+				"display": "Several days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6570-1",
+				"display": "More than half the days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6571-9",
+				"display": "Nearly every day"
+			}
+		} ]
+	}, {
+		"linkId": "57488",
+		"code": [ {
+			"system": "http://loinc.org",
+			"code": "44255-8",
+			"display": "Feeling down, depressed, or hopeless"
+		} ],
+		"prefix": "PHQ4_04",
+		"text": "Feeling down, depressed, or hopeless",
+		"type": "choice",
+		"repeats": false,
+		"answerOption": [ {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6568-5",
+				"display": "Not at all"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6569-3",
+				"display": "Several days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6570-1",
+				"display": "More than half the days"
+			}
+		}, {
+			"valueCoding": {
+				"system": "http://loinc.org",
+				"code": "LA6571-9",
+				"display": "Nearly every day"
+			}
+		} ]
+	}, {
+		"linkId": "58625",
+		"text": "Patient health questionnaire 4 item total score",
+		"type": "decimal"
+	} ]
+}
