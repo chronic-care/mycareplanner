@@ -9,3 +9,8 @@ p.question-text {
     white-space: normal;
     word-break: break-word;
 }
+.form-control {
+    width: 400px;
+    white-space: normal;
+    word-break: break-word;
+}

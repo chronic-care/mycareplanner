@@ -15,7 +15,7 @@ export default class ReviewPageComponent extends React.Component<any, any> {
             <div className="review-page-container">
 
                 {sortedList.map((question: QuestionnaireResponseItem) => {
-                    let text = JSON.stringify(question.text)
+                    let text = question.text ?? 'No question text'
 
                     if (question.answer) {
                         return (<div className='question-response-container' key={question.linkId}>
@@ -35,7 +35,9 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{question.answer[0].valueString ||  moment(question.answer[0].valueDateTime).format('MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{question.answer[0].valueString 
+                                            || question.answer[0].valueQuantity?.value
+                                            ||  moment(question.answer[0].valueDateTime).format('MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -46,7 +48,7 @@ export default class ReviewPageComponent extends React.Component<any, any> {
 
                         return (
                             <div className='question-response-container' key={question.linkId}>
-                                <h6>{parser(text)}</h6>
+                                <h5>{parser(text)}</h5>
                                 {
                                     <Table responsive bordered striped size="sm">
                                         <thead>
@@ -74,6 +76,13 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                                                             <tr key={item.linkId}>
                                                                 <td>{parser(JSON.stringify(item.text))}</td>
                                                                 <td>{item.answer![0].valueString}</td>
+                                                            </tr>
+                                                        )
+                                                    } else if (item.answer![0].valueQuantity?.value !== undefined) {
+                                                        return (
+                                                            <tr key={item.linkId}>
+                                                                <td>{parser(JSON.stringify(item.text))}</td>
+                                                                <td>{item.answer![0].valueQuantity?.value?.toString()}</td>
                                                             </tr>
                                                         )
                                                     } else if (item.answer![0].valueDateTime!.length > 0) {

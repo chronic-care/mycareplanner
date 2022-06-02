@@ -25,6 +25,17 @@
 		"display": "PROMIS item bank - 29 profile"
 	} ],
 	"item": [ {
+		"linkId": "physical-function",
+		"code": [{
+			"code": "no-code",
+			"display": "No code"
+		  }
+		],
+		"text": "Physical Function",
+		"type": "group",
+		"required": true,
+		"item": [ 
+			{
 		"linkId": "47202",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -188,7 +199,20 @@
 				"display": "Unable to do"
 			}
 		} ]
-	}, {
+	}
+]}, 
+{
+	"linkId": "anxiety",
+	"code": [{
+		"code": "no-code",
+		"display": "No code"
+	  }
+	],
+	"text": "Anxiety",
+	"type": "group",
+	"required": true,
+	"item": [ 
+		{
 		"linkId": "47206",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -352,7 +376,20 @@
 				"display": "Always"
 			}
 		} ]
-	}, {
+	}
+]}, 
+{
+	"linkId": "depression",
+	"code": [{
+		"code": "no-code",
+		"display": "No code"
+	  }
+	],
+	"text": "Depression",
+	"type": "group",
+	"required": true,
+	"item": [ 
+		{
 		"linkId": "47210",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -516,7 +553,20 @@
 				"display": "Always"
 			}
 		} ]
-	}, {
+	}
+	]}, 
+	{
+		"linkId": "fatigue",
+		"code": [{
+			"code": "no-code",
+			"display": "No code"
+		  }
+		],
+		"text": "Fatigue",
+		"type": "group",
+		"required": true,
+		"item": [ 
+			{
 		"linkId": "47214",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -680,7 +730,19 @@
 				"display": "Very much"
 			}
 		} ]
-	}, {
+	}
+]}, 
+{
+	"linkId": "sleep-disturbance",
+	"code": [{
+		"code": "no-code",
+		"display": "No code"
+	  }
+	],
+	"text": "Sleep Disturbance",
+	"type": "group",
+	"required": true,
+	"item": [ {
 		"linkId": "47218",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -844,7 +906,19 @@
 				"display": "Very much"
 			}
 		} ]
-	}, {
+	}
+	]}, 
+	{
+		"linkId": "social-participation",
+		"code": [{
+			"code": "no-code",
+			"display": "No code"
+		  }
+		],
+		"text": "Ability to Participate in Social Roles and Activities",
+		"type": "group",
+		"required": true,
+		"item": [ {
 		"linkId": "47222",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -1008,7 +1082,19 @@
 				"display": "Very much"
 			}
 		} ]
-	}, {
+	}
+		]}, 
+		{
+			"linkId": "pain-interference",
+			"code": [{
+				"code": "no-code",
+				"display": "No code"
+			  }
+			],
+			"text": "Pain Interference",
+			"type": "group",
+			"required": true,
+			"item": [ {
 		"linkId": "47226",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -1172,7 +1258,19 @@
 				"display": "Very much"
 			}
 		} ]
-	}, {
+	}
+			]}, 
+			{
+				"linkId": "pain-intensity",
+				"code": [{
+					"code": "no-code",
+					"display": "No code"
+				  }
+				],
+				"text": "Pain Intensity",
+				"type": "group",
+				"required": true,
+				"item": [ {
 		"linkId": "47230",
 		"code": [ {
 			"system": "http://loinc.org",
@@ -1249,61 +1347,7 @@
 				"display": "10 - worst imaginable pain"
 			}
 		} ]
-	}, {
-		"linkId": "62788",
-		"text": "PROMIS-29 Sleep Disturbance, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62787",
-		"text": "PROMIS-29 Sleep Disturbance, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62786",
-		"text": "PROMIS-29 Satisfaction with Participation in Social Roles, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62785",
-		"text": "PROMIS-29 Satisfaction with Participation in Social Roles, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62784",
-		"text": "PROMIS-29 Physical Function, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62783",
-		"text": "PROMIS-29 Physical Function, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62782",
-		"text": "PROMIS-29 Pain Interference, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62781",
-		"text": "PROMIS-29 Pain Interference, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62780",
-		"text": "PROMIS-29 Fatigue, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62779",
-		"text": "PROMIS-29 Fatigue, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62778",
-		"text": "PROMIS-29 Depression, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62777",
-		"text": "PROMIS-29 Depression, raw score",
-		"type": "decimal"
-	}, {
-		"linkId": "62776",
-		"text": "PROMIS-29 Anxiety, T score",
-		"type": "decimal"
-	}, {
-		"linkId": "62775",
-		"text": "PROMIS-29 Anxiety, raw score",
-		"type": "decimal"
-	} ]
+	}
+	]}
+]
 }

@@ -58,19 +58,21 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <h5>My Tasks</h5>
 
-          <Link to={{pathname: '/questionnaire', 
+          {/* <Link to={{pathname: '/questionnaire', 
                     state: { patientSummary: this.props.patientSummary, questionnaireId: 'PHQ-4-questionnaire' }
-                  }} ><strong>Mental Health Assessment</strong></Link><br/>
+                  }} ><strong>Mental Health Assessment</strong></Link><br/> */}
           <Link to={{pathname: '/questionnaire', 
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'PHQ-4-grouped-questionnaire' }
-                    }} ><strong>PHQ-4 grouped</strong></Link><br/>
+                    }} ><strong>Mental Health Assessment</strong></Link><br/>
           <Link to={{pathname: '/questionnaire', 
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'PROMIS-29-questionnaire' }
-                    }} ><strong>Health Assessment</strong></Link><br/>
+                    }} ><strong>General Health Assessment</strong></Link><br/>
           <Link to={{pathname: '/questionnaire', 
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'PRAPARE-questionnaire' }
                     }} ><strong>Social Risk Assessment</strong></Link><br/>
                     
+          <p/>
+          
             {/* {(tasks === undefined)
                 ? <p>You have no tasks today!</p>
                 : <ul>

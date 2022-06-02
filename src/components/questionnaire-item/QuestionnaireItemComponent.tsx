@@ -2,10 +2,10 @@ import React, { createRef } from 'react';
 import { QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../fhir-types/fhir-r4';
 import './QuestionnaireItemComponent.css';
 import { Card, Button } from 'react-bootstrap';
-// import MultiSelectButtonComponent from '../multi-select-button/MultiSelectButton';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ChoiceDropDown from '../choice-button/ChoiceDropDown';
+import ChoiceDropDown from './ChoiceDropDown';
+// import MultiSelectButtonComponent from '../multi-select-button/MultiSelectButton';
 import parser from 'html-react-parser';
 import YouTube from 'react-youtube';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -99,21 +99,10 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
       }
     }
 
-    let processTextResponse = (questionItem: QuestionnaireItem, answer: any) => {
-      let responseAnswer: QuestionnaireResponseItemAnswer = JSON.parse(answer);
-      let childResponse: QuestionnaireResponseItem = {
-        linkId: questionItem.linkId,
-        text: questionItem.text,
-        answer: [responseAnswer]
-      };
-
-      this.props.onChange(childResponse);
-    }
-
 
     let recordWebsiteVisit = (event: any) => {
       let timeStamp: any = new Date().toISOString();
-      processTextResponse(this.props.QuestionnaireItem, JSON.stringify({ valueDateTime: timeStamp }))
+      this.processResponse(this.props.QuestionnaireItem, JSON.stringify({ valueDateTime: timeStamp }))
     }
     const vidOptions = {
       width: "100%",
@@ -166,13 +155,17 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             <CircularProgressbar value={percentage(this.props.QuestionnaireItem.linkId, this.props.length)} text={percentage(this.props.QuestionnaireItem.linkId, this.props.length) + '%'} />
           </div>
         </div>
+
+        {/* For groups, show item text as H4 header */}
         { this.props.QuestionnaireItem.type === "group" ? <div className="description-text">
           <h4> {parser(text, options)}</h4>
         </div> : <div/> }
+
         <div>
           {
             this.props.QuestionnaireItem.type === "boolean" ?
               <div className="boolean-type">
+                <p className="question-text">{this.props.QuestionnaireItem.text}</p>
                 <div className="radio-button">
                   <input type="radio" name={this.props.QuestionnaireItem.linkId} onChange={() => this.props.onChange(this.props.QuestionnaireItem, [{ valueBoolean: true }])} /> <label htmlFor={this.props.QuestionnaireItem.linkId}> Yes</label>
                 </div>
@@ -186,18 +179,20 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                 </div>
                 : (this.props.QuestionnaireItem.type === "quantity" || this.props.QuestionnaireItem.type === "decimal") ?
                   <div className="quantity-type">
+                    <p className="question-text">{this.props.QuestionnaireItem.text}</p>
                     <input type="text" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
                     </div>
                   : this.props.QuestionnaireItem.type === "group" ?
                     <div className="open-choice-type">
-                      {this.populateGroupType(this.props.QuestionnaireItem)}
+                      {this.populateGroupType(this.props)}
                     </div>
 
                     : (this.props.QuestionnaireItem.type === "text" || this.props.QuestionnaireItem.type === "string") ?
                       <div className="text-type">
+                        <p className="question-text">{this.props.QuestionnaireItem.text}</p>
                         <textarea placeholder="Type your answer here......"
                           onChange={(event) => {
-                            processTextResponse(this.props.QuestionnaireItem, JSON.stringify({ valueString: event.target.value }))
+                            this.processResponse(this.props.QuestionnaireItem, JSON.stringify({ valueString: event.target.value }))
                           }}
                         />
                       </div>
@@ -216,10 +211,18 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     );
   }
 
+  private processResponse = (questionItem: QuestionnaireItem, answer: any) => {
+    let responseAnswer: QuestionnaireResponseItemAnswer = JSON.parse(answer);
+    let childResponse: QuestionnaireResponseItem = {
+      linkId: questionItem.linkId,
+      text: questionItem.text,
+      answer: [responseAnswer]
+    };
 
-  // public populateChoice(props: { QuestionnaireItem: QuestionnaireItem, onChange: (item: QuestionnaireItem, answer?: QuestionnaireResponseItemAnswer[]) => void }) {
-  public populateChoice(item: QuestionnaireItem) {
+    this.props.onChange(childResponse);
+  }
 
+  private populateChoice(item: QuestionnaireItem) {
 
     let receiveData = (childData: QuestionnaireItem, answer: string) => {
       let responseAnswer: QuestionnaireResponseItemAnswer = JSON.parse(answer)
@@ -229,11 +232,6 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
         answer: [responseAnswer]
       };
 
-      let joined = this.state.questionnaireResponse.item;
-
-      // const updateItem = (array: any, response: any) => {
-
-      // }
       const addItem = (response: any) => {
         this.setState(state => {
           const questionnaireResponse = {
@@ -251,25 +249,16 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
         })
       }
 
-      if (joined!.length > 0) {
-        for (let i = 0; i < joined!.length; i++) {
-
-        }
-      } else {
-        addItem(childResponse);
-      }
-
-
-
+      addItem(childResponse);
     }
 
     return (
       <ChoiceDropDown parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceDropDown>
-
     );
   }
 
-  public populateGroupType(groupItem: QuestionnaireItem) {
+  private populateGroupType(props: any) {
+    let groupItem = props.QuestionnaireItem
 
     let receiveData = (childData: QuestionnaireResponseItem, answer: any) => {
       let childResponse: QuestionnaireResponseItem = {
@@ -333,21 +322,24 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             <div className="choice-type">
                  { this.populateChoice(nestedItem) }
             </div>
-            : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
-              <div className="quantity-type">
-                <p className="question-text">{nestedItem.text}</p>
-                <input type="text" onChange={(event) => this.props.onChange(nestedItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
-                </div>
-                : (nestedItem.type === "text" || nestedItem.type === "string") ?
-                  <div className="text-type">
-                    <p className="question-text">{nestedItem.text}</p>
-                    <textarea placeholder="Type your answer here......"
-                      onChange={(event) => {
-                        this.props.processTextResponse(nestedItem, JSON.stringify({ valueString: event.target.value }))
-                      }}
-                    />
-                  </div>
-                  : <div></div>
+          : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
+            <div className="quantity-type">
+              <p className="question-text">{nestedItem.text}</p>
+              <input type="text" 
+                    onChange={(event) => {
+                      this.processResponse(nestedItem,  JSON.stringify({ valueQuantity: { value: parseFloat(event.target.value) }}))
+                    }} />
+              </div>
+          : (nestedItem.type === "text" || nestedItem.type === "string") ?
+            <div className="text-type">
+              <p className="question-text">{nestedItem.text}</p>
+              <textarea placeholder="Type your answer here......"
+                onChange={(event) => {
+                  this.processResponse(nestedItem, JSON.stringify({ valueString: event.target.value }))
+                }}
+              />
+            </div>
+          : <div></div>
       }
     </div>
     )
