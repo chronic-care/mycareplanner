@@ -118,10 +118,25 @@ input[type="radio"]:focus+label::before {
     box-shadow: 0 0px 8px rgba(var(--color-dark), .75);
 }
 
+input[type="text"] {
+    border: 2px solid gray;
+    border-radius: 4px;
+    margin: 5px 5px;
+}
+
+input[type="number"] {
+    border: 2px solid gray;
+    border-radius: 4px;
+    margin: 5px 5px;
+}
+
 textarea {
     width: 100%;
     max-width: 450px;
     height: 150px;
+    border: 2px solid gray;
+    border-radius: 4px;
+    margin: 5px 5px;
 }
 
 
@@ -166,6 +181,14 @@ textarea {
       -webkit-overflow-scrolling:touch; 
     }
 }
+
+div.question-group {
+    box-sizing: border-box;
+    border: 1px solid gray;
+    padding: 5px;
+    margin-bottom: 1rem;
+}
+
 .questionnaire-item p {
     font-size: 1rem;
     text-align: left;
@@ -175,4 +198,5 @@ textarea {
 
 p.question-text {
     margin-bottom: .5rem;
+    font-weight: bold;
 }

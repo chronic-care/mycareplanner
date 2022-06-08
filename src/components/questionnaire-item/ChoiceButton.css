@@ -3,6 +3,7 @@
 }
 p.question-text {
     margin-bottom: .5rem;
+    font-weight: bold;
 }
 .dropdown-item {
     width: 400px;

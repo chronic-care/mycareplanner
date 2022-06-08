@@ -10,6 +10,7 @@ import parser from 'html-react-parser';
 import YouTube from 'react-youtube';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
+import { isNullOrUndefined } from 'util';
 
 interface QuestionnaireItemState {
   showReview: boolean,
@@ -52,7 +53,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     }
   }
   handlePreviousQuestionScroll(linkId: number) {
-    if (this.questionnaireItemRef.current.id === linkId) {
+    if (this.questionnaireItemRef.current.id === linkId && this.questionnaireItemRef.current.previousSibling !== null) {
       if (this.vidRef.current !== null) {
         this.stopVideos();
       }
@@ -151,9 +152,9 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           { this.props.QuestionnaireItem.prefix !== undefined ? <div className="prefix-text">
             <h3>{this.props.QuestionnaireItem.prefix}</h3>
           </div> : <div/> }
-          <div className="progress-circle">
+          {/* <div className="progress-circle">
             <CircularProgressbar value={percentage(this.props.QuestionnaireItem.linkId, this.props.length)} text={percentage(this.props.QuestionnaireItem.linkId, this.props.length) + '%'} />
-          </div>
+          </div> */}
         </div>
 
         {/* For groups, show item text as H4 header */}
@@ -178,9 +179,9 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                   {this.populateChoice(this.props.QuestionnaireItem)}
                 </div>
                 : (this.props.QuestionnaireItem.type === "quantity" || this.props.QuestionnaireItem.type === "decimal") ?
-                  <div className="quantity-type">
+                  <div className="question-group">
                     <p className="question-text">{this.props.QuestionnaireItem.text}</p>
-                    <input type="text" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
+                    <input type="number" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
                     </div>
                   : this.props.QuestionnaireItem.type === "group" ?
                     <div className="open-choice-type">
@@ -188,7 +189,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                     </div>
 
                     : (this.props.QuestionnaireItem.type === "text" || this.props.QuestionnaireItem.type === "string") ?
-                      <div className="text-type">
+                      <div className="question-group">
                         <p className="question-text">{this.props.QuestionnaireItem.text}</p>
                         <textarea placeholder="Type your answer here......"
                           onChange={(event) => {
@@ -323,15 +324,15 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                  { this.populateChoice(nestedItem) }
             </div>
           : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
-            <div className="quantity-type">
+            <div className="question-group">
               <p className="question-text">{nestedItem.text}</p>
-              <input type="text" 
+              <input type="number" 
                     onChange={(event) => {
                       this.processResponse(nestedItem,  JSON.stringify({ valueQuantity: { value: parseFloat(event.target.value) }}))
                     }} />
               </div>
           : (nestedItem.type === "text" || nestedItem.type === "string") ?
-            <div className="text-type">
+            <div className="question-group">
               <p className="question-text">{nestedItem.text}</p>
               <textarea placeholder="Type your answer here......"
                 onChange={(event) => {
