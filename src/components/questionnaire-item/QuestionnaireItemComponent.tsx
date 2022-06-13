@@ -167,8 +167,12 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             this.props.QuestionnaireItem.type === "boolean" ?
               <div className="boolean-type">
                 <p className="question-text">{this.props.QuestionnaireItem.text}</p>
+                <p>&nbsp;</p>
                 <div className="radio-button">
-                  <input type="radio" name={this.props.QuestionnaireItem.linkId} onChange={() => this.props.onChange(this.props.QuestionnaireItem, [{ valueBoolean: true }])} /> <label htmlFor={this.props.QuestionnaireItem.linkId}> Yes</label>
+                  <input type="radio" name={this.props.QuestionnaireItem.linkId} onChange={() => {
+                            this.processResponse(this.props.QuestionnaireItem, JSON.stringify({ valueBoolean: true }))
+                          }} />
+                  <label htmlFor={this.props.QuestionnaireItem.linkId}> Yes</label>
                 </div>
                 <div className="radio-button">
                   <input type="radio" name={this.props.QuestionnaireItem.linkId} onChange={() => this.props.onChange(this.props.QuestionnaireItem, [{ valueBoolean: false }])} /><label htmlFor={this.props.QuestionnaireItem.linkId}> No</label>
@@ -312,11 +316,16 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
         nestedItem.type === "boolean" ?
           <div className="boolean-type">
             <p className="question-text">{nestedItem.text}</p>
+            <p>&nbsp;&nbsp;</p>
             <div className="radio-button">
-              <input type="radio" name={nestedItem.linkId} onChange={() => this.props.onChange(nestedItem, [{ valueBoolean: true }])} /> <label htmlFor={nestedItem.linkId}> Yes</label>
+              <input type="radio" name={nestedItem.linkId} onChange={(event) => {
+                    this.processResponse(nestedItem, JSON.stringify({ valueBoolean: true }))}} />
+              <label htmlFor={nestedItem.linkId}> Yes</label>
             </div>
             <div className="radio-button">
-              <input type="radio" name={nestedItem.linkId} onChange={() => this.props.onChange(nestedItem, [{ valueBoolean: false }])} /><label htmlFor={nestedItem.linkId}> No</label>
+              <input type="radio" name={nestedItem.linkId} onChange={(event) => {
+                    this.processResponse(nestedItem, JSON.stringify({ valueBoolean: false }))}} />
+              <label htmlFor={nestedItem.linkId}> No</label>
             </div>
           </div>
           : nestedItem.type === "choice" ?

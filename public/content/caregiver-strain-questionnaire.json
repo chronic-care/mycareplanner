@@ -1,0 +1,177 @@
+{
+    "resourceType": "Questionnaire",
+    "id": "questionnaire-caregiver-strain-index",
+    "url": "http://hl7.org/Questionnaire/caregiver-strain-index",
+    "name": "Caregiver_Strain_Index",
+    "title": "Caregiver Strain Index",
+    "status": "draft",
+    "publisher": "The Gerontological Society of America",
+    "copyright": "Copyright (c) The Gerontological Society of America. Permission is hereby granted to reproduce this material for non-for-profit educational purposes only, provided The Hartford Institute for Geriatric Nursing, Division of Nursing, New York University is cited as the source. Available on the internet at www.hartfordign.org.",
+    "code": [
+        {
+            "system": "http://hl7.org",
+            "code": "caregiver-strain-index",
+            "display": "Caregiver Strain Index"
+        }
+    ],
+    "item": [
+        {
+            "linkId": "caregiver-strain-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Caregiver Strain",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "q1",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "Sleep is disturbed (e.g., because . . . is in and out of bed or wanders around at night)"
+                        }
+                    ],
+                    "text": "Sleep is disturbed (e.g., because . . . is in and out of bed or wanders around at night)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q2",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "It is inconvenient (e.g., because helping takes so much time or it’s a long drive over to help)"
+                        }
+                    ],
+                    "text": "It is inconvenient (e.g., because helping takes so much time or it’s a long drive over to help)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q3",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "It is a physical strain (e.g., because of lifting in and out of a chair; effort or concentration is required)"
+                        }
+                    ],
+                    "text": "It is a physical strain (e.g., because of lifting in and out of a chair; effort or concentration is required)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q4",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "It is confining (e.g., helping restricts free time or cannot go visiting)"
+                        }
+                    ],
+                    "text": "It is confining (e.g., helping restricts free time or cannot go visiting)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q5",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "There have been family adjustments (e.g., because helping has disrupted routine; there has been no privacy)"
+                        }
+                    ],
+                    "text": "There have been family adjustments (e.g., because helping has disrupted routine; there has been no privacy)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q6",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "There have been changes in personal plans (e.g., had to turn down a job; could not go on vacation)"
+                        }
+                    ],
+                    "text": "There have been changes in personal plans (e.g., had to turn down a job; could not go on vacation)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q7",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "There have been emotional adjustments (e.g., because of severe arguments)"
+                        }
+                    ],
+                    "text": "There have been emotional adjustments (e.g., because of severe arguments)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q8",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "Some behavior is upsetting (e.g., because of incontinence; . . . has trouble remembering things; or . . . accuses people of taking things)"
+                        }
+                    ],
+                    "text": "Some behavior is upsetting (e.g., because of incontinence; . . . has trouble remembering things; or . . . accuses people of taking things)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q9",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "It is upsetting to find . . . has changed so much from his/her former self (e.g., he/she is a different person than he/she used to be)"
+                        }
+                    ],
+                    "text": "It is upsetting to find . . . has changed so much from his/her former self (e.g., he/she is a different person than he/she used to be)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q10",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "There have been work adjustments (e.g., because of having to take time off)"
+                        }
+                    ],
+                    "text": "There have been work adjustments (e.g., because of having to take time off)",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q11",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "It is a financial strain"
+                        }
+                    ],
+                    "text": "It is a financial strain",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "q12",
+                    "code": [
+                        {
+                            "system": "http://hl7.org",
+                            "code": "???",
+                            "display": "Feeling completely overwhelmed (e.g., because of worry about . . . ; concerns about how you will manage)"
+                        }
+                    ],
+                    "text": "Feeling completely overwhelmed (e.g., because of worry about . . . ; concerns about how you will manage)",
+                    "type": "boolean"
+                }
+            ]
+        }
+    ]
+}

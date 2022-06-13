@@ -35,7 +35,8 @@ export default class ReviewPageComponent extends React.Component<any, any> {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{question.answer[0].valueString 
+                                            <td>{question.answer[0].valueString
+                                            || (question.answer[0].valueBoolean === undefined ? null : question.answer[0].valueBoolean ? 'Yes' : 'No')
                                             || question.answer[0].valueQuantity?.value
                                             ||  moment(question.answer[0].valueDateTime).format('MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
@@ -71,11 +72,17 @@ export default class ReviewPageComponent extends React.Component<any, any> {
 
                                                     }
                                                     if (item.answer![0].valueString!.length > 0) {
-
                                                         return (
                                                             <tr key={item.linkId}>
                                                                 <td>{parser(JSON.stringify(item.text))}</td>
                                                                 <td>{item.answer![0].valueString}</td>
+                                                            </tr>
+                                                        )
+                                                    } else if (item.answer![0].valueBoolean !== undefined) {
+                                                        return (
+                                                            <tr key={item.linkId}>
+                                                                <td>{parser(JSON.stringify(item.text))}</td>
+                                                                <td>{item.answer![0].valueBoolean ? 'Yes' : 'No'}</td>
                                                             </tr>
                                                         )
                                                     } else if (item.answer![0].valueQuantity?.value !== undefined) {
