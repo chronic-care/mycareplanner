@@ -38,8 +38,8 @@ export class InfoModal extends React.Component<any, any> {
                         <Modal.Title></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <p>Click the submit button below to send this information to your doctor and your care team. Please be sure to check in with your provider to see if they have accessed PatientCareManager to review your MyPreventiveCare materials.</p>
-                        <p>For additional assistance with MyPreventiveCare or questions about your upcoming appointment, please contact your health care provider.</p>
+                        <p>Click the submit button below to send this information to your doctor and your care team. Please be sure to check in with your provider to see if they have accessed your e-Care Plan to review your contributions.</p>
+                        <p>For additional assistance with this application or questions about your upcoming appointment, please contact your health care provider.</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="danger" className="close-button" onClick={this.handleClose}> <FontAwesomeIcon icon={faWindowClose} /> Cancel </Button>
