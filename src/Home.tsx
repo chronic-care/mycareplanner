@@ -66,7 +66,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                     }} ><strong>General Health Assessment</strong></Link><br/>
           <Link to={{pathname: '/questionnaire', 
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'PRAPARE-questionnaire' }
-                    }} ><strong>Social Suppoprt Assessment</strong></Link><br/>
+                    }} ><strong>Social Support Assessment</strong></Link><br/>
           <Link to={{pathname: '/questionnaire', 
                     state: { patientSummary: this.props.patientSummary, questionnaireId: 'caregiver-strain-questionnaire' }
                   }} ><strong>Caregiver Strain Assessment</strong></Link><br/>
@@ -101,41 +101,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                     </li>))}
                 </ul>
             }
-
-          {/* <h5>Health Record</h5>
-          <p>Select one of the tabs above to review your health records.</p>
-
-          Health Goals [{this.props.fhirData?.goals?.length ?? '?'} records]<br/>
-          Health Concerns [{this.props.fhirData?.conditions?.length ?? '?'}]<br/>
-          Medications [{this.props.fhirData?.medications?.length ?? '?'}]<br/>
-          Immunizations [{this.props.fhirData?.immunizations?.length ?? '?'}]<br/>
-          Lab Results [{this.props.fhirData?.labResults?.length ?? '?'}]<br/>
-          Vitals [{this.props.fhirData?.vitalSigns?.length ?? '?'}]<br/>
-          Treatment Plan [{this.props.fhirData?.serviceRequests?.length ?? '?'}]<br/> */}
-
-          {/*
-          <Link to={{ pathname: '/goals', state: { fhirData: this.props.fhirData }}}>Health Goals </Link> 
-            [{this.props.fhirData?.goals?.length ?? 0}]<br/>
-          <Link to={{ pathname: '/conditions', state: { fhirData: this.props.fhirData }}}>Health Issues </Link> 
-            [{this.props.fhirData?.conditions?.length ?? 0}]<br/>
-          <Link to={{ pathname: '/immunizations', state: { fhirData: this.props.fhirData }}}>Immunizations </Link> 
-            [{(this.props.fhirData?.immunizations?.length ?? 0)}]<br/>
-          <Link to={{ pathname: '/medications', state: { fhirData: this.props.fhirData }}}>Medications </Link> 
-            [{(this.props.fhirData?.medications?.length ?? 0)}]<br/>
-
-          Care Plan Activities [{this.props.fhirData?.serviceRequests?.length ?? 0}]<br/>
-
-          Assessment Responses [{this.props.fhirData?.surveyResults?.length ?? 0}]<br/>
-          <Link to={{ pathname: '/observations', state: { fhirData: this.props.fhirData }}}>Lab Results </Link>
-            [{(this.props.fhirData?.labResults?.length ?? 0)}]<br/>
-          Vital Signs [{this.props.fhirData?.vitalSigns?.length ?? 0}] (last 100)<br/>
-          */ }
-          
-          {/* {this.props.fhirData?.carePlans?.length ?? 0} Care Plans<br/> */}
-          {/* {this.props.fhirData?.socialHistory?.length ?? 0} Social History<br/> */}
-          {/* {this.props.fhirData?.procedures?.length ?? 0} Procedures<br/> */}
-          {/* {this.props.fhirData?.diagnosticReports?.length ?? 0} Diagnostic Reports<br/> */}
-          
         </div>
         }
       </div>

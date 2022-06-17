@@ -162,6 +162,11 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           <h4> {parser(text, options)}</h4>
         </div> : <div/> }
 
+        {/* For display items, modify the text to show YouTube videos or embedded images, if included in the question HTML text. */}
+        { this.props.QuestionnaireItem.type === "display" ? <div className="description-text">
+          {parser(text, options)}
+        </div> : <div/> }
+
         <div>
           {
             this.props.QuestionnaireItem.type === "boolean" ?
