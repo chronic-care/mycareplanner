@@ -1,7 +1,6 @@
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
 import { Questionnaire, QuestionnaireResponse } from '../fhir-types/fhir-r4';
-import { properties } from './properties';
 
 export function getLocalQuestionnaire(id: String) {
     let publicPath = `${process.env.PUBLIC_URL}`;
@@ -17,12 +16,12 @@ export function getLocalQuestionnaire(id: String) {
         });
 }
 
-export function getQuestionnaire(serverUrl:any){
+export function getQuestionnaire(serverUrl:any, questionnaireID: string){
     let url:string;
     return FHIR.oauth2.ready()
         .then((client: Client) => {
             url = client.state.serverUrl;
-            return client.request('Questionnaire/' + properties.QUESTIONNAIRE_ID);
+            return client.request('Questionnaire/' + questionnaireID);
         })
         .then((questionnaire)=>{
             serverUrl.push(url + '/Questionnaire/' + questionnaire.id);
