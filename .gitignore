@@ -10,7 +10,6 @@ Thumbs.db
 
 # Other files #
 ######################
-yarn.lock
 package-lock.json
 node_modules/*
 build/*
