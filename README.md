@@ -5,14 +5,11 @@
 * npm
   * Minimum npm version that the team has tested
     * 8x
-* create-react-app
-   * See https://create-react-app.dev/docs/getting-started/ for npx-based installation instructions
-   * Note: The application uses rescripts as a devDependency
 
 ## Branches
 * 'main' branch
   * The application itself
-* 'gh-pages' branch 
+* 'gh-pages' branch
   * Created automatically by the 'npm run deploy' command. Used to build and deploy the application for use in github.io
 * 'mui' branch
   * TODO: Dave to provide this information
@@ -24,7 +21,7 @@
     * `yarn`
 4. To run the application on localhost, run:
     * `yarn start`
-5. Open the following URL in a browser to test the local version in our test sandbox: 
+5. Open the following URL in a browser to test the local version in our test sandbox:
     * http://localhost:8000/mycareplanner/launch.html?iss=https://gw.interop.community/CarePlanning/data
 7. Login with credentials
 8. Select Patricia Noelle, the primary test patient to load sample data so that it can be displayed/used in the application
@@ -44,7 +41,7 @@
 * In general, do not commit updates to 'package.json' unless:
     * There is a valid and intentional dependency update to 'package.json'
       * e.g. New dependencies are added, old dependencies are removed, dependency versions are updated for security or for preferential reasons
-* TODO: Create a combined ticket to address/update this and 'package.json' maintenance. 
+* TODO: Create a combined ticket to address/update this and 'package.json' maintenance.
   * See the following link for an implementation option: https://11sigma.com/blog/2021/09/03/yarn-lock-how-it-works-and-what-you-risk-without-maintaining-yarn-dependencies-deep-dive/
 
 ## Development environment setup after modifying 'package.json', 'yarn.lock', or checking out a new version of either
