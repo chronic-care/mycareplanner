@@ -1,9 +1,9 @@
-import '../../Home.css';
-import React from 'react';
-import { Link } from "react-router-dom";
-import { FHIRData, displayDate, displayValue } from '../../models/fhirResources';
-import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary';
-import { getVitalSignSummary } from '../../service/mccCqlService';
+import '../../Home.css'
+import React from 'react'
+import { useState, useEffect } from 'react'
+import { FHIRData, displayDate } from '../../models/fhirResources'
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary'
+import { getVitalSignSummary } from '../../service/mccCqlService'
 
 interface VitalsListProps {
   fhirData?: FHIRData,
@@ -15,51 +15,47 @@ interface VitalsListState {
   vitalSignSummary?: ObservationSummary[]
 }
 
-export class VitalsList extends React.Component<VitalsListProps, VitalsListState> {
+export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) => {
 
-  constructor(props: VitalsListProps) {
-    super(props);
-    this.state = {
-    };
-  }
+  const [vitalSignSummary, setVitalSignSummary] = useState<ObservationSummary[] | undefined>([
+    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+  ])
 
-  componentDidMount() {
+  useEffect(() => {
     console.time('getVitalSignSummary()')
-    this.setState({ vitalSignSummary: getVitalSignSummary(this.props.fhirData) })
+    setVitalSignSummary(getVitalSignSummary(props.fhirData))
     console.timeEnd('getVitalSignSummary()')
-  }
+  }, [props.fhirData])
 
-  public render(): JSX.Element {
-    let observations = this.state.vitalSignSummary
+  return (
+    <div className="home-view">
+      <div className="welcome">
 
-    return (
-      <div className="home-view">
-        <div className="welcome">
-          <h4 className="title">Vitals</h4>
+        <h4 className="title">Vitals</h4>
 
-            {observations === undefined || observations?.length === 0 ? <p>No records found.</p> :
-            <table><tbody>
-            {observations?.map((obs, idx) => (
+        {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !vitalSignSummary || vitalSignSummary.length < 1 ? <p>No records found.</p> :
+          <table><tbody>
+            {vitalSignSummary?.map((obs, idx) => (
               <tr key={idx}>
-              <td>
-              <table><tbody>
-                <tr>
-                  <td colSpan={2}><b>{obs.DisplayName}</b></td>
-                </tr>
-                <tr>
-                  <td colSpan={1} align="left">{obs.ResultText}</td>
-                  <td colSpan={1} align="right">{displayDate(obs.Date)}</td>
-                </tr>
-                <tr><td colSpan={2}>Performed by: {obs.Performer ?? 'Unknown'}</td></tr>
-              </tbody></table>
-              </td>
+                <td>
+                  <table><tbody>
+                    <tr>
+                      <td colSpan={2}><b>{obs.DisplayName}</b></td>
+                    </tr>
+                    <tr>
+                      <td colSpan={1} align="left">{obs.ResultText}</td>
+                      <td colSpan={1} align="right">{displayDate(obs.Date)}</td>
+                    </tr>
+                    <tr><td colSpan={2}>Performed by: {obs.Performer ?? 'Unknown'}</td></tr>
+                  </tbody></table>
+                </td>
               </tr>
-              ))}
+            ))}
           </tbody></table>
-          }
-        </div>
+        }
+
       </div>
-    )
-  }
+    </div>
+  )
 
 }

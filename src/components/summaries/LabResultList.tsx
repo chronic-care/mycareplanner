@@ -1,9 +1,10 @@
-import '../../Home.css';
-import React from 'react';
-import { Link } from "react-router-dom";
-import { FHIRData, displayDate } from '../../models/fhirResources';
-import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary';
-import { getLabResultSummary } from '../../service/mccCqlService';
+import '../../Home.css'
+import React from 'react'
+import { useState, useEffect } from 'react'
+import { Link } from "react-router-dom"
+import { FHIRData, displayDate } from '../../models/fhirResources'
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary'
+import { getLabResultSummary } from '../../service/mccCqlService'
 
 interface LabResultListProps {
   fhirData?: FHIRData,
@@ -15,59 +16,55 @@ interface LabResultListState {
   labResultSummary?: ObservationSummary[]
 }
 
-export class LabResultList extends React.Component<LabResultListProps, LabResultListState> {
+export const LabResultList: React.FC<LabResultListProps> = (props: LabResultListProps) => {
 
-  constructor(props: LabResultListProps) {
-    super(props);
-    this.state = {
-    };
-  }
+  const [labResultSummary, setLabResultSummary] = useState<ObservationSummary[] | undefined>([
+    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+  ])
 
-  componentDidMount() {
+  useEffect(() => {
     console.time('getLabResultSummary()')
-    this.setState({ labResultSummary: getLabResultSummary(this.props.fhirData) })
+    setLabResultSummary(getLabResultSummary(props.fhirData))
     console.timeEnd('getLabResultSummary()')
-  }
+  }, [props.fhirData])
 
-  public render(): JSX.Element {
-    let observations = this.state.labResultSummary
+  return (
+    <div className="home-view">
+      <div className="welcome">
 
-    return (
-      <div className="home-view">
-        <div className="welcome">
-          <h4 className="title">Lab Results</h4>
+        <h4 className="title">Lab Results</h4>
 
-          {observations === undefined || observations?.length === 0 ? <p>No records found.</p> :
-            <table><tbody>
-            {observations?.map((obs, idx) => (
+        {labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !labResultSummary || labResultSummary.length < 1 ? <p>No records found.</p> :
+          <table><tbody>
+            {labResultSummary?.map((obs, idx) => (
               <tr key={idx}>
-              <td>
-              <table><tbody>
-                <tr>
-                  <td colSpan={3}><b>{obs.DisplayName}</b></td>
-                  <td align="right">{obs.LearnMore === undefined || obs.LearnMore === null ? '' :
-                    <Link to="route" target="_blank" onClick={(event) => {event.preventDefault(); window.open(obs.LearnMore);}}><i>Learn&nbsp;More</i></Link>}</td>
-                </tr>
-                <tr>
-                  <td colSpan={2} align="left">{obs.ResultText}</td>
-                  <td colSpan={2} align="right">{displayDate(obs.Date)}</td>
-                </tr>
-                <tr>
-                  <td colSpan={3}>{obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange}</td>
-                  <td align="right"><b>{obs.Interpretation}</b></td>
-                </tr>
-                {/* {obs.Notes?.map((note, idx) => (
+                <td>
+                  <table><tbody>
+                    <tr>
+                      <td colSpan={3}><b>{obs.DisplayName}</b></td>
+                      <td align="right">{obs.LearnMore === undefined || obs.LearnMore === null ? '' :
+                        <Link to="route" target="_blank" onClick={(event) => { event.preventDefault(); window.open(obs.LearnMore); }}><i>Learn&nbsp;More</i></Link>}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2} align="left">{obs.ResultText}</td>
+                      <td colSpan={2} align="right">{displayDate(obs.Date)}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>{obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange}</td>
+                      <td align="right"><b>{obs.Interpretation}</b></td>
+                    </tr>
+                    {/* {obs.Notes?.map((note, idx) => (
                   <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
                 ))} */}
-              </tbody></table>
-              </td>
+                  </tbody></table>
+                </td>
               </tr>
-              ))}
+            ))}
           </tbody></table>
-          }
-        </div>
+        }
+
       </div>
-    )
-  }
+    </div>
+  )
 
 }
