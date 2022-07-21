@@ -1,8 +1,7 @@
 import '../../Home.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { Link } from "react-router-dom"
-import { FHIRData, displayDate, displayValue } from '../../models/fhirResources'
+import { FHIRData, displayDate } from '../../models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary'
 import { getVitalSignSummary } from '../../service/mccCqlService'
 
@@ -18,8 +17,9 @@ interface VitalsListState {
 
 export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) => {
 
-  const [vitalSignSummary, setVitalSignSummary] =
-    useState<[ObservationSummary] | undefined>(getVitalSignSummary(props.fhirData))
+  const [vitalSignSummary, setVitalSignSummary] = useState<ObservationSummary[] | undefined>([
+    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+  ])
 
   useEffect(() => {
     console.time('getVitalSignSummary()')
@@ -33,7 +33,7 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
         <h4 className="title">Vitals</h4>
 
-        {vitalSignSummary === undefined || vitalSignSummary?.length < 1 ? <p>No records found.</p> :
+        {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !vitalSignSummary || vitalSignSummary.length < 1 ? <p>No records found.</p> :
           <table><tbody>
             {vitalSignSummary?.map((obs, idx) => (
               <tr key={idx}>

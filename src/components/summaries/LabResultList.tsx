@@ -18,8 +18,9 @@ interface LabResultListState {
 
 export const LabResultList: React.FC<LabResultListProps> = (props: LabResultListProps) => {
 
-  const [labResultSummary, setLabResultSummary] =
-    useState<[ObservationSummary] | undefined>(getLabResultSummary(props.fhirData))
+  const [labResultSummary, setLabResultSummary] = useState<ObservationSummary[] | undefined>([
+    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+  ])
 
   useEffect(() => {
     console.time('getLabResultSummary()')
@@ -33,7 +34,7 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
 
         <h4 className="title">Lab Results</h4>
 
-        {labResultSummary === undefined || labResultSummary?.length < 1 ? <p>No records found.</p> :
+        {labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !labResultSummary || labResultSummary.length < 1 ? <p>No records found.</p> :
           <table><tbody>
             {labResultSummary?.map((obs, idx) => (
               <tr key={idx}>

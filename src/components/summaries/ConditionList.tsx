@@ -18,8 +18,7 @@ interface ConditionListState {
 
 export const ConditionList: React.FC<ConditionListProps> = (props: ConditionListProps) => {
 
-  const [conditionSummary, setConditionSummary] =
-    useState<[ConditionSummary] | undefined>(getConditionSummary(props.fhirData))
+  const [conditionSummary, setConditionSummary] = useState<ConditionSummary[] | undefined>([{ ConceptName: 'init' }])
 
   useEffect(() => {
     console.time('getConditionSummary()')
@@ -37,7 +36,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
           : <p />}
 
-        {conditionSummary === undefined || conditionSummary?.length < 1 ? <p>No records found.</p> :
+        {conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !conditionSummary || conditionSummary.length < 1 ? <p>No records found.</p> :
           <table><tbody>
             {conditionSummary?.map((cond, idx) => (
               <tr key={idx}><td>

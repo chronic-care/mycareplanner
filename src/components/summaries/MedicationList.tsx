@@ -18,8 +18,7 @@ interface MedicationListState {
 
 export const MedicationList: React.FC<MedicationListProps> = (props: MedicationListProps) => {
 
-  const [medicationSummary, setMedicationSummary] =
-    useState<[MedicationSummary] | undefined>(getMedicationSummary(props.fhirData))
+  const [medicationSummary, setMedicationSummary] = useState<MedicationSummary[] | undefined>([{ ConceptName: 'init' }])
 
   useEffect(() => {
     console.time('getMedicationSummary()')
@@ -33,7 +32,7 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
         <h4 className="title">Medications</h4>
 
-        {medicationSummary === undefined || medicationSummary?.length < 1 ? <p>No records found.</p> :
+        {medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !medicationSummary || medicationSummary.length < 1 ? <p>No records found.</p> :
           <table><tbody>
             {medicationSummary?.map((med, idx) => (
               <tr key={idx}>

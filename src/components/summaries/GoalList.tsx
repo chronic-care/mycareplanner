@@ -17,8 +17,7 @@ interface GoalListState {
 
 export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
-  const [goalSummary, setGoalSummary] =
-    useState<[GoalSummary] | undefined>(getGoalSummary(props.fhirData))
+  const [goalSummary, setGoalSummary] = useState<GoalSummary[] | undefined>([{ Description: 'init' }])
 
   useEffect(() => {
     console.time('getGoalSummary()')
@@ -36,7 +35,7 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirData: props.fhirData } }}>Add a New Goal</Link></p>
           : <p />}
 
-        {goalSummary === undefined || goalSummary?.length < 1 ? <p>No records found.</p> :
+        {goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init' ? <p>Loading...</p> : !goalSummary || goalSummary.length < 1 ? <p>No records found.</p> :
           <table><tbody>
             {goalSummary?.map((goal, idx1) => (
               <tr key={idx1}>
