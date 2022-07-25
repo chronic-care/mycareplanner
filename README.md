@@ -1,10 +1,13 @@
 ## Major dependencies
 * node.js
-  * Minimum node version that the team has tested
+  * Minimum version that the team has tested
     * 16x
 * npm
-  * Minimum npm version that the team has tested
+  * Minimum version that the team has tested
     * 8x
+* yarn
+  * Minimum version that the team has tested
+    * 1.22.19
 
 ## Branches
 * 'main' branch
@@ -17,11 +20,13 @@
 ## Setup development environment
 1. Clone the application using https://github.com/chronic-care/mycareplanner.git
 2. Checkout the 'main' branch
-3. Run yarn to install:
+3. With __administrative__ privileges, run:
+    * `npm install yarn -g`
+4. Run yarn to install (Note: Running 'yarn' is a shortcut for running 'yarn install'):
     * `yarn`
-4. To run the application on localhost, run:
+5. To run the application on localhost, run:
     * `yarn start`
-5. Open the following URL in a browser to test the local version in our test sandbox:
+6. Open the following URL in a browser to test the local version in our test sandbox:
     * http://localhost:8000/mycareplanner/launch.html?iss=https://gw.interop.community/CarePlanning/data
 7. Login with credentials
 8. Select Patricia Noelle, the primary test patient to load sample data so that it can be displayed/used in the application
