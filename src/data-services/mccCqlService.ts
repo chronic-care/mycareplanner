@@ -3,9 +3,9 @@ import cql from 'cql-execution';
 // @ts-ignore
 import cqlfhir from 'cql-exec-fhir';
 
-import { Resource } from '../fhir-types/fhir-r4';
-import { FHIRData } from '../models/fhirResources';
-import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } from '../models/cqlSummary';
+import { Resource } from './fhir-types/fhir-r4';
+import { FHIRData } from './models/fhirResources';
+import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } from './models/cqlSummary';
 
 import { mccCodeService, mccConditionsLibrary, mccGoalsLibrary, mccLabResultsLibrary, mccMedicationsLibrary, mccVitalSignsLibrary } from './mccCqlLibraries';
 

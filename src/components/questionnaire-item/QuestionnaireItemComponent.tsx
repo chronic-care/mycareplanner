@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../fhir-types/fhir-r4';
+import { QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
 import './QuestionnaireItemComponent.css';
 import { Card, Button } from 'react-bootstrap';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";

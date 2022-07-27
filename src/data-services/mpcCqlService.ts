@@ -3,11 +3,11 @@ import cql from 'cql-execution';
 // @ts-ignore
 import cqlfhir from 'cql-exec-fhir';
 
-import { Resource } from '../fhir-types/fhir-r4';
-import { FHIRData } from '../models/fhirResources';
-import { PatientSummary, ScreeningSummary } from '../models/cqlSummary';
+import { Resource } from './fhir-types/fhir-r4';
+import { FHIRData } from './models/fhirResources';
+import { PatientSummary, ScreeningSummary } from './models/cqlSummary';
 
-import { patientSummaryLibrary, cancerScreeningLibraries, codeService } from './cqlLibraries';
+import { patientSummaryLibrary, cancerScreeningLibraries, codeService } from './mpcCqlLibraries';
 
 function getBundleEntries(resources?: Resource[]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []

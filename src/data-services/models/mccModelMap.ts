@@ -1,7 +1,7 @@
 
 import { Observation } from '../fhir-types/fhir-r4';
 import { ObservationSummary } from './cqlSummary';
-import { displayDate, displayValue } from './fhirResources';
+import { displayValue } from './fhirResources';
 
 function mapObservations(observations: Observation[]): ObservationSummary[] {
     return observations.map(obs => {

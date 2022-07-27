@@ -5,13 +5,13 @@ import { Switch, Route } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-import { Task } from './fhir-types/fhir-r4';
+import { Task } from './data-services/fhir-types/fhir-r4';
 
 import Home from "./Home";
-import { FHIRData } from './models/fhirResources';
-import { PatientSummary, ScreeningSummary, EditFormData } from './models/cqlSummary';
-import { getFHIRData } from './service/fhirService';
-import { getPatientSummary, executeScreenings } from './service/cqlService';
+import { FHIRData } from './data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary, EditFormData } from './data-services/models/cqlSummary';
+import { getFHIRData } from './data-services/fhirService';
+import { getPatientSummary, executeScreenings } from './data-services/mpcCqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { GoalList } from "./components/summaries/GoalList";

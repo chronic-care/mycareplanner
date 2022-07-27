@@ -1,6 +1,6 @@
 import FHIR from 'fhirclient';
 import Client from 'fhirclient/lib/Client';
-import { Questionnaire, QuestionnaireResponse } from '../fhir-types/fhir-r4';
+import { Questionnaire, QuestionnaireResponse } from './fhir-types/fhir-r4';
 
 export function getLocalQuestionnaire(id: String) {
     let publicPath = `${process.env.PUBLIC_URL}`;

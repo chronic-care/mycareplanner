@@ -1,8 +1,8 @@
 import FHIR from 'fhirclient';
 import { fhirclient } from 'fhirclient/lib/types';
 import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, Condition, DiagnosticReport, Goal, Observation,
-        Procedure, Immunization, MedicationRequest, ServiceRequest } from '../fhir-types/fhir-r4';
-import { FHIRData, hasScope } from '../models/fhirResources';
+        Procedure, Immunization, MedicationRequest, ServiceRequest } from './fhir-types/fhir-r4';
+import { FHIRData, hasScope } from './models/fhirResources';
 import { format } from 'date-fns';
 import Client from 'fhirclient/lib/Client';
 import { responseToJSON } from 'fhirclient/lib/lib';

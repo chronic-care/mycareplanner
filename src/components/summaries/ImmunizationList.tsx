@@ -1,7 +1,7 @@
 import '../../Home.css'
 import React from 'react'
-import { FHIRData, displayDate } from '../../models/fhirResources'
-import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary'
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,

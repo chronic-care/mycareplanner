@@ -1,8 +1,8 @@
 import './Patient.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PatientSummary, ScreeningSummary } from '../../models/cqlSummary';
-import { Questionnaire } from '../../fhir-types/fhir-r4';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
+import { Questionnaire } from '../../data-services/fhir-types/fhir-r4';
 
 interface ScreeningDecisionProps {
     history?: any,
