@@ -1,6 +1,6 @@
 import FHIR from 'fhirclient';
 import { fhirclient } from 'fhirclient/lib/types';
-import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, Condition, DiagnosticReport, Goal, Observation,
+import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Observation,
         Procedure, Immunization, MedicationRequest, ServiceRequest } from './fhir-types/fhir-r4';
 import { FHIRData, hasScope } from './models/fhirResources';
 import { format } from 'date-fns';
@@ -24,9 +24,8 @@ const oneDay = 24*3600*1000
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
-// const carePlanPath = 'CarePlan?category=38717003,assess-plan';  // Epic or Cerner category
-// const carePlanPath = 'CarePlan?category=38717003,736271009,assess-plan';
-const carePlanPath = 'CarePlan?category=assess-plan';
+const carePlanPath = 'CarePlan?status=active&category=38717003,736271009,assess-plan';  // Epic or Cerner category
+const careTeamPath = 'CareTeam?_include=CareTeam:participant';
 const goalsPath = 'Goal?lifecycle-status=active';
 
 // Epic allows multiple category codes only >= Aug 2021 release
@@ -41,12 +40,10 @@ const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDatePar
 const proceduresPath = 'Procedure';
 const diagnosticReportPath = 'DiagnosticReport';
 // const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
-// const vitalSignsPath = 'Observation?category=vital-signs&_count=500';  // Epic defaults to count=1000
-const vitalSignsPath = 'Observation?category=vital-signs&code=85354-9,8867-4,59408-5,2708-6,8310-5,29463-7,8302-2,39156-5&_count=500';  // Epic defaults to count=1000
 const socialHistoryPath = 'Observation?category=social-history';
 
 // category=survey returns 400 error from Epic, so include another category recognized by Epic
-const surveyResultsPath = 'Observation?category=survey,functional-mental-status';
+// const surveyResultsPath = 'Observation?category=survey,functional-mental-status';
 
 const fhirOptions: fhirclient.FhirOptions = {
   pageLimit: 0,
@@ -107,11 +104,29 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   console.time('FHIR queries')
 
+  var careTeamMembers = new Map<string,Practitioner>()
+  if (patientPCP?.id !== undefined) {
+    careTeamMembers.set(patientPCP?.id!, patientPCP!)
+  }
+
   // Authentication form allows patient to un-select individual types from allowed scope
   console.log('CarePlan request: ' + new Date().toLocaleTimeString())
   const carePlans = (hasScope(clientScope, 'CarePlan.read')
     ? resourcesFrom(await client.patient.request(carePlanPath, fhirOptions) as fhirclient.JsonObject)
     : undefined) as CarePlan[];
+
+  console.log('CareTeam request: ' + new Date().toLocaleTimeString())
+  const careTeamData = (hasScope(clientScope, 'CareTeam.read')
+    ? resourcesFrom(await client.patient.request(careTeamPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined) as CareTeam[]
+  const careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
+  const careTeamPractitioners = careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
+  careTeamPractitioners?.forEach((pract: Practitioner) => {
+    if (pract.id !== undefined && careTeamMembers.get(pract.id!) === undefined) {
+      careTeamMembers.set(pract.id!, pract)
+    }
+  })
+
   console.log('Goal request: ' + new Date().toLocaleTimeString())
   const goals = (hasScope(clientScope, 'Goal.read')
     ? resourcesFrom(await client.patient.request(goalsPath, fhirOptions) as fhirclient.JsonObject)
@@ -166,18 +181,40 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
   console.timeEnd('FHIR queries')
 
-  // console.log("FHIRData Patient: " + JSON.stringify(patient));
-  // console.log("FHIRData social history: ");
+  // console.log("FHIRData Patient: " + JSON.stringify(patient))
+  // console.log("FHIRData social history: ")
   // socialHistory?.forEach(function (resource) {
-  //   console.log(JSON.stringify(resource));
-  // });
-  // console.log("FHIRData goals: ");
+  //   console.log(JSON.stringify(resource))
+  // })
+  // console.log("FHIRData goals: ")
   // goals?.forEach(function (resource) {
-  //   console.log(JSON.stringify(resource));
-  // });
+  //   console.log(JSON.stringify(resource))
+  // })
 
-  // console.log("LabResults Bundle: ");
+  // console.log("LabResults Bundle: ")
   // console.log(JSON.stringify(await client.patient.request(labResultsPath, fhirOptions)))
+
+  /*
+  console.log("FHIRData CarePlan: ")
+  carePlans?.forEach(function (resource) {
+    console.log(JSON.stringify(resource))
+  })
+
+  console.log("FHIRData CareTeam: ")
+  careTeams?.forEach(function (resource) {
+    console.log(JSON.stringify(resource))
+  })
+
+  console.log("FHIRData CareTeam practitioners: ")
+  careTeamPractitioners?.forEach(function (resource) {
+    console.log(JSON.stringify(resource))
+  })
+
+  console.log("CareTeam member dictionary values: " + careTeamMembers?.size ?? 0)
+  careTeamMembers?.forEach((practitioner, id) =>
+    console.log(JSON.stringify(practitioner))
+  )
+  */
 
   return {
     clientScope,
@@ -186,6 +223,8 @@ export const getFHIRData = async (): Promise<FHIRData> => {
     patient,
     patientPCP,
     carePlans,
+    careTeams,
+    careTeamMembers,
     conditions,
     diagnosticReports,
     goals,
@@ -211,7 +250,7 @@ export function createResource(resource: Resource) {
       }).catch(error => {
           console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
           return
-      });
+      })
 }
 
 export function updateResource(resource: Resource) {
@@ -224,5 +263,5 @@ export function updateResource(resource: Resource) {
       }).catch(error => {
           console.log('Cannot update resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
           return
-      });
+      })
 }

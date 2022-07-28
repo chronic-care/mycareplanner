@@ -13,6 +13,7 @@ import { PatientSummary, ScreeningSummary, EditFormData } from './data-services/
 import { getFHIRData } from './data-services/fhirService';
 import { getPatientSummary, executeScreenings } from './data-services/mpcCqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
+import { CareTeamList } from "./components/summaries/CareTeamList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { GoalList } from "./components/summaries/GoalList";
 import { ImmunizationList } from "./components/summaries/ImmunizationList";
@@ -151,8 +152,7 @@ export default class App extends React.Component<AppProps, AppState> {
                             </Tabs>
                         </TabPanel>
                         <TabPanel>
-                            <h4 className="title">Care Team</h4>
-                            <p>Coming soon...</p>
+                            <CareTeamList {...this.state} />
                         </TabPanel>
                     </Tabs>
                 </Route> 
