@@ -1,9 +1,9 @@
 import './Home.css';
 import React from 'react';
 import { Link } from "react-router-dom";
-import { FHIRData } from './models/fhirResources';
-import { PatientSummary, ScreeningSummary } from './models/cqlSummary';
-import { Task } from './fhir-types/fhir-r4';
+import { FHIRData } from './data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSummary';
+import { Task } from './data-services/fhir-types/fhir-r4';
 import BusySpinner from './components/busy-spinner/BusySpinner';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 

@@ -1,5 +1,5 @@
 // import { fhirclient } from 'fhirclient/lib/types';
-import { CarePlan, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
+import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
   Observation, Patient, Practitioner, Procedure, RelatedPerson } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
@@ -9,6 +9,9 @@ export interface FHIRData {
   patient?: Patient,
   patientPCP?: Practitioner,
   carePlans?: CarePlan[],
+  careTeams?: CareTeam[],
+  careTeamMembers?: Map<string,Practitioner>,
+  // careTeamPhotos?: Binary[],
   conditions?: Condition[],
   diagnosticReports?: DiagnosticReport[],
   goals?: Goal[],

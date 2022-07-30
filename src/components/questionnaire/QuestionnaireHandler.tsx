@@ -4,9 +4,9 @@ import React, { createRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import { InfoModal } from '../info-modal/InfoModal';
 import QuestionnaireComponent from './QuestionnaireComponent';
-import { Questionnaire, QuestionnaireResponse, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../fhir-types/fhir-r4';
-import { submitQuestionnaireResponse, getLocalQuestionnaire } from '../../service/questionnaireService';
-import { PatientSummary } from '../../models/cqlSummary';
+import { Questionnaire, QuestionnaireResponse, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
+import { submitQuestionnaireResponse, getLocalQuestionnaire } from '../../data-services/questionnaireService';
+import { PatientSummary } from '../../data-services/models/cqlSummary';
 
 interface QuestionnaireHandlerProps {
   history?: any

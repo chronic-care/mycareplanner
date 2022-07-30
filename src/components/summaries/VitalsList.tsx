@@ -1,9 +1,9 @@
 import '../../Home.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { FHIRData, displayDate } from '../../models/fhirResources'
-import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../models/cqlSummary'
-import { getVitalSignSummary } from '../../service/mccCqlService'
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
+import { getVitalSignSummary } from '../../data-services/mccCqlService'
 
 interface VitalsListProps {
   fhirData?: FHIRData,

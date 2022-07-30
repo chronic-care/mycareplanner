@@ -1,10 +1,13 @@
 ## Major dependencies
 * node.js
-  * Minimum node version that the team has tested
+  * Minimum version that the team has tested
     * 16x
 * npm
-  * Minimum npm version that the team has tested
+  * Minimum version that the team has tested
     * 8x
+* yarn
+  * Minimum version that the team has tested
+    * 1.22.19
 
 ## Branches
 * 'main' branch
@@ -17,11 +20,13 @@
 ## Setup development environment
 1. Clone the application using https://github.com/chronic-care/mycareplanner.git
 2. Checkout the 'main' branch
-3. Run yarn to install:
+3. With __administrative__ privileges, run:
+    * `npm install yarn -g`
+4. Run yarn to install (Note: Running 'yarn' is a shortcut for running 'yarn install'):
     * `yarn`
-4. To run the application on localhost, run:
+5. To run the application on localhost, run:
     * `yarn start`
-5. Open the following URL in a browser to test the local version in our test sandbox:
+6. Open the following URL in a browser to test the local version in our test sandbox:
     * http://localhost:8000/mycareplanner/launch.html?iss=https://gw.interop.community/CarePlanning/data
 7. Login with credentials
 8. Select Patricia Noelle, the primary test patient to load sample data so that it can be displayed/used in the application
@@ -68,6 +73,24 @@
     * Lint can enforce the style but we would want to provide a way to keep the style synchronized in an automated fashion such as a script or by using the same development environment settings (e.g. using VS Code). It should be seamless so that one never sees a lint error to begin with simply by saving the file or running a script. Note: In VS Code this can even be done in real time as you type
 
 ## Troubleshooting:
+* A yarn error similar to, "cannot find module yarn.js" is presented
+  * With __administrative__ privileges, run:
+    * `npm install yarn -g`
+* A React error states that dependencies are missing when attempting to run `yarn` or `npm install`
+  * Attempt to create a new React app to ensure that React will work on your device in general
+    * Run the following:
+      * `npx create-react-app test`
+      * `cd test`
+      * `yarn start`
+    * Ensure the app launches in a browser
+      * Open http://localhost:3000/ to view the test app
+    * If the test app works, navigate back to the mycareplanner directory
+    * Attempt to install the application
+      * `yarn`
+    * If there are no longer any errors installing, run:
+      * `yarn start`
+      * ...and continue from step 6 of [Setup development environment](#setup-development-environment)
+    * If there are still errors installing, follow the directions in this [Troubleshooting](#troubleshooting) section titled, 'A yarn error similar to, "cannot find module yarn.js" is presented'
 * Typescript errors are presented which do not allow the application to compile
   * Obtain a working 'yarn.lock' file
   * Follow the [Development environment setup after modifying 'package.json', 'yarn.lock', or checking out a new version of either](#development-environment-setup-after-modifying-packagejson-yarnlock-or-checking-out-a-new-version-of-either) process to resolve

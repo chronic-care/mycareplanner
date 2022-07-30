@@ -2,7 +2,7 @@ import React from 'react';
 import './ReviewPageComponent.css';
 import { Table } from 'react-bootstrap';
 import parser from 'html-react-parser';
-import { QuestionnaireResponseItem } from '../../fhir-types/fhir-r4';
+import { QuestionnaireResponseItem } from '../../data-services/fhir-types/fhir-r4';
 import moment from 'moment';
 
 

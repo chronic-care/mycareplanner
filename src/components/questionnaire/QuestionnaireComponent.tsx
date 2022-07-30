@@ -3,7 +3,7 @@ import './QuestionnaireComponent.css';
 import {
     QuestionnaireItem,
     QuestionnaireResponse
-} from '../../fhir-types/fhir-r4';
+} from '../../data-services/fhir-types/fhir-r4';
 import QuestionnaireItemComponent from '../questionnaire-item/QuestionnaireItemComponent';
 import ReviewPageComponent from '../review-page/ReviewPageComponent';
 import { Button } from 'react-bootstrap';

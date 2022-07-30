@@ -2,9 +2,9 @@ import '../../Home.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FHIRData, displayDate } from '../../models/fhirResources'
-import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../models/cqlSummary'
-import { getMedicationSummary } from '../../service/mccCqlService'
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
+import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary'
+import { getMedicationSummary } from '../../data-services/mccCqlService'
 
 interface MedicationListProps {
   fhirData?: FHIRData,

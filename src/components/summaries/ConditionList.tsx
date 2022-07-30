@@ -2,9 +2,9 @@ import '../../Home.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FHIRData, hasScope, displayDate } from '../../models/fhirResources'
-import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../models/cqlSummary'
-import { getConditionSummary } from '../../service/mccCqlService'
+import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources'
+import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary'
+import { getConditionSummary } from '../../data-services/mccCqlService'
 
 interface ConditionListProps {
   fhirData?: FHIRData,

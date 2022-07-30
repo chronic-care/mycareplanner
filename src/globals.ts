@@ -1,4 +1,4 @@
-import { FHIRData } from './models/fhirResources';
+import { FHIRData } from './data-services/models/fhirResources';
 
 export interface Globals {
   // FHIRData is a non-serializable object from third-party API so

@@ -11,9 +11,9 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { EditFormData } from '../../models/cqlSummary';
-import { Condition } from '../../fhir-types/fhir-r4';
-import { createResource, updateResource } from '../../service/fhirService';
+import { EditFormData } from '../../data-services/models/cqlSummary';
+import { Condition } from '../../data-services/fhir-types/fhir-r4';
+import { createResource, updateResource } from '../../data-services/fhirService';
 
 export default function ConditionEditForm(formData?: EditFormData) {
   let history = useHistory()

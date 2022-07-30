@@ -3,7 +3,7 @@ import './MultiSelectButton.css';
 import { ButtonGroup, Button } from 'react-bootstrap';
 // import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { QuestionnaireItem } from '../../fhir-types/fhir-r4';
+import { QuestionnaireItem } from '../../data-services/fhir-types/fhir-r4';
 
 
 export default class MultiSelectButtonComponent extends React.Component<any, any> {
