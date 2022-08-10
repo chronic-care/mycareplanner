@@ -36,7 +36,8 @@ const healthConcernPath = 'Condition?category=health-concern&clinical-status=act
 const immunizationsPath = 'Immunization?status=completed';
 const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo);
 const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo);
-const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(threeYearsAgo);
+// const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(threeYearsAgo)
+const serviceRequestPath = 'ServiceRequest?status=active'
 const proceduresPath = 'Procedure';
 const diagnosticReportPath = 'DiagnosticReport';
 // const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
@@ -190,6 +191,10 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   // goals?.forEach(function (resource) {
   //   console.log(JSON.stringify(resource))
   // })
+  console.log("FHIRData Service Request: ")
+  serviceRequests?.forEach(function (resource) {
+    console.log(JSON.stringify(resource))
+  })
 
   // console.log("LabResults Bundle: ")
   // console.log(JSON.stringify(await client.patient.request(labResultsPath, fhirOptions)))

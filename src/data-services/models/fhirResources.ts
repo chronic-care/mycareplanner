@@ -1,6 +1,6 @@
 // import { fhirclient } from 'fhirclient/lib/types';
 import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
-  Observation, Patient, Practitioner, Procedure, RelatedPerson } from '../fhir-types/fhir-r4';
+  Observation, Patient, Practitioner, Procedure, RelatedPerson, CodeableConcept, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
   clientScope?: string,
@@ -49,6 +49,24 @@ export function displayDate(dateString?: string): string | undefined {
         day: "2-digit"
       })
   }
+}
+
+export function displayConcept(codeable: CodeableConcept | undefined): string | undefined {
+  if (codeable?.text !== undefined) {
+    return codeable?.text
+  }
+  else {
+    // use the first codeing.display that has a value
+    return codeable?.coding?.filter((c) => c.display !== undefined)?.[0]?.display
+  }
+}
+
+export function displayTiming(timing: Timing | undefined): string | undefined {
+  let boundsPeriod = (timing?.repeat as TimingRepeat)?.boundsPeriod
+  let startDate = displayDate(boundsPeriod?.start)
+  let endDate = displayDate(boundsPeriod?.end)
+
+  return (startDate ?? '') + ((endDate !== undefined) ? ` until ${endDate}` : '')
 }
 
 export function displayValue(obs: Observation): string | undefined {
