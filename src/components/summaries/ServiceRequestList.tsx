@@ -2,6 +2,7 @@ import '../../Home.css'
 import React from 'react'
 import { FHIRData, displayDate, displayTiming, displayConcept } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
+import { TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
 
 interface ServiceRequestListProps {
   fhirData?: FHIRData,
@@ -12,7 +13,28 @@ interface ServiceRequestListProps {
 export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
 
   let serviceRequests = props.fhirData?.serviceRequests
-  // TODO sort by descending date
+
+  // Sort by descending occurrenceTiming start date
+  serviceRequests?.sort((sr1, sr2) => {
+    let sr1BoundsPeriod = (sr1.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
+    let sr1StartDate = sr1BoundsPeriod?.start !== undefined ? new Date(sr1BoundsPeriod.start) : undefined
+    let sr2BoundsPeriod = (sr2.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
+    let sr2StartDate = sr2BoundsPeriod?.start !== undefined ? new Date(sr2BoundsPeriod.start) : undefined
+    
+    if (sr1StartDate === undefined && sr2StartDate !== undefined) {
+        return 1
+    }
+    if (sr1StartDate !== undefined && sr2StartDate === undefined) {
+        return -1
+    }
+    if (sr1StartDate! < sr2StartDate!) {
+        return 1;
+    }
+    if (sr1StartDate! > sr2StartDate!) {
+        return -1;
+    }
+    return 0;
+  })
 
   return (
     <div className="home-view">
