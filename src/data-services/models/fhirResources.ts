@@ -1,6 +1,6 @@
 // import { fhirclient } from 'fhirclient/lib/types';
 import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
-  Observation, Patient, Practitioner, Procedure, RelatedPerson, CodeableConcept, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
+  Observation, Patient, Practitioner, Procedure, RelatedPerson, CodeableConcept, Period, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
   clientScope?: string,
@@ -65,6 +65,13 @@ export function displayTiming(timing: Timing | undefined): string | undefined {
   let boundsPeriod = (timing?.repeat as TimingRepeat)?.boundsPeriod
   let startDate = displayDate(boundsPeriod?.start)
   let endDate = displayDate(boundsPeriod?.end)
+
+  return (startDate ?? '') + ((endDate !== undefined) ? ` until ${endDate}` : '')
+}
+
+export function displayPeriod(period: Period | undefined): string | undefined {
+  let startDate = displayDate(period?.start)
+  let endDate = displayDate(period?.end)
 
   return (startDate ?? '') + ((endDate !== undefined) ? ` until ${endDate}` : '')
 }
