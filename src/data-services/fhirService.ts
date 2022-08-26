@@ -251,9 +251,9 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.timeEnd('FHIR queries')
 
   console.log("Provenance resources: " + provenance?.length ?? 0)
-  provenance?.forEach((resource) => {
-    console.log(JSON.stringify(resource))
-  })
+  // provenance?.forEach((resource) => {
+  //   console.log(JSON.stringify(resource))
+  // })
 
   // console.log("Provenance dictionary values: " + provenanceMap?.size ?? 0)
   // provenanceMap?.forEach((provenanceList, refId) => {
