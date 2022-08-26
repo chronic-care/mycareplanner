@@ -1,6 +1,6 @@
 import '../../Home.css'
 import React from 'react'
-import { FHIRData, displayDate, displayTiming, displayConcept } from '../../data-services/models/fhirResources'
+import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
 

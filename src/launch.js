@@ -1,8 +1,12 @@
 import FHIR from 'fhirclient';
 
-const epicScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
+const epicScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
 
-const epicPilotScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read";
+const epicPilotScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read";
+
+const cernerScopeUSCDI = "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
+
+const cernerScopePilot = "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
 
 FHIR.oauth2.authorize([
     {
@@ -71,9 +75,16 @@ FHIR.oauth2.authorize([
     {
         // Cerner sandbox
         issMatch: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
-        redirectUri: "http://localhost:8000/mycareplanner/index.html",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
+        scope: cernerScopePilot
+    },
+    {
+        // Cerner production client for USCDI patient app
+        issMatch: "https://fhir-myrecord.cerner.com/r4",
+        redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_cerner,
-        scope: "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read"
+        scope: cernerScopeUSCDI
     },
     {
         // Epic sandbox

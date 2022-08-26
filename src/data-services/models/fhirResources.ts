@@ -1,6 +1,6 @@
 // import { fhirclient } from 'fhirclient/lib/types';
 import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, MedicationRequest, ServiceRequest,
-  Observation, Patient, Practitioner, Procedure, RelatedPerson, CodeableConcept, Period, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
+  Observation, Patient, Practitioner, Procedure, Provenance, RelatedPerson, CodeableConcept, Period, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
   clientScope?: string,
@@ -23,6 +23,10 @@ export interface FHIRData {
   vitalSigns?: Observation[],
   socialHistory?: Observation[],
   surveyResults?: Observation[],
+
+  // key = Resource.id, values = 0..* Provenance
+  provenanceMap?: Map<string,Provenance[]>,
+  provenance?: Provenance[],
 }
 
 export function hasScope(clientScope: string | undefined, resourceType: string) {

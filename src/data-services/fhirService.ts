@@ -1,7 +1,7 @@
 import FHIR from 'fhirclient';
 import { fhirclient } from 'fhirclient/lib/types';
 import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Observation,
-        Procedure, Immunization, MedicationRequest, ServiceRequest } from './fhir-types/fhir-r4';
+        Procedure, Immunization, MedicationRequest, ServiceRequest, Provenance, Reference } from './fhir-types/fhir-r4';
 import { FHIRData, hasScope } from './models/fhirResources';
 import { format } from 'date-fns';
 import Client from 'fhirclient/lib/Client';
@@ -24,38 +24,75 @@ const oneDay = 24*3600*1000
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
-const carePlanPath = 'CarePlan?status=active&category=38717003,736271009,assess-plan';  // Epic or Cerner category
-const careTeamPath = 'CareTeam?_include=CareTeam:participant';
-const goalsPath = 'Goal?lifecycle-status=active';
+const provenanceSearch = '&_revInclude=Provenance:target'
 
-// Epic allows multiple category codes only >= Aug 2021 release
+/// Epic category codes
+// const carePlanPath = 'CarePlan?status=active&category=38717003,736271009,assess-plan' + provenanceSearch
+
+// 'assess-plan' returns Longitudinal Care Plan in both Cerner and Epic.
+// Cerner throws an error when including other category codes
+const carePlanPath = 'CarePlan?status=active&category=assess-plan' + provenanceSearch
+
+// Cerner throws error with _include arg for participants.
+//const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
+
+const careTeamPath = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
+const goalsPath = 'Goal?lifecycle-status=active' + provenanceSearch
+
+/// Epic allows multiple category codes only >= Aug 2021 release
 // const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
-const problemListPath = 'Condition?category=problem-list-item&clinical-status=active';
-const healthConcernPath = 'Condition?category=health-concern&clinical-status=active';
+const problemListPath = 'Condition?category=problem-list-item&clinical-status=active' + provenanceSearch
+const healthConcernPath = 'Condition?category=health-concern&clinical-status=active' + provenanceSearch
 
-const immunizationsPath = 'Immunization?status=completed';
-const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo);
-const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo);
-// const serviceRequestPath = 'ServiceRequest?status=active&authored=' + getDateParameter(threeYearsAgo)
-const serviceRequestPath = 'ServiceRequest?status=active'
-const proceduresPath = 'Procedure';
-const diagnosticReportPath = 'DiagnosticReport';
-// const vitalSignsPath = 'Observation?category=vital-signs&date=' + getDateParameter(sixMonthsAgo);
-const socialHistoryPath = 'Observation?category=social-history';
+const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
+const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
+const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const serviceRequestPath = 'ServiceRequest?status=active' + provenanceSearch
 
-// category=survey returns 400 error from Epic, so include another category recognized by Epic
-// const surveyResultsPath = 'Observation?category=survey,functional-mental-status';
+const proceduresPath = 'Procedure?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const diagnosticReportPath = 'DiagnosticReport?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const socialHistoryPath = 'Observation?category=social-history' + provenanceSearch
+
+/// category=survey returns 400 error from Epic, so include another category recognized by Epic
+// const surveyResultsPath = 'Observation?category=survey,functional-mental-status' + provenanceSearch
 
 const fhirOptions: fhirclient.FhirOptions = {
   pageLimit: 0,
 };
 
+/// key = Resource.id  value = Provenance[]
+var provenanceMap = new Map<string,Provenance[]>()
+
+var provenance: Provenance[] = []
+
+function recordProvenance(resources: Resource[] | undefined) {
+  const provResources = resources?.filter((item: any) => item.resourceType === 'Provenance') as Provenance[]
+
+  provResources?.forEach((prov: Provenance) => {
+    prov.target.forEach((ref: Reference) => {
+      let resourceId = ref.reference
+      if (resourceId !== undefined) {
+        var provList: Provenance[] = provenanceMap.get(resourceId) ?? []
+        provList = provList.concat([prov])
+        provenanceMap.set(resourceId!, provList)
+      }
+    })
+  })
+
+  if (provResources !== undefined) {
+    provenance = provenance.concat(provResources!)
+  }
+}
+
 export async function getConditions(client: Client): Promise<Condition[]> {
-  var conditions: Condition[] = []
+  var resources: Resource[] = []
   // Epic allows multiple category codes in one query only >= Aug 2021 release
-  conditions = conditions.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) as Condition[] )
-  conditions = conditions.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) as Condition[] )
-  conditions = conditions.filter(c => c !== undefined)
+  resources = resources.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) )
+  resources = resources.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) )
+
+  const conditions = resources.filter((item: any) => item.resourceType === 'Condition') as Condition[]
+  recordProvenance(resources)
+
   return conditions
 }
 
@@ -65,7 +102,7 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
     return []
   }
 
-  var vitals: Observation[] = []
+  var resources: Resource[] = []
   // codes are ordered by preference for presentation: BP, Heart rate, O2 sat, temp, weight, height, BMI
   // const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
   // codes are ordered by preference for presentation: BP, O2 sat, temp, weight, height
@@ -73,20 +110,23 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   const queryPaths = vitalsCodes.map(code => {
     // Issue: UCHealth returns 400 error if include both category and code.
     // return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_sort:desc=date&_count=1'
-    return 'Observation?code=http://loinc.org|' + code + '&_sort:desc=date&_count=1'
+    return 'Observation?code=http://loinc.org|' + code + '&_sort:desc=date&_count=1' + provenanceSearch
   })
 
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  // vitals = vitals.concat( resourcesFrom(await client.patient.request(queryPaths[7], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[7], fhirOptions) as fhirclient.JsonObject) as Observation[] )
 
-  vitals = vitals.filter(v => v !== undefined)
+  resources = resources.filter(v => v!== undefined)
+  const vitals = resources.filter((item: any) => item?.resourceType === 'Observation') as Observation[]
+  recordProvenance(resources)
+
   return vitals
 }
 
@@ -106,20 +146,23 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.time('FHIR queries')
 
   var careTeamMembers = new Map<string,Practitioner>()
+
   if (patientPCP?.id !== undefined) {
     careTeamMembers.set(patientPCP?.id!, patientPCP!)
   }
 
   // Authentication form allows patient to un-select individual types from allowed scope
   console.log('CarePlan request: ' + new Date().toLocaleTimeString())
-  const carePlans = (hasScope(clientScope, 'CarePlan.read')
+  const carePlanData = (hasScope(clientScope, 'CarePlan.read')
     ? resourcesFrom(await client.patient.request(carePlanPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined) as CarePlan[];
+    : undefined)
+  const carePlans = carePlanData?.filter((item: any) => item.resourceType === 'CarePlan') as CarePlan[]
+  recordProvenance(carePlanData)
 
   console.log('CareTeam request: ' + new Date().toLocaleTimeString())
   const careTeamData = (hasScope(clientScope, 'CareTeam.read')
     ? resourcesFrom(await client.patient.request(careTeamPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined) as CareTeam[]
+    : undefined)
   const careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
   const careTeamPractitioners = careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
   careTeamPractitioners?.forEach((pract: Practitioner) => {
@@ -127,50 +170,75 @@ export const getFHIRData = async (): Promise<FHIRData> => {
       careTeamMembers.set(pract.id!, pract)
     }
   })
+  recordProvenance(careTeamData)
 
   console.log('Goal request: ' + new Date().toLocaleTimeString())
-  const goals = (hasScope(clientScope, 'Goal.read')
+  const goalData = (hasScope(clientScope, 'Goal.read')
     ? resourcesFrom(await client.patient.request(goalsPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined) as Goal[];
-  console.log('Condition request: ' + new Date().toLocaleTimeString())
+    : undefined)
+  const goals = goalData?.filter((item: any) => item.resourceType === 'Goal') as Goal[]
+  recordProvenance(goalData)
 
+  console.log('Condition request: ' + new Date().toLocaleTimeString())
   const conditions = (hasScope(clientScope, 'Condition.read')
     ? await getConditions(client)
     : undefined)
   
   console.log('Procedure request: ' + new Date().toLocaleTimeString())
-  const procedures = (hasScope(clientScope, 'Procedure.read')
+  const procedureData = (hasScope(clientScope, 'Procedure.read')
     ? resourcesFrom(await client.patient.request(proceduresPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as Procedure[];
+    : undefined)
+  const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
+  recordProvenance(procedureData)
+
   console.log('DiagnosticReport request: ' + new Date().toLocaleTimeString())
-  const diagnosticReports = (hasScope(clientScope, 'DiagnosticReport.read')
+  const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
     ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as DiagnosticReport[];
+    : undefined)
+  const diagnosticReports = diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
+  recordProvenance(diagnosticReportData)
+
   console.log('Immunization request: ' + new Date().toLocaleTimeString())
-  const immunizations = (hasScope(clientScope, 'Immunization.read')
+  const immunizationData = (hasScope(clientScope, 'Immunization.read')
     ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as Immunization[];
+    : undefined)
+  const immunizations = immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
+  recordProvenance(immunizationData)
+
   console.log('LabResult request: ' + new Date().toLocaleTimeString())
-  const labResults = (hasScope(clientScope, 'Observation.read')
+  const labResultData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(labResultsPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as Observation[];
+    : undefined)
+  const labResults = labResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  recordProvenance(labResultData)
+
   console.log('MedicationRequest request: ' + new Date().toLocaleTimeString())
-  const medications = (hasScope(clientScope, 'MedicationRequest.read')
+  const medicationRequestData = (hasScope(clientScope, 'MedicationRequest.read')
     ? resourcesFrom(await client.patient.request(medicationRequestPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as MedicationRequest[];
+    : undefined)
+  const medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
+  recordProvenance(medicationRequestData)
+
   console.log('ServiceRequest request: ' + new Date().toLocaleTimeString())
-  const serviceRequests = (hasScope(clientScope, 'ServiceRequest.read')
+  const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
     ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as ServiceRequest[];
+    : undefined)
+  const serviceRequests = serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
+  recordProvenance(serviceRequestData)
+
   console.log('Social History request: ' + new Date().toLocaleTimeString())
-  const socialHistory = (hasScope(clientScope, 'Observation.read')
+  const socialHistoryData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject) 
-    : undefined) as Observation[];
+    : undefined)
+  const socialHistory = socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  recordProvenance(socialHistoryData)
 
   // console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
-  // const surveyResults = (hasScope(clientScope, 'Observation.read')
+  // const surveyResultData = (hasScope(clientScope, 'Observation.read')
   //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject) 
-  //   : undefined) as Observation[];
+  //   : undefined)
+  // const surveyResults = surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  // recordProvenance(surveyResultData)
   const surveyResults = undefined
 
   console.log('Vitals request: ' + new Date().toLocaleTimeString())
@@ -182,6 +250,17 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
   console.timeEnd('FHIR queries')
 
+  console.log("Provenance resources: " + provenance?.length ?? 0)
+  provenance?.forEach((resource) => {
+    console.log(JSON.stringify(resource))
+  })
+
+  // console.log("Provenance dictionary values: " + provenanceMap?.size ?? 0)
+  // provenanceMap?.forEach((provenanceList, refId) => {
+  //   console.log("Provenance for: " + refId)
+  //   console.log(JSON.stringify(provenanceList))
+  // })
+
   // console.log("FHIRData Patient: " + JSON.stringify(patient))
   // console.log("FHIRData social history: ")
   // socialHistory?.forEach(function (resource) {
@@ -191,20 +270,20 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   // goals?.forEach(function (resource) {
   //   console.log(JSON.stringify(resource))
   // })
-  console.log("FHIRData Service Request: ")
-  serviceRequests?.forEach(function (resource) {
-    console.log(JSON.stringify(resource))
-  })
+  // console.log("FHIRData Service Request: ")
+  // serviceRequests?.forEach(function (resource) {
+  //   console.log(JSON.stringify(resource))
+  // })
 
   // console.log("LabResults Bundle: ")
   // console.log(JSON.stringify(await client.patient.request(labResultsPath, fhirOptions)))
 
-  /*
-  console.log("FHIRData CarePlan: ")
-  carePlans?.forEach(function (resource) {
-    console.log(JSON.stringify(resource))
-  })
+  // console.log("FHIRData CarePlan: ")
+  // carePlans?.forEach(function (resource) {
+  //   console.log(JSON.stringify(resource))
+  // })
 
+  /*
   console.log("FHIRData CareTeam: ")
   careTeams?.forEach(function (resource) {
     console.log(JSON.stringify(resource))
@@ -241,6 +320,8 @@ export const getFHIRData = async (): Promise<FHIRData> => {
     vitalSigns,
     socialHistory,
     surveyResults,
+    provenanceMap,
+    provenance,
   }
 }
 

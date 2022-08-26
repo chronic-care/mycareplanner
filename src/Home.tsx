@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData } from './data-services/models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSummary';
-import { Task } from './data-services/fhir-types/fhir-r4';
+// import { Task } from './data-services/fhir-types/fhir-r4';
 import BusySpinner from './components/busy-spinner/BusySpinner';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
@@ -11,7 +11,7 @@ interface HomeProps {
     fhirData?: FHIRData,
     patientSummary?: PatientSummary,
     screenings?: [ScreeningSummary],
-    tasks?: [Task] | undefined
+    // tasks?: [Task] | undefined
 }
 
 interface HomeState {
@@ -30,7 +30,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     let fhirData = this.props.fhirData
     let patient = this.props.patientSummary;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
-    let tasks = this.props.tasks;
+    // let tasks = this.props.tasks;
 
     return (
       <div className="home-view">
