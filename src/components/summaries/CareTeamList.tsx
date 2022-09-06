@@ -1,6 +1,6 @@
 import '../../Home.css'
 import React from 'react'
-import { FHIRData } from '../../data-services/models/fhirResources'
+import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
 
@@ -40,8 +40,12 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
     <div className="home-view">
       <div className="welcome">
 
-        <h4 className="title">Care Team</h4>
+        <h5 className="sectiontitle">Primary Care Physician</h5>
+        {props.fhirData?.patientPCP === undefined ? <p>Not available</p> :
+          <p>{props.fhirData?.patientPCP?.name?.[0].text ?? "Name not provided"}</p>
+        }
 
+        <h4 className="title">Care Team</h4>
         {(participants?.length ?? 0) < 1 ? <p>No records found.</p> :
           <table><tbody>
             {participants?.map((participant, idx) => (
@@ -53,6 +57,9 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
                           ?? participant.member?.display
                           ?? participant.member?.reference ?? "No name"}</b></td></tr>
                     <tr><td>Role: {participant.role?.[0].text ?? "No role"}</td></tr>
+
+                    {participant.period === undefined ? <tr/> :
+                      <tr><td>Time Period: {displayPeriod(participant.period)}</td></tr>}
                   </tbody></table>
                 </td>
               </tr>

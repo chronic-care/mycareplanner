@@ -15,7 +15,27 @@ interface ImmunizationListState {
 export const ImmunizationList: React.FC<ImmunizationListProps> = (props: ImmunizationListProps) => {
 
   let immunizations = props.fhirData?.immunizations
-  // TODO sort by descending date
+  // Sort by descending occurrence date
+  immunizations?.sort((r1, r2) => {
+    let r1DateString = r1.occurrenceDateTime ?? r1.recorded
+    let r2DateString = r2.occurrenceDateTime ?? r2.recorded
+    let r1Date = r1DateString !== undefined ? new Date(r1DateString!) : undefined
+    let r2Date = r2DateString !== undefined ? new Date(r2DateString!) : undefined
+    
+    if (r1Date === undefined && r2Date !== undefined) {
+        return 1
+    }
+    if (r1Date !== undefined && r2Date === undefined) {
+        return -1
+    }
+    if (r1Date! < r2Date!) {
+        return 1;
+    }
+    if (r1Date! > r2Date!) {
+        return -1;
+    }
+    return 0;
+  })
 
   return (
     <div className="home-view">

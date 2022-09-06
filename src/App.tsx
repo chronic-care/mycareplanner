@@ -18,6 +18,7 @@ import { ConditionList } from "./components/summaries/ConditionList";
 import { GoalList } from "./components/summaries/GoalList";
 import { ImmunizationList } from "./components/summaries/ImmunizationList";
 import { MedicationList } from "./components/summaries/MedicationList";
+import { ServiceRequestList } from "./components/summaries/ServiceRequestList";
 import { LabResultList } from "./components/summaries/LabResultList";
 import { VitalsList } from "./components/summaries/VitalsList";
 import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHandler";
@@ -123,8 +124,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                      <MedicationList {...this.state} />
                                 </TabPanel>
                                 <TabPanel>
-                                    <h4 className="title">Planned Activities (Interventions)</h4>
-                                    <p>Coming soon...</p>
+                                     <ServiceRequestList {...this.state} />
                                 </TabPanel>
                             </Tabs>
                         </TabPanel>
