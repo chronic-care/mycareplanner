@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useParams } from 'react-router';
+// import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom'
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -13,11 +13,11 @@ import Typography from '@mui/material/Typography';
 
 import { EditFormData } from '../../data-services/models/cqlSummary';
 import { Goal } from '../../data-services/fhir-types/fhir-r4';
-import { createResource, updateResource } from '../../data-services/fhirService';
+import { createResource } from '../../data-services/fhirService';
 
 export default function GoalEditForm(formData?: EditFormData) {
   let history = useHistory()
-  const id = useParams();
+  // const id = useParams();
   const [description, setDescription] = React.useState<string | null>('');
   const [startDate, setStartDate] = React.useState<Date | null>(new Date());
   const [dueDate, setDueDate] = React.useState<Date | null>(null);

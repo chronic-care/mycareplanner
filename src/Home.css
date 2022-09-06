@@ -33,6 +33,11 @@
     justify-content:center;
 }
 
+.sectiontitle {
+    margin-bottom: 5px;
+    justify-content:left;
+}
+
 .home-view p {
     font-size: 1rem;
 }
