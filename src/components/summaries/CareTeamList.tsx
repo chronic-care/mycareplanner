@@ -3,6 +3,7 @@ import React from 'react'
 import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
+import { Summary } from './Summary'
 
 interface CareTeamListProps {
   fhirData?: FHIRData,
@@ -19,7 +20,7 @@ function flatten(arr?: any) {
   }, []);
 }
 
-function resolve(ref?: Reference, members?: Map<string,Practitioner>)  {
+function resolve(ref?: Reference, members?: Map<string, Practitioner>) {
   let resourceID: string | undefined = ref?.reference?.split('/').reverse()?.[0]
   return members?.get(resourceID ?? 'missing id')
 }
@@ -46,25 +47,42 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
         }
 
         <h4 className="title">Care Team</h4>
-        {(participants?.length ?? 0) < 1 ? <p>No records found.</p> :
-          <table><tbody>
-            {participants?.map((participant, idx) => (
-              <tr key={idx}>
-                <td>
-                  <table><tbody>
-                    {/* <tr><td><b>{participant.member?.display ?? "No name"}</b></td></tr> */}
-                    <tr><td><b>{resolve(participant.member, careTeamMembers)?.name?.[0].text 
-                          ?? participant.member?.display
-                          ?? participant.member?.reference ?? "No name"}</b></td></tr>
-                    <tr><td>Role: {participant.role?.[0].text ?? "No role"}</td></tr>
 
-                    {participant.period === undefined ? <tr/> :
-                      <tr><td>Time Period: {displayPeriod(participant.period)}</td></tr>}
-                  </tbody></table>
-                </td>
-              </tr>
+        {(participants?.length ?? 0) < 1
+          ? <p>No records found.</p>
+          :
+          <>
+            {participants?.map((participant, idx) => (
+
+              <Summary key={idx} id={idx} rows={[
+
+                {
+                  isHeader: true,
+                  twoColumns: false,
+                  data1: resolve(participant.member, careTeamMembers)?.name?.[0].text
+                    ?? participant.member?.display
+                    ?? participant.member?.reference ?? "No name",
+                  data2: '',
+                },
+                {
+                  isHeader: false,
+                  twoColumns: false,
+                  data1: "Role: " + (participant.role?.[0].text ?? "No role"),
+                  data2: '',
+                },
+                {
+                  isHeader: false,
+                  twoColumns: false,
+                  data1: participant.period === undefined ? '' : "Time Period: " + displayPeriod(participant.period),
+                  data2: '',
+                },
+              ]} />
+
             ))}
-          </tbody></table>
+          </>
+
+          /* May need to be implemented in header:
+            <tr><td><b>{participant.member?.display ?? "No name"}</b></td></tr> */
         }
 
       </div>
