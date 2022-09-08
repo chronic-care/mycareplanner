@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
 import { getVitalSignSummary } from '../../data-services/mccCqlService'
+import { Summary } from './Summary'
 
 interface VitalsListProps {
   fhirData?: FHIRData,
@@ -33,25 +34,37 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
         <h4 className="title">Vitals</h4>
 
-        {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !vitalSignSummary || vitalSignSummary.length < 1 ? <p>No records found.</p> :
-          <table><tbody>
-            {vitalSignSummary?.map((obs, idx) => (
-              <tr key={idx}>
-                <td>
-                  <table><tbody>
-                    <tr>
-                      <td colSpan={2}><b>{obs.DisplayName}</b></td>
-                    </tr>
-                    <tr>
-                      <td colSpan={1} align="left">{obs.ResultText}</td>
-                      <td colSpan={1} align="right">{displayDate(obs.Date)}</td>
-                    </tr>
-                    <tr><td colSpan={2}>Performed by: {obs.Performer ?? 'Unknown'}</td></tr>
-                  </tbody></table>
-                </td>
-              </tr>
-            ))}
-          </tbody></table>
+        {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
+          ? <p>Loading...</p>
+          : !vitalSignSummary || vitalSignSummary.length < 1
+            ? <p>No records found.</p>
+            :
+            <>
+              {vitalSignSummary?.map((obs, idx) => (
+
+                <Summary key={idx} id={idx} rows={[
+                  {
+                    isHeader: true,
+                    twoColumns: false,
+                    data1: obs.DisplayName,
+                    data2: '',
+                  },
+                  {
+                    isHeader: false,
+                    twoColumns: true,
+                    data1: obs.ResultText,
+                    data2: displayDate(obs.Date),
+                  },
+                  {
+                    isHeader: false,
+                    twoColumns: false,
+                    data1: "Performed by: " + (obs.Performer ?? 'Unknown'),
+                    data2: '',
+                  },
+                ]} />
+
+              ))}
+            </>
         }
 
       </div>
