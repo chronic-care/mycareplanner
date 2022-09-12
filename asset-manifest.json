@@ -1,25 +1,25 @@
 {
   "files": {
-    "static/js/0.b5808eba.chunk.js": "/mycareplanner/static/js/0.b5808eba.chunk.js",
-    "launch.js": "/mycareplanner/static/js/launch.eea9c984.chunk.js",
+    "static/js/0.82051cc9.chunk.js": "/mycareplanner/static/js/0.82051cc9.chunk.js",
+    "launch.js": "/mycareplanner/static/js/launch.547864f7.chunk.js",
     "main.css": "/mycareplanner/static/css/main.b3a6eb4f.chunk.css",
-    "main.js": "/mycareplanner/static/js/main.a9a141db.chunk.js",
+    "main.js": "/mycareplanner/static/js/main.3bb2f06c.chunk.js",
     "runtime-launch.js": "/mycareplanner/static/js/runtime-launch.d80f08ae.js",
     "runtime-main.js": "/mycareplanner/static/js/runtime-main.69118ab0.js",
     "static/css/5.c44b15ec.chunk.css": "/mycareplanner/static/css/5.c44b15ec.chunk.css",
-    "static/js/5.1812bf53.chunk.js": "/mycareplanner/static/js/5.1812bf53.chunk.js",
+    "static/js/5.73fbf495.chunk.js": "/mycareplanner/static/js/5.73fbf495.chunk.js",
     "index.html": "/mycareplanner/index.html",
     "launch.html": "/mycareplanner/launch.html",
-    "precache-manifest.de641e9cfa4e9cefbf78befacfedab03.js": "/mycareplanner/precache-manifest.de641e9cfa4e9cefbf78befacfedab03.js",
+    "precache-manifest.4d81a82ea38c682b757e265e5424d477.js": "/mycareplanner/precache-manifest.4d81a82ea38c682b757e265e5424d477.js",
     "service-worker.js": "/mycareplanner/service-worker.js",
-    "static/js/5.1812bf53.chunk.js.LICENSE.txt": "/mycareplanner/static/js/5.1812bf53.chunk.js.LICENSE.txt"
+    "static/js/5.73fbf495.chunk.js.LICENSE.txt": "/mycareplanner/static/js/5.73fbf495.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.69118ab0.js",
-    "static/js/0.b5808eba.chunk.js",
+    "static/js/0.82051cc9.chunk.js",
     "static/css/5.c44b15ec.chunk.css",
-    "static/js/5.1812bf53.chunk.js",
+    "static/js/5.73fbf495.chunk.js",
     "static/css/main.b3a6eb4f.chunk.css",
-    "static/js/main.a9a141db.chunk.js"
+    "static/js/main.3bb2f06c.chunk.js"
   ]
 }
