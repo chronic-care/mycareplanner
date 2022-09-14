@@ -42,7 +42,10 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
               <tr key={idx}><td>
                 <table><tbody>
                   <tr>
-                    <td colSpan={4}><b>{cond.ConceptName}</b></td>
+                    <td colSpan={4}><b>{cond.CommonName ?? ''} ({cond.Category})</b></td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4}>{cond.ConceptName}</td>
                   </tr>
                   <tr>
                     <td colSpan={3}>Author: {cond.Recorder ?? cond.Asserter ?? 'Unknown'}</td>

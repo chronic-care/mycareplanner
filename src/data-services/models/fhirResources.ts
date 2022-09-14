@@ -32,6 +32,7 @@ export interface FHIRData {
 export function hasScope(clientScope: string | undefined, resourceType: string) {
   // Use lower case for compare - Epic returns, e.g. Condition.Read
   return clientScope?.toLowerCase().includes(resourceType.toLowerCase())
+    || clientScope?.toLowerCase().includes('*.read')
 }
 
 
