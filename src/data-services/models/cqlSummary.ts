@@ -47,6 +47,7 @@ export interface DataElementSummary {
 export interface ConditionSummary {
   id?: string,
   Category?: string,
+  ConditionType?: string,
   CommonName?: string,
   ConceptName: string,
   RecordedDate?: string,
