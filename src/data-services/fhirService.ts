@@ -66,7 +66,7 @@ var provenanceMap = new Map<string,Provenance[]>()
 var provenance: Provenance[] = []
 
 function recordProvenance(resources: Resource[] | undefined) {
-  const provResources = resources?.filter((item: any) => item.resourceType === 'Provenance') as Provenance[]
+  const provResources = resources?.filter((item: any) => item?.resourceType === 'Provenance') as Provenance[]
 
   provResources?.forEach((prov: Provenance) => {
     prov.target.forEach((ref: Reference) => {
@@ -90,7 +90,7 @@ export async function getConditions(client: Client): Promise<Condition[]> {
   resources = resources.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) )
   resources = resources.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) )
 
-  const conditions = resources.filter((item: any) => item.resourceType === 'Condition') as Condition[]
+  const conditions = resources.filter((item: any) => item?.resourceType === 'Condition') as Condition[]
   recordProvenance(resources)
 
   return conditions
@@ -131,10 +131,22 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
 }
 
 export const getFHIRData = async (): Promise<FHIRData> => {
+  console.log('Starting OAuth2 authentication')
   const client = await FHIR.oauth2.ready();
+  console.log('Finished OAuth2 authentication')
 
   const clientScope = client?.state.tokenResponse?.scope
-  const patient: Patient = await client.patient.read() as Patient;
+  console.log('OAuth2 scope authorized: ' + clientScope)
+  console.log('Client JSON: ' + console.log(JSON.stringify(client)))
+
+  /*
+   *  Allscripts does not return patient, so also try user if patient is missing.
+   */
+  // const patient: Patient = await client.patient.read() as Patient
+  const patient: Patient = client.patient.id !== null 
+    ? await client.patient.read() as Patient
+    : await client.user.read() as Patient
+
   const pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined;
   const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
 
@@ -272,6 +284,10 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   // })
   // console.log("FHIRData Service Request: ")
   // serviceRequests?.forEach(function (resource) {
+  //   console.log(JSON.stringify(resource))
+  // })
+  // console.log("FHIRData Immunization: ")
+  // immunizations?.forEach(function (resource) {
   //   console.log(JSON.stringify(resource))
   // })
 

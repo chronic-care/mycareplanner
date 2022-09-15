@@ -1,8 +1,11 @@
 import FHIR from 'fhirclient';
 
-const epicScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
+const allscriptsScope = "launch openid fhirUser patient/*.read"
+// const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read"
 
-const epicPilotScope = "launch openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read";
+const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
+
+const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read";
 
 const cernerScopeUSCDI = "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
 
@@ -71,6 +74,20 @@ FHIR.oauth2.authorize([
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_acf_odh,
         scope: "openid offline_access launch launch/patient fhirUser patient/*.read"
+    },
+    {
+        // Allscripts sandbox
+        issMatch: "https://allscriptsfhirconnect.open.allscripts.com/R4/fhir-InfernoStageStandalone",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_allscripts_sandbox,
+        scope: allscriptsScope
+    },
+    {
+        // Allscripts sandbox (open)
+        issMatch: "https://allscriptsfhirconnect.open.allscripts.com/R4/open-InfernoStageStandalone",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_allscripts_sandbox,
+        scope: allscriptsScope
     },
     {
         // Cerner sandbox
