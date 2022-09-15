@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary'
 import { getConditionSummary } from '../../data-services/mccCqlService'
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
 
 interface ConditionListProps {
   fhirData?: FHIRData,
@@ -36,44 +37,77 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
           : <p />}
 
-        {conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !conditionSummary || conditionSummary.length < 1 ? <p>No records found.</p> :
-          <table><tbody>
-            {conditionSummary?.map((cond, idx) => (
-              <tr key={idx}><td>
-                <table><tbody>
-                  <tr>
-                    <td colSpan={4}><b><i>{cond.Category ?? ''}</i></b></td>
-                  </tr>
-                  <tr>
-                    <td colSpan={4}>{cond.ConditionType === null ? '' : <b>{cond.CommonName ?? ''} ({cond.ConditionType})</b>}</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={4}>{cond.ConceptName}</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={3}>Author: {cond.Recorder ?? cond.Asserter ?? 'Unknown'}</td>
-                    <td align="right">{cond.LearnMore === undefined || cond.LearnMore === null ? '' :
-                      <Link to="route" target="_blank" onClick={(event) => { event.preventDefault(); window.open(cond.LearnMore); }}><i>Learn&nbsp;More</i></Link>}</td>
-                  </tr>
-                  {(cond.RecordedDate === null && cond.AssertedDate === null) ? <tr /> :
-                    <tr>
-                      <td colSpan={2}>{cond.RecordedDate === null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate)}</td>
-                      <td colSpan={2}>{cond.AssertedDate === null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate)}</td>
-                    </tr>}
-                  <tr>
-                    <td colSpan={4}>{cond.OnsetDate === null ? '' : 'When it started: ' + displayDate(cond.OnsetDate)}</td>
-                  </tr>
-                  {cond.Notes?.map((note) => (
-                    <tr><td colSpan={4}>Note: {note}</td></tr>
-                  ))}
-                </tbody></table>
-              </td></tr>
-            ))}
-          </tbody></table>
+        {conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
+          ? <p>Loading...</p>
+          : !conditionSummary || conditionSummary.length < 1 ? <p>No records found.</p>
+            :
+            <>
+              {conditionSummary?.map((cond, idx) => (
+                <Summary key={idx} id={idx} rows={buildRows(cond)} />
+              ))}
+            </>
         }
 
       </div>
     </div>
   )
 
+}
+
+const buildRows = (cond: ConditionSummary): SummaryRowItems => {
+  let rows: SummaryRowItems =
+    [
+      {
+        isHeader: true,
+        twoColumns: false,
+        data1: cond.ConceptName,
+        data2: '',
+      },
+      {
+        isHeader: false,
+        twoColumns: true,
+        data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
+        data2: cond.LearnMore === undefined || cond.LearnMore === null ? '' :
+          <Link to="route" target="_blank"
+            onClick={
+              (event) => { event.preventDefault(); window.open(cond.LearnMore); }
+            }><i>Learn&nbsp;More</i>
+          </Link>,
+      },
+    ]
+
+  const recordedAndAssertedDates: SummaryRowItem | undefined =
+    cond.RecordedDate === null && cond.AssertedDate === null
+      ? undefined
+      : {
+        isHeader: false,
+        twoColumns: true,
+        data1: cond.RecordedDate === null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate),
+        data2: cond.AssertedDate === null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate),
+      }
+  if (recordedAndAssertedDates !== undefined) {
+    rows.push(recordedAndAssertedDates)
+  }
+
+  const onsetDate: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: false,
+    data1: cond.OnsetDate === null ? '' : 'When it started: ' + displayDate(cond.OnsetDate),
+    data2: '',
+  }
+  rows.push(onsetDate)
+
+  const notes: SummaryRowItems | undefined = cond.Notes?.map((note) => (
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Note: ' + note,
+      data2: '',
+    }
+  ))
+  if (notes?.length) {
+    rows = rows.concat(notes)
+  }
+
+  return rows
 }
