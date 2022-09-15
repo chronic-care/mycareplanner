@@ -55,26 +55,49 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 }
 
 const buildRows = (cond: ConditionSummary): SummaryRowItems => {
-  let rows: SummaryRowItems =
-    [
-      {
-        isHeader: true,
-        twoColumns: false,
-        data1: cond.ConceptName,
-        data2: '',
-      },
-      {
+  let rows: SummaryRowItems = []
+
+  const condition: SummaryRowItem = {
+    isHeader: true,
+    twoColumns: false,
+    data1: <i>{cond.Category ?? ''}</i>,
+    data2: '',
+  }
+  rows.push(condition)
+
+  const conditionExpanded: SummaryRowItem | undefined =
+    cond.ConditionType === null
+      ? undefined
+      : {
         isHeader: false,
-        twoColumns: true,
-        data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
-        data2: cond.LearnMore === undefined || cond.LearnMore === null ? '' :
-          <Link to="route" target="_blank"
-            onClick={
-              (event) => { event.preventDefault(); window.open(cond.LearnMore); }
-            }><i>Learn&nbsp;More</i>
-          </Link>,
-      },
-    ]
+        twoColumns: false,
+        data1: <><b>{cond.CommonName ?? ''}: </b><i>{cond.ConditionType}</i></>,
+        data2: '',
+      }
+  if (conditionExpanded !== undefined) {
+    rows.push(conditionExpanded)
+  }
+
+  const concept: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: false,
+    data1: cond.ConceptName,
+    data2: '',
+  }
+  rows.push(concept)
+
+  const author: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: true,
+    data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
+    data2: cond.LearnMore === undefined || cond.LearnMore === null ? '' :
+      <Link to="route" target="_blank"
+        onClick={
+          (event) => { event.preventDefault(); window.open(cond.LearnMore); }
+        }><i>Learn&nbsp;More</i>
+      </Link>,
+  }
+  rows.push(author)
 
   const recordedAndAssertedDates: SummaryRowItem | undefined =
     cond.RecordedDate === null && cond.AssertedDate === null
@@ -82,6 +105,7 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
       : {
         isHeader: false,
         twoColumns: true,
+        // Still need null checks as one item or the other could be null, just not both
         data1: cond.RecordedDate === null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate),
         data2: cond.AssertedDate === null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate),
       }
