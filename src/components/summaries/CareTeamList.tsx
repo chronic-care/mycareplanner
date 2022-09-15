@@ -55,7 +55,6 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
             {participants?.map((participant, idx) => (
 
               <Summary key={idx} id={idx} rows={[
-
                 {
                   isHeader: true,
                   twoColumns: false,
