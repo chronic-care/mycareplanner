@@ -33,10 +33,10 @@ const provenanceSearch = '&_revInclude=Provenance:target'
 // Cerner throws an error when including other category codes
 const carePlanPath = 'CarePlan?status=active&category=assess-plan' + provenanceSearch
 
-// Cerner throws error with _include arg for participants.
-//const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
+// Allscripts and Cerner throws error with _include arg for participants.
+const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
+const careTeamPath_include = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
 
-const careTeamPath = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
 const goalsPath = 'Goal?lifecycle-status=active' + provenanceSearch
 
 /// Epic allows multiple category codes only >= Aug 2021 release
@@ -46,9 +46,12 @@ const healthConcernPath = 'Condition?category=health-concern&clinical-status=act
 
 const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
 const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
-const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
-const serviceRequestPath = 'ServiceRequest?status=active' + provenanceSearch
 
+// Allscripts does not support both status and authoredon args
+// const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const medicationRequestPath = 'MedicationRequest?authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
+
+const serviceRequestPath = 'ServiceRequest?status=active' + provenanceSearch
 const proceduresPath = 'Procedure?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const diagnosticReportPath = 'DiagnosticReport?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const socialHistoryPath = 'Observation?category=social-history' + provenanceSearch
@@ -86,9 +89,16 @@ function recordProvenance(resources: Resource[] | undefined) {
 
 export async function getConditions(client: Client): Promise<Condition[]> {
   var resources: Resource[] = []
-  // Epic allows multiple category codes in one query only >= Aug 2021 release
-  resources = resources.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) )
-  resources = resources.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) )
+  // workaround for Allscripts lack of support for both category and status args
+  if (client.state.serverUrl.includes('allscripts.com')) {
+    const conditionsPath = 'Condition?category=problem-list-item,health-concern' + provenanceSearch
+    resources = resources.concat( resourcesFrom(await client.patient.request(conditionsPath, fhirOptions) as fhirclient.JsonObject) )
+  }
+  else {
+    // Epic allows multiple category codes in one query only >= Aug 2021 release
+    resources = resources.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) )
+    resources = resources.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) )
+  }
 
   const conditions = resources.filter((item: any) => item?.resourceType === 'Condition') as Condition[]
   recordProvenance(resources)
@@ -97,8 +107,9 @@ export async function getConditions(client: Client): Promise<Condition[]> {
 }
 
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
-  // Workaround for Epic Sandbox that takes many minutes to request vital-signs, or times out completely
-  if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4') {
+  // Workaround for Cerner and Epic Sandbox that takes many minutes to request vital-signs, or times out completely
+  if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4'
+      || client.state.serverUrl.includes('cerner.com')) {
     return []
   }
 
@@ -110,7 +121,8 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   const queryPaths = vitalsCodes.map(code => {
     // Issue: UCHealth returns 400 error if include both category and code.
     // return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_sort:desc=date&_count=1'
-    return 'Observation?code=http://loinc.org|' + code + '&_sort:desc=date&_count=1' + provenanceSearch
+    // return 'Observation?code=http://loinc.org|' + code + '&_sort:desc=date&_count=1' + provenanceSearch
+    return 'Observation?code=http://loinc.org|' + code + '&_count=1' + provenanceSearch
   })
 
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
@@ -136,8 +148,18 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.log('Finished OAuth2 authentication')
 
   const clientScope = client?.state.tokenResponse?.scope
-  console.log('OAuth2 scope authorized: ' + clientScope)
-  console.log('Client JSON: ' + console.log(JSON.stringify(client)))
+  const serverURL = client?.state.serverUrl
+
+  // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
+  const supportsInclude = !(
+    serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
+  )
+  console.log("Server URL = " + serverURL)
+  console.log("Supports _include = " + supportsInclude)
+
+  // console.log('OAuth2 scope authorized: ' + clientScope)
+  console.log('Client JSON: ')
+  console.log(console.log(JSON.stringify(client)))
 
   /*
    *  Allscripts does not return patient, so also try user if patient is missing.
@@ -147,7 +169,15 @@ export const getFHIRData = async (): Promise<FHIRData> => {
     ? await client.patient.read() as Patient
     : await client.user.read() as Patient
 
-  const pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined;
+  // console.log('Patient resource:')
+  // console.log(JSON.stringify(patient))
+
+  var pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined
+
+  // workaround for Allscripts bug
+  pcpPath = pcpPath?.replace('R4/fhir', 'R4/open')
+  // console.log('PCP path = ' + pcpPath)
+
   const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
 
   const patientPath = 'Patient/' + client.getPatientId();
@@ -172,8 +202,10 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   recordProvenance(carePlanData)
 
   console.log('CareTeam request: ' + new Date().toLocaleTimeString())
+  const _careTeamPath = supportsInclude ? careTeamPath_include : careTeamPath
+  // console.log('CareTeam path: ' + _careTeamPath)
   const careTeamData = (hasScope(clientScope, 'CareTeam.read')
-    ? resourcesFrom(await client.patient.request(careTeamPath, fhirOptions) as fhirclient.JsonObject)
+    ? resourcesFrom(await client.patient.request(_careTeamPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
   const careTeamPractitioners = careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
@@ -296,6 +328,11 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   // console.log("FHIRData CarePlan: ")
   // carePlans?.forEach(function (resource) {
+  //   console.log(JSON.stringify(resource))
+  // })
+
+  // console.log("FHIRData MedicationRequest: ")
+  // medications?.forEach(function (resource) {
   //   console.log(JSON.stringify(resource))
   // })
 
