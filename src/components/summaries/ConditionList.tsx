@@ -57,34 +57,26 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   let rows: SummaryRowItems = []
 
-  const condition: SummaryRowItem = {
+  const conditionName: SummaryRowItem = {
     isHeader: true,
     twoColumns: false,
-    data1: <i>{cond.Category ?? ''}</i>,
+    data1:<><b>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</b></>,
     data2: '',
   }
-  rows.push(condition)
+  rows.push(conditionName)
 
-  const conditionExpanded: SummaryRowItem | undefined =
-    cond.ConditionType === null
-      ? undefined
-      : {
-        isHeader: false,
-        twoColumns: false,
-        data1: <><b>{cond.CommonName ?? ''}: </b><i>{cond.ConditionType}</i></>,
-        data2: '',
-      }
-  if (conditionExpanded !== undefined) {
-    rows.push(conditionExpanded)
-  }
-
-  const concept: SummaryRowItem = {
-    isHeader: false,
-    twoColumns: false,
-    data1: cond.ConceptName,
-    data2: '',
-  }
-  rows.push(concept)
+  // const conditionExpanded: SummaryRowItem | undefined =
+  //   cond.ConditionType === null
+  //     ? undefined
+  //     : {
+  //       isHeader: false,
+  //       twoColumns: false,
+  //       data1: <><b>{cond.CommonName ?? ''}: {cond.ConceptName}</b></>,
+  //       data2: '',
+  //     }
+  // if (conditionExpanded !== undefined) {
+  //   rows.push(conditionExpanded)
+  // }
 
   const author: SummaryRowItem = {
     isHeader: false,
@@ -132,6 +124,14 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   if (notes?.length) {
     rows = rows.concat(notes)
   }
+
+  const categoryName: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: true,
+    data1: <b>{cond.Category ?? ''}</b>,
+    data2: cond.CommonName === null ? '' : cond.ConceptName,
+  }
+  rows.push(categoryName)
 
   return rows
 }

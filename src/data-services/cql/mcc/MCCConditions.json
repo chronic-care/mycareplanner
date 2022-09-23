@@ -26722,7 +26722,7 @@
             }
          }, {
             "localId" : "937",
-            "locator" : "629:1-630:111",
+            "locator" : "629:1-630:93",
             "name" : "ReportSocialDeterminantsOfHealthConditions",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -26758,14 +26758,8 @@
                               "value" : [ "'Social Determinants of Health'" ]
                            } ]
                         }, {
-                           "value" : [ ", " ]
-                        }, {
                            "r" : "935",
-                           "s" : [ {
-                              "value" : [ "'Life(style) Problems'" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
+                           "value" : [ ", ","null",")" ]
                         } ]
                      } ]
                   } ]
@@ -26855,7 +26849,7 @@
             },
             "expression" : {
                "localId" : "936",
-               "locator" : "630:3-630:111",
+               "locator" : "630:3-630:93",
                "name" : "ReportConditions",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -26961,12 +26955,14 @@
                   "value" : "Social Determinants of Health",
                   "type" : "Literal"
                }, {
-                  "localId" : "935",
-                  "locator" : "630:89-630:110",
-                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
-                  "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                  "value" : "Life(style) Problems",
-                  "type" : "Literal"
+                  "asType" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "As",
+                  "operand" : {
+                     "localId" : "935",
+                     "locator" : "630:89-630:92",
+                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}Any",
+                     "type" : "Null"
+                  }
                } ]
             }
          }, {
