@@ -25484,7 +25484,7 @@
                               }, {
                                  "r" : "882",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25522,7 +25522,7 @@
                               }, {
                                  "r" : "890",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25560,7 +25560,7 @@
                               }, {
                                  "r" : "898",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25598,7 +25598,7 @@
                               }, {
                                  "r" : "906",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25636,7 +25636,7 @@
                               }, {
                                  "r" : "914",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25674,7 +25674,7 @@
                               }, {
                                  "r" : "922",
                                  "s" : [ {
-                                    "value" : [ "'Respiratory Conditionsh'" ]
+                                    "value" : [ "'Respiratory Conditions'" ]
                                  } ]
                               }, {
                                  "value" : [ ", " ]
@@ -25953,7 +25953,7 @@
                   },
                   "element" : [ {
                      "localId" : "884",
-                     "locator" : "599:5-599:80",
+                     "locator" : "599:5-599:79",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26053,14 +26053,14 @@
                         }
                      }, {
                         "localId" : "882",
-                        "locator" : "599:45-599:69",
+                        "locator" : "599:45-599:68",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "883",
-                        "locator" : "599:72-599:79",
+                        "locator" : "599:71-599:78",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Asthma",
@@ -26068,7 +26068,7 @@
                      } ]
                   }, {
                      "localId" : "892",
-                     "locator" : "600:5-600:93",
+                     "locator" : "600:5-600:92",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26168,14 +26168,14 @@
                         }
                      }, {
                         "localId" : "890",
-                        "locator" : "600:53-600:77",
+                        "locator" : "600:53-600:76",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "891",
-                        "locator" : "600:80-600:92",
+                        "locator" : "600:79-600:91",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Lung Damage",
@@ -26183,7 +26183,7 @@
                      } ]
                   }, {
                      "localId" : "900",
-                     "locator" : "601:5-601:116",
+                     "locator" : "601:5-601:115",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26283,14 +26283,14 @@
                         }
                      }, {
                         "localId" : "898",
-                        "locator" : "601:83-601:107",
+                        "locator" : "601:83-601:106",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "899",
-                        "locator" : "601:110-601:115",
+                        "locator" : "601:109-601:114",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "COPD",
@@ -26298,7 +26298,7 @@
                      } ]
                   }, {
                      "localId" : "908",
-                     "locator" : "602:5-602:117",
+                     "locator" : "602:5-602:116",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26398,14 +26398,14 @@
                         }
                      }, {
                         "localId" : "906",
-                        "locator" : "602:64-602:88",
+                        "locator" : "602:64-602:87",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "907",
-                        "locator" : "602:91-602:116",
+                        "locator" : "602:90-602:115",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Interstitial Lung Damage",
@@ -26413,7 +26413,7 @@
                      } ]
                   }, {
                      "localId" : "916",
-                     "locator" : "603:5-603:95",
+                     "locator" : "603:5-603:94",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26513,14 +26513,14 @@
                         }
                      }, {
                         "localId" : "914",
-                        "locator" : "603:57-603:81",
+                        "locator" : "603:57-603:80",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "915",
-                        "locator" : "603:84-603:94",
+                        "locator" : "603:83-603:93",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Lung Clot",
@@ -26528,7 +26528,7 @@
                      } ]
                   }, {
                      "localId" : "924",
-                     "locator" : "604:5-604:90",
+                     "locator" : "604:5-604:89",
                      "name" : "ReportConditions",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
@@ -26628,14 +26628,14 @@
                         }
                      }, {
                         "localId" : "922",
-                        "locator" : "604:50-604:74",
+                        "locator" : "604:50-604:73",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                        "value" : "Respiratory Conditionsh",
+                        "value" : "Respiratory Conditions",
                         "type" : "Literal"
                      }, {
                         "localId" : "923",
-                        "locator" : "604:77-604:89",
+                        "locator" : "604:76-604:88",
                         "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Sleep Apnea",
@@ -26722,7 +26722,7 @@
             }
          }, {
             "localId" : "937",
-            "locator" : "629:1-630:93",
+            "locator" : "629:1-630:84",
             "name" : "ReportSocialDeterminantsOfHealthConditions",
             "context" : "Patient",
             "accessLevel" : "Public",
@@ -26755,7 +26755,7 @@
                         }, {
                            "r" : "934",
                            "s" : [ {
-                              "value" : [ "'Social Determinants of Health'" ]
+                              "value" : [ "'Life(style) Problems'" ]
                            } ]
                         }, {
                            "r" : "935",
@@ -26849,7 +26849,7 @@
             },
             "expression" : {
                "localId" : "936",
-               "locator" : "630:3-630:93",
+               "locator" : "630:3-630:84",
                "name" : "ReportConditions",
                "libraryName" : "DE",
                "type" : "FunctionRef",
@@ -26949,17 +26949,17 @@
                   }
                }, {
                   "localId" : "934",
-                  "locator" : "630:56-630:86",
+                  "locator" : "630:56-630:77",
                   "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                  "value" : "Social Determinants of Health",
+                  "value" : "Life(style) Problems",
                   "type" : "Literal"
                }, {
                   "asType" : "{urn:hl7-org:elm-types:r1}String",
                   "type" : "As",
                   "operand" : {
                      "localId" : "935",
-                     "locator" : "630:89-630:92",
+                     "locator" : "630:80-630:83",
                      "resultTypeName" : "{urn:hl7-org:elm-types:r1}Any",
                      "type" : "Null"
                   }
