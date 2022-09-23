@@ -65,19 +65,6 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   }
   rows.push(conditionName)
 
-  // const conditionExpanded: SummaryRowItem | undefined =
-  //   cond.ConditionType === null
-  //     ? undefined
-  //     : {
-  //       isHeader: false,
-  //       twoColumns: false,
-  //       data1: <><b>{cond.CommonName ?? ''}: {cond.ConceptName}</b></>,
-  //       data2: '',
-  //     }
-  // if (conditionExpanded !== undefined) {
-  //   rows.push(conditionExpanded)
-  // }
-
   const author: SummaryRowItem = {
     isHeader: false,
     twoColumns: true,
