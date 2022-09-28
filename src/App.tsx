@@ -27,6 +27,9 @@ import { ErrorPage } from "./components/error-page/ErrorPage";
 
 import ConditionEditForm from './components/edit-forms/ConditionEditForm';
 import GoalEditForm from './components/edit-forms/GoalEditForm';
+import ProviderLogin from "./components/shared-data/ProviderLogin"
+import ShareData from "./components/shared-data/ShareData"
+import SharedDataSummary from "./components/shared-data/SharedDataSummary"
 
 interface AppProps {
 
@@ -88,6 +91,10 @@ export default class App extends React.Component<AppProps, AppState> {
                 <Route path="/goal-edit">
                     <GoalEditForm {...editFormData} />
                 </Route>
+
+                <Route path="/provider-login" component= { ProviderLogin } />
+                <Route path="/share-data" component= { ShareData } />
+                <Route path="/shared-data-summary" component= { SharedDataSummary } />
 
                 <Route path="/decision" component= { ScreeningDecision } />
                 <Route path="/questionnaire" component= { QuestionnaireHandler } />

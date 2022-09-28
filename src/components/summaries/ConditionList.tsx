@@ -57,36 +57,18 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   let rows: SummaryRowItems = []
 
-  const condition: SummaryRowItem = {
+  const conditionName: SummaryRowItem = {
     isHeader: true,
     twoColumns: false,
-    data1: <i>{cond.Category ?? ''}</i>,
+    data1:<><b>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</b></>,
     data2: '',
   }
-  rows.push(condition)
+  rows.push(conditionName)
 
-  const conditionExpanded: SummaryRowItem | undefined =
-    cond.ConditionType === null
-      ? undefined
-      : {
-        isHeader: false,
-        twoColumns: false,
-        data1: <><b>{cond.CommonName ?? ''}: </b><i>{cond.ConditionType}</i></>,
-        data2: '',
-      }
-  if (conditionExpanded !== undefined) {
-    rows.push(conditionExpanded)
-  }
-
-  const concept: SummaryRowItem = {
-    isHeader: false,
-    twoColumns: false,
-    data1: cond.ConceptName,
-    data2: '',
-  }
-  rows.push(concept)
-
-  const author: SummaryRowItem = {
+  const author: SummaryRowItem | undefined = 
+    cond.Recorder === null && cond.Asserter === null
+    ? undefined
+    : {
     isHeader: false,
     twoColumns: true,
     data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
@@ -96,8 +78,10 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
           (event) => { event.preventDefault(); window.open(cond.LearnMore); }
         }><i>Learn&nbsp;More</i>
       </Link>,
+    }
+  if (author !== undefined) {
+    rows.push(author)
   }
-  rows.push(author)
 
   const recordedAndAssertedDates: SummaryRowItem | undefined =
     cond.RecordedDate === null && cond.AssertedDate === null
@@ -132,6 +116,26 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   if (notes?.length) {
     rows = rows.concat(notes)
   }
+
+  const provenance: SummaryRowItems | undefined = cond.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
+  }
+
+  const categoryName: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: true,
+    data1: <b>{cond.Category ?? ''}</b>,
+    data2: cond.CommonName === null ? '' : cond.ConceptName,
+  }
+  rows.push(categoryName)
 
   return rows
 }
