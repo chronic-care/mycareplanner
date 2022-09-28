@@ -65,7 +65,10 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   }
   rows.push(conditionName)
 
-  const author: SummaryRowItem = {
+  const author: SummaryRowItem | undefined = 
+    cond.Recorder === null && cond.Asserter === null
+    ? undefined
+    : {
     isHeader: false,
     twoColumns: true,
     data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
@@ -75,8 +78,10 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
           (event) => { event.preventDefault(); window.open(cond.LearnMore); }
         }><i>Learn&nbsp;More</i>
       </Link>,
+    }
+  if (author !== undefined) {
+    rows.push(author)
   }
-  rows.push(author)
 
   const recordedAndAssertedDates: SummaryRowItem | undefined =
     cond.RecordedDate === null && cond.AssertedDate === null
@@ -110,6 +115,18 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   ))
   if (notes?.length) {
     rows = rows.concat(notes)
+  }
+
+  const provenance: SummaryRowItems | undefined = cond.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
   }
 
   const categoryName: SummaryRowItem = {

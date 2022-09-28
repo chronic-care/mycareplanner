@@ -114,6 +114,18 @@ const buildRows = (goal: GoalSummary): SummaryRowItems => {
     rows = rows.concat(notes)
   }
 
+  const provenance: SummaryRowItems | undefined = goal.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
+  }
+
   return rows
 }
 

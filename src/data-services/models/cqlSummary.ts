@@ -44,10 +44,14 @@ export interface DataElementSummary {
   // Resource?: Resource,
 }
 
+export interface ProvenanceSummary {
+  Transmitter?: string,
+  Author?: string,
+}
+
 export interface ConditionSummary {
   id?: string,
   Category?: string,
-  ConditionType?: string,
   CommonName?: string,
   ConceptName: string,
   RecordedDate?: string,
@@ -57,6 +61,7 @@ export interface ConditionSummary {
   Asserter?: string,
   Notes?: string[],
   HasGoal?: GoalSummary[],
+  Provenance?: ProvenanceSummary[],
   LearnMore?: string
 }
 
@@ -68,6 +73,7 @@ export interface GoalSummary {
   Target?: GoalTarget[],
   Addresses?: DataElementSummary[],
   Notes?: string[],
+  Provenance?: ProvenanceSummary[],
   LearnMore?: string
 }
 
@@ -85,6 +91,7 @@ export interface MedicationSummary {
   Requester?: string,
   DosageInstruction?: string,
   Notes?: string[],
+  Provenance?: ProvenanceSummary[],
   LearnMore?: string
 }
 
@@ -100,5 +107,6 @@ export interface ObservationSummary {
   Flag?: boolean,
   Performer?: string,
   Notes?: string[],
+  Provenance?: ProvenanceSummary[],
   LearnMore?: string
 }
