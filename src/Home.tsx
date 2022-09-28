@@ -58,9 +58,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <h5>My Tasks</h5>
 
-          {/* <Link to={{pathname: '/questionnaire', 
-                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'PHQ-4-grouped-questionnaire' }
-                    }} ><strong>Mental Health Assessment</strong></Link><br/> */}
           <Link to={{pathname: '/questionnaire', 
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'PROMIS-29-questionnaire' }
                     }} ><strong>General Health Assessment</strong></Link><br/>
@@ -101,6 +98,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                     </li>))}
                 </ul>
             }
+
+            <h5>Shared Health Records</h5>
+            <Link to={{pathname: '/provider-login'}}>Retrieve records from other healthcare providers</Link>
+            <br/><Link to={{pathname: '/share-data'}}>Share your health data</Link>
+            <br/><Link to={{pathname: '/shared-data-summary'}}>Summary of shared health data</Link>
         </div>
         }
       </div>

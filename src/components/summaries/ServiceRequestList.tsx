@@ -41,7 +41,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
     <div className="home-view">
       <div className="welcome">
 
-        <h4 className="title">Planned Activities (Interventions)</h4>
+        <h4 className="title">Planned Activities</h4>
 
         {serviceRequests === undefined || serviceRequests?.length < 1
           ? <p>No records found.</p>
