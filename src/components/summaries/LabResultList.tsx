@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
 import { getLabResultSummary } from '../../data-services/mccCqlService'
-import { Summary } from './Summary'
+import { Summary, SummaryRowItems } from './Summary'
 
 interface LabResultListProps {
   fhirData?: FHIRData,
@@ -42,37 +42,7 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
             :
             <>
               {labResultSummary?.map((obs, idx) => (
-
-                <Summary key={idx} id={idx} rows={[
-                  {
-                    isHeader: true,
-                    twoColumns: true,
-                    data1: obs.DisplayName,
-                    data2: obs.LearnMore === undefined || obs.LearnMore === null ? '' :
-                      <Link to="route" target="_blank"
-                        onClick={
-                          (event) => { event.preventDefault(); window.open(obs.LearnMore); }
-                        }><i>Learn&nbsp;More</i>
-                      </Link>,
-                  },
-                  {
-                    isHeader: false,
-                    twoColumns: true,
-                    data1: obs.ResultText,
-                    data2: displayDate(obs.Date),
-                  },
-                  {
-                    isHeader: false,
-                    twoColumns: true,
-                    data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
-                    data2: obs.Interpretation,
-                  },
-                  /* May need to be implemented one day...
-                  {obs.Notes?.map((note, idx) => (
-                  <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
-                  ))} */
-                ]} />
-
+                <Summary key={idx} id={idx} rows={buildRows(obs)} />
               ))}
             </>
         }
@@ -81,4 +51,39 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
     </div>
   )
 
+}
+
+const buildRows = (obs: ObservationSummary): SummaryRowItems => {
+  let rows: SummaryRowItems =
+    [
+      {
+        isHeader: true,
+        twoColumns: true,
+        data1: obs.DisplayName,
+        data2: obs.LearnMore === undefined || obs.LearnMore === null ? '' :
+          <Link to="route" target="_blank"
+            onClick={
+              (event) => { event.preventDefault(); window.open(obs.LearnMore); }
+            }><i>Learn&nbsp;More</i>
+          </Link>,
+      },
+      {
+        isHeader: false,
+        twoColumns: true,
+        data1: obs.ResultText,
+        data2: displayDate(obs.Date),
+      },
+      {
+        isHeader: false,
+        twoColumns: true,
+        data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
+        data2: obs.Interpretation,
+      },
+      /* May need to be implemented one day...
+      {obs.Notes?.map((note, idx) => (
+      <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
+      ))} */
+    ]
+
+  return rows
 }

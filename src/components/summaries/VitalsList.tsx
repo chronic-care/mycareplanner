@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
 import { getVitalSignSummary } from '../../data-services/mccCqlService'
-import { Summary } from './Summary'
+import { Summary, SummaryRowItems } from './Summary'
 
 interface VitalsListProps {
   fhirData?: FHIRData,
@@ -41,28 +41,7 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
             :
             <>
               {vitalSignSummary?.map((obs, idx) => (
-
-                <Summary key={idx} id={idx} rows={[
-                  {
-                    isHeader: true,
-                    twoColumns: false,
-                    data1: obs.DisplayName,
-                    data2: '',
-                  },
-                  {
-                    isHeader: false,
-                    twoColumns: true,
-                    data1: obs.ResultText,
-                    data2: displayDate(obs.Date),
-                  },
-                  {
-                    isHeader: false,
-                    twoColumns: false,
-                    data1: "Performed by: " + (obs.Performer ?? 'Unknown'),
-                    data2: '',
-                  },
-                ]} />
-
+                <Summary key={idx} id={idx} rows={buildRows(obs)} />
               ))}
             </>
         }
@@ -71,4 +50,30 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
     </div>
   )
 
+}
+
+const buildRows = (obs: ObservationSummary): SummaryRowItems => {
+  let rows: SummaryRowItems =
+    [
+      {
+        isHeader: true,
+        twoColumns: false,
+        data1: obs.DisplayName,
+        data2: '',
+      },
+      {
+        isHeader: false,
+        twoColumns: true,
+        data1: obs.ResultText,
+        data2: displayDate(obs.Date),
+      },
+      {
+        isHeader: false,
+        twoColumns: false,
+        data1: "Performed by: " + (obs.Performer ?? 'Unknown'),
+        data2: '',
+      },
+    ]
+
+  return rows
 }
