@@ -2,6 +2,9 @@ import '../../Home.css'
 import React from 'react'
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
+import { Immunization } from '../../data-services/fhir-types/fhir-r4'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,
@@ -21,18 +24,18 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
     let r2DateString = r2.occurrenceDateTime ?? r2.recorded
     let r1Date = r1DateString !== undefined ? new Date(r1DateString!) : undefined
     let r2Date = r2DateString !== undefined ? new Date(r2DateString!) : undefined
-    
+
     if (r1Date === undefined && r2Date !== undefined) {
-        return 1
+      return 1
     }
     if (r1Date !== undefined && r2Date === undefined) {
-        return -1
+      return -1
     }
     if (r1Date! < r2Date!) {
-        return 1;
+      return 1;
     }
     if (r1Date! > r2Date!) {
-        return -1;
+      return -1;
     }
     return 0;
   })
@@ -43,29 +46,66 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
 
         <h4 className="title">Immunizations</h4>
 
-        {immunizations === undefined || immunizations?.length < 1 ? <p>No records found.</p> :
-          <table><tbody>
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
+        {(immunizations === undefined || immunizations?.length < 1) && props.fhirData !== undefined
+          ? <p>No records found.</p>
+          :
+          <>
             {immunizations?.map((med, idx) => (
-              <tr key={idx}>
-                <td>
-                  <table><tbody>
-                    <tr><td><b>{med.vaccineCode?.text ?? "No text"}</b></td></tr>
-                    <tr><td>Administered on: {displayDate(med.occurrenceDateTime)}</td></tr>
-                    {(med.location === undefined) ? '' :
-                      <tr><td>Location: {med.location?.display}</td></tr>
-                    }
-                    {med.note?.map((note, idx) => (
-                      <tr key={idx}><td>Note: {note.text}</td></tr>
-                    ))}
-                  </tbody></table>
-                </td>
-              </tr>
+              <Summary key={idx} id={idx} rows={buildRows(med)} />
             ))}
-          </tbody></table>
+          </>
         }
 
       </div>
     </div>
   )
 
+}
+
+const buildRows = (med: Immunization): SummaryRowItems => {
+  let rows: SummaryRowItems =
+    [
+      {
+        isHeader: true,
+        twoColumns: false,
+        data1: med.vaccineCode?.text ?? "No text",
+        data2: '',
+      },
+      {
+        isHeader: false,
+        twoColumns: false,
+        data1: 'Administered on: ' + (med.occurrenceDateTime ? displayDate(med.occurrenceDateTime) : 'Unknown'),
+        data2: '',
+      },
+    ]
+
+  if (med.location) {
+    const location: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Location: ' + med.location?.display,
+      data2: undefined
+    }
+    rows.push(location)
+  }
+
+  const notes: SummaryRowItems | undefined = med.note?.map((note) => (
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: note.text ? 'Note: ' + note.text : '',
+      data2: '',
+    }
+  ))
+  if (notes?.length) {
+    rows = rows.concat(notes)
+  }
+
+  return rows
 }

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary'
 import { getMedicationSummary } from '../../data-services/mccCqlService'
+import { Summary, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface MedicationListProps {
   fhirData?: FHIRData,
@@ -32,31 +34,81 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
         <h4 className="title">Medications</h4>
 
-        {medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init' ? <p>Loading...</p> : !medicationSummary || medicationSummary.length < 1 ? <p>No records found.</p> :
-          <table><tbody>
-            {medicationSummary?.map((med, idx) => (
-              <tr key={idx}>
-                <td>
-                  <table><tbody>
-                    <tr>
-                      <td colSpan={3}><b>{med.ConceptName ?? "No text"}</b></td>
-                      <td align="right">{med.LearnMore === undefined || med.LearnMore === null ? '' :
-                        <Link to="route" target="_blank" onClick={(event) => { event.preventDefault(); window.open(med.LearnMore); }}><i>Learn&nbsp;More</i></Link>}</td>
-                    </tr>
-                    <tr><td colSpan={2}>{displayDate(med.AuthoredOn)}</td><td colSpan={2}>By: {med.Requester ?? 'Unknown'}</td></tr>
-                    <tr><td colSpan={4}>{med.DosageInstruction}</td></tr>
-                    {med.Notes?.map((note, idx) => (
-                      <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
-                    ))}
-                  </tbody></table>
-                </td>
-              </tr>
-            ))}
-          </tbody></table>
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
+        {medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init'
+          ? <p>Loading...</p>
+          : (!medicationSummary || medicationSummary.length < 1) && props.fhirData !== undefined
+            ? <p>No records found.</p>
+            :
+            <>
+              {medicationSummary?.map((med, idx) => (
+                <Summary key={idx} id={idx} rows={buildRows(med)} />
+              ))}
+            </>
         }
 
       </div>
     </div>
   )
 
+}
+
+const buildRows = (med: MedicationSummary): SummaryRowItems => {
+  let rows: SummaryRowItems =
+    [
+      {
+        isHeader: true,
+        twoColumns: true,
+        data1: med.ConceptName ?? "No text",
+        data2: med.LearnMore === undefined || med.LearnMore === null ? '' :
+          <Link to="route" target="_blank"
+            onClick={
+              (event) => { event.preventDefault(); window.open(med.LearnMore); }
+            }><i>Learn&nbsp;More</i>
+          </Link>,
+      },
+      {
+        isHeader: false,
+        twoColumns: true,
+        data1: displayDate(med.AuthoredOn),
+        data2: 'By: ' + (med.Requester ?? 'Unknown'),
+      },
+      {
+        isHeader: false,
+        twoColumns: false,
+        data1: med.DosageInstruction,
+        data2: '',
+      },
+    ]
+
+  const notes: SummaryRowItems | undefined = med.Notes?.map((note) => (
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Note: ' + note,
+      data2: '',
+    }
+  ))
+  if (notes?.length) {
+    rows = rows.concat(notes)
+  }
+
+  const provenance: SummaryRowItems | undefined = med.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
+  }
+
+  return rows
 }

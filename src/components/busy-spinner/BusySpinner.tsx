@@ -1,26 +1,17 @@
 import React from 'react';
-import { Spinner } from 'react-bootstrap';
-import './BusySpinner.css'
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 
 interface BusySpinnerProps {
   busy?: boolean;
 }
 
-interface BusySpinnerState {
-  authenticated: boolean;
+export const BusySpinner: React.FC<BusySpinnerProps> = (props: BusySpinnerProps) => {
+  return (
+    props.busy ?
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+      : null
+  )
 }
-
-export default class BusySpinner extends React.Component<BusySpinnerProps, BusySpinnerState> {
-  // constructor(props: BusySpinnerProps) {
-  //   super(props);
-  // }
-  public render(): JSX.Element | null {
-    return (
-        this.props.busy ?
-            <div className="spinner-overlay">
-                <Spinner animation="border" variant="primary"></Spinner>
-            </div>
-        : null
-      );
-    }
-  }

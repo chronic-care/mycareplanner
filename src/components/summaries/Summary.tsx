@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid'
 import { createTheme, ThemeProvider } from '@mui/material'
 import { SummaryRow } from './SummaryRow'
 
-interface SummaryRowItem {
+export interface SummaryRowItem {
   isHeader: boolean,
   twoColumns: boolean,
   data1: any,
