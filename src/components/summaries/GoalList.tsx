@@ -6,6 +6,7 @@ import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhir
 import { PatientSummary, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary'
 import { getGoalSummary } from '../../data-services/mccCqlService'
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface GoalListProps {
   fhirData?: FHIRData,
@@ -32,13 +33,19 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
         <h4 className="title">Health Goals</h4>
 
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
         {hasScope(props.fhirData?.clientScope, 'Goal.write')
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirData: props.fhirData } }}>Add a New Goal</Link></p>
           : <p />}
 
         {goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
           ? <p>Loading...</p>
-          : !goalSummary || goalSummary.length < 1
+          : (!goalSummary || goalSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>

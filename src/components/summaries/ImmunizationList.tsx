@@ -4,6 +4,7 @@ import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
 import { Immunization } from '../../data-services/fhir-types/fhir-r4'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,
@@ -45,7 +46,13 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
 
         <h4 className="title">Immunizations</h4>
 
-        {immunizations === undefined || immunizations?.length < 1
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
+        {(immunizations === undefined || immunizations?.length < 1) && props.fhirData !== undefined
           ? <p>No records found.</p>
           :
           <>

@@ -6,6 +6,7 @@ import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhir
 import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary'
 import { getConditionSummary } from '../../data-services/mccCqlService'
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface ConditionListProps {
   fhirData?: FHIRData,
@@ -33,13 +34,19 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
         <h4 className="title">Current Health Issues</h4>
 
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
         {hasScope(props.fhirData?.clientScope, 'Goal.write')
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
           : <p />}
 
         {conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : !conditionSummary || conditionSummary.length < 1 ? <p>No records found.</p>
+          : (!conditionSummary || conditionSummary.length < 1) && props.fhirData !== undefined ? <p>No records found.</p>
             :
             <>
               {conditionSummary?.map((cond, idx) => (
@@ -60,25 +67,25 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   const conditionName: SummaryRowItem = {
     isHeader: true,
     twoColumns: false,
-    data1:<><b>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</b></>,
+    data1: <><b>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</b></>,
     data2: '',
   }
   rows.push(conditionName)
 
-  const author: SummaryRowItem | undefined = 
+  const author: SummaryRowItem | undefined =
     cond.Recorder === null && cond.Asserter === null
-    ? undefined
-    : {
-    isHeader: false,
-    twoColumns: true,
-    data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
-    data2: cond.LearnMore === undefined || cond.LearnMore === null ? '' :
-      <Link to="route" target="_blank"
-        onClick={
-          (event) => { event.preventDefault(); window.open(cond.LearnMore); }
-        }><i>Learn&nbsp;More</i>
-      </Link>,
-    }
+      ? undefined
+      : {
+        isHeader: false,
+        twoColumns: true,
+        data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
+        data2: cond.LearnMore === undefined || cond.LearnMore === null ? '' :
+          <Link to="route" target="_blank"
+            onClick={
+              (event) => { event.preventDefault(); window.open(cond.LearnMore); }
+            }><i>Learn&nbsp;More</i>
+          </Link>,
+      }
   if (author !== undefined) {
     rows.push(author)
   }

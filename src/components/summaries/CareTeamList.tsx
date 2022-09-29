@@ -4,6 +4,7 @@ import { FHIRData, displayPeriod } from '../../data-services/models/fhirResource
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
 import { Summary } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
   fhirData?: FHIRData,
@@ -48,7 +49,13 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
 
         <h4 className="title">Care Team</h4>
 
-        {(participants?.length ?? 0) < 1
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
+        {((participants?.length ?? 0) < 1) && props.fhirData !== undefined
           ? <p>No records found.</p>
           :
           <>

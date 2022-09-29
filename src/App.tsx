@@ -36,14 +36,14 @@ interface AppProps {
 }
 
 interface AppState {
-  mainTabIndex: number,
-  planTabIndex: number,
-  statusTabIndex: number,
-  fhirData?: FHIRData,
-  patientSummary?: PatientSummary,
-  screenings?: [ScreeningSummary],
-  tasks?: [Task],
-  ErrorMessage?: string
+    mainTabIndex: number,
+    planTabIndex: number,
+    statusTabIndex: number,
+    fhirData?: FHIRData,
+    patientSummary?: PatientSummary,
+    screenings?: [ScreeningSummary],
+    tasks?: [Task],
+    ErrorMessage?: string
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -75,97 +75,97 @@ export default class App extends React.Component<AppProps, AppState> {
 
         return (
             <div className="app">
-            <header className="app-header">
-                {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
-                <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner"/>
-                {patient === undefined ? '' : <p>&npsp;&npsp;{patient?.fullName}</p>}
-            </header>
+                <header className="app-header">
+                    {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
+                    <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
+                    {patient === undefined ? '' : <p>&npsp;&npsp;{patient?.fullName}</p>}
+                </header>
 
-            <Switch>
-                <Route path="/goals">
-                    <GoalList {...this.state} />
-                </Route>
-                <Route path="/condition-edit">
-                    <ConditionEditForm {...editFormData} />
-                </Route>
-                <Route path="/goal-edit">
-                    <GoalEditForm {...editFormData} />
-                </Route>
+                <Switch>
+                    <Route path="/goals">
+                        <GoalList {...this.state} />
+                    </Route>
+                    <Route path="/condition-edit">
+                        <ConditionEditForm {...editFormData} />
+                    </Route>
+                    <Route path="/goal-edit">
+                        <GoalEditForm {...editFormData} />
+                    </Route>
 
-                <Route path="/provider-login" component= { ProviderLogin } />
-                <Route path="/share-data" component= { ShareData } />
-                <Route path="/shared-data-summary" component= { SharedDataSummary } />
+                    <Route path="/provider-login" component={ProviderLogin} />
+                    <Route path="/share-data" component={ShareData} />
+                    <Route path="/shared-data-summary" component={SharedDataSummary} />
 
-                <Route path="/decision" component= { ScreeningDecision } />
-                <Route path="/questionnaire" component= { QuestionnaireHandler } />
-                <Route path='/confirmation' component= { ConfirmationPage } />
-                <Route path="/error" component= { ErrorPage } />
+                    <Route path="/decision" component={ScreeningDecision} />
+                    <Route path="/questionnaire" component={QuestionnaireHandler} />
+                    <Route path='/confirmation' component={ConfirmationPage} />
+                    <Route path="/error" component={ErrorPage} />
 
-                <Route path="/">
-                    <Tabs selectedIndex={this.state.mainTabIndex} onSelect={(index) => this.setState({ mainTabIndex: index })}>
-                        <TabList>
-                            <Tab>Home</Tab>
-                            <Tab>Care Plan</Tab>
-                            <Tab>Health Status</Tab>
-                            <Tab>Team</Tab>
-                        </TabList>
+                    <Route path="/">
+                        <Tabs selectedIndex={this.state.mainTabIndex} onSelect={(index) => this.setState({ mainTabIndex: index })}>
+                            <TabList>
+                                <Tab>Home</Tab>
+                                <Tab>Care Plan</Tab>
+                                <Tab>Health Status</Tab>
+                                <Tab>Team</Tab>
+                            </TabList>
 
-                        <TabPanel>
-                            <Home {...this.state} />
-                        </TabPanel>
-                        <TabPanel>
-                            <Tabs selectedIndex={this.state.planTabIndex} onSelect={(index) => this.setState({ planTabIndex: index })}>
-                                <TabList>
-                                    <Tab>Goals</Tab>
-                                    <Tab>Concerns</Tab>
-                                    <Tab>Medications</Tab>
-                                    <Tab>Activities</Tab>
-                                </TabList>
-                                <TabPanel>
-                                    <GoalList {...this.state} />
-                                </TabPanel>
-                                <TabPanel>
-                                    <ConditionList {...this.state} />
-                                </TabPanel>
-                                <TabPanel>
-                                     <MedicationList {...this.state} />
-                                </TabPanel>
-                                <TabPanel>
-                                     <ServiceRequestList {...this.state} />
-                                </TabPanel>
-                            </Tabs>
-                        </TabPanel>
-                        <TabPanel>
-                            <Tabs selectedIndex={this.state.statusTabIndex} onSelect={(index) => this.setState({ statusTabIndex: index })}>
-                                <TabList>
-                                    <Tab>Tests</Tab>
-                                    <Tab>Vitals</Tab>
-                                    {/* <Tab>Assessment</Tab> */}
-                                    <Tab>Immunization</Tab>
-                                </TabList>
-                                <TabPanel>
-                                    <LabResultList {...this.state} />
-                                </TabPanel>
-                                <TabPanel>
-                                    <VitalsList {...this.state} />
-                                </TabPanel>
-                                {/* <TabPanel>
+                            <TabPanel>
+                                <Home {...this.state} />
+                            </TabPanel>
+                            <TabPanel>
+                                <Tabs selectedIndex={this.state.planTabIndex} onSelect={(index) => this.setState({ planTabIndex: index })}>
+                                    <TabList>
+                                        <Tab>Goals</Tab>
+                                        <Tab>Concerns</Tab>
+                                        <Tab>Medications</Tab>
+                                        <Tab>Activities</Tab>
+                                    </TabList>
+                                    <TabPanel>
+                                        <GoalList {...this.state} />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <ConditionList {...this.state} />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <MedicationList {...this.state} />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <ServiceRequestList {...this.state} />
+                                    </TabPanel>
+                                </Tabs>
+                            </TabPanel>
+                            <TabPanel>
+                                <Tabs selectedIndex={this.state.statusTabIndex} onSelect={(index) => this.setState({ statusTabIndex: index })}>
+                                    <TabList>
+                                        <Tab>Tests</Tab>
+                                        <Tab>Vitals</Tab>
+                                        {/* <Tab>Assessment</Tab> */}
+                                        <Tab>Immunization</Tab>
+                                    </TabList>
+                                    <TabPanel>
+                                        <LabResultList {...this.state} />
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <VitalsList {...this.state} />
+                                    </TabPanel>
+                                    {/* <TabPanel>
                                     <h4 className="title">Assessment Results</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel> */}
-                                <TabPanel>
-                                    <ImmunizationList {...this.state} />
-                                </TabPanel>
-                            </Tabs>
-                        </TabPanel>
-                        <TabPanel>
-                            <CareTeamList {...this.state} />
-                        </TabPanel>
-                    </Tabs>
-                </Route> 
-            </Switch>
+                                    <TabPanel>
+                                        <ImmunizationList {...this.state} />
+                                    </TabPanel>
+                                </Tabs>
+                            </TabPanel>
+                            <TabPanel>
+                                <CareTeamList {...this.state} />
+                            </TabPanel>
+                        </Tabs>
+                    </Route>
+                </Switch>
 
-            {/* 
+                {/*
             <Switch>
                 <Route path="/decision" component= { ScreeningDecision }/>
                 <Route path="/conditions" component= { ConditionList }/>
@@ -179,7 +179,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
                 <Route path="/">
                     <Home {...this.state} />
-                </Route> 
+                </Route>
             </Switch>
             */}
 

@@ -4,6 +4,7 @@ import { FHIRData, displayTiming, displayConcept } from '../../data-services/mod
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
 import { ServiceRequest, TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
   fhirData?: FHIRData,
@@ -43,7 +44,13 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
 
         <h4 className="title">Planned Activities</h4>
 
-        {serviceRequests === undefined || serviceRequests?.length < 1
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
+        {(serviceRequests === undefined || serviceRequests?.length < 1) && props.fhirData !== undefined
           ? <p>No records found.</p>
           :
           <>
