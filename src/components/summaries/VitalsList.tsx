@@ -5,6 +5,7 @@ import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
 import { getVitalSignSummary } from '../../data-services/mccCqlService'
 import { Summary, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface VitalsListProps {
   fhirData?: FHIRData,
@@ -34,9 +35,15 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
         <h4 className="title">Vitals</h4>
 
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
         {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : !vitalSignSummary || vitalSignSummary.length < 1
+          : (!vitalSignSummary || vitalSignSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>

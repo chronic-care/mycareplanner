@@ -6,6 +6,7 @@ import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary'
 import { getMedicationSummary } from '../../data-services/mccCqlService'
 import { Summary, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface MedicationListProps {
   fhirData?: FHIRData,
@@ -33,9 +34,15 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
         <h4 className="title">Medications</h4>
 
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
         {medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : !medicationSummary || medicationSummary.length < 1
+          : (!medicationSummary || medicationSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>

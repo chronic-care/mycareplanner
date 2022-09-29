@@ -6,6 +6,7 @@ import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
 import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
 import { getLabResultSummary } from '../../data-services/mccCqlService'
 import { Summary, SummaryRowItems } from './Summary'
+import { BusySpinner } from '../busy-spinner/BusySpinner'
 
 interface LabResultListProps {
   fhirData?: FHIRData,
@@ -35,9 +36,15 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
 
         <h4 className="title">Lab Results</h4>
 
+        {props.fhirData === undefined
+          && <> <p>Reading your clinical records...</p>
+            <BusySpinner busy={props.fhirData === undefined} />
+          </>
+        }
+
         {labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : !labResultSummary || labResultSummary.length < 1
+          : (!labResultSummary || labResultSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>
