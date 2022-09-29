@@ -85,5 +85,17 @@ const buildRows = (obs: ObservationSummary): SummaryRowItems => {
       ))} */
     ]
 
+  const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
+  }
+
   return rows
 }
