@@ -68,6 +68,13 @@ FHIR.oauth2.authorize([
         scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
     },
     {
+        // Meld MyWholeHealth sandbox
+        issMatch: /\bgw.interop.community\/MyWholeHealth\b/i,
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_meld_mywholehealth,
+        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
+    },
+    {
         // ACF ODH sandbox
         issMatch: /\bdev-fhirproxy.myodh.org\b/i,
         redirectUri: "./index.html",
