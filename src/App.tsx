@@ -2,9 +2,8 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-
+import { Tab, Tabs } from '@mui/material';
+import { TabList, TabPanel, TabContext } from '@mui/lab';
 import { Task } from './data-services/fhir-types/fhir-r4';
 
 import Home from "./Home";
@@ -32,13 +31,12 @@ import ShareData from "./components/shared-data/ShareData"
 import SharedDataSummary from "./components/shared-data/SharedDataSummary"
 
 interface AppProps {
-
 }
 
 interface AppState {
-    mainTabIndex: number,
-    planTabIndex: number,
-    statusTabIndex: number,
+    mainTabIndex: string,
+    planTabIndex: string,
+    statusTabIndex: string,
     fhirData?: FHIRData,
     patientSummary?: PatientSummary,
     screenings?: [ScreeningSummary],
@@ -50,9 +48,9 @@ export default class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            mainTabIndex: 0,
-            planTabIndex: 0,
-            statusTabIndex: 0,
+            mainTabIndex: "1",
+            planTabIndex: "5",
+            statusTabIndex: "9",
             fhirData: undefined,
         }
     }
@@ -102,66 +100,65 @@ export default class App extends React.Component<AppProps, AppState> {
                     <Route path="/error" component={ErrorPage} />
 
                     <Route path="/">
-                        <Tabs selectedIndex={this.state.mainTabIndex} onSelect={(index) => this.setState({ mainTabIndex: index })}>
-                            <TabList>
-                                <Tab>Home</Tab>
-                                <Tab>Care Plan</Tab>
-                                <Tab>Health Status</Tab>
-                                <Tab>Team</Tab>
+                        <TabContext value={this.state.mainTabIndex}>
+                            <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} centered>
+                                <Tab label="Home" value="1" />
+                                <Tab label="Care Plan" value="2" />
+                                <Tab label="Health Status" value="3" />
+                                <Tab label="Team" value="4" />
                             </TabList>
 
-                            <TabPanel>
+                            <TabPanel value="1">
                                 <Home {...this.state} />
                             </TabPanel>
-                            <TabPanel>
-                                <Tabs selectedIndex={this.state.planTabIndex} onSelect={(index) => this.setState({ planTabIndex: index })}>
-                                    <TabList>
-                                        <Tab>Goals</Tab>
-                                        <Tab>Concerns</Tab>
-                                        <Tab>Medications</Tab>
-                                        <Tab>Activities</Tab>
+                            <TabPanel value="2">
+                                <TabContext value={this.state.planTabIndex}>
+                                    <TabList onChange={(event, value) => this.setState({ planTabIndex: value })} centered>
+                                        <Tab label="Goals" value="5" />
+                                        <Tab label="Concerns" value="6" />
+                                        <Tab label="Medications" value="7" />
+                                        <Tab label="Activities" value="8" />
                                     </TabList>
-                                    <TabPanel>
+                                    <TabPanel value="5">
                                         <GoalList {...this.state} />
                                     </TabPanel>
-                                    <TabPanel>
+                                    <TabPanel value="6">
                                         <ConditionList {...this.state} />
                                     </TabPanel>
-                                    <TabPanel>
+                                    <TabPanel value="7">
                                         <MedicationList {...this.state} />
                                     </TabPanel>
-                                    <TabPanel>
+                                    <TabPanel value="8">
                                         <ServiceRequestList {...this.state} />
                                     </TabPanel>
-                                </Tabs>
+                                </TabContext>
                             </TabPanel>
-                            <TabPanel>
-                                <Tabs selectedIndex={this.state.statusTabIndex} onSelect={(index) => this.setState({ statusTabIndex: index })}>
-                                    <TabList>
-                                        <Tab>Tests</Tab>
-                                        <Tab>Vitals</Tab>
-                                        {/* <Tab>Assessment</Tab> */}
-                                        <Tab>Immunization</Tab>
+                            <TabPanel value="3">
+                                <TabContext value={this.state.statusTabIndex}>
+                                    <TabList onChange={(event, value) => this.setState({ statusTabIndex: value })} centered>
+                                        <Tab label="Tests" value="9" />
+                                        <Tab label="Vitals" value="10" />
+                                        <Tab label="Immunization" value="11" />
                                     </TabList>
-                                    <TabPanel>
+                                    <TabPanel value="9">
                                         <LabResultList {...this.state} />
                                     </TabPanel>
-                                    <TabPanel>
+                                    <TabPanel value="10">
                                         <VitalsList {...this.state} />
                                     </TabPanel>
                                     {/* <TabPanel>
                                     <h4 className="title">Assessment Results</h4>
                                     <p>Coming soon...</p>
                                 </TabPanel> */}
-                                    <TabPanel>
+                                    <TabPanel value="11">
                                         <ImmunizationList {...this.state} />
                                     </TabPanel>
-                                </Tabs>
+                                </TabContext>
                             </TabPanel>
-                            <TabPanel>
+                            <TabPanel value="4">
                                 <CareTeamList {...this.state} />
                             </TabPanel>
-                        </Tabs>
+                        </TabContext>
                     </Route>
                 </Switch>
 
