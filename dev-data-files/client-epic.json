@@ -1,0 +1,45 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "821ea3c1-011f-4f70-a8ae-299043b7e0be",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read",
+        "redirectUri": "http://localhost:8000/mycareplanner/index.html",
+        "serverUrl": "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
+        "tokenResponse": {
+            "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1cm46b2lkOmZoaXIiLCJjbGllbnRfaWQiOiI4MjFlYTNjMS0wMTFmLTRmNzAtYThhZS0yOTkwNDNiN2UwYmUiLCJlcGljLmVjaSI6InVybjplcGljOk9wZW4uRXBpYy1jdXJyZW50IiwiZXBpYy5tZXRhZGF0YSI6ImI3TDRkWGZXZERpcEhwd21xOTRCUFdpMG5fWWs3WmtKWkM1T3BOUHoyakY5cmZpb1pYVlpMTzhjZ3hNOE9fcGs0QTR1V0p2UkVpczA3cmJyZGZBUVRaQktKM3FmRTkzNGdzRDhQSTFJTTNaNjVqYURGSTBMSktxaFB6Y1gxSldyIiwiZXBpYy50b2tlbnR5cGUiOiJhY2Nlc3MiLCJleHAiOjE2NjYyODg0NzEsImlhdCI6MTY2NjI4NDg3MSwiaXNzIjoidXJuOm9pZDpmaGlyIiwianRpIjoiNjViZDA4NzMtNGY2MC00M2M4LTg3NGItMWU4ZjU0MjkyZDUxIiwibmJmIjoxNjY2Mjg0ODcxLCJzdWIiOiJlaWFWSm0yakFCVHJ1OU1SbnR2YW1iUTMifQ.Z8MpLZfRA2S_78T1oE7nI-aCtq-9kE2JplIRxhLQwt-oPA1k0AjmWSv7VXfQ1lnq7lUYGCBiU5X-ggGB6ajVUkL0qFsLG3Wly1KyCCLA3xWI29QRV3zMhWhowrUD0Sfc1yPRVzzwaVqqTFl2MxGr-gf3xZHO82ZUIX_dGh0UEGRYor2WeApGULhP9dXQDT4i_0mdCz_Eqa5ZyNCLDCtqOqQH0xJ4nhx52QI6KKZqLkA6mENoe96n9WOWGgbqM_RNYhr9JOkUSYdlAi21lJzlfspLMYvif7AlmrL_p_YHUdzAdUT5RL0fzSCDYGZ3akQa2UotolqQCIqeyD-vyc4g9A",
+            "token_type": "Bearer",
+            "expires_in": 3600,
+            "scope": "patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Encounter.read patient/Goal.read patient/Immunization.read patient/Location.read patient/Medication.read patient/MedicationRequest.read patient/Observation.read patient/Organization.read patient/Patient.read patient/Practitioner.read patient/PractitionerRole.read patient/Procedure.read patient/Provenance.read patient/RelatedPerson.Read fhirUser launch/patient openid",
+            "state": "ErSez9yhiKF0myUx",
+            "__epic.dstu2.patient": "Tw1NlvLjU9fJ3smxYc.DP2IYIruy10jgl8uyBEyuh4ykB",
+            "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRvVzlqTVVTTi81L0wzaXdhUUdkVG1ORHVodnAvSmNBWlZIL2NPSjZPckU9IiwidHlwIjoiSldUIn0.eyJhdWQiOiI4MjFlYTNjMS0wMTFmLTRmNzAtYThhZS0yOTkwNDNiN2UwYmUiLCJleHAiOjE2NjYyODUxNzEsImZoaXJVc2VyIjoiaHR0cHM6Ly9maGlyLmVwaWMuY29tL2ludGVyY29ubmVjdC1maGlyLW9hdXRoL2FwaS9GSElSL1I0L1BhdGllbnQvZTJTUFA1aHY3OU9VUGJ4LUhqcHJ6bUEzIiwiaWF0IjoxNjY2Mjg0ODcxLCJpc3MiOiJodHRwczovL2ZoaXIuZXBpYy5jb20vaW50ZXJjb25uZWN0LWZoaXItb2F1dGgvb2F1dGgyIiwic3ViIjoiZTJTUFA1aHY3OU9VUGJ4LUhqcHJ6bUEzIn0.WKEe_hTo4iSmrIwmAkr9jPXi6jpi1v-KH1S2aAslYKWfna59tw3t33kNN6-xrsKIW7mbNZTmdQAWO7uCTzBjW53f4k-VqR9jP-Voj9-NND-1wUGWeuCgTBOkTACBa7FcqLvsKgytK87-S04dfSGXlCXARBVI_ebY88Too0ZL04wCEVhqfV-yUlel5aEjqlFmDa5CX94ymUSyVwo8hNOxfeMzyMZ6_X6bk2ZfHqOBripcISLOP6uBrQ8H3Ty7Pz665mEhWxhkmdl-dlm6ejkbxpYnk2Y98XPu5-y_O0uBYQW--Dwu-dUBtOEMyxTB5gpqCouiwDiBhIj25V1pPO8pvw",
+            "patient": "e2SPP5hv79OUPbx-HjprzmA3"
+        },
+        "key": "ErSez9yhiKF0myUx",
+        "registrationUri": "",
+        "authorizeUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize",
+        "tokenUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
+        "expiresAt": 1666288471
+    },
+    "environment": {
+        "_url": "http://localhost:8000/mycareplanner/index.html",
+        "_storage": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": "e2SPP5hv79OUPbx-HjprzmA3"
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "fhirUser": "Patient/e2SPP5hv79OUPbx-HjprzmA3",
+        "id": "e2SPP5hv79OUPbx-HjprzmA3",
+        "resourceType": "Patient"
+    }
+}
