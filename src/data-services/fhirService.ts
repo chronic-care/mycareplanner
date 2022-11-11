@@ -1,23 +1,26 @@
 import FHIR from 'fhirclient';
 import { fhirclient } from 'fhirclient/lib/types';
-import { Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Observation,
-        Procedure, Immunization, MedicationRequest, ServiceRequest, Provenance, Reference } from './fhir-types/fhir-r4';
+import {
+  Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Observation,
+  Procedure, Immunization, MedicationRequest, ServiceRequest, Provenance, Reference
+} from './fhir-types/fhir-r4';
 import { FHIRData, hasScope } from './models/fhirResources';
 import { format } from 'date-fns';
 import Client from 'fhirclient/lib/Client';
 import { responseToJSON } from 'fhirclient/lib/lib';
+import localForage from 'localforage'
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
   const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
   return entries?.map((entry: fhirclient.JsonObject) => entry.resource as any)
-                .filter((resource: Resource) => resource.resourceType !== 'OperationOutcome');
+    .filter((resource: Resource) => resource.resourceType !== 'OperationOutcome');
 };
 
 // TODO full date argument does not work correctly in Logica?  Use only yyyy-MM for now.
 // export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM-dd')}`;
 export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM')}`;
 const today: Date = new Date()
-const oneDay = 24*3600*1000
+const oneDay = 24 * 3600 * 1000
 // const threeMonthsAgo = new Date(today.getTime() - (365/4 * oneDay))
 // const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
 // const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
@@ -64,7 +67,7 @@ const fhirOptions: fhirclient.FhirOptions = {
 };
 
 /// key = Resource.id  value = Provenance[]
-var provenanceMap = new Map<string,Provenance[]>()
+var provenanceMap = new Map<string, Provenance[]>()
 
 var provenance: Provenance[] = []
 
@@ -92,12 +95,12 @@ export async function getConditions(client: Client): Promise<Condition[]> {
   // workaround for Allscripts lack of support for both category and status args
   if (client.state.serverUrl.includes('allscripts.com')) {
     const conditionsPath = 'Condition?category=problem-list-item,health-concern' + provenanceSearch
-    resources = resources.concat( resourcesFrom(await client.patient.request(conditionsPath, fhirOptions) as fhirclient.JsonObject) )
+    resources = resources.concat(resourcesFrom(await client.patient.request(conditionsPath, fhirOptions) as fhirclient.JsonObject))
   }
   else {
     // Epic allows multiple category codes in one query only >= Aug 2021 release
-    resources = resources.concat( resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject) )
-    resources = resources.concat( resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject) )
+    resources = resources.concat(resourcesFrom(await client.patient.request(problemListPath, fhirOptions) as fhirclient.JsonObject))
+    resources = resources.concat(resourcesFrom(await client.patient.request(healthConcernPath, fhirOptions) as fhirclient.JsonObject))
   }
 
   const conditions = resources.filter((item: any) => item?.resourceType === 'Condition') as Condition[]
@@ -109,7 +112,7 @@ export async function getConditions(client: Client): Promise<Condition[]> {
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // Workaround for Cerner and Epic Sandbox that takes many minutes to request vital-signs, or times out completely
   if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4'
-      || client.state.serverUrl.includes('cerner.com')) {
+    || client.state.serverUrl.includes('cerner.com')) {
     return []
   }
 
@@ -126,26 +129,79 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   })
 
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
-  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as Observation[] )
-  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[0], fhirOptions) as fhirclient.JsonObject) as Observation[])
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[1], fhirOptions) as fhirclient.JsonObject) as Observation[])
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[2], fhirOptions) as fhirclient.JsonObject) as Observation[])
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[3], fhirOptions) as fhirclient.JsonObject) as Observation[])
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[4], fhirOptions) as fhirclient.JsonObject) as Observation[])
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[5], fhirOptions) as fhirclient.JsonObject) as Observation[] )
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[6], fhirOptions) as fhirclient.JsonObject) as Observation[] )
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[7], fhirOptions) as fhirclient.JsonObject) as Observation[] )
 
-  resources = resources.filter(v => v!== undefined)
+  resources = resources.filter(v => v !== undefined)
   const vitals = resources.filter((item: any) => item?.resourceType === 'Observation') as Observation[]
   recordProvenance(resources)
 
   return vitals
 }
 
+const saveFHIRAccessData = async (key: string, fhirClientState: fhirclient.ClientState): Promise<any> => {
+  if (fhirClientState) {
+    console.log('localForage.setItem(key, fhirClientState)', fhirClientState)
+    return await localForage.setItem(key, fhirClientState)
+  }
+}
+
+const isFHIRAccessData = async (key: string): Promise<boolean> => {
+  if (!localForage.getItem(key)) {
+    console.log('Key does NOT exist in localForage')
+    return false
+  }
+  console.log('Key exists in localForage')
+  return true
+}
+
+const getFHIRAccessData = async (key: string): Promise<unknown> => {
+  try {
+    const isData: boolean = await isFHIRAccessData(key)
+    if (!isData) {
+      return
+    }
+    return localForage.getItem(key)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 export const getFHIRData = async (): Promise<FHIRData> => {
   console.log('Starting OAuth2 authentication')
   const client = await FHIR.oauth2.ready();
   console.log('Finished OAuth2 authentication')
+
+  /* The follwing code is under development - this is just a very basic proof of concept */
+  /* START */
+  /* eventually we want to:
+   -store an array of state objects (vs just current state object),
+   and maybe even isolate specific props needed
+   -consider externalization of some of this
+   -support multiple logins using the data with the following logic:
+   1: If the saved token is still valid, used those token(s) to query all required patient data from each endpoint without new login
+   2: If tokens are expired, and we have a saved list of the user's selected endpoints,  prompt to log in to each (and save the new token)
+   3: After logging in and saving tokens, now iterate through the tokens to query all required data from its endpoint.
+   4: Display all data in our app from all data sources
+  */
+  // it's best practice to use a suffix to ensure a unique key so we don't load data for another website
+  const LF_ID = '-MCP'
+  const key = 'fhir-client-state' + LF_ID
+
+  await saveFHIRAccessData(key, client?.state).then(() => {
+    console.log('fhirClientState saved/promise returned')
+  }).catch((e) => console.log(e))
+
+  // This is just a test of acess and likely won't stay here...
+  const fhirClientStateFromLocalForage = await getFHIRAccessData(key)
+  console.log('fhirClientStateFromLocalForage', fhirClientStateFromLocalForage)
+  /* END */
 
   const clientScope = client?.state.tokenResponse?.scope
   const serverURL = client?.state.serverUrl
@@ -165,7 +221,7 @@ export const getFHIRData = async (): Promise<FHIRData> => {
    *  Allscripts does not return patient, so also try user if patient is missing.
    */
   // const patient: Patient = await client.patient.read() as Patient
-  const patient: Patient = client.patient.id !== null 
+  const patient: Patient = client.patient.id !== null
     ? await client.patient.read() as Patient
     : await client.user.read() as Patient
 
@@ -187,7 +243,7 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   console.time('FHIR queries')
 
-  var careTeamMembers = new Map<string,Practitioner>()
+  var careTeamMembers = new Map<string, Practitioner>()
 
   if (patientPCP?.id !== undefined) {
     careTeamMembers.set(patientPCP?.id!, patientPCP!)
@@ -227,59 +283,59 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   const conditions = (hasScope(clientScope, 'Condition.read')
     ? await getConditions(client)
     : undefined)
-  
+
   console.log('Procedure request: ' + new Date().toLocaleTimeString())
   const procedureData = (hasScope(clientScope, 'Procedure.read')
-    ? resourcesFrom(await client.patient.request(proceduresPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(proceduresPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
   recordProvenance(procedureData)
 
   console.log('DiagnosticReport request: ' + new Date().toLocaleTimeString())
   const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
-    ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const diagnosticReports = diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
   recordProvenance(diagnosticReportData)
 
   console.log('Immunization request: ' + new Date().toLocaleTimeString())
   const immunizationData = (hasScope(clientScope, 'Immunization.read')
-    ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const immunizations = immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
   recordProvenance(immunizationData)
 
   console.log('LabResult request: ' + new Date().toLocaleTimeString())
   const labResultData = (hasScope(clientScope, 'Observation.read')
-    ? resourcesFrom(await client.patient.request(labResultsPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(labResultsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const labResults = labResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(labResultData)
 
   console.log('MedicationRequest request: ' + new Date().toLocaleTimeString())
   const medicationRequestData = (hasScope(clientScope, 'MedicationRequest.read')
-    ? resourcesFrom(await client.patient.request(medicationRequestPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(medicationRequestPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
   recordProvenance(medicationRequestData)
 
   console.log('ServiceRequest request: ' + new Date().toLocaleTimeString())
   const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
-    ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const serviceRequests = serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
   recordProvenance(serviceRequestData)
 
   console.log('Social History request: ' + new Date().toLocaleTimeString())
   const socialHistoryData = (hasScope(clientScope, 'Observation.read')
-    ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject) 
+    ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const socialHistory = socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(socialHistoryData)
 
   // console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
   // const surveyResultData = (hasScope(clientScope, 'Observation.read')
-  //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject) 
+  //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject)
   //   : undefined)
   // const surveyResults = surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   // recordProvenance(surveyResultData)
@@ -287,7 +343,7 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   console.log('Vitals request: ' + new Date().toLocaleTimeString())
   const vitalSigns = (hasScope(clientScope, 'Observation.read')
-    // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject) 
+    // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject)
     ? await getVitalSigns(client)
     : undefined)
 
@@ -380,27 +436,27 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
 export function createResource(resource: Resource) {
   return FHIR.oauth2.ready()
-      .then((client: Client) => {
-          return client.create(resource as fhirclient.FHIR.Resource)
-      })
-      .then((response) => {
-          console.log('Created new resource: ' + responseToJSON)
-          return response
-      }).catch(error => {
-          console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
-          return
-      })
+    .then((client: Client) => {
+      return client.create(resource as fhirclient.FHIR.Resource)
+    })
+    .then((response) => {
+      console.log('Created new resource: ' + responseToJSON)
+      return response
+    }).catch(error => {
+      console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      return
+    })
 }
 
 export function updateResource(resource: Resource) {
   return FHIR.oauth2.ready()
-      .then((client: Client) => {
-          return client.update(resource as fhirclient.FHIR.Resource)
-      })
-      .then((response) => {
-          return response
-      }).catch(error => {
-          console.log('Cannot update resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
-          return
-      })
+    .then((client: Client) => {
+      return client.update(resource as fhirclient.FHIR.Resource)
+    })
+    .then((response) => {
+      return response
+    }).catch(error => {
+      console.log('Cannot update resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      return
+    })
 }
