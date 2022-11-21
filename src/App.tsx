@@ -109,10 +109,10 @@ export default class App extends React.Component<AppProps, AppState> {
                             <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                 <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
                                     <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{ "& .Mui-selected, .Mui-selected > svg": { color: "#FFFFFF !important", bgcolor: "#355CA8" } }}>
-                                        <Tab icon={<HomeIcon />} label="Home" value="1" wrapped />
-                                        <Tab icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
-                                        <Tab icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
-                                        <Tab icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                        <Tab sx={{ textTransform: 'none' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
+                                        <Tab sx={{ textTransform: 'none' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
+                                        <Tab sx={{ textTransform: 'none' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
+                                        <Tab sx={{ textTransform: 'none' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
                                     </TabList>
                                 </Paper>
 
