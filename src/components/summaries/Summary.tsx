@@ -28,8 +28,8 @@ const summaryTheme = createTheme({
             variant: "h6"
           },
           style: {
-            fontSize: 18,
-            fontWeight: "bold",
+            fontSize: "18px",
+            fontWeight: "500",
           },
         },
         {

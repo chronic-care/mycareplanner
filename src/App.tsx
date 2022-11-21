@@ -2,9 +2,14 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Tab, Tabs } from '@mui/material';
+import { Tab, Tabs, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
 import { Task } from './data-services/fhir-types/fhir-r4';
+
+import HomeIcon from '@mui/icons-material/Home';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import LineAxisIcon from '@mui/icons-material/LineAxis';
+import PeopleIcon from '@mui/icons-material/People';
 
 import Home from "./Home";
 import { FHIRData } from './data-services/models/fhirResources';
@@ -73,7 +78,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
         return (
             <div className="app">
-                <header className="app-header">
+                <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
                     <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
                     {patient === undefined ? '' : <p>&npsp;&npsp;{patient?.fullName}</p>}
@@ -101,63 +106,67 @@ export default class App extends React.Component<AppProps, AppState> {
 
                     <Route path="/">
                         <TabContext value={this.state.mainTabIndex}>
-                            <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} centered>
-                                <Tab label="Home" value="1" />
-                                <Tab label="Care Plan" value="2" />
-                                <Tab label="Health Status" value="3" />
-                                <Tab label="Team" value="4" />
-                            </TabList>
+                            <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
+                                <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
+                                    <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{ "& .Mui-selected, .Mui-selected > svg": { color: "#FFFFFF !important", bgcolor: "#355CA8" } }}>
+                                        <Tab icon={<HomeIcon />} label="Home" value="1" wrapped />
+                                        <Tab icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
+                                        <Tab icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
+                                        <Tab icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                    </TabList>
+                                </Paper>
 
-                            <TabPanel value="1">
-                                <Home {...this.state} />
-                            </TabPanel>
-                            <TabPanel value="2">
-                                <TabContext value={this.state.planTabIndex}>
-                                    <TabList onChange={(event, value) => this.setState({ planTabIndex: value })} centered>
-                                        <Tab label="Goals" value="5" />
-                                        <Tab label="Concerns" value="6" />
-                                        <Tab label="Medications" value="7" />
-                                        <Tab label="Activities" value="8" />
-                                    </TabList>
-                                    <TabPanel value="5">
-                                        <GoalList {...this.state} />
-                                    </TabPanel>
-                                    <TabPanel value="6">
-                                        <ConditionList {...this.state} />
-                                    </TabPanel>
-                                    <TabPanel value="7">
-                                        <MedicationList {...this.state} />
-                                    </TabPanel>
-                                    <TabPanel value="8">
-                                        <ServiceRequestList {...this.state} />
-                                    </TabPanel>
-                                </TabContext>
-                            </TabPanel>
-                            <TabPanel value="3">
-                                <TabContext value={this.state.statusTabIndex}>
-                                    <TabList onChange={(event, value) => this.setState({ statusTabIndex: value })} centered>
-                                        <Tab label="Tests" value="9" />
-                                        <Tab label="Vitals" value="10" />
-                                        <Tab label="Immunization" value="11" />
-                                    </TabList>
-                                    <TabPanel value="9">
-                                        <LabResultList {...this.state} />
-                                    </TabPanel>
-                                    <TabPanel value="10">
-                                        <VitalsList {...this.state} />
-                                    </TabPanel>
-                                    {/* <TabPanel>
-                                    <h4 className="title">Assessment Results</h4>
-                                    <p>Coming soon...</p>
-                                </TabPanel> */}
-                                    <TabPanel value="11">
-                                        <ImmunizationList {...this.state} />
-                                    </TabPanel>
-                                </TabContext>
-                            </TabPanel>
-                            <TabPanel value="4">
-                                <CareTeamList {...this.state} />
-                            </TabPanel>
+                                <TabPanel value="1" sx={{ padding: '0px 24px 100px' }}>
+                                    <Home {...this.state} />
+                                </TabPanel>
+                                <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
+                                    <TabContext value={this.state.planTabIndex}>
+                                        <TabList onChange={(event, value) => this.setState({ planTabIndex: value })} variant="fullWidth" centered>
+                                            <Tab label="Goals" value="5" wrapped />
+                                            <Tab label="Concerns" value="6" wrapped />
+                                            <Tab label="Medications" value="7" wrapped />
+                                            <Tab label="Activities" value="8" wrapped />
+                                        </TabList>
+                                        <TabPanel value="5">
+                                            <GoalList {...this.state} />
+                                        </TabPanel>
+                                        <TabPanel value="6">
+                                            <ConditionList {...this.state} />
+                                        </TabPanel>
+                                        <TabPanel value="7">
+                                            <MedicationList {...this.state} />
+                                        </TabPanel>
+                                        <TabPanel value="8">
+                                            <ServiceRequestList {...this.state} />
+                                        </TabPanel>
+                                    </TabContext>
+                                </TabPanel>
+                                <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
+                                    <TabContext value={this.state.statusTabIndex}>
+                                        <TabList onChange={(event, value) => this.setState({ statusTabIndex: value })} variant="fullWidth" centered>
+                                            <Tab label="Tests" value="9" wrapped />
+                                            <Tab label="Vitals" value="10" wrapped />
+                                            <Tab label="Immunization" value="11" wrapped />
+                                        </TabList>
+                                        <TabPanel value="9">
+                                            <LabResultList {...this.state} />
+                                        </TabPanel>
+                                        <TabPanel value="10">
+                                            <VitalsList {...this.state} />
+                                        </TabPanel>
+                                        {/* <TabPanel>
+                                            <h4 className="title">Assessment Results</h4>
+                                            <p>Coming soon...</p>
+                                        </TabPanel> */}
+                                        <TabPanel value="11">
+                                            <ImmunizationList {...this.state} />
+                                        </TabPanel>
+                                    </TabContext>
+                                </TabPanel>
+                                <TabPanel value="4" sx={{ padding: '10px 24px 100px' }}>
+                                    <CareTeamList {...this.state} />
+                                </TabPanel>
+                            </Box>
                         </TabContext>
                     </Route>
                 </Switch>

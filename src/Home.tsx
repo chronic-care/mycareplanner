@@ -35,7 +35,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     return (
       <div className="home-view">
         <div className="welcome">
-          <h4 className="title">Welcome to My Care Planner!</h4>
+          <h4 className="title" style={{ textAlign: 'center' }}>Welcome to My Care Planner!</h4>
           <p>My Care Planner is a tool to help you and your care team work together to keep you healthy. It is a completely personalized way to see what steps you’ve already taken and what else you can do to check for and prevent illnesses.</p>
 
           {(fhirData?.caregiverName === undefined) ? '' :
@@ -56,7 +56,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           </div>
           : <div>
 
-            <h5>My Tasks</h5>
+            <h5 style={{ marginTop: '20px' }}>My Tasks</h5>
 
             <Link to={{
               pathname: '/questionnaire',
@@ -88,7 +88,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 </ul>
             } */}
 
-            <h5>Preventive Care</h5>
+            <h5 style={{ paddingTop: '20px' }}>Preventive Care</h5>
             {(screenings !== undefined && screenings.length === 0)
               ? <p>You have no screenings due.</p>
               : <ul>
@@ -102,7 +102,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               </ul>
             }
 
-            <h5>Shared Health Records</h5>
+            <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
             <Link to={{ pathname: '/provider-login' }}>Retrieve records from other healthcare providers</Link>
             <br /><Link to={{ pathname: '/share-data' }}>Share your health data</Link>
             <br /><Link to={{ pathname: '/shared-data-summary' }}>Summary of shared health data</Link>

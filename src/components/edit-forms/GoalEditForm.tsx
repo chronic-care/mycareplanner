@@ -55,7 +55,7 @@ export default function GoalEditForm(formData?: EditFormData) {
 
     const descriptionCodeable = { text: description ?? 'No description provided' }
     const goalTargets = (dueDate !== undefined) ? [{ dueDate: dueDate?.toISOString() }] : undefined
-    
+
     var goal: Goal = {
       resourceType: 'Goal',
       lifecycleStatus: 'active',
@@ -69,7 +69,7 @@ export default function GoalEditForm(formData?: EditFormData) {
     console.log('New Goal: ' + JSON.stringify(goal))
 
     createResource(goal)
-    
+
     // update FHIRData shared state
 
     history.goBack()
@@ -81,17 +81,17 @@ export default function GoalEditForm(formData?: EditFormData) {
 
   return (
     <React.Fragment>
-    <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
+      <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ pt: 3, pr: 4, pl: 4, pb: '100%', bgcolor: '#F7F7F7', width: '100%' }}>
         <Typography variant="h5" gutterBottom>
-         Health Goal
+          Health Goal
         </Typography>
         <Grid container spacing={3}>
 
-        <Grid item xs={12}>
+          <Grid item xs={12}>
             <TextField
               value={description}
               onChange={(e) => {
-                  setDescription(e.target.value);
+                setDescription(e.target.value);
               }}
               required
               multiline
@@ -103,46 +103,46 @@ export default function GoalEditForm(formData?: EditFormData) {
               maxRows={5}
               variant="standard"
             />
-        </Grid>
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                      label="Start Date"
-                      value={startDate}
-                      onChange={(newValue) => {
-                          setStartDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
-                  />
-              </LocalizationProvider>
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                onChange={(newValue) => {
+                  setStartDate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
+              />
+            </LocalizationProvider>
           </Grid>
           <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                      label="Due Date"
-                      value={dueDate}
-                      onChange={(newValue) => {
-                          setDueDate(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
-                  />
-              </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Due Date"
+                value={dueDate}
+                onChange={(newValue) => {
+                  setDueDate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
+              />
+            </LocalizationProvider>
           </Grid>
-  
-        <Grid item xs={12} sm={6}>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Save
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Cancel
-          </Button>
-        </Grid>
 
-      </Grid>
-    </Box>
+          <Grid item xs={12} sm={6}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
+              Save
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
+              Cancel
+            </Button>
+          </Grid>
+
+        </Grid>
+      </Box>
     </React.Fragment>
   );
 }
