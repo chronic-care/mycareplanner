@@ -109,14 +109,14 @@ export default class App extends React.Component<AppProps, AppState> {
                             <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                 <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
                                     <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{ "& .Mui-selected, .Mui-selected > svg": { color: "#FFFFFF !important", bgcolor: "#355CA8" } }}>
-                                        <Tab sx={{ textTransform: 'none' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
-                                        <Tab sx={{ textTransform: 'none' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
-                                        <Tab sx={{ textTransform: 'none' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
-                                        <Tab sx={{ textTransform: 'none' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
                                     </TabList>
                                 </Paper>
 
-                                <TabPanel value="1" sx={{ padding: '0px 24px 100px' }}>
+                                <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
                                     <Home {...this.state} />
                                 </TabPanel>
                                 <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
@@ -127,16 +127,16 @@ export default class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Medications" value="7" wrapped />
                                             <Tab label="Activities" value="8" wrapped />
                                         </TabList>
-                                        <TabPanel value="5">
+                                        <TabPanel value="5" sx={{ padding: '0px 15px' }}>
                                             <GoalList {...this.state} />
                                         </TabPanel>
-                                        <TabPanel value="6">
+                                        <TabPanel value="6" sx={{ padding: '0px 15px' }}>
                                             <ConditionList {...this.state} />
                                         </TabPanel>
-                                        <TabPanel value="7">
+                                        <TabPanel value="7" sx={{ padding: '0px 15px' }}>
                                             <MedicationList {...this.state} />
                                         </TabPanel>
-                                        <TabPanel value="8">
+                                        <TabPanel value="8" sx={{ padding: '0px 15px' }}>
                                             <ServiceRequestList {...this.state} />
                                         </TabPanel>
                                     </TabContext>
@@ -148,10 +148,10 @@ export default class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Vitals" value="10" wrapped />
                                             <Tab label="Immunization" value="11" wrapped />
                                         </TabList>
-                                        <TabPanel value="9">
+                                        <TabPanel value="9" sx={{ padding: '0px 15px' }}>
                                             <LabResultList {...this.state} />
                                         </TabPanel>
-                                        <TabPanel value="10">
+                                        <TabPanel value="10" sx={{ padding: '0px 15px' }}>
                                             <VitalsList {...this.state} />
                                         </TabPanel>
                                         {/* <TabPanel>
@@ -163,7 +163,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                         </TabPanel>
                                     </TabContext>
                                 </TabPanel>
-                                <TabPanel value="4" sx={{ padding: '10px 24px 100px' }}>
+                                <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
                                     <CareTeamList {...this.state} />
                                 </TabPanel>
                             </Box>
