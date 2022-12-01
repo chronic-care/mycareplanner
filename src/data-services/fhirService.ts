@@ -1,14 +1,14 @@
-import FHIR from 'fhirclient';
-import { fhirclient } from 'fhirclient/lib/types';
+import FHIR from 'fhirclient'
+import { fhirclient } from 'fhirclient/lib/types'
 import {
-  Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Observation,
-  Procedure, Immunization, MedicationRequest, ServiceRequest, Provenance, Reference
-} from './fhir-types/fhir-r4';
-import { FHIRData, hasScope } from './models/fhirResources';
-import { format } from 'date-fns';
-import Client from 'fhirclient/lib/Client';
-import { responseToJSON } from 'fhirclient/lib/lib';
-import localForage from 'localforage'
+  Resource, Patient, Practitioner, RelatedPerson, CarePlan, CareTeam, Condition, DiagnosticReport, Goal,
+  Observation, Procedure, Immunization, MedicationRequest, ServiceRequest, Provenance, Reference
+} from './fhir-types/fhir-r4'
+import { FHIRData, hasScope } from './models/fhirResources'
+import { format } from 'date-fns'
+import Client from 'fhirclient/lib/Client'
+import { responseToJSON } from 'fhirclient/lib/lib'
+import { persistFHIRAccessData } from './persistenceService'
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
   const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
@@ -145,102 +145,8 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   return vitals
 }
 
-const saveFHIRAccessData = async (key: string, fhirClientState: fhirclient.ClientState): Promise<any> => {
-  if (fhirClientState) {
-    console.log('localForage.setItem(key, fhirClientState)', fhirClientState)
-    return await localForage.setItem(key, fhirClientState)
-  }
-}
-
-const isFHIRAccessData = async (key: string): Promise<boolean> => {
-  if (!localForage.getItem(key)) {
-    console.log('Key does NOT exist in localForage')
-    return false
-  }
-  console.log('Key exists in localForage')
-  return true
-}
-
-const getFHIRAccessData = async (key: string): Promise<unknown> => {
-  try {
-    const isData: boolean = await isFHIRAccessData(key)
-    if (!isData) {
-      return
-    }
-    return localForage.getItem(key)
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-export const getFHIRData = async (): Promise<FHIRData> => {
-  console.log('Starting OAuth2 authentication')
-  const client = await FHIR.oauth2.ready();
-  console.log('Finished OAuth2 authentication')
-
-  /* The follwing code is under development - this is just a very basic proof of concept */
-  /* START */
-  /* eventually we want to:
-   -store an array of state objects (vs just current state object),
-   and maybe even isolate specific props needed
-   -consider externalization of some of this
-   -support multiple logins using the data with the following logic:
-   1: If the saved token is still valid, used those token(s) to query all required patient data from each endpoint without new login
-   2: If tokens are expired, and we have a saved list of the user's selected endpoints,  prompt to log in to each (and save the new token)
-   3: After logging in and saving tokens, now iterate through the tokens to query all required data from its endpoint.
-   4: Display all data in our app from all data sources
-  */
-  // it's best practice to use a suffix to ensure a unique key so we don't load data for another website
-  const LF_ID = '-MCP'
-  const key = 'fhir-client-state' + LF_ID
-
-  await saveFHIRAccessData(key, client?.state).then(() => {
-    console.log('fhirClientState saved/promise returned')
-  }).catch((e) => console.log(e))
-
-  // This is just a test of acess and likely won't stay here...
-  const fhirClientStateFromLocalForage = await getFHIRAccessData(key)
-  console.log('fhirClientStateFromLocalForage', fhirClientStateFromLocalForage)
-  /* END */
-
-  const clientScope = client?.state.tokenResponse?.scope
-  const serverURL = client?.state.serverUrl
-
-  // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
-  const supportsInclude = !(
-    serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
-  )
-  console.log("Server URL = " + serverURL)
-  console.log("Supports _include = " + supportsInclude)
-
-  // console.log('OAuth2 scope authorized: ' + clientScope)
-  console.log('Client JSON: ')
-  console.log(console.log(JSON.stringify(client)))
-
-  /*
-   *  Allscripts does not return patient, so also try user if patient is missing.
-   */
-  // const patient: Patient = await client.patient.read() as Patient
-  const patient: Patient = client.patient.id !== null
-    ? await client.patient.read() as Patient
-    : await client.user.read() as Patient
-
-  // console.log('Patient resource:')
-  // console.log(JSON.stringify(patient))
-
-  var pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined
-
-  // workaround for Allscripts bug
-  pcpPath = pcpPath?.replace('R4/fhir', 'R4/open')
-  // console.log('PCP path = ' + pcpPath)
-
-  const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
-
-  const patientPath = 'Patient/' + client.getPatientId();
-  const fhirUserPath = client.getFhirUser();
-  const fhirUser: Practitioner | Patient | RelatedPerson | undefined = fhirUserPath ? await client.request(fhirUserPath) : undefined;
-  const caregiverName: String | undefined = (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
-
+const getFHIRQueries = async (client: Client, clientScope: string | undefined, supportsInclude: boolean,
+  patientPCP: Practitioner | undefined): Promise<FHIRData> => {
   console.time('FHIR queries')
 
   var careTeamMembers = new Map<string, Practitioner>()
@@ -264,7 +170,8 @@ export const getFHIRData = async (): Promise<FHIRData> => {
     ? resourcesFrom(await client.patient.request(_careTeamPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
-  const careTeamPractitioners = careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
+  const careTeamPractitioners =
+    careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
   careTeamPractitioners?.forEach((pract: Practitioner) => {
     if (pract.id !== undefined && careTeamMembers.get(pract.id!) === undefined) {
       careTeamMembers.set(pract.id!, pract)
@@ -295,14 +202,16 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
     ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
-  const diagnosticReports = diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
+  const diagnosticReports =
+    diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
   recordProvenance(diagnosticReportData)
 
   console.log('Immunization request: ' + new Date().toLocaleTimeString())
   const immunizationData = (hasScope(clientScope, 'Immunization.read')
     ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
-  const immunizations = immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
+  const immunizations =
+    immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
   recordProvenance(immunizationData)
 
   console.log('LabResult request: ' + new Date().toLocaleTimeString())
@@ -316,28 +225,32 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   const medicationRequestData = (hasScope(clientScope, 'MedicationRequest.read')
     ? resourcesFrom(await client.patient.request(medicationRequestPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
-  const medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
+  const medications =
+    medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
   recordProvenance(medicationRequestData)
 
   console.log('ServiceRequest request: ' + new Date().toLocaleTimeString())
   const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
     ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
-  const serviceRequests = serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
+  const serviceRequests =
+    serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
   recordProvenance(serviceRequestData)
 
   console.log('Social History request: ' + new Date().toLocaleTimeString())
   const socialHistoryData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
-  const socialHistory = socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  const socialHistory =
+    socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(socialHistoryData)
 
   // console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
   // const surveyResultData = (hasScope(clientScope, 'Observation.read')
   //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject)
   //   : undefined)
-  // const surveyResults = surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  // const surveyResults =
+  //  surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   // recordProvenance(surveyResultData)
   const surveyResults = undefined
 
@@ -349,6 +262,7 @@ export const getFHIRData = async (): Promise<FHIRData> => {
 
   console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
   console.timeEnd('FHIR queries')
+
 
   console.log("Provenance resources: " + provenance?.length ?? 0)
   // provenance?.forEach((resource) => {
@@ -410,11 +324,6 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   */
 
   return {
-    clientScope,
-    fhirUser,
-    caregiverName,
-    patient,
-    patientPCP,
     carePlans,
     careTeams,
     careTeamMembers,
@@ -432,6 +341,82 @@ export const getFHIRData = async (): Promise<FHIRData> => {
     provenanceMap,
     provenance,
   }
+}
+
+const getFHIRResources = async (client: Client, clientScope: string | undefined,
+  supportsInclude: boolean): Promise<FHIRData> => {
+  /*
+   *  Allscripts does not return patient, so also try user if patient is missing.
+   */
+  // const patient: Patient = await client.patient.read() as Patient
+  const patient: Patient = client.patient.id !== null
+    ? await client.patient.read() as Patient
+    : await client.user.read() as Patient
+
+  // console.log('Patient resource:')
+  // console.log(JSON.stringify(patient))
+
+  var pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined
+
+  // workaround for Allscripts bug
+  pcpPath = pcpPath?.replace('R4/fhir', 'R4/open')
+  // console.log('PCP path = ' + pcpPath)
+
+  const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
+
+  const patientPath = 'Patient/' + client.getPatientId();
+  const fhirUserPath = client.getFhirUser();
+  const fhirUser: Practitioner | Patient | RelatedPerson | undefined =
+    fhirUserPath ? await client.request(fhirUserPath) : undefined;
+  const caregiverName: String | undefined =
+    (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
+
+
+  let fhirQueries = {} // empty object for speed of development/testing purposes, remains empty if env var is false
+  const getFhirQuereiesEnvVar = process.env.REACT_APP_GET_FHIR_QUERIES
+  console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQuereiesEnvVar)
+  if (getFhirQuereiesEnvVar === undefined || getFhirQuereiesEnvVar === 'true') {
+    // we allow undefined or true as we want the default to always be to load the queries
+    fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP)
+  }
+
+  return {
+    clientScope,
+    fhirUser,
+    caregiverName,
+    patient,
+    patientPCP,
+    ...fhirQueries
+  }
+}
+
+export const getFHIRData = async (): Promise<FHIRData> => {
+  console.log('Starting OAuth2 authentication')
+  const client = await FHIR.oauth2.ready();
+  console.log('Finished OAuth2 authentication')
+
+  const clientState: fhirclient.ClientState = client?.state
+  if (clientState) {
+    await persistFHIRAccessData(clientState)
+  } else {
+    console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
+  }
+
+  const clientScope = client?.state.tokenResponse?.scope
+  const serverURL = client?.state.serverUrl
+
+  // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
+  const supportsInclude = !(
+    serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
+  )
+  console.log("Server URL = " + serverURL)
+  console.log("Supports _include = " + supportsInclude)
+
+  // console.log('OAuth2 scope authorized: ' + clientScope)
+  console.log('Client JSON: ')
+  console.log(console.log(JSON.stringify(client)))
+
+  return await getFHIRResources(client, clientScope, supportsInclude)
 }
 
 export function createResource(resource: Resource) {
