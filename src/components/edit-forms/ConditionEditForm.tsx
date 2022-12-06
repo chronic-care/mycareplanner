@@ -36,23 +36,23 @@ export default function ConditionEditForm(formData?: EditFormData) {
   } : undefined
 
   const clinicalStatus = {
-      coding: [
-        {
-          system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
-          code: 'active'
-        }
-      ],
-      text: 'Active'
-    }
+    coding: [
+      {
+        system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
+        code: 'active'
+      }
+    ],
+    text: 'Active'
+  }
   const verificationStatus = {
-      coding: [
-        {
-          system: 'http://terminology.hl7.org/CodeSystem/condition-ver-status',
-          code: 'confirmed'
-        }
-      ],
-      text: 'Confirmed'
-    }
+    coding: [
+      {
+        system: 'http://terminology.hl7.org/CodeSystem/condition-ver-status',
+        code: 'confirmed'
+      }
+    ],
+    text: 'Confirmed'
+  }
   const healthConcernCategory = [
     {
       coding: [
@@ -100,17 +100,17 @@ export default function ConditionEditForm(formData?: EditFormData) {
 
   return (
     <React.Fragment>
-    <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
+      <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ pt: 3, pr: 4, pl: 4, pb: '100%', bgcolor: '#F7F7F7', width: '100%' }}>
         <Typography variant="h5" gutterBottom>
           Health Concern
         </Typography>
         <Grid container spacing={3}>
 
-        <Grid item xs={12}>
+          <Grid item xs={12}>
             <TextField
               value={description}
               onChange={(e) => {
-                  setDescription(e.target.value);
+                setDescription(e.target.value);
               }}
               required
               multiline
@@ -122,34 +122,34 @@ export default function ConditionEditForm(formData?: EditFormData) {
               maxRows={5}
               variant="standard"
             />
-        </Grid>
+          </Grid>
 
-        <Grid item xs={12}>
+          <Grid item xs={12}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                    label="When did it start?"
-                    value={onsetDate}
-                    onChange={(newValue) => {
-                        setStartDate(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
-                />
+              <DatePicker
+                label="When did it start?"
+                value={onsetDate}
+                onChange={(newValue) => {
+                  setStartDate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} fullWidth variant="standard" />}
+              />
             </LocalizationProvider>
-        </Grid>
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Save
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Cancel
-          </Button>
-        </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
+              Save
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
+              Cancel
+            </Button>
+          </Grid>
 
-      </Grid>
-    </Box>
+        </Grid>
+      </Box>
     </React.Fragment>
   );
 }
