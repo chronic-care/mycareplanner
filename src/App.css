@@ -6,7 +6,9 @@ html {
     --color-light-text: 255, 255, 255;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-family: 'Times New Roman', Times, serif;
 }
 
@@ -19,26 +21,29 @@ h3 {
         display: flex;
         justify-content: center;
     }
+
     .app {
         max-width: 500px;
+        border: #E1E2EC 1px solid;
     }
 }
 
 .app {
     text-align: center;
 }
+
 /* Ipad specific media queries */
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .app {
-      overflow: scroll;
-      -webkit-overflow-scrolling:touch;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
     .app {
-      overflow: scroll;
-      -webkit-overflow-scrolling:touch;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -58,20 +63,23 @@ h3 {
     background-color: rgba(var(--color-light-text), 1);
     display: flex;
     /* flex-direction: column; */
-    align-items:flex-end;
+    align-items: flex-end;
     justify-content: flex-start;
     font-size: calc(10px + 2vmin);
     color: rgba(var(--color-light-text), 1);
     height: 60px;
+    border-bottom: #E1E2EC 1px solid;
 }
+
 .app-header .mypain-header-logo {
     height: 100%;
 }
+
 .app-header p {
     margin: 0;
     margin-left: 5px;
     font-size: smaller;
-    color: var(--color-light-text)
+    color: var(--color-light-text);
 }
 
 .continue-button {
@@ -89,7 +97,8 @@ h3 {
     justify-content: center;
 }
 
-.app .options, .app .options button {
+.app .options,
+.app .options button {
     margin: 5px;
 }
 
