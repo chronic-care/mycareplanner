@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Tab, Tabs, Box, Paper } from '@mui/material';
+import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
 import { Task } from './data-services/fhir-types/fhir-r4';
 
