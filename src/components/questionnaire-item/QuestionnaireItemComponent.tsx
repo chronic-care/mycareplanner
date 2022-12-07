@@ -11,6 +11,7 @@ import YouTube from 'react-youtube';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
 import { isNullOrUndefined } from 'util';
+import Grid from '@mui/material/Grid'
 
 interface QuestionnaireItemState {
   showReview: boolean,
@@ -125,10 +126,10 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
             opts={vidOptions}
             onEnd={recordWebsiteVisit}
           />
-        // website link
+          // website link
         } else if (domNode?.next?.attribs?.id === 'website' && domNode?.next?.attribs?.value !== undefined) {
           let website = domNode?.next?.attribs?.value
-          return <a id="replace" className="d-flex justify-content-center mt-1" target="_blank" 
+          return <a id="replace" className="d-flex justify-content-center mt-1" target="_blank"
             rel="noopener noreferrer" href={website} ><button onClick={recordWebsiteVisit} className="btn btn-outline-secondary">Visit Web Site</button></a>
         }
       }
@@ -149,23 +150,23 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                   onClick={(event: any) => this.handlePreviousQuestionScroll(this.props.QuestionnaireItem.linkId)} />
               </Button>
             )}
-          { this.props.QuestionnaireItem.prefix !== undefined ? <div className="prefix-text">
+          {this.props.QuestionnaireItem.prefix !== undefined ? <div className="prefix-text">
             <h3>{this.props.QuestionnaireItem.prefix}</h3>
-          </div> : <div/> }
+          </div> : <div />}
           {/* <div className="progress-circle">
             <CircularProgressbar value={percentage(this.props.QuestionnaireItem.linkId, this.props.length)} text={percentage(this.props.QuestionnaireItem.linkId, this.props.length) + '%'} />
           </div> */}
         </div>
 
         {/* For groups, show item text as H4 header */}
-        { this.props.QuestionnaireItem.type === "group" ? <div className="description-text">
+        {this.props.QuestionnaireItem.type === "group" ? <div className="description-text">
           <h4> {parser(text, options)}</h4>
-        </div> : <div/> }
+        </div> : <div />}
 
         {/* For display items, modify the text to show YouTube videos or embedded images, if included in the question HTML text. */}
-        { this.props.QuestionnaireItem.type === "display" ? <div className="description-text">
+        {this.props.QuestionnaireItem.type === "display" ? <div className="description-text">
           {parser(text, options)}
-        </div> : <div/> }
+        </div> : <div />}
 
         <div>
           {
@@ -175,8 +176,8 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                 <p>&nbsp;</p>
                 <div className="radio-button">
                   <input type="radio" name={this.props.QuestionnaireItem.linkId} onChange={() => {
-                            this.processResponse(this.props.QuestionnaireItem, JSON.stringify({ valueBoolean: true }))
-                          }} />
+                    this.processResponse(this.props.QuestionnaireItem, JSON.stringify({ valueBoolean: true }))
+                  }} />
                   <label htmlFor={this.props.QuestionnaireItem.linkId}> Yes</label>
                 </div>
                 <div className="radio-button">
@@ -191,7 +192,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                   <div className="question-group">
                     <p className="question-text">{this.props.QuestionnaireItem.text}</p>
                     <input type="number" onChange={(event) => this.props.onChange(this.props.QuestionnaireItem, [{ valueQuantity: { value: parseFloat(event.target.value) } }])} />
-                    </div>
+                  </div>
                   : this.props.QuestionnaireItem.type === "group" ?
                     <div className="open-choice-type">
                       {this.populateGroupType(this.props)}
@@ -312,57 +313,66 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     }
 
     return (
-    <div>
-    {
-      groupItem.item?.map((nestedItem: QuestionnaireItem) => {
-    return (
-      <div key={JSON.stringify(nestedItem)}>
-      {
-        nestedItem.type === "boolean" ?
-          <div className="boolean-type">
-            <p className="question-text">{nestedItem.text}</p>
-            <p>&nbsp;&nbsp;</p>
-            <div className="radio-button">
-              <input type="radio" name={nestedItem.linkId} onChange={(event) => {
-                    this.processResponse(nestedItem, JSON.stringify({ valueBoolean: true }))}} />
-              <label htmlFor={nestedItem.linkId}> Yes</label>
-            </div>
-            <div className="radio-button">
-              <input type="radio" name={nestedItem.linkId} onChange={(event) => {
-                    this.processResponse(nestedItem, JSON.stringify({ valueBoolean: false }))}} />
-              <label htmlFor={nestedItem.linkId}> No</label>
-            </div>
-          </div>
-          : nestedItem.type === "choice" ?
-            <div className="choice-type">
-                 { this.populateChoice(nestedItem) }
-            </div>
-          : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
-            <div className="question-group">
-              <p className="question-text">{nestedItem.text}</p>
-              <input type="number" 
-                    onChange={(event) => {
-                      this.processResponse(nestedItem,  JSON.stringify({ valueQuantity: { value: parseFloat(event.target.value) }}))
-                    }} />
+      <div>
+        {
+          groupItem.item?.map((nestedItem: QuestionnaireItem) => {
+            return (
+              <div key={JSON.stringify(nestedItem)}>
+                {
+                  nestedItem.type === "boolean" ?
+                    <div className="boolean-type">
+                      <Grid container spacing={1}>
+                        <Grid item xs={8}>
+                          <p className="question-text">{nestedItem.text}</p>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <div className="radio-button">
+                            <input type="radio" name={nestedItem.linkId} onChange={(event) => {
+                              this.processResponse(nestedItem, JSON.stringify({ valueBoolean: true }))
+                            }} />
+                            <label htmlFor={nestedItem.linkId}> Yes</label>
+                          </div>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <div className="radio-button">
+                            <input type="radio" name={nestedItem.linkId} onChange={(event) => {
+                              this.processResponse(nestedItem, JSON.stringify({ valueBoolean: false }))
+                            }} />
+                            <label htmlFor={nestedItem.linkId}> No</label>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </div>
+                    : nestedItem.type === "choice" ?
+                      <div className="choice-type">
+                        {this.populateChoice(nestedItem)}
+                      </div>
+                      : (nestedItem.type === "quantity" || nestedItem.type === "decimal") ?
+                        <div className="question-group">
+                          <p className="question-text">{nestedItem.text}</p>
+                          <input type="number"
+                            onChange={(event) => {
+                              this.processResponse(nestedItem, JSON.stringify({ valueQuantity: { value: parseFloat(event.target.value) } }))
+                            }} />
+                        </div>
+                        : (nestedItem.type === "text" || nestedItem.type === "string") ?
+                          <div className="question-group">
+                            <p className="question-text">{nestedItem.text}</p>
+                            <textarea placeholder="Type your answer here......"
+                              onChange={(event) => {
+                                this.processResponse(nestedItem, JSON.stringify({ valueString: event.target.value }))
+                              }}
+                            />
+                          </div>
+                          : <div></div>
+                }
               </div>
-          : (nestedItem.type === "text" || nestedItem.type === "string") ?
-            <div className="question-group">
-              <p className="question-text">{nestedItem.text}</p>
-              <textarea placeholder="Type your answer here......"
-                onChange={(event) => {
-                  this.processResponse(nestedItem, JSON.stringify({ valueString: event.target.value }))
-                }}
-              />
-            </div>
-          : <div></div>
-      }
-    </div>
+            )
+          })
+        }
+      </div>
     )
-    })
-  }
-  </div>
-      )
-    
+
     // if (props.QuestionnaireItem.code![0].code === 'pain-location' || props.QuestionnaireItem.code![0].code === 'about-my-treatments') {
     //   return (
     //     <div>
@@ -376,20 +386,20 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     //     </div>
     //   );
     // } else {
-      // return (
-      //   <div>
-      //     {
-      //       props.QuestionnaireItem.item?.map((item: QuestionnaireItemAnswerOption) => {
-      //         return (
-      //           <ChoiceButton parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceButton>
-      //         )
-      //       })
+    // return (
+    //   <div>
+    //     {
+    //       props.QuestionnaireItem.item?.map((item: QuestionnaireItemAnswerOption) => {
+    //         return (
+    //           <ChoiceButton parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceButton>
+    //         )
+    //       })
 
-      //     }
-      //   </div>
-      // )
+    //     }
+    //   </div>
+    // )
     // }
-  // }
+    // }
 
-}
+  }
 }

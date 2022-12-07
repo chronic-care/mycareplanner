@@ -3,7 +3,7 @@
     border: 1px solid #000000;
     padding: 10px;
     margin: 3px;
-    /* -webkit-overflow-scrolling:touch; 
+    /* -webkit-overflow-scrolling:touch;
     overflow: scroll; */
 }
 
@@ -18,8 +18,8 @@
 .next-button {
     width: 40%;
     margin: auto;
-    display:flex; 
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     color: #ffffff !important;
     font-weight: bold;
 }
@@ -152,6 +152,7 @@ textarea {
     align-items: baseline;
     justify-content: space-between;
 }
+
 .progress-circle {
     width: 50px;
 }
@@ -161,7 +162,9 @@ textarea {
     text-align: left;
     max-width: 450px;
 }
-.prefix-text p, .description-text p {
+
+.prefix-text p,
+.description-text p {
     font-size: larger !important;
 }
 
@@ -173,19 +176,19 @@ textarea {
 }
 
 /* Ipad specific media queries */
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
     .questionnaire-item {
-      height: 1024px;
-      overflow: scroll;
-      -webkit-overflow-scrolling:touch; 
+        height: 1024px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
     .questionnaire-item {
-      height: 768px;
-      overflow: scroll;
-      -webkit-overflow-scrolling:touch; 
+        height: 768px;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -206,4 +209,6 @@ div.question-group {
 p.question-text {
     margin-bottom: .5rem;
     font-weight: bold;
+    /* may want to increase padding-right up to 15px max */
+    padding-right: 10px;
 }
