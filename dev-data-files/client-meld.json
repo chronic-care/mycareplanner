@@ -1,0 +1,43 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "2dbe1620-7232-4ab7-a5e5-4ee85112a74e",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write",
+        "redirectUri": "http://localhost:8000/mycareplanner/index.html",
+        "serverUrl": "https://gw.interop.community/CarePlanning/data",
+        "tokenResponse": {
+            "access_token": "eyJqa3UiOiJodHRwczpcL1wvaW9sMmF1dGguaW50ZXJvcC5jb21tdW5pdHlqd2siLCJraWQiOiJyc2ExIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJhdWQiOiIyZGJlMTYyMC03MjMyLTRhYjctYTVlNS00ZWU4NTExMmE3NGUiLCJpc3MiOiJodHRwczpcL1wvaW9sMmF1dGguaW50ZXJvcC5jb21tdW5pdHkiLCJleHAiOjE2NjYyODgxOTksImlhdCI6MTY2NjI4NDU5OSwianRpIjoiOWU5YTdkOGQtY2UwZS00NDBjLWIwMGMtZjg2M2JhYmE2ODQ4In0.FM8AuQMqCUAhZAmtI2n0ShtQ08AAkJik3OHxPp0WC4ZIr3Lg1CKum2V3dCm-zuSmTTW1IduhBxIBJOBRRl9T-zGra1Vd0hyzVlQN-umkY_yGXbmkrSqFxd23UYNiTD1sDWlWa5Op0IwlSSGo_FRGi_vM1n-p42Zg8WwBO3rjnQ-HYKSdzz8RVijanQ5t3UhRPY7vpjQnZb78PXk4Q3BIQ6sroA8SlksEJtRAd6At_Ipf8Aj73gvTGHILL4n_UdcP08HFPmsClfqFeMpAYEtEVjlrYGZKswcnFdX24DMWmopipSrgwRtlTi_ARdP264LViUGgUg3V6oi9HZoTQ_vhJA",
+            "token_type": "Bearer",
+            "expires_in": 3599,
+            "scope": "patient/Goal.write patient/CareTeam.read patient/Practitioner.read launch/patient openid patient/Questionnaire.read patient/Goal.read patient/Immunization.read launch patient/ServiceRequest.read fhirUser patient/Procedure.read patient/RelatedPerson.read patient/MedicationRequest.read patient/Task.read patient/Condition.write patient/DiagnosticReport.read patient/Patient.read patient/Condition.read patient/MedicationRequest.write patient/QuestionnaireResponse.write patient/Observation.read patient/CarePlan.read",
+            "patient": "mcc-pat-pnoelle",
+            "id_token": "eyJraWQiOiJyc2ExIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJwbm9lbGxlQENhcmVQbGFubmluZyIsImF1ZCI6IjJkYmUxNjIwLTcyMzItNGFiNy1hNWU1LTRlZTg1MTEyYTc0ZSIsImRpc3BsYXlOYW1lIjoiUGF0cmljaWEgTm9lbGxlIiwicHJvZmlsZSI6IlBhdGllbnRcL21jYy1wYXQtcG5vZWxsZSIsImtpZCI6InJzYTEiLCJpc3MiOiJodHRwczpcL1wvaW9sMmF1dGguaW50ZXJvcC5jb21tdW5pdHkiLCJleHAiOjE2NjYyODgxOTksImZoaXJVc2VyIjoiUGF0aWVudFwvbWNjLXBhdC1wbm9lbGxlIiwiaWF0IjoxNjY2Mjg0NTk5LCJlbWFpbCI6InBub2VsbGVAQ2FyZVBsYW5uaW5nIn0.TTBplL-0rAN1RHfZwp_8eK3otZ4AUQ6hYCk2BczOQfaQLr95Lv0cZ4NdZkKRK-ZNdmZB-OkxySMkgXBXIERufoQpMtEH-qv3taPBQ04Q3DdPH_1N42OjaOTsDYLqUGZiZOWN_3W-RTq5o8dki39XlOiAOwnHIQ_vkHR5eOCq6Jb18R4vvG9IqPUpDwr-crVhNXn6qRgRk8oEKJMC-4hyqy8NIjPZzQ3hyi4xmIfyObVayX9pT3XGNMFsM_BK7Vbzqu4S1mHKdNQykwcUgYuKcVoaUZG11_7x81gWm0H0L_CU0K82Xs0CwNBqmB6XxlUifajN2eI-GIuLh-OHP4LP4Q"
+        },
+        "key": "IVEJWYt7bjDbi6AG",
+        "registrationUri": "https://iol2auth.interop.community/register",
+        "authorizeUri": "https://iol2auth.interop.community/authorize",
+        "tokenUri": "https://iol2auth.interop.community/token",
+        "expiresAt": 1666288198
+    },
+    "environment": {
+        "_url": "http://localhost:8000/mycareplanner/index.html",
+        "_storage": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": "mcc-pat-pnoelle"
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "fhirUser": "Patient/mcc-pat-pnoelle",
+        "id": "mcc-pat-pnoelle",
+        "resourceType": "Patient"
+    }
+}
