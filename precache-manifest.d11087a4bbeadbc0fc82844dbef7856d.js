@@ -28,8 +28,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/mycareplanner/static/js/5.e27ee629.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "51dcbe6d7f83be38622c",
-    "url": "/mycareplanner/static/js/launch.6f92b97d.chunk.js"
+    "revision": "ccf5f8d3560c4efc1e08",
+    "url": "/mycareplanner/static/js/launch.c94f35be.chunk.js"
   },
   {
     "revision": "d33249a6d26e6e9a44c4",
