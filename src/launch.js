@@ -1,14 +1,20 @@
 import FHIR from 'fhirclient';
 
-const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read"
+const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read";
+
+// const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read";
+
+const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/*.read";
 
 const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
 
 const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read";
 
-const cernerScopeUSCDI = "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
+const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
 
-const cernerScopePilot = "launch/patient openid fhirUser online_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
+const cernerScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
+
+const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
 
 FHIR.oauth2.authorize([
     {
@@ -47,39 +53,11 @@ FHIR.oauth2.authorize([
         scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
     },
     {
-        // Gravity Project sandbox
-        issMatch: /\bapi.logicahealth.org\/GravitySandboxNew\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_gravity,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
-    },
-    {
         // Logica sandbox
         issMatch: /\blogicahealth\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_logica,
         scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
-    },
-    {
-        // Meld MPC sandbox
-        issMatch: /\bgw.interop.community\/mpc\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_mpc,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write"
-    },
-    {
-        // Meld MyWholeHealth sandbox
-        issMatch: /\bgw.interop.community\/MyWholeHealth\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_mywholehealth,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
-    },
-    {
-        // ACF ODH sandbox
-        issMatch: /\bdev-fhirproxy.myodh.org\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_acf_odh,
-        scope: "openid offline_access launch launch/patient fhirUser patient/*.read"
     },
     {
         // Allscripts sandbox
@@ -96,6 +74,13 @@ FHIR.oauth2.authorize([
         scope: allscriptsScope
     },
     {
+        // Athena Practice sandbox
+        issMatch: "https://ap22sandbox.fhirapi.athenahealth.com/demoAPIServer/fhir/r4",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_athena_practice_sandbox,
+        scope: athenaScopePilot
+    },
+    {
         // Cerner sandbox
         issMatch: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
         redirectUri: "./index.html",
@@ -104,31 +89,43 @@ FHIR.oauth2.authorize([
     },
     {
         // Cerner production client for USCDI patient app
-        issMatch: "https://fhir-myrecord.cerner.com/r4",
+        issMatch: /\bfhir-myrecord.cerner.com\/r4\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_cerner,
         scope: cernerScopeUSCDI
+    },
+    {
+        // VA sandbox
+        issMatch: "https://sandbox-api.va.gov/services/fhir/v0/r4",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_va,
+        scope: vaScope,
+        pkceMode: "unsafeV1"
+        // "unsafeV1" - Use against Smart v1 servers. Smart v1 does not define conformance, so validate your server supports PKCE before using this setting
     },
     {
         // Epic sandbox
         issMatch: "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
-        scope: epicPilotScope
+        scope: epicPilotScope,
+        pkceMode: "unsafeV1"
     },
     {
         // Production Epic instance, if the ISS contains the word "epic"
         issMatch: /\bepic\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope
+        scope: epicScope,
+        pkceMode: "unsafeV1"
     },
     {
         // For any other enpoints, try using Epic (not all contain string 'epic')
         issMatch: /\bR4\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope
+        scope: epicScope,
+        pkceMode: "unsafeV1"
     }
 
     /*
