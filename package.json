@@ -27,7 +27,7 @@
         "cql-exec-fhir": "^2.0.0",
         "cql-execution": "^2.3.0",
         "date-fns": "^2.19.0",
-        "fhirclient": "^2.3.11",
+        "fhirclient": "^2.5.2",
         "html-react-parser": "^0.14.1",
         "immer": "9.0.6",
         "localforage": "^1.10.0",
