@@ -67,7 +67,7 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   const conditionName: SummaryRowItem = {
     isHeader: true,
     twoColumns: false,
-    data1: <><b>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</b></>,
+    data1: <>{cond.CommonName ?? cond.ConceptName ?? 'Missing Condition Name'}</>,
     data2: '',
   }
   rows.push(conditionName)

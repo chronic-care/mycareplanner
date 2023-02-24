@@ -1,0 +1,48 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "0oakxgmaatqRcyW9x2p7",
+        "scope": "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read",
+        "redirectUri": "https://chronic-care.github.io/mycareplanner/index.html",
+        "serverUrl": "https://sandbox-api.va.gov/services/fhir/v0/r4",
+        "tokenResponse": {
+            "access_token": "eyJraWQiOiJMRW1UWFozVlpUR28tTXhyXy1TUW0wY1JKRkwwbHk3OTRRU1BIQmpJdk1BIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULkE4VlFkN3RHT2VrQk5ERUhoMGJvVExaUF9TbXdYTUpucHV1VTR2RnBwZlkub2FyMXk3YjB2Z0JaeWRRMUkycDciLCJpc3MiOiJodHRwczovL2RlcHR2YS1ldmFsLm9rdGEuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTY3NjY3NDIzMywiZXhwIjoxNjc2Njc3ODMzLCJjaWQiOiIwb2FreGdtYWF0cVJjeVc5eDJwNyIsInVpZCI6IjAwdTM5ZGJ3YjZIbVRNOGQ1MnA3Iiwic2NwIjpbIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIiwicGF0aWVudC9JbW11bml6YXRpb24ucmVhZCIsInBhdGllbnQvUGF0aWVudC5yZWFkIiwibGF1bmNoL3BhdGllbnQiLCJwYXRpZW50L1ByYWN0aXRpb25lci5yZWFkIiwicHJvZmlsZSIsInBhdGllbnQvTWVkaWNhdGlvbi5yZWFkIiwicGF0aWVudC9Db25kaXRpb24ucmVhZCIsInBhdGllbnQvT2JzZXJ2YXRpb24ucmVhZCIsInBhdGllbnQvTWVkaWNhdGlvblJlcXVlc3QucmVhZCJdLCJhdXRoX3RpbWUiOjE2NzY2NzQyMTksInN1YiI6ImUzNGEzYzhlNmQxYzQ0Mzk4NTU4M2JmZTE1ZGNjZjkyIn0.5S36dgh7z7VQS3Mcs_HwWNqvJzZFvU8ylR18R_cM4BTK6f8zWbgDAYkXVPoP8NpFyHKrZFbx7AjgDTlhfe7hj9F_Os0Q_P2SsrVw8tEq0AJZUmLlwnEf2UKoCJfaATWIo5f9ZzVsWLRU4tZa6oOn3oIGnBgB0-sZjnVx-1I5A1VT3MX6XYKRzMi3bL9w7LSJx3WNtQp9cozFNytn7AfsaxgN2623U0xabUkWLo3FM5xKaPp3iplMpPxgeMxClRv0TQw0gmp1R2OHkMHV5LDmPtOAj-As_1-HE3TNUi9BvxKaFN9pP_Q0EnYuBVFM93R1fM_pPd8TUJkPGkFrRjjqbA",
+            "id_token": "eyJraWQiOiJMRW1UWFozVlpUR28tTXhyXy1TUW0wY1JKRkwwbHk3OTRRU1BIQmpJdk1BIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIwMHUzOWRid2I2SG1UTThkNTJwNyIsIm5hbWUiOiJUb2JpYXMyMzYgV29sZmYxODAiLCJ2ZXIiOjEsImlzcyI6Imh0dHBzOi8vZGVwdHZhLWV2YWwub2t0YS5jb20vb2F1dGgyL2RlZmF1bHQiLCJhdWQiOiIwb2FreGdtYWF0cVJjeVc5eDJwNyIsImlhdCI6MTY3NjY3NDIzMywiZXhwIjoxNjc2Njc3ODMzLCJqdGkiOiJJRC5QdXJPZEgzTlZWTjhfb0x6SDhkbHVhczNXU0FhME5MeVI3VE5xWEUtWl93IiwiYW1yIjpbInB3ZCJdLCJpZHAiOiIwb2E1OXNxaHNnT0k4em9BQjJwNyIsInByZWZlcnJlZF91c2VybmFtZSI6IjEwMDAwMDMiLCJhdXRoX3RpbWUiOjE2NzY2NzQyMTksImF0X2hhc2giOiJVY0ZXYTRNQTdaaVFaNkd1LXdxTHFnIn0.XNT2xvnwe_3GXN55ygu3iEeNibTXXATNk0280E-82igIUUgKLd1cfdBtLPnS7vnSWZWC9Dkv-D1SBP6L_0n-Phhdi-75y0bgYXw7Fo9OJO2VAfLuB4mKl1K5TlQ44fiL1GhOACzlMKJg4ZxH5X9sUkYTQGI0FvNqNgVSL720eLo1KR2pKRdkh-KkC72nCpuvn1DCDjGceBPF63d3kp3gzT-NNKkn6W-3pXOWUvcqem2NQiBv5slnYODo7z-8PIdoiySTtSx-3A1CpLSxTPPTEpt_DIxnie4Xcui3JHz4A78xBwriQ2Oo6v6ctm90E2Qq40pOHkiIX-TnBL7gIH1oaw",
+            "refresh_token": "fk2ItWjqs6SPnqyqUEFFOa_or2YXj59JbTQrV8A0txE",
+            "token_type": "Bearer",
+            "scope": "openid offline_access patient/Immunization.read patient/Patient.read launch/patient patient/Practitioner.read profile patient/Medication.read patient/Condition.read patient/Observation.read patient/MedicationRequest.read",
+            "expires_in": 3600,
+            "state": "8GCIiegiWxn83XWN",
+            "patient": "1000003"
+        },
+        "key": "8GCIiegiWxn83XWN",
+        "registrationUri": "",
+        "authorizeUri": "https://sandbox-api.va.gov/oauth2/authorization",
+        "tokenUri": "https://sandbox-api.va.gov/oauth2/token",
+        "codeChallengeMethods": [],
+        "codeChallenge": "7WHOX4K3Ienq3FXCA59wE0p03JCmxYJH1yPe4lR1D88",
+        "codeVerifier": "VU_Dw63keG769dLun1t4HoqW8buuLLQ24LLLhXhyCSRbEx8uPJj9u4ceNsfbXWGey6u4o8yZjzsxaCB7doQUYV0_z2X3EV9TAz8jf1f5BrSOwKWBYAzCpQCEpN6zXSMS",
+        "expiresAt": 1676677834
+    },
+    "environment": {
+        "_url": "https://chronic-care.github.io/mycareplanner/index.html",
+        "_storage": {},
+        "security": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": "1000003"
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "id": null,
+        "resourceType": null
+    }
+}
