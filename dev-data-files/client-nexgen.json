@@ -1,0 +1,46 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "d50d7a87-df04-40c3-bcd9-3bbc49b230fd",
+        "scope": "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read",
+        "redirectUri": "https://chronic-care.github.io/mycareplanner/index.html",
+        "serverUrl": "https://fhir.nextgen.com/nge/prod/fhir-api-r4/fhir/r4",
+        "tokenResponse": {
+            "access_token": "0b245f37-e10c-4800-b437-e1e697a73f97",
+            "token_type": "Bearer",
+            "expires_in": 3600,
+            "refresh_token": "a2d68ca6-1cfd-42b7-b16d-436793c68fe5",
+            "scope": "fhirUser openid launch/patient patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Medication.read patient/MedicationRequest.read patient/Observation.read patient/Patient.read patient/Practitioner.read patient/Procedure.read patient/Provenance.read patient/RelatedPerson.read",
+            "id_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2ZoaXIubmV4dGdlbi5jb20vbmdlL3Byb2QvZmhpci1hcGktcjQvZmhpci9yNCIsImlhdCI6MTY3ODEzNTc4OCwiZXhwIjoxNjc4MTM2OTg4LCJzdWIiOiIiLCJhdWQiOiJkNTBkN2E4Ny1kZjA0LTQwYzMtYmNkOS0zYmJjNDliMjMwZmQiLCJmaGlyVXNlciI6Imh0dHBzOi8vZmhpci5uZXh0Z2VuLmNvbS9uZ2UvcHJvZC9maGlyLWFwaS1yNC9maGlyL3I0L1BhdGllbnQvOTAyZDc2YTgtZjUzOC00MDlhLWI1NDAtODYyNzFhZDYyNWUzIn0.JfkHSMcV6WoHjTwcG0CKHL70lNp6f0R7fgwII4e9CgGpqT2fGGxmPwOvrTy0Xalx_epikvbTuFiKKnUNHBqOC09WTqtjo33kKMtf5BjRlPx5maABIYkuP_UTaDR_h-HV5SHOuMMUhUfxWViikS8uEB8YzJ_Rc0tbR7REUrUXcwsS_QnVt1KB1iILgLhkM0YCF24ycho_nnymR59gJbJ2UMlslRX1Yfi30kdK5lrdcHdjJ4iqAnX43Oyv97Xr62Jqj9cOsZSU5a4hX31XHBp5dFbCxJi34MltjwQIvjYKexDmAc-4pBbqnmsR5HRBuNVm4lVpz5lTGUySh96QE7F86A",
+            "patient": "902d76a8-f538-409a-b540-86271ad625e3"
+        },
+        "key": "e2X2a1AO95A4Naxz",
+        "registrationUri": "",
+        "authorizeUri": "https://fhir.nextgen.com/nge/prod/patient-oauth/authorize",
+        "tokenUri": "https://fhir.nextgen.com/nge/prod/patient-oauth/token",
+        "codeChallengeMethods": [],
+        "expiresAt": 1678139394
+    },
+    "environment": {
+        "_url": "https://chronic-care.github.io/mycareplanner/index.html",
+        "_storage": {},
+        "security": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": "902d76a8-f538-409a-b540-86271ad625e3"
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "fhirUser": "Patient/902d76a8-f538-409a-b540-86271ad625e3",
+        "id": "902d76a8-f538-409a-b540-86271ad625e3",
+        "resourceType": "Patient"
+    }
+}

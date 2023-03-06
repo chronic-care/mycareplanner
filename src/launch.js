@@ -14,6 +14,8 @@ const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/
 
 const cernerScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
 
+const nexgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
+
 const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
 
 FHIR.oauth2.authorize([
@@ -79,6 +81,13 @@ FHIR.oauth2.authorize([
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_athena_practice_sandbox,
         scope: athenaScopePilot
+    },
+    {
+        // NexGen production and sandbox
+        issMatch: "https://fhir.nextgen.com/nge/prod/fhir-api-r4/fhir/r4",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_nexgen,
+        scope: nexgenScope
     },
     {
         // Cerner sandbox

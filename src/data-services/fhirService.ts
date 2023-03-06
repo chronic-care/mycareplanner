@@ -48,14 +48,18 @@ const problemListPath = 'Condition?category=problem-list-item&clinical-status=ac
 const healthConcernPath = 'Condition?category=health-concern&clinical-status=active' + provenanceSearch
 
 const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
-const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
+// date parameter not supported by NexGen (or likely the ge comparator)
+// const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
+const labResultsPath = 'Observation?category=laboratory&_count=500' + provenanceSearch
 
 // Allscripts does not support both status and authoredon args
 // const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
-const medicationRequestPath = 'MedicationRequest?authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const medicationRequestActivePath = 'MedicationRequest?status=active' + provenanceSearch
+const medicationRequestInactivePath = 'MedicationRequest?status=on-hold,cancelled,completed,stopped&_count=10' + provenanceSearch
 
 const serviceRequestPath = 'ServiceRequest?status=active' + provenanceSearch
-const proceduresPath = 'Procedure?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const proceduresTimePath = 'Procedure?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const proceduresCountPath = 'Procedure?_count=100' + provenanceSearch
 const diagnosticReportPath = 'DiagnosticReport?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const socialHistoryPath = 'Observation?category=social-history' + provenanceSearch
 
@@ -192,9 +196,15 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     : undefined)
 
   console.log('Procedure request: ' + new Date().toLocaleTimeString())
-  const procedureData = (hasScope(clientScope, 'Procedure.read')
-    ? resourcesFrom(await client.patient.request(proceduresPath, fhirOptions) as fhirclient.JsonObject)
+  var procedureData = (hasScope(clientScope, 'Procedure.read')
+    ? resourcesFrom(await client.patient.request(proceduresTimePath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
+  // if no procedures found in past 3 years, get _count=100
+  if (procedureData == undefined || procedureData.entries?.length == 0) {
+    procedureData = (hasScope(clientScope, 'Procedure.read')
+    ? resourcesFrom(await client.patient.request(proceduresCountPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  }
   const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
   recordProvenance(procedureData)
 
@@ -222,12 +232,27 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
   recordProvenance(labResultData)
 
   console.log('MedicationRequest request: ' + new Date().toLocaleTimeString())
-  const medicationRequestData = (hasScope(clientScope, 'MedicationRequest.read')
-    ? resourcesFrom(await client.patient.request(medicationRequestPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined)
-  const medications =
-    medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
-  recordProvenance(medicationRequestData)
+  var medications = undefined
+  if (hasScope(clientScope, 'MedicationRequest.read')) {
+    var medicationRequestData: Resource[] = []
+    // fetch all active meds
+    medicationRequestData = resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
+    console.log('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.')
+
+    // also fetch the last 10 inactive meds
+    var inactiveMeds = resourcesFrom(await client.patient.request(medicationRequestInactivePath, fhirOptions) as fhirclient.JsonObject)
+    // remove any inactive meds also in the active list (VA does not support the status parameter)
+    console.log('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).')
+    inactiveMeds = inactiveMeds?.filter((item: any) => medicationRequestData?.find((resource: Resource) => resource.id === item.id) === undefined)
+    console.log('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).')
+    medicationRequestData = (medicationRequestData ?? []).concat(inactiveMeds ?? [])
+
+    medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
+    recordProvenance(medicationRequestData)
+  }
+  else {
+    medications = undefined
+  }
 
   console.log('ServiceRequest request: ' + new Date().toLocaleTimeString())
   const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
