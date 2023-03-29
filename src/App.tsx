@@ -61,12 +61,14 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     componentDidMount() {
-        getFHIRData().then((data: FHIRData) => {
-            this.setState({ fhirData: data })
-            this.setState({ patientSummary: getPatientSummary(data) })
-            this.setState({ screenings: executeScreenings(data) })
-            this.setState({ tasks: undefined })
-        })
+        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
+            getFHIRData().then((data: FHIRData) => {
+                this.setState({ fhirData: data })
+                this.setState({ patientSummary: getPatientSummary(data) })
+                this.setState({ screenings: executeScreenings(data) })
+                this.setState({ tasks: undefined })
+            })
+        }
     }
 
     public render(): JSX.Element {
