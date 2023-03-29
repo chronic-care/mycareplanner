@@ -19,10 +19,6 @@ class ProviderEndpoint {
 export default function ProviderLogin() {
   let history = useHistory()
 
-  const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
-  const cernerScope = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read";
-  const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
-
   const endpoints: ProviderEndpoint[] = [
     {
       name: 'OCHIN',
@@ -30,7 +26,7 @@ export default function ProviderLogin() {
         iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
       }
     },
     {
@@ -39,7 +35,7 @@ export default function ProviderLogin() {
         iss: "https://haikuor.providence.org/fhirproxy/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
       }
     },
     {
@@ -48,37 +44,66 @@ export default function ProviderLogin() {
         iss: "https://haikuwa.providence.org/fhirproxy/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope
-      }
-    },
-    {
-      name: 'Epic Sandbox (test data)',
-      config: {
-        iss: "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
-        scope: epicScope
-      }
-    },
-    {
-      name: 'Cerner Sandbox (test data)',
-      config: {
-        iss: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
-        scope: cernerScope
-      }
-    },
-    {
-      name: 'VA Sandbox (test data)',
-      config: {
-        iss: "https://sandbox-api.va.gov/services/fhir/v0/r4",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_va,
-        scope: vaScope
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
       }
     }
   ]
+
+  if (process.env.REACT_APP_ADD_MELD_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    endpoints.push(
+      {
+        name: 'Test Data: Meld Sandbox',
+        config: {
+          iss: process.env.REACT_APP_MELD_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
+          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+        }
+      }
+    )
+  }
+
+  if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    endpoints.push(
+      {
+        name: 'Test Data: Epic Sandbox',
+        config: {
+          iss: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
+          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
+        }
+      }
+    )
+  }
+
+  if (process.env.REACT_APP_ADD_CERNER_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    endpoints.push(
+      {
+        name: 'Test Data: Cerner Sandbox',
+        config: {
+          iss: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
+          scope: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
+        }
+      }
+    )
+  }
+
+  if (process.env.REACT_APP_ADD_VA_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    endpoints.push(
+      {
+        name: 'Test Data: VA Sandbox',
+        config: {
+          iss: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_va,
+          scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE
+        }
+      }
+    )
+  }
 
   const [endpoint, setEndpoint] = React.useState<ProviderEndpoint | null>(null);
 
@@ -102,49 +127,49 @@ export default function ProviderLogin() {
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
     history.goBack()
   }
-  
+
   return (
     <React.Fragment>
-    <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
+      <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
         <Typography variant="h5" gutterBottom>
           Health Provider Login
         </Typography>
         <Grid container spacing={3}>
 
-        <Grid item xs={12}>
-          <FormControl fullWidth>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
-              Select your healthcare provider
-            </InputLabel>
-            <NativeSelect
-              // defaultValue={}
-              inputProps={{
-                name: 'provider',
-                id: 'uncontrolled-native',
-              }}
-              onChange={handleChange}
-            >
-              <option key={'not-selected'} value=''></option>
-              {endpoints.map((endpoint: ProviderEndpoint) => {
-                return <option key={endpoint.name} value={JSON.stringify(endpoint)}>{endpoint.name}</option>
-              })}
-            </NativeSelect>
-          </FormControl>
-        </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Select your healthcare provider
+              </InputLabel>
+              <NativeSelect
+                // defaultValue={}
+                inputProps={{
+                  name: 'provider',
+                  id: 'uncontrolled-native',
+                }}
+                onChange={handleChange}
+              >
+                <option key={'not-selected'} value=''></option>
+                {endpoints.map((endpoint: ProviderEndpoint) => {
+                  return <option key={endpoint.name} value={JSON.stringify(endpoint)}>{endpoint.name}</option>
+                })}
+              </NativeSelect>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Button type="submit" disabled={endpoint === null} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Login
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            Cancel
-          </Button>
-        </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="submit" disabled={endpoint === null} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Login
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Button type="reset" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Cancel
+            </Button>
+          </Grid>
 
-      </Grid>
-    </Box>
+        </Grid>
+      </Box>
     </React.Fragment>
   )
 }

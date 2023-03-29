@@ -51,6 +51,13 @@ export default class Home extends React.Component<HomeProps, HomeState> {
         </div>
         {(this.props.fhirData === undefined)
           ? <div className="welcome">
+            {process.env.REACT_APP_SHOW_LINK_TO_PROVIDER_LOGIN_ON_LAUNCH === 'true' &&
+              <>
+                {/* DEV TEST: Adds option to navigate to retrieve records on launch or during load */}
+                <Link to={{ pathname: '/provider-login' }}>Retrieve records from other healthcare providers</Link>
+                <br />
+              </>
+            }
             <p>Reading your clinical records...</p>
             <BusySpinner busy={this.props.fhirData === undefined} />
           </div>
