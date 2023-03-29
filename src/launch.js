@@ -1,22 +1,22 @@
-import FHIR from 'fhirclient';
+import FHIR from 'fhirclient'
 
-const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read";
+const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read"
 
 // const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read";
 
-const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/*.read";
+const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/*.read"
 
-const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
+const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
 
-const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read";
+const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read"
 
 const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
 
 const cernerScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
 
-const nexgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read";
+const nexgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
 
-const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read";
+const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read"
 
 FHIR.oauth2.authorize([
     {
@@ -52,7 +52,7 @@ FHIR.oauth2.authorize([
         issMatch: /\bgw.interop.community\/CarePlanning\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
+        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
     },
     {
         // Logica sandbox
@@ -91,7 +91,7 @@ FHIR.oauth2.authorize([
     },
     {
         // Cerner sandbox
-        issMatch: "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
+        issMatch: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_ISS,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
         scope: cernerScopePilot
@@ -153,4 +153,4 @@ FHIR.oauth2.authorize([
         }
     }
     */
-]);
+])
