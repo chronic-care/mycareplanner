@@ -3,20 +3,14 @@ import FHIR from 'fhirclient'
 const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*.read"
 
 // const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read";
-
 const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/*.read"
-
-const epicScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
 
 const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read"
 
 const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
-
-const cernerScopePilot = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
+const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
 
 const nexgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
-
-const vaScope = "launch/patient openid profile offline_access patient/Patient.read patient/Practitioner.read patient/Condition.read patient/Observation.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read"
 
 FHIR.oauth2.authorize([
     {
@@ -108,7 +102,7 @@ FHIR.oauth2.authorize([
         issMatch: "https://sandbox-api.va.gov/services/fhir/v0/r4",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_va,
-        scope: vaScope,
+        scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE,
         pkceMode: "unsafeV1"
         // "unsafeV1" - Use against Smart v1 servers. Smart v1 does not define conformance, so validate your server supports PKCE before using this setting
     },
@@ -125,7 +119,7 @@ FHIR.oauth2.authorize([
         issMatch: /\bepic\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope,
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
         pkceMode: "unsafeV1"
     },
     {
@@ -133,7 +127,7 @@ FHIR.oauth2.authorize([
         issMatch: /\bR4\b/i,
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: epicScope,
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
         pkceMode: "unsafeV1"
     }
 
