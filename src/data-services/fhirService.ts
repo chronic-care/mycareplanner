@@ -25,7 +25,7 @@ const oneDay = 24 * 3600 * 1000
 // const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
 // const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
-const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
+// const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
 const provenanceSearch = '&_revInclude=Provenance:target'
 
@@ -200,10 +200,10 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     ? resourcesFrom(await client.patient.request(proceduresTimePath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   // if no procedures found in past 3 years, get _count=100
-  if (procedureData == undefined || procedureData.entries?.length == 0) {
+  if (procedureData === undefined || procedureData.entries?.length === 0) {
     procedureData = (hasScope(clientScope, 'Procedure.read')
-    ? resourcesFrom(await client.patient.request(proceduresCountPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined)
+      ? resourcesFrom(await client.patient.request(proceduresCountPath, fhirOptions) as fhirclient.JsonObject)
+      : undefined)
   }
   const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
   recordProvenance(procedureData)
