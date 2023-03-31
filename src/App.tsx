@@ -60,14 +60,17 @@ export default class App extends React.Component<AppProps, AppState> {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
-            getFHIRData().then((data: FHIRData) => {
+            try {
+                let data = await getFHIRData(false, null)
                 this.setState({ fhirData: data })
                 this.setState({ patientSummary: getPatientSummary(data) })
                 this.setState({ screenings: executeScreenings(data) })
                 this.setState({ tasks: undefined })
-            })
+            } catch (err) {
+                console.log(`Failure calling getFHIRData from App.tsx componentDidMount: ${err}`)
+            }
         }
     }
 

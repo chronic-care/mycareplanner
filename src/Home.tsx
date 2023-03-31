@@ -54,7 +54,12 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             {process.env.REACT_APP_SHOW_LINK_TO_PROVIDER_LOGIN_ON_LAUNCH === 'true' &&
               <>
                 {/* DEV TEST: Adds option to navigate to retrieve records on launch or during load */}
-                <Link to={{ pathname: '/provider-login' }}>Retrieve records from other healthcare providers</Link>
+                <Link to={{
+                  pathname: '/provider-login',
+                  state: {
+                    fhirData: this.props.fhirData
+                  }
+                }}>Retrieve records from other healthcare providers</Link>
                 <br />
               </>
             }
@@ -110,7 +115,12 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             }
 
             <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
-            <Link to={{ pathname: '/provider-login' }}>Retrieve records from other healthcare providers</Link>
+            <Link to={{
+              pathname: '/provider-login',
+              state: {
+                fhirData: this.props.fhirData
+              }
+            }}>Retrieve records from other healthcare providers</Link>
             <br /><Link to={{ pathname: '/share-data' }}>Share your health data</Link>
             <br /><Link to={{ pathname: '/shared-data-summary' }}>Summary of shared health data</Link>
           </div>
