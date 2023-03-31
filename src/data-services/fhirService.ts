@@ -483,8 +483,8 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null)
           // 2: Use something like FHIR.oauth2.ready(persistedStateObj) if possible.
           //    May need nav and react state fhirData update or worst case refresh of page.
           //    Basically we call getFHIRData (which uses ready already (just not with an arg)) and then set the react fhirData state with what is returned.
-          // 2: Store encrypted fhirData in local storage and retrieve that
-          // 3: Bypass Authentication using the fakeTokenResponse/access_token (we aren't sure this will work in all scenarios though, so may not be an option)
+          // 3: Store encrypted fhirData in local storage and retrieve that
+          // 4: Bypass Authentication using the fakeTokenResponse/access_token (we aren't sure this will work in all scenarios though, so may not be an option)
           // For now, to keep existing application flow prior to impl, creating default connection (which requires reuth/redirect):
           // However, this should NEVER get called yet, as we are reauthorizing for now, so that we get a specific endpoint
           // And, a launcher won't send authorized as true (yet)
