@@ -91,10 +91,12 @@ export const isGivenEndpointMatchesLastActiveEndpoint =
       if (lastStoredEndpoint) {
         console.log('lastStoredEndpoint:', lastStoredEndpoint)
         if (givenEndpoint === lastStoredEndpoint) {
+          console.log("Matches last stored endpoint")
           return true
         }
       }
     }
+    console.log("NOT a match to the last stored endpoint")
     return false
   }
 
@@ -103,14 +105,12 @@ export const isEndpointStillAuthorized =
     console.log('enter isEndpointStillAuthorized()')
     console.log('endpoint:', endpoint)
 
-    // The code works with extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint only as well
-    // but extractFhirAccessDataObjectFromLastActiveEndpoint is more efficent when relevant
+    // The logic works with extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint either way
+    // but extractFhirAccessDataObjectFromLastActiveEndpoint is more efficient when relevant
     const fhirAccessDataWithMatchingServerUrl = isCheckLastActiveEndpoint
       ? await extractFhirAccessDataObjectFromLastActiveEndpoint(endpoint) as fhirclient.ClientState
       : await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(endpoint) as fhirclient.ClientState
-    console.log("fhirAccessDataWithMatchingServerUrl: ", fhirAccessDataWithMatchingServerUrl)
-    // TODO: Analyze potential issue: fhirAccessDataWithMatchingServerUrl: null
-    // aAove is null, even though a match is found and returned, why?
+    console.log("fhirAccessDataWithMatchingServerUrl: ", JSON.stringify(fhirAccessDataWithMatchingServerUrl))
     if (fhirAccessDataWithMatchingServerUrl) {
       console.log("Check if saved token for the relevant endpoint is still valid")
       let isTokenStillValid: boolean = await isSavedTokenStillValid(fhirAccessDataWithMatchingServerUrl)

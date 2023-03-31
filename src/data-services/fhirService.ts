@@ -8,7 +8,9 @@ import { FHIRData, hasScope } from './models/fhirResources'
 import { format } from 'date-fns'
 import Client from 'fhirclient/lib/Client'
 import { responseToJSON } from 'fhirclient/lib/lib'
-import { persistFHIRAccessData } from './persistenceService'
+import {
+  persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint
+} from './persistenceService'
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
   const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
@@ -374,6 +376,10 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
    *  Allscripts does not return patient, so also try user if patient is missing.
    */
   // const patient: Patient = await client.patient.read() as Patient
+  // TODO: Analaysze/consider if we end up with persistence that can retain patient data for a longer period of time,
+  // such as session storage, or a secure back end, or use or have a local storage endpoint with an active auth:
+  // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
+  // so it's not null, and can be populated in most cases
   const patient: Patient = client.patient.id !== null
     ? await client.patient.read() as Patient
     : await client.user.read() as Patient
@@ -415,6 +421,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   }
 }
 
+/*
 export const getFHIRData = async (): Promise<FHIRData> => {
   console.log('Starting OAuth2 authentication')
   const client = await FHIR.oauth2.ready();
@@ -442,6 +449,93 @@ export const getFHIRData = async (): Promise<FHIRData> => {
   console.log(console.log(JSON.stringify(client)))
 
   return await getFHIRResources(client, clientScope, supportsInclude)
+}
+*/
+
+export const getFHIRData = async (authorized: boolean, serverUrl: string | null): Promise<FHIRData> => {
+  console.log("Enter getFHIRData()")
+
+  try {
+
+    if (process.env.REACT_APP_LOAD_MELD_ON_STARTUP === 'true') {
+      // TODO: Implement when time
+      console.log('Attempting to load meld sandbox automatically w/o a user-provided launcher and on startup')
+      // { iss: process.env.REACT_APP_MELD_SANDBOX_ENDPOINT_ISS,
+      //   redirectUri: "./index.html",
+      //   clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
+      //   scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE }
+    }
+
+    let client: Client
+    if (authorized) {
+      console.log("Known to be authorized, reconnecting to given, prior-authorized client, and reloading data")
+      if (serverUrl) {
+        console.log("serverUrl is truthy")
+        const matchedFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(serverUrl)
+        if (matchedFhirAccessDataObject) {
+          console.log("matchedFhirAccessDataObject is truthy, we should have a valid endpoint to pass to the client and reauthorize without redirect")
+          // TODO: Implement fetching data w/o redirect since alredy authorized
+          // Keep in mind that we probably don't have fhirData in react state anymore,
+          // And that local storage does not contain fhirData, only references to connect
+          // We either need to:
+          // 1: Using the API, if possible, pass the endpoint to the client and create a new connection, or, fetch data otherwise
+          // 2: Use something like FHIR.oauth2.ready(persistedStateObj) if possible.
+          //    May need nav and react state fhirData update or worst case refresh of page.
+          //    Basically we call getFHIRData (which uses ready already (just not with an arg)) and then set the react fhirData state with what is returned.
+          // 3: Store encrypted fhirData in local storage and retrieve that
+          // 4: Bypass Authentication using the fakeTokenResponse/access_token (we aren't sure this will work in all scenarios though, so may not be an option)
+          // For now, to keep existing application flow prior to impl, creating default connection (which requires reuth/redirect):
+          // However, this should NEVER get called yet, as we are reauthorizing for now, so that we get a specific endpoint
+          // And, a launcher won't send authorized as true (yet)
+          client = await FHIR.oauth2.ready();
+        } else {
+          throw new Error("A matching fhirAccessDataObject could not be found against the given serverUrl, cannot connect to client or load FHIR data")
+        }
+      } else {
+        throw new Error("Given serverUrl is null, cannot connect to client or load FHIR data")
+      }
+    } else { // prior/default
+      console.log("Not known to be authorized, but could be, either a launcher, app startup, or FHIR.oauth2.authorize was called due to expiration")
+      console.log('Starting default OAuth2 authentication')
+      client = await FHIR.oauth2.ready();
+      console.log('Executed: client = await FHIR.oauth2.ready()')
+    }
+
+    if (!client) {
+      throw new Error("client isn't truthy, cannot connect to client or load FHIR data")
+    }
+
+    process.env.REACT_APP_TEST_PERSISTENCE === 'true' && console.log("client: ", JSON.stringify(client))
+
+    // We have a connected/populated client now, get the state/make use of the data
+    const clientState: fhirclient.ClientState = client?.state
+    if (clientState) {
+      await persistFHIRAccessData(clientState)
+    } else {
+      console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
+    }
+
+    const clientScope = client?.state.tokenResponse?.scope
+    const serverURL = client?.state.serverUrl
+
+    // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
+    const supportsInclude = !(
+      serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
+    )
+    console.log("Server URL = " + serverURL)
+    console.log("Supports _include = " + supportsInclude)
+
+    // console.log('OAuth2 scope authorized: ' + clientScope)
+    console.log('Client JSON: ')
+    console.log(console.log(JSON.stringify(client)))
+
+    return await getFHIRResources(client, clientScope, supportsInclude)
+  } catch (err) {
+    console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
+    throw (err)
+  }
+
 }
 
 export function createResource(resource: Resource) {
