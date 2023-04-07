@@ -1,0 +1,47 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "c6aef821-3098-4639-89eb-c85ffbe64c08",
+        "scope": "launch launch/patient openid fhirUser user/Patient.read user/Practitioner.read user/RelatedPerson.read user/Condition.read user/DiagnosticReport.read user/Observation.read user/Procedure.read user/CarePlan.read user/CareTeam.read user/Goal.read user/Immunization.read user/MedicationRequest.read user/Medication.read user/ServiceRequest.read user/Provenance.read user/Organization.read",
+        "redirectUri": "http://localhost:8000/mycareplanner/index.html",
+        "serverUrl": "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
+        "tokenResponse": {
+            "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1cm46b2lkOmZoaXIiLCJjbGllbnRfaWQiOiJjNmFlZjgyMS0zMDk4LTQ2MzktODllYi1jODVmZmJlNjRjMDgiLCJlcGljLmVjaSI6InVybjplcGljOk9wZW4uRXBpYy1jdXJyZW50IiwiZXBpYy5tZXRhZGF0YSI6IlNqVnpBd3Z2OGlrcjRxVVBGcEtxMFpnWXNfbnpYOGJ2S3hMc3JFX0ZpWUZCYkl2eTJESDNuTEZ5TTk3TEZjVHo1UXBLMmtQUHo3RlduNk5YeEVoTVp1aEhJTEVNcjl4UVJndGV2OEt1NXNQZk9YbkdteVFMSzhNX0paMDVxNVVPIiwiZXBpYy50b2tlbnR5cGUiOiJhY2Nlc3MiLCJleHAiOjE2Nzk2Nzc3MzQsImlhdCI6MTY3OTY3NDEzNCwiaXNzIjoidXJuOm9pZDpmaGlyIiwianRpIjoiNjRjZGU4NDYtZGM5Yi00YjI5LTk0NjAtMTc2ZjA0NzZjOTQ2IiwibmJmIjoxNjc5Njc0MTM0LCJzdWIiOiJlNmF3Ni1SSnVLTzJtYnFqbGVLdmdWUTMifQ.TieXw2LIQcHHT_AaqpBdU8PVx2E4zAP3SET3_Ja6aKk8e4ca-m-BVnhl5HervCLGVBxJoD66LxTLLNGJFkbOs98XuWCVmIGbiEWiREgsXBPgdlemuibA_kAeZuafsPLsmJp9tu3sgOyCrPM2KzlT2LCLaexPPfQdY31mmxpkzE_83I0wJYqXgmC1q8j3Wud_6zeq7myzRMtgr1xkRgCXhix3r-UILVpifmLqH8BhZ1GSrZHf35ofSeFMollCBaQzjt8lrNh5i-MZ2o3KG8kE-QSDO4UoezZE0RBiAAZ8AHK3hxBZDw3Tx3p26Y5khH6nbmj8RhyETJiAX81XoTgLiA",
+            "token_type": "Bearer",
+            "expires_in": 3600,
+            "scope": "user/Condition.read user/Goal.read user/Immunization.read user/Medication.read user/MedicationRequest.read user/Observation.read user/Patient.read user/Practitioner.read user/Procedure.read user/ServiceRequest.read fhirUser openid",
+            "state": "x2Cz9sMLk69QqeRf",
+            "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6InRvVzlqTVVTTi81L0wzaXdhUUdkVG1ORHVodnAvSmNBWlZIL2NPSjZPckU9IiwidHlwIjoiSldUIn0.eyJhdWQiOiJjNmFlZjgyMS0zMDk4LTQ2MzktODllYi1jODVmZmJlNjRjMDgiLCJleHAiOjE2Nzk2NzQ0MzQsImZoaXJVc2VyIjoiaHR0cHM6Ly9maGlyLmVwaWMuY29tL2ludGVyY29ubmVjdC1maGlyLW9hdXRoL2FwaS9GSElSL1I0L1ByYWN0aXRpb25lci9lNmF3Ni1SSnVLTzJtYnFqbGVLdmdWUTMiLCJpYXQiOjE2Nzk2NzQxMzQsImlzcyI6Imh0dHBzOi8vZmhpci5lcGljLmNvbS9pbnRlcmNvbm5lY3QtZmhpci1vYXV0aC9vYXV0aDIiLCJzdWIiOiJlNmF3Ni1SSnVLTzJtYnFqbGVLdmdWUTMifQ.nSU3pQMWMD2QzxaC7GG8mo7GvkzGzCSpXrWPAiQXFnXa9Xm50ToGPerDsg-cZUbTGNzYp9ByCl2Vb4Hd6Po5TWKtMbbgJj78dNpU7Ql18BKjLTfwIcKomiL6TJkfClECd6tLmwPiEt9o0QUkcKIpbS0bWwuDp-Rf1Vq_KUXK-rtz3aIjFVgDz09u8V3_6m_c3KGbdWzcwa7rdzVx6AJW-T0iG86hQOG-EVOwHbfMjESIzE2A-s8EhIGYcZv1sjIur1dAsIW0RzalzwCUnmDjUutK-ZlWEK2Kgh4vY7s5vVTjvMJkWosPAsdgIfq-c6JuPb72pmTc3k5W7n9GOuxZtQ"
+        },
+        "key": "x2Cz9sMLk69QqeRf",
+        "registrationUri": "",
+        "authorizeUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize",
+        "tokenUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
+        "codeChallengeMethods": [],
+        "codeChallenge": "P1dC97v0nuvBsEMtRnAYvo_emHvWu4fAUMQuCfiewrU",
+        "codeVerifier": "sMHd-CVzxhgt-95tEm2F0qUmfqNXPYgenpj4AFK89ZoO2892dw3VUDx1U5YXrt6jb9w4IlAiwfSN6Gk4afhXTj3btZpf4xCbcXsBU1SB0TzND8l1W_gI4YzfY5_AqAzM",
+        "expiresAt": 1679677734
+    },
+    "environment": {
+        "_url": "http://localhost:8000/mycareplanner/index.html",
+        "_storage": {},
+        "security": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": null
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "fhirUser": "Practitioner/e6aw6-RJuKO2mbqjleKvgVQ3",
+        "id": "e6aw6-RJuKO2mbqjleKvgVQ3",
+        "resourceType": "Practitioner"
+    }
+}

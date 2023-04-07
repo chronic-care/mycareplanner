@@ -41,7 +41,8 @@ export default function ProviderLogin(props: Props) {
         iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+        pkceMode: "unsafeV1"
       }
     },
     {
@@ -50,7 +51,8 @@ export default function ProviderLogin(props: Props) {
         iss: "https://haikuor.providence.org/fhirproxy/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+        pkceMode: "unsafeV1"
       }
     },
     {
@@ -59,7 +61,8 @@ export default function ProviderLogin(props: Props) {
         iss: "https://haikuwa.providence.org/fhirproxy/api/FHIR/R4/",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+        pkceMode: "unsafeV1"
       }
     }
   ]
@@ -86,7 +89,8 @@ export default function ProviderLogin(props: Props) {
           iss: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_ISS,
           redirectUri: "./index.html",
           clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE
+          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+          pkceMode: "unsafeV1"
         }
       }
     )
@@ -114,7 +118,8 @@ export default function ProviderLogin(props: Props) {
           iss: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_ISS,
           redirectUri: "./index.html",
           clientId: process.env.REACT_APP_CLIENT_ID_va,
-          scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE
+          scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE,
+          pkceMode: "unsafeV1"
         }
       }
     )
