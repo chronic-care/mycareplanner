@@ -6,8 +6,8 @@ const allscriptsScope = "launch/patient openid fhirUser offline_access patient/*
 const athenaScopePilot = "launch/patient openid fhirUser offline_access patient/*.read"
 
 const epicPilotScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read"
-
-const epicProviderScope = "launch launch/patient openid fhirUser user/Patient.read user/Practitioner.read user/RelatedPerson.read user/Condition.read user/DiagnosticReport.read user/Observation.read user/Procedure.read user/CarePlan.read user/CareTeam.read user/Goal.read user/Immunization.read user/MedicationRequest.read user/Medication.read user/ServiceRequest.read user/Provenance.read user/Organization.read";
+// eslint-disable-next-line no-unused-vars
+const epicProviderScope = "launch launch/patient openid fhirUser user/Patient.read user/Practitioner.read user/RelatedPerson.read user/Condition.read user/DiagnosticReport.read user/Observation.read user/Procedure.read user/CarePlan.read user/CareTeam.read user/Goal.read user/Immunization.read user/MedicationRequest.read user/Medication.read user/ServiceRequest.read user/Provenance.read user/Organization.read"
 
 const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
 const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
