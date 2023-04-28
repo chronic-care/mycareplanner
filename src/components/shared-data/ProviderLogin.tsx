@@ -2,7 +2,7 @@ import * as React from 'react'
 import { RouteComponentProps, useHistory } from 'react-router-dom'
 import FHIR from 'fhirclient'
 import { fhirclient } from 'fhirclient/lib/types'
-// import { getFHIRData } from '../../data-services/fhirService'
+import { getFHIRData } from '../../data-services/fhirService'
 import {
   isGivenEndpointMatchesLastActiveEndpoint, isEndpointStillAuthorized
 } from '../../data-services/persistenceService'
@@ -22,11 +22,11 @@ class ProviderEndpoint {
 }
 
 interface Props extends RouteComponentProps {
-  fhirData?: FHIRData
+  setFhirDataStates: (data: FHIRData | undefined) => void
 }
 
 interface LocationState {
-  fhirData?: FHIRData
+  fhirData?: FHIRData,
 }
 
 export default function ProviderLogin(props: Props) {
@@ -137,15 +137,6 @@ export default function ProviderLogin(props: Props) {
     }
   }
 
-  /*
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (endpoint !== null) {
-      FHIR.oauth2.authorize(endpoint.config!)
-    }
-  }
-  */
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -154,51 +145,67 @@ export default function ProviderLogin(props: Props) {
       console.log('issServerUrl:', issServerUrl)
       if (await isGivenEndpointMatchesLastActiveEndpoint(issServerUrl!)) {
         console.log("is last endpoint")
-        if (await isEndpointStillAuthorized(issServerUrl!, true)) {
+        if (await isEndpointStillAuthorized(issServerUrl!, true)) { // Only checks last endpoint
           console.log("is last endpoint and IS authorized")
           console.log("Redirect w/o a refresh as the data should be in our React state already")
           // It may seem silly that a user would do this (select the same thing they are already viewing)
-          // but if they do, it won't reload the data, it will just go home since the data is there
+          // but it will happen at least by accident at some point, and thus we won't reload the data, but will just go home since the data is already there
           // TODO: Consider more error checking of fhirData, check important properties?
+          // TODO: Make sure we are fully handling back button during authorization situations
+          // (Should be handled with empty fhir data case, and should be handled by local storage, but need to ensure user experience makes sense in such situations.
+          // If local storage becomes corrupt in production, it's external so difficult to manage - so want to ensure that is tested for all edge cases prior to prod deployment)
           if (fhirData) {
             process.env.REACT_APP_TEST_PERSISTENCE === 'true' &&
               console.log("fhirData is truthy, navigating home w/o reload or passing data:", JSON.stringify(fhirData))
-            // TODO: Consider using contentAPI or a callback function passed from App->Home->Here to update fhirData react state
-            // Data should be the same so may not need, will likely need to do in "NOT last endpoint but IS already / still authorized"
             history.push('/')
-            // TODO: Do we need to handle a case where the endpoint is the same, but the user wants to select a different paitient?
+            // TODO: Do we need to handle a case where the endpoint is the same, but the user wants to select a different patient?
             // If so, they don't need a reauth, but they do need to be redirected to choose a new patient...
           } else {
             process.env.REACT_APP_TEST_PERSISTENCE === 'true' &&
-              console.log("fhirData is falsey, reauthorizing until a non-reauth solution is implemented:", fhirData)
-            // TODO: Implement no-reauth solution. Can be a unique version for thie scenario
-            // or apply w / e is done "in NOT last endpoint but IS already/still authorized"
-            // await getFHIRData(true, issServerUrl!)
-            // For now, we can either, reauthorize:
+              console.log("fhirData is falsey, reauthorizing as data cannot be trusted/does not exist:", fhirData)
+            // TODO: Consider externalizing logic in "NOT last endpoint but IS already/still authorized" and use that in this case
+            // It should work fine as the local storage fhirAccessState should be in tact and we can fetch the data from the server w/o a reauth
             FHIR.oauth2.authorize(endpoint.config!)
-            // Or, assume nothing fishy happened with the UI (like user starting a redirect auth and then hitting back at the last moment), and use history:
-            // history.push('/')
           }
         } else {
           console.log("is last endpoint but is NOT authorized - reauthorizing")
+          // Techincally, if needed, we could redirect w/o refresh as in the "is last endpoint and IS authorized" path,
+          // but for now we are going to assume the data may have changed enough at this point to require a reauthorization
           FHIR.oauth2.authorize(endpoint.config!)
         }
       } else {
         console.log("NOT last endpoint")
-        if (await isEndpointStillAuthorized(issServerUrl!, false)) { // This check needs to check all endpoints in array, not just last endpoint accessed
-          console.log("NOT last endpoint but IS already/still authorized - reauthorize as a temporary flow to reload data")
+        if (await isEndpointStillAuthorized(issServerUrl!, false)) { // This checks all endpoints in array, not just last endpoint accessed
+          console.log("NOT last endpoint but IS already/still authorized")
           try {
-            // TODO: This is our most complex use case.
-            // TODO: Instead of below call, support reloading the data (which is NOT local at this point,
-            // other than an the state object) without requiring reauthorization/redirect.
-            // We will likely use the new getFHIRData flow to do this (once implemented)
-            FHIR.oauth2.authorize(endpoint.config!)
-            // await getFHIRData(true, issServerUrl!)
+            console.log('Reload data (which is NOT local at this point, other than the fhirAccessData state object) without requiring reauthorization/redirect')
+            let fhirDataFromStoredEndpoint: FHIRData | undefined = undefined
+            try {
+              console.log('setting fhirData to undefined so progess indicator is triggered while new data is loaded subsequently')
+              props.setFhirDataStates(undefined)
+              console.log("redirecting to '/'")
+              history.push('/')
+              console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
+              fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)
+            } catch (err) {
+              console.log(`Failure calling getFHIRData(true, issServerUrl!) from ProviderLogin.tsx handleSubmit: ${err}`)
+              console.log('fallback to authorization due to above failure')
+              // TODO: Add logic to ensure that fhirAccess obj and array are not updated (or are reverted) from a faulty no-auth load attempt
+              FHIR.oauth2.authorize(endpoint.config!)
+            } finally {
+              console.log('Set fhir data states with Route prop directly using App callback function')
+              props.setFhirDataStates(fhirDataFromStoredEndpoint!)
+            }
+            console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
           } catch (err) {
-            console.log(`Failure calling getFHIRData from ProviderLogin.tsx handleSubmit: ${err}`)
+            // catches if setFhirDataStates in finally fails
+            console.log(`Failure setting fhir data states after getFHIRData call in ProviderLogin.tsx handleSubmit: ${err}`)
+            console.log('fallback to authorization due to above failure')
+            // TODO: Add logic to ensure that fhirAccess obj and array are not updated (or are reverted) from a faulty no-auth load attempt
+            FHIR.oauth2.authorize(endpoint.config!)
           }
         } else {
-          console.log("not last endpoint and NOT still authorized - reauthorizing")
+          console.log("NOT last endpoint and NOT still authorized - reauthorizing")
           FHIR.oauth2.authorize(endpoint.config!)
         }
       }

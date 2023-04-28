@@ -61,17 +61,25 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     async componentDidMount() {
+        console.log("App.tsx componentDidMount()")
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
             try {
+                console.log("getting and setting fhirData state in componentDidMount")
                 let data = await getFHIRData(false, null)
-                this.setState({ fhirData: data })
-                this.setState({ patientSummary: getPatientSummary(data) })
-                this.setState({ screenings: executeScreenings(data) })
-                this.setState({ tasks: undefined })
+                this.setFhirDataStates(data)
             } catch (err) {
                 console.log(`Failure calling getFHIRData from App.tsx componentDidMount: ${err}`)
             }
         }
+    }
+
+    // callback function to update state and give ProviderLogin access to it
+    setFhirDataStates = (data: FHIRData | undefined) => {
+        console.log("setFhirDataStates(data: FHIRData | undefined): void")
+        this.setState({ fhirData: data })
+        this.setState({ patientSummary: data ? getPatientSummary(data) : undefined })
+        this.setState({ screenings: data ? executeScreenings(data) : undefined })
+        this.setState({ tasks: undefined })
     }
 
     public render(): JSX.Element {
@@ -100,7 +108,15 @@ export default class App extends React.Component<AppProps, AppState> {
                         <GoalEditForm {...editFormData} />
                     </Route>
 
-                    <Route path="/provider-login" component={ProviderLogin} />
+                    {/* <Route path="/provider-login" component={ProviderLogin} /> */}
+                    <Route path="/provider-login"
+                        render={(routeProps) => (
+                            <ProviderLogin
+                                setFhirDataStates={this.setFhirDataStates}
+                                {...routeProps}
+                            />
+                        )}
+                    />
                     <Route path="/share-data" component={ShareData} />
                     <Route path="/shared-data-summary" component={SharedDataSummary} />
 

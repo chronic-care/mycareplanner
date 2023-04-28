@@ -475,20 +475,15 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null)
           await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(serverUrl)
         if (matchedFhirAccessDataObject) {
           console.log("matchedFhirAccessDataObject is truthy, we should have a valid endpoint to pass to the client and reauthorize without redirect")
-          // TODO: Implement fetching data w/o redirect since alredy authorized
-          // Keep in mind that we probably don't have fhirData in react state anymore,
-          // And that local storage does not contain fhirData, only references to connect
-          // We either need to:
-          // 1: Using the API, if possible, pass the endpoint to the client and create a new connection, or, fetch data otherwise
-          // 2: Use something like FHIR.oauth2.ready(persistedStateObj) if possible.
-          //    May need nav and react state fhirData update or worst case refresh of page.
-          //    Basically we call getFHIRData (which uses ready already (just not with an arg)) and then set the react fhirData state with what is returned.
-          // 3: Store encrypted fhirData in local storage and retrieve that
-          // 4: Bypass Authentication using the fakeTokenResponse/access_token (we aren't sure this will work in all scenarios though, so may not be an option)
-          // For now, to keep existing application flow prior to impl, creating default connection (which requires reuth/redirect):
-          // However, this should NEVER get called yet, as we are reauthorizing for now, so that we get a specific endpoint
-          // And, a launcher won't send authorized as true (yet)
-          client = await FHIR.oauth2.ready();
+          console.log("matchedFhirAccessDataObject", matchedFhirAccessDataObject)
+          // FHIR.client is passed fhirclient.ClientState from localForage which allows for fetching data w/o an external redirect since already authorized
+          // If for some reason we need an alternate impl to handle this, here are some options:
+          // 1: Using the API, if possible, use fetch after some connection is made (with object or endpoint), or use ready in similar manner
+          // 2: Store encrypted fhirData (actual patient data, hence encryption) in local storage and retrieve that
+          // 3: Bypass authentication using the fakeTokenResponse/access_token or an access token directly
+          // Note: Unfortunately, this is not an asynchronous operation
+          client = FHIR.client(matchedFhirAccessDataObject)
+          console.log('Executed: client = FHIR.client(matchedFhirAccessDataObject)')
         } else {
           throw new Error("A matching fhirAccessDataObject could not be found against the given serverUrl, cannot connect to client or load FHIR data")
         }
