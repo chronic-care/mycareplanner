@@ -151,8 +151,147 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   return vitals
 }
 
+export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
+  setProgressMessageState: (message: string) => void): Promise<FHIRData> => {
+  console.log("Enter getFHIRData()")
+
+  try {
+
+    if (process.env.REACT_APP_LOAD_MELD_ON_STARTUP === 'true') {
+      // TODO: Implement when time
+      console.log('Attempting to load meld sandbox automatically w/o a user-provided launcher and on startup')
+      // { iss: process.env.REACT_APP_MELD_SANDBOX_ENDPOINT_ISS,
+      //   redirectUri: "./index.html",
+      //   clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
+      //   scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE }
+    }
+
+    let client: Client
+    if (authorized) {
+      console.log("Known to be authorized, reconnecting to given, prior-authorized client, and reloading data")
+      if (serverUrl) {
+        console.log("serverUrl is truthy")
+        const matchedFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(serverUrl)
+        if (matchedFhirAccessDataObject) {
+          console.log("matchedFhirAccessDataObject is truthy, we should have a valid endpoint to pass to the client and reauthorize without redirect")
+          console.log("matchedFhirAccessDataObject", matchedFhirAccessDataObject)
+          // FHIR.client is passed fhirclient.ClientState from localForage which allows for fetching data w/o an external redirect since already authorized
+          // If for some reason we need an alternate impl to handle this, here are some options:
+          // 1: Using the API, if possible, use fetch after some connection is made (with object or endpoint), or use ready in similar manner
+          // 2: Store encrypted fhirData (actual patient data, hence encryption) in local storage and retrieve that
+          // 3: Bypass authentication using the fakeTokenResponse/access_token or an access token directly
+          // Note: Unfortunately, this is not an asynchronous operation
+          setProgressMessageState("Connecting to FHIR Client (for prior authorized client)")
+          client = FHIR.client(matchedFhirAccessDataObject)
+          console.log('Executed: client = FHIR.client(matchedFhirAccessDataObject)')
+        } else {
+          throw new Error("A matching fhirAccessDataObject could not be found against the given serverUrl, cannot connect to client or load FHIR data")
+        }
+      } else {
+        throw new Error("Given serverUrl is null, cannot connect to client or load FHIR data")
+      }
+    } else { // prior/default
+      console.log("Not known to be authorized, but could be, either a launcher, app startup, or FHIR.oauth2.authorize was called due to expiration")
+      console.log('Starting default OAuth2 authentication')
+      setProgressMessageState("Connecting to FHIR Client")
+      client = await FHIR.oauth2.ready();
+      console.log('Executed: client = await FHIR.oauth2.ready()')
+    }
+
+    setProgressMessageState("Verifying connection data and state")
+    if (!client) {
+      throw new Error("client isn't truthy, cannot connect to client or load FHIR data")
+    }
+
+    process.env.REACT_APP_TEST_PERSISTENCE === 'true' && console.log("client: ", JSON.stringify(client))
+
+    // We have a connected/populated client now, get the state/make use of the data
+    const clientState: fhirclient.ClientState = client?.state
+    if (clientState) {
+      await persistFHIRAccessData(clientState)
+    } else {
+      console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
+    }
+
+    const clientScope = client?.state.tokenResponse?.scope
+    const serverURL = client?.state.serverUrl
+
+    // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
+    const supportsInclude = !(
+      serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
+    )
+    console.log("Server URL = " + serverURL)
+    console.log("Supports _include = " + supportsInclude)
+
+    // console.log('OAuth2 scope authorized: ' + clientScope)
+    console.log('Client JSON: ')
+    console.log(console.log(JSON.stringify(client)))
+
+    return await getFHIRResources(client, clientScope, supportsInclude, setProgressMessageState)
+  } catch (err) {
+    console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
+    throw (err)
+  }
+
+}
+
+const getFHIRResources = async (client: Client, clientScope: string | undefined,
+  supportsInclude: boolean, setProgressMessageState: (message: string) => void): Promise<FHIRData> => {
+  /*
+   *  Allscripts does not return patient, so also try user if patient is missing.
+   */
+  // const patient: Patient = await client.patient.read() as Patient
+  // TODO: Analaysze/consider if we end up with persistence that can retain patient data for a longer period of time,
+  // such as session storage, or a secure back end, or use or have a local storage endpoint with an active auth:
+  // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
+  // so it's not null, and can be populated in most cases
+  setProgressMessageState("Reading Patient data")
+  const patient: Patient = client.patient.id !== null
+    ? await client.patient.read() as Patient
+    : await client.user.read() as Patient
+
+  // console.log('Patient resource:')
+  // console.log(JSON.stringify(patient))
+
+  var pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined
+
+  // workaround for Allscripts bug
+  pcpPath = pcpPath?.replace('R4/fhir', 'R4/open')
+  // console.log('PCP path = ' + pcpPath)
+
+  const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
+
+  setProgressMessageState("Reading User data")
+  const patientPath = 'Patient/' + client.getPatientId();
+  const fhirUserPath = client.getFhirUser();
+  const fhirUser: Practitioner | Patient | RelatedPerson | undefined =
+    fhirUserPath ? await client.request(fhirUserPath) : undefined;
+  const caregiverName: String | undefined =
+    (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
+
+
+  let fhirQueries = {} // empty object for speed of development/testing purposes, remains empty if env var is false
+  const getFhirQuereiesEnvVar = process.env.REACT_APP_GET_FHIR_QUERIES
+  console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQuereiesEnvVar)
+  if (getFhirQuereiesEnvVar === undefined || getFhirQuereiesEnvVar === 'true') {
+    // we allow undefined or true as we want the default to always be to load the queries
+    setProgressMessageState("Retrieving FHIR Queries")
+    fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP, setProgressMessageState)
+  }
+
+  return {
+    clientScope,
+    fhirUser,
+    caregiverName,
+    patient,
+    patientPCP,
+    ...fhirQueries
+  }
+}
+
 const getFHIRQueries = async (client: Client, clientScope: string | undefined, supportsInclude: boolean,
-  patientPCP: Practitioner | undefined): Promise<FHIRData> => {
+  patientPCP: Practitioner | undefined, setProgressMessageState: (message: string) => void): Promise<FHIRData> => {
   console.time('FHIR queries')
 
   var careTeamMembers = new Map<string, Practitioner>()
@@ -162,14 +301,14 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
   }
 
   // Authentication form allows patient to un-select individual types from allowed scope
-  console.log('CarePlan request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('CarePlan request: ' + new Date().toLocaleTimeString())
   const carePlanData = (hasScope(clientScope, 'CarePlan.read')
     ? resourcesFrom(await client.patient.request(carePlanPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const carePlans = carePlanData?.filter((item: any) => item.resourceType === 'CarePlan') as CarePlan[]
   recordProvenance(carePlanData)
 
-  console.log('CareTeam request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('CareTeam request: ' + new Date().toLocaleTimeString())
   const _careTeamPath = supportsInclude ? careTeamPath_include : careTeamPath
   // console.log('CareTeam path: ' + _careTeamPath)
   const careTeamData = (hasScope(clientScope, 'CareTeam.read')
@@ -185,19 +324,19 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
   })
   recordProvenance(careTeamData)
 
-  console.log('Goal request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Goal request: ' + new Date().toLocaleTimeString())
   const goalData = (hasScope(clientScope, 'Goal.read')
     ? resourcesFrom(await client.patient.request(goalsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const goals = goalData?.filter((item: any) => item.resourceType === 'Goal') as Goal[]
   recordProvenance(goalData)
 
-  console.log('Condition request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Condition request: ' + new Date().toLocaleTimeString())
   const conditions = (hasScope(clientScope, 'Condition.read')
     ? await getConditions(client)
     : undefined)
 
-  console.log('Procedure request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Procedure request: ' + new Date().toLocaleTimeString())
   var procedureData = (hasScope(clientScope, 'Procedure.read')
     ? resourcesFrom(await client.patient.request(proceduresTimePath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
@@ -210,7 +349,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
   const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
   recordProvenance(procedureData)
 
-  console.log('DiagnosticReport request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('DiagnosticReport request: ' + new Date().toLocaleTimeString())
   const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
     ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
@@ -218,7 +357,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
   recordProvenance(diagnosticReportData)
 
-  console.log('Immunization request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Immunization request: ' + new Date().toLocaleTimeString())
   const immunizationData = (hasScope(clientScope, 'Immunization.read')
     ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
@@ -226,27 +365,27 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
   recordProvenance(immunizationData)
 
-  console.log('LabResult request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('LabResult request: ' + new Date().toLocaleTimeString())
   const labResultData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(labResultsPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const labResults = labResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(labResultData)
 
-  console.log('MedicationRequest request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('MedicationRequest request: ' + new Date().toLocaleTimeString())
   var medications = undefined
   if (hasScope(clientScope, 'MedicationRequest.read')) {
     var medicationRequestData: Resource[] = []
     // fetch all active meds
     medicationRequestData = resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
-    console.log('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.')
+    setProgressMessageState('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.')
 
     // also fetch the last 10 inactive meds
     var inactiveMeds = resourcesFrom(await client.patient.request(medicationRequestInactivePath, fhirOptions) as fhirclient.JsonObject)
     // remove any inactive meds also in the active list (VA does not support the status parameter)
-    console.log('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).')
+    setProgressMessageState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).')
     inactiveMeds = inactiveMeds?.filter((item: any) => medicationRequestData?.find((resource: Resource) => resource.id === item.id) === undefined)
-    console.log('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).')
+    setProgressMessageState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).')
     medicationRequestData = (medicationRequestData ?? []).concat(inactiveMeds ?? [])
 
     medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
@@ -256,7 +395,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     medications = undefined
   }
 
-  console.log('ServiceRequest request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('ServiceRequest request: ' + new Date().toLocaleTimeString())
   const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
     ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
@@ -264,7 +403,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
   recordProvenance(serviceRequestData)
 
-  console.log('Social History request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Social History request: ' + new Date().toLocaleTimeString())
   const socialHistoryData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
@@ -272,7 +411,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(socialHistoryData)
 
-  // console.log('Obs Survey request: ' + new Date().toLocaleTimeString())
+  // setProgressMessageState('Obs Survey request: ' + new Date().toLocaleTimeString())
   // const surveyResultData = (hasScope(clientScope, 'Observation.read')
   //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject)
   //   : undefined)
@@ -281,13 +420,13 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
   // recordProvenance(surveyResultData)
   const surveyResults = undefined
 
-  console.log('Vitals request: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('Vitals request: ' + new Date().toLocaleTimeString())
   const vitalSigns = (hasScope(clientScope, 'Observation.read')
     // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject)
     ? await getVitalSigns(client)
     : undefined)
 
-  console.log('All FHIR requests finished: ' + new Date().toLocaleTimeString())
+  setProgressMessageState('All FHIR requests finished: ' + new Date().toLocaleTimeString())
   console.timeEnd('FHIR queries')
 
 
@@ -368,169 +507,6 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined, s
     provenanceMap,
     provenance,
   }
-}
-
-const getFHIRResources = async (client: Client, clientScope: string | undefined,
-  supportsInclude: boolean): Promise<FHIRData> => {
-  /*
-   *  Allscripts does not return patient, so also try user if patient is missing.
-   */
-  // const patient: Patient = await client.patient.read() as Patient
-  // TODO: Analaysze/consider if we end up with persistence that can retain patient data for a longer period of time,
-  // such as session storage, or a secure back end, or use or have a local storage endpoint with an active auth:
-  // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
-  // so it's not null, and can be populated in most cases
-  const patient: Patient = client.patient.id !== null
-    ? await client.patient.read() as Patient
-    : await client.user.read() as Patient
-
-  // console.log('Patient resource:')
-  // console.log(JSON.stringify(patient))
-
-  var pcpPath = patient.generalPractitioner ? patient.generalPractitioner?.[0]?.reference : undefined
-
-  // workaround for Allscripts bug
-  pcpPath = pcpPath?.replace('R4/fhir', 'R4/open')
-  // console.log('PCP path = ' + pcpPath)
-
-  const patientPCP: Practitioner | undefined = pcpPath ? await client.request(pcpPath) : undefined;
-
-  const patientPath = 'Patient/' + client.getPatientId();
-  const fhirUserPath = client.getFhirUser();
-  const fhirUser: Practitioner | Patient | RelatedPerson | undefined =
-    fhirUserPath ? await client.request(fhirUserPath) : undefined;
-  const caregiverName: String | undefined =
-    (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
-
-
-  let fhirQueries = {} // empty object for speed of development/testing purposes, remains empty if env var is false
-  const getFhirQuereiesEnvVar = process.env.REACT_APP_GET_FHIR_QUERIES
-  console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQuereiesEnvVar)
-  if (getFhirQuereiesEnvVar === undefined || getFhirQuereiesEnvVar === 'true') {
-    // we allow undefined or true as we want the default to always be to load the queries
-    fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP)
-  }
-
-  return {
-    clientScope,
-    fhirUser,
-    caregiverName,
-    patient,
-    patientPCP,
-    ...fhirQueries
-  }
-}
-
-/*
-export const getFHIRData = async (): Promise<FHIRData> => {
-  console.log('Starting OAuth2 authentication')
-  const client = await FHIR.oauth2.ready();
-  console.log('Finished OAuth2 authentication')
-
-  const clientState: fhirclient.ClientState = client?.state
-  if (clientState) {
-    await persistFHIRAccessData(clientState)
-  } else {
-    console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
-  }
-
-  const clientScope = client?.state.tokenResponse?.scope
-  const serverURL = client?.state.serverUrl
-
-  // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
-  const supportsInclude = !(
-    serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
-  )
-  console.log("Server URL = " + serverURL)
-  console.log("Supports _include = " + supportsInclude)
-
-  // console.log('OAuth2 scope authorized: ' + clientScope)
-  console.log('Client JSON: ')
-  console.log(console.log(JSON.stringify(client)))
-
-  return await getFHIRResources(client, clientScope, supportsInclude)
-}
-*/
-
-export const getFHIRData = async (authorized: boolean, serverUrl: string | null): Promise<FHIRData> => {
-  console.log("Enter getFHIRData()")
-
-  try {
-
-    if (process.env.REACT_APP_LOAD_MELD_ON_STARTUP === 'true') {
-      // TODO: Implement when time
-      console.log('Attempting to load meld sandbox automatically w/o a user-provided launcher and on startup')
-      // { iss: process.env.REACT_APP_MELD_SANDBOX_ENDPOINT_ISS,
-      //   redirectUri: "./index.html",
-      //   clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-      //   scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE }
-    }
-
-    let client: Client
-    if (authorized) {
-      console.log("Known to be authorized, reconnecting to given, prior-authorized client, and reloading data")
-      if (serverUrl) {
-        console.log("serverUrl is truthy")
-        const matchedFhirAccessDataObject: fhirclient.ClientState | undefined =
-          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(serverUrl)
-        if (matchedFhirAccessDataObject) {
-          console.log("matchedFhirAccessDataObject is truthy, we should have a valid endpoint to pass to the client and reauthorize without redirect")
-          console.log("matchedFhirAccessDataObject", matchedFhirAccessDataObject)
-          // FHIR.client is passed fhirclient.ClientState from localForage which allows for fetching data w/o an external redirect since already authorized
-          // If for some reason we need an alternate impl to handle this, here are some options:
-          // 1: Using the API, if possible, use fetch after some connection is made (with object or endpoint), or use ready in similar manner
-          // 2: Store encrypted fhirData (actual patient data, hence encryption) in local storage and retrieve that
-          // 3: Bypass authentication using the fakeTokenResponse/access_token or an access token directly
-          // Note: Unfortunately, this is not an asynchronous operation
-          client = FHIR.client(matchedFhirAccessDataObject)
-          console.log('Executed: client = FHIR.client(matchedFhirAccessDataObject)')
-        } else {
-          throw new Error("A matching fhirAccessDataObject could not be found against the given serverUrl, cannot connect to client or load FHIR data")
-        }
-      } else {
-        throw new Error("Given serverUrl is null, cannot connect to client or load FHIR data")
-      }
-    } else { // prior/default
-      console.log("Not known to be authorized, but could be, either a launcher, app startup, or FHIR.oauth2.authorize was called due to expiration")
-      console.log('Starting default OAuth2 authentication')
-      client = await FHIR.oauth2.ready();
-      console.log('Executed: client = await FHIR.oauth2.ready()')
-    }
-
-    if (!client) {
-      throw new Error("client isn't truthy, cannot connect to client or load FHIR data")
-    }
-
-    process.env.REACT_APP_TEST_PERSISTENCE === 'true' && console.log("client: ", JSON.stringify(client))
-
-    // We have a connected/populated client now, get the state/make use of the data
-    const clientState: fhirclient.ClientState = client?.state
-    if (clientState) {
-      await persistFHIRAccessData(clientState)
-    } else {
-      console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
-    }
-
-    const clientScope = client?.state.tokenResponse?.scope
-    const serverURL = client?.state.serverUrl
-
-    // TODO design a way to move this into configuration settings, and/or check CapabilityStatement
-    const supportsInclude = !(
-      serverURL.includes('cerner.com') || serverURL.includes('allscripts.com')
-    )
-    console.log("Server URL = " + serverURL)
-    console.log("Supports _include = " + supportsInclude)
-
-    // console.log('OAuth2 scope authorized: ' + clientScope)
-    console.log('Client JSON: ')
-    console.log(console.log(JSON.stringify(client)))
-
-    return await getFHIRResources(client, clientScope, supportsInclude)
-  } catch (err) {
-    console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
-    throw (err)
-  }
-
 }
 
 export function createResource(resource: Resource) {

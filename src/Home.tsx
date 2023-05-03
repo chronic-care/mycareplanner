@@ -11,7 +11,8 @@ interface HomeProps {
   fhirData?: FHIRData,
   patientSummary?: PatientSummary,
   screenings?: [ScreeningSummary],
-  // tasks?: [Task] | undefined
+  // tasks?: [Task] | undefined,
+  progressMessage: string
 }
 
 interface HomeState {
@@ -63,7 +64,9 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <br />
               </>
             }
-            <p>Reading your clinical records...</p>
+            <p>Reading your clinical records:</p>
+            {/* Display realtime loading data to indicate progress: e.g. FHIR resource Query Type and Load Time*/}
+            <p>{this.props.progressMessage}...</p>
             <BusySpinner busy={this.props.fhirData === undefined} />
           </div>
           : <div>
