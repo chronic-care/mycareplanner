@@ -49,6 +49,7 @@ interface AppState {
     ErrorMessage?: string,
     progressMessage: string,
     progressValue: number,
+    resourcesLoadedCount: number
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -61,6 +62,7 @@ export default class App extends React.Component<AppProps, AppState> {
             fhirData: undefined,
             progressMessage: "Initializing",
             progressValue: 0,
+            resourcesLoadedCount: 0
         }
     }
 
@@ -69,7 +71,8 @@ export default class App extends React.Component<AppProps, AppState> {
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
             try {
                 console.log("getting and setting fhirData state in componentDidMount")
-                let data = await getFHIRData(false, null, this.setAndLogProgressState)
+                let data = await getFHIRData(false, null, this.setAndLogProgressState,
+                    this.setResourcesLoadedCountState)
                 this.setFhirDataStates(data)
             } catch (err) {
                 console.log(`Failure calling getFHIRData from App.tsx componentDidMount: ${err}`)
@@ -86,11 +89,15 @@ export default class App extends React.Component<AppProps, AppState> {
         this.setState({ tasks: undefined })
     }
 
-    // callback function to update progressMessage and progressValue state and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
+    // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
     setAndLogProgressState = (message: string, value: number) => {
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
         console.log(`ProgressMessage: ${message}`)
+    }
+    // callback function to update resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
+    setResourcesLoadedCountState = (count: number) => {
+        this.setState({ resourcesLoadedCount: count })
     }
 
     public render(): JSX.Element {
@@ -125,6 +132,7 @@ export default class App extends React.Component<AppProps, AppState> {
                             <ProviderLogin
                                 setFhirDataStates={this.setFhirDataStates}
                                 setAndLogProgressState={this.setAndLogProgressState}
+                                setResourcesLoadedCountState={this.setResourcesLoadedCountState}
                                 {...routeProps}
                             />
                         )}

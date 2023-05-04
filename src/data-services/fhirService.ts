@@ -152,7 +152,8 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
 }
 
 export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
-  setAndLogProgressState: (message: string, value: number) => void): Promise<FHIRData> => {
+  setAndLogProgressState: (message: string, value: number) => void,
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   console.log("Enter getFHIRData()")
 
   try {
@@ -182,7 +183,7 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
           // 2: Store encrypted fhirData (actual patient data, hence encryption) in local storage and retrieve that
           // 3: Bypass authentication using the fakeTokenResponse/access_token or an access token directly
           // Note: Unfortunately, this is not an asynchronous operation
-          setAndLogProgressState("Connecting to FHIR Client (for prior authorized client)", 5)
+          setAndLogProgressState("Connecting to FHIR client (for prior authorized client)", 5)
           client = FHIR.client(matchedFhirAccessDataObject)
           console.log('Executed: client = FHIR.client(matchedFhirAccessDataObject)')
         } else {
@@ -194,7 +195,7 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     } else { // prior/default
       console.log("Not known to be authorized, but could be, either a launcher, app startup, or FHIR.oauth2.authorize was called due to expiration")
       console.log('Starting default OAuth2 authentication')
-      setAndLogProgressState("Connecting to FHIR Client", 10)
+      setAndLogProgressState("Connecting to FHIR client", 10)
       client = await FHIR.oauth2.ready();
       console.log('Executed: client = await FHIR.oauth2.ready()')
     }
@@ -228,7 +229,8 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     console.log('Client JSON: ')
     console.log(console.log(JSON.stringify(client)))
 
-    return await getFHIRResources(client, clientScope, supportsInclude, setAndLogProgressState)
+    return await getFHIRResources(client, clientScope, supportsInclude,
+      setAndLogProgressState, setResourcesLoadedCountState)
   } catch (err) {
     console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
     throw (err)
@@ -236,8 +238,9 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
 
 }
 
-const getFHIRResources = async (client: Client, clientScope: string | undefined,
-  supportsInclude: boolean, setAndLogProgressState: (message: string, value: number) => void): Promise<FHIRData> => {
+const getFHIRResources = async (client: Client, clientScope: string | undefined, supportsInclude: boolean,
+  setAndLogProgressState: (message: string, value: number) => void,
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   /*
    *  Allscripts does not return patient, so also try user if patient is missing.
    */
@@ -246,7 +249,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   // such as session storage, or a secure back end, or use or have a local storage endpoint with an active auth:
   // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
   // so it's not null, and can be populated in most cases
-  setAndLogProgressState("Reading Patient data", 20)
+  setAndLogProgressState("Reading patient data", 20)
   const patient: Patient = client.patient.id !== null
     ? await client.patient.read() as Patient
     : await client.user.read() as Patient
@@ -276,8 +279,9 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQuereiesEnvVar)
   if (getFhirQuereiesEnvVar === undefined || getFhirQuereiesEnvVar === 'true') {
     // we allow undefined or true as we want the default to always be to load the queries
-    setAndLogProgressState("Retrieving FHIR Queries", 35)
-    fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP, setAndLogProgressState)
+    setAndLogProgressState("Retrieving FHIR queries", 35)
+    fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP,
+      setAndLogProgressState, setResourcesLoadedCountState)
   }
 
   return {
@@ -292,8 +296,11 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
 
 const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   supportsInclude: boolean, patientPCP: Practitioner | undefined,
-  setAndLogProgressState: (message: string, value: number) => void): Promise<FHIRData> => {
+  setAndLogProgressState: (message: string, value: number) => void,
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   console.time('FHIR queries')
+
+  let resourcesLoadedCount: number = 0
 
   var careTeamMembers = new Map<string, Practitioner>()
 
@@ -308,6 +315,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     : undefined)
   const carePlans = carePlanData?.filter((item: any) => item.resourceType === 'CarePlan') as CarePlan[]
   recordProvenance(carePlanData)
+  carePlanData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('CareTeam request: ' + new Date().toLocaleTimeString(), 45)
   const _careTeamPath = supportsInclude ? careTeamPath_include : careTeamPath
@@ -324,6 +332,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     }
   })
   recordProvenance(careTeamData)
+  careTeamData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('Goal request: ' + new Date().toLocaleTimeString(), 50)
   const goalData = (hasScope(clientScope, 'Goal.read')
@@ -331,11 +340,13 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     : undefined)
   const goals = goalData?.filter((item: any) => item.resourceType === 'Goal') as Goal[]
   recordProvenance(goalData)
+  goalData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('Condition request: ' + new Date().toLocaleTimeString(), 55)
   const conditions = (hasScope(clientScope, 'Condition.read')
     ? await getConditions(client)
     : undefined)
+  conditions && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('Procedure request: ' + new Date().toLocaleTimeString(), 60)
   var procedureData = (hasScope(clientScope, 'Procedure.read')
@@ -349,6 +360,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   }
   const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
   recordProvenance(procedureData)
+  procedureData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('DiagnosticReport request: ' + new Date().toLocaleTimeString(), 65)
   const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
@@ -357,6 +369,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   const diagnosticReports =
     diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
   recordProvenance(diagnosticReportData)
+  diagnosticReportData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('Immunization request: ' + new Date().toLocaleTimeString(), 70)
   const immunizationData = (hasScope(clientScope, 'Immunization.read')
@@ -365,6 +378,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   const immunizations =
     immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
   recordProvenance(immunizationData)
+  immunizationData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('LabResult request: ' + new Date().toLocaleTimeString(), 75)
   const labResultData = (hasScope(clientScope, 'Observation.read')
@@ -372,6 +386,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     : undefined)
   const labResults = labResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(labResultData)
+  labResultData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('MedicationRequest request: ' + new Date().toLocaleTimeString(), 80)
   var medications = undefined
@@ -380,14 +395,18 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     // fetch all active meds
     medicationRequestData = resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
     setAndLogProgressState('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.', 81)
+    medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
     // also fetch the last 10 inactive meds
     var inactiveMeds = resourcesFrom(await client.patient.request(medicationRequestInactivePath, fhirOptions) as fhirclient.JsonObject)
     // remove any inactive meds also in the active list (VA does not support the status parameter)
     setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).', 82)
     inactiveMeds = inactiveMeds?.filter((item: any) => medicationRequestData?.find((resource: Resource) => resource.id === item.id) === undefined)
+    inactiveMeds && setResourcesLoadedCountState(++resourcesLoadedCount)
+
     setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).', 83)
     medicationRequestData = (medicationRequestData ?? []).concat(inactiveMeds ?? [])
+    medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
     medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
     recordProvenance(medicationRequestData)
@@ -403,22 +422,25 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   const serviceRequests =
     serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
   recordProvenance(serviceRequestData)
+  serviceRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  setAndLogProgressState('Social History request: ' + new Date().toLocaleTimeString(), 90)
+  setAndLogProgressState('SocialHistory request: ' + new Date().toLocaleTimeString(), 90)
   const socialHistoryData = (hasScope(clientScope, 'Observation.read')
     ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject)
     : undefined)
   const socialHistory =
     socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   recordProvenance(socialHistoryData)
+  socialHistoryData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  // setProgressMessageState('Obs Survey request: ' + new Date().toLocaleTimeString())
+  // setProgressMessageState('Obs Survey request: ' + new Date().toLocaleTimeString(), 93)
   // const surveyResultData = (hasScope(clientScope, 'Observation.read')
   //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject)
   //   : undefined)
   // const surveyResults =
   //  surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
   // recordProvenance(surveyResultData)
+  // surveyResultData && setResourcesLoadedCountState(++resourcesLoadedCount)
   const surveyResults = undefined
 
   setAndLogProgressState('Vitals request: ' + new Date().toLocaleTimeString(), 95)
@@ -426,6 +448,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject)
     ? await getVitalSigns(client)
     : undefined)
+  vitalSigns && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('All FHIR requests finished: ' + new Date().toLocaleTimeString(), 100)
   console.timeEnd('FHIR queries')
@@ -489,6 +512,10 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     console.log(JSON.stringify(practitioner))
   )
   */
+
+  // Reset progress as sometimes React isn't fast enough on next load
+  setAndLogProgressState('', 0)
+  setResourcesLoadedCountState(0)
 
   return {
     carePlans,

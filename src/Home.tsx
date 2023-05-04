@@ -15,7 +15,8 @@ interface HomeProps {
   screenings?: [ScreeningSummary],
   // tasks?: [Task] | undefined,
   progressMessage: string,
-  progressValue: number
+  progressValue: number,
+  resourcesLoadedCount: number,
 }
 
 interface HomeState {
@@ -72,6 +73,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             <DeterminateProgress progressValue={this.props.progressValue} />
             {/* <BusySpinner busy={this.props.fhirData === undefined} /> */}
             <p>{this.props.progressMessage}...<span style={{ paddingLeft: '10px' }}><CircularProgress size="1rem" /></span></p>
+            <p>Resources loaded: {this.props.resourcesLoadedCount}</p>
           </div>
           : <div>
 
