@@ -51,6 +51,13 @@ FHIR.oauth2.authorize([
         scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
     },
     {
+        // Meld CHC Pilot Test sandbox
+        issMatch: /\bgw.interop.community\/CHCPilotTest\b/i,
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_meld_chc,
+        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+    },
+    {
         // Logica sandbox
         issMatch: /\blogicahealth\b/i,
         redirectUri: "./index.html",
