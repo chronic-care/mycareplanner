@@ -42,7 +42,7 @@ const carePlanPath = 'CarePlan?status=active&category=assess-plan' + provenanceS
 const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
 const careTeamPath_include = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
 
-const goalsPath = 'Goal?lifecycle-status=active' + provenanceSearch
+const goalsPath = 'Goal?lifecycle-status=planned,accepted,active,on-hold' + provenanceSearch
 
 /// Epic allows multiple category codes only >= Aug 2021 release
 // const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
