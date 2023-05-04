@@ -22,8 +22,8 @@ class ProviderEndpoint {
 }
 
 interface Props extends RouteComponentProps {
-  setFhirDataStates: (data: FHIRData | undefined) => void
-  setProgressMessageState: (message: string) => void
+  setFhirDataStates: (data: FHIRData | undefined) => void,
+  setAndLogProgressState: (message: string, value: number) => void,
 }
 
 interface LocationState {
@@ -187,7 +187,7 @@ export default function ProviderLogin(props: Props) {
               console.log("redirecting to '/'")
               history.push('/')
               console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
-              fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, props.setProgressMessageState)
+              fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, props.setAndLogProgressState)
             } catch (err) {
               console.log(`Failure calling getFHIRData(true, issServerUrl!) from ProviderLogin.tsx handleSubmit: ${err}`)
               console.log('fallback to authorization due to above failure')

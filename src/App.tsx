@@ -46,8 +46,9 @@ interface AppState {
     patientSummary?: PatientSummary,
     screenings?: [ScreeningSummary],
     tasks?: [Task],
-    ErrorMessage?: string
-    progressMessage: string
+    ErrorMessage?: string,
+    progressMessage: string,
+    progressValue: number,
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -58,7 +59,8 @@ export default class App extends React.Component<AppProps, AppState> {
             planTabIndex: "5",
             statusTabIndex: "9",
             fhirData: undefined,
-            progressMessage: "Initializing"
+            progressMessage: "Initializing",
+            progressValue: 0,
         }
     }
 
@@ -67,7 +69,7 @@ export default class App extends React.Component<AppProps, AppState> {
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
             try {
                 console.log("getting and setting fhirData state in componentDidMount")
-                let data = await getFHIRData(false, null, this.setProgressMessageState)
+                let data = await getFHIRData(false, null, this.setAndLogProgressState)
                 this.setFhirDataStates(data)
             } catch (err) {
                 console.log(`Failure calling getFHIRData from App.tsx componentDidMount: ${err}`)
@@ -84,9 +86,10 @@ export default class App extends React.Component<AppProps, AppState> {
         this.setState({ tasks: undefined })
     }
 
-    // callback function to update progressMessage state and log message to console (passed to fhirService functions as arg, and ProviderLogin as prop)
-    setProgressMessageState = (message: string) => {
+    // callback function to update progressMessage and progressValue state and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
+    setAndLogProgressState = (message: string, value: number) => {
         this.setState({ progressMessage: message })
+        this.setState({ progressValue: value })
         console.log(`ProgressMessage: ${message}`)
     }
 
@@ -121,7 +124,7 @@ export default class App extends React.Component<AppProps, AppState> {
                         render={(routeProps) => (
                             <ProviderLogin
                                 setFhirDataStates={this.setFhirDataStates}
-                                setProgressMessageState={this.setProgressMessageState}
+                                setAndLogProgressState={this.setAndLogProgressState}
                                 {...routeProps}
                             />
                         )}

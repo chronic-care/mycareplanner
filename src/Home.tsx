@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { FHIRData } from './data-services/models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSummary';
 // import { Task } from './data-services/fhir-types/fhir-r4';
-import { BusySpinner } from './components/busy-spinner/BusySpinner';
+// import { BusySpinner } from './components/busy-spinner/BusySpinner';
+import { CircularProgress } from '@mui/material';
+import { DeterminateProgress } from './components/determinate-progress/DeterminateProgress';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
@@ -12,7 +14,8 @@ interface HomeProps {
   patientSummary?: PatientSummary,
   screenings?: [ScreeningSummary],
   // tasks?: [Task] | undefined,
-  progressMessage: string
+  progressMessage: string,
+  progressValue: number
 }
 
 interface HomeState {
@@ -64,10 +67,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <br />
               </>
             }
-            <p>Reading your clinical records:</p>
-            {/* Display realtime loading data to indicate progress: e.g. FHIR resource Query Type and Load Time*/}
-            <p>{this.props.progressMessage}...</p>
-            <BusySpinner busy={this.props.fhirData === undefined} />
+            <h6>Reading your clinical records: </h6>
+            {/* Display realtime loading data to visually determine progress: e.g. FHIR resource Query Type and Load Time*/}
+            <DeterminateProgress progressValue={this.props.progressValue} />
+            {/* <BusySpinner busy={this.props.fhirData === undefined} /> */}
+            <p>{this.props.progressMessage}...<span style={{ paddingLeft: '10px' }}><CircularProgress size="1rem" /></span></p>
           </div>
           : <div>
 
