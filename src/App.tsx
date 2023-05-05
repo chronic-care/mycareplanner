@@ -46,10 +46,15 @@ interface AppState {
     patientSummary?: PatientSummary,
     screenings?: [ScreeningSummary],
     tasks?: [Task],
-    ErrorMessage?: string,
+
     progressMessage: string,
     progressValue: number,
     resourcesLoadedCount: number
+
+    errorType: string | undefined,
+    userErrorMessage: string | undefined,
+    developerErrorMessage: string | undefined,
+    errorCaught: Error | string | unknown,
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -60,9 +65,15 @@ export default class App extends React.Component<AppProps, AppState> {
             planTabIndex: "5",
             statusTabIndex: "9",
             fhirData: undefined,
+
             progressMessage: "Initializing",
             progressValue: 0,
-            resourcesLoadedCount: 0
+            resourcesLoadedCount: 0,
+
+            errorType: undefined,
+            userErrorMessage: undefined,
+            developerErrorMessage: undefined,
+            errorCaught: undefined
         }
     }
 
@@ -75,7 +86,8 @@ export default class App extends React.Component<AppProps, AppState> {
                     this.setResourcesLoadedCountState)
                 this.setFhirDataStates(data)
             } catch (err) {
-                console.log(`Failure calling getFHIRData from App.tsx componentDidMount: ${err}`)
+                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Loading has been halted.',
+                    'Failure calling getFHIRData from App.tsx componentDidMount.', err)
             }
         }
     }
@@ -91,13 +103,27 @@ export default class App extends React.Component<AppProps, AppState> {
 
     // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
     setAndLogProgressState = (message: string, value: number) => {
+        console.log(`ProgressMessage: ${message}`)
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
-        console.log(`ProgressMessage: ${message}`)
     }
     // callback function to update resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
     setResourcesLoadedCountState = (count: number) => {
         this.setState({ resourcesLoadedCount: count })
+    }
+
+    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
+        console.log(`${errorType} Error: ${userErrorMessage} | Technical Message: ${developerErrorMessage} | Error Caught: ${errorCaught}`)
+        this.setState({ errorType: errorType })
+        this.setState({ userErrorMessage: userErrorMessage })
+        this.setState({ developerErrorMessage: developerErrorMessage })
+        let errorCaughtString: string = 'N/A'
+        if (errorCaught instanceof Error) {
+            errorCaughtString = errorCaught.message
+        } else if (typeof errorCaught === "string") {
+            errorCaughtString = errorCaught
+        }
+        this.setState({ errorCaught: errorCaughtString })
     }
 
     public render(): JSX.Element {
