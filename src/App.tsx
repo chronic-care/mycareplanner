@@ -86,7 +86,7 @@ export default class App extends React.Component<AppProps, AppState> {
                     this.setResourcesLoadedCountState)
                 this.setFhirDataStates(data)
             } catch (err) {
-                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Loading has been halted.',
+                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Loading has been halted. Please try a different launcher or select a different provider.',
                     'Failure calling getFHIRData from App.tsx componentDidMount.', err)
             }
         }
