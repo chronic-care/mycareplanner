@@ -1,9 +1,9 @@
-import '../../Home.css'
-import React from 'react'
-import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
+import '../../Home.css';
+import React from 'react';
+import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
-import { Summary } from './Summary'
+import { Summary } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {

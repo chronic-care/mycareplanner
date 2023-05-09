@@ -1,11 +1,11 @@
-import '../../Home.css'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary'
-import { getVitalSignSummary } from '../../data-services/mccCqlService'
-import { Summary, SummaryRowItems } from './Summary'
-import { BusySpinner } from '../busy-spinner/BusySpinner'
+import '../../Home.css';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary';
+import { getVitalSignSummary } from '../../data-services/mccCqlService';
+import { Summary, SummaryRowItems } from './Summary';
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
   fhirData?: FHIRData,

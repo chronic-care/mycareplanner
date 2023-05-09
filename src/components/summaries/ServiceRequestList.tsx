@@ -1,9 +1,9 @@
-import '../../Home.css'
-import React from 'react'
-import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
+import '../../Home.css';
+import React from 'react';
+import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { ServiceRequest, TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
-import { Summary, SummaryRowItems } from './Summary'
+import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {

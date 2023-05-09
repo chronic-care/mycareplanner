@@ -17,7 +17,7 @@ interface ErrorMessageProps {
 }
 
 export const ErrorMessage: React.FC<ErrorMessageProps> = (props: ErrorMessageProps) => {
-  {/* TODO: Consider converting CSS to inline MUI */ }
+  // TODO: Consider converting CSS to inline MUI so the application has more continuity
   return (
     <>
       {

@@ -1,12 +1,12 @@
-import '../../Home.css'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary'
-import { getMedicationSummary } from '../../data-services/mccCqlService'
-import { Summary, SummaryRowItems } from './Summary'
-import { BusySpinner } from '../busy-spinner/BusySpinner'
+import '../../Home.css';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary';
+import { getMedicationSummary } from '../../data-services/mccCqlService';
+import { Summary, SummaryRowItems } from './Summary';
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface MedicationListProps {
   fhirData?: FHIRData,
