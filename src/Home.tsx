@@ -7,6 +7,7 @@ import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSumm
 // import { BusySpinner } from './components/busy-spinner/BusySpinner';
 import { CircularProgress } from '@mui/material';
 import { DeterminateProgress } from './components/determinate-progress/DeterminateProgress';
+import { ErrorMessage } from './components/error-message/ErrorMessage';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
@@ -80,43 +81,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <p>Resources loaded: {this.props.resourcesLoadedCount}</p>
               </>
             }
-
-            {/* TODO: Consider putting this in its own ErrorMessage component, adding CSS, and/or using MUI */}
-            {
-              ((this.props.userErrorMessage && this.props.errorType === 'Terminating') || process.env.REACT_APP_SHOW_LINK_TO_PROVIDER_LOGIN_ON_LAUNCH === 'true') &&
-              <>
-                <p style={{ color: 'black' }}><b>Navigate</b></p>
-                <Link to={{
-                  pathname: '/provider-login',
-                  state: {
-                    fhirData: this.props.fhirData
-                  }
-                }}>Retrieve records from other healthcare providers</Link>
-                <br />
-              </>
-            }
-            {
-              this.props.userErrorMessage &&
-              <div style={{ color: 'red' }}>
-                <p><b>Error</b></p>
-                <p><span style={{ color: 'black' }}>Type: </span>{this.props.errorType}</p>
-                <p><span style={{ color: 'black' }}>Message: </span>{this.props.userErrorMessage}</p>
-                <p><span style={{ color: 'black' }}>Technical Message: </span>{this.props.developerErrorMessage}</p>
-                <p><span style={{ color: 'black' }}>Error Caught Message: </span>{this.props.errorCaught}</p>
-                <p><span style={{ color: 'black' }}>Support: </span>{process.env.REACT_APP_SUPPORT_EMAIL_MESSAGE}</p>
-                {
-                  this.props.errorType === 'Terminating' &&
-                  <>
-                    <div style={{ color: 'darkblue' }}>
-                      <p><b>Collected Progress Data</b></p>
-                      <p><span style={{ color: 'black' }}>Percentage Completed: </span>{this.props.progressValue}%</p>
-                      <p><span style={{ color: 'black' }}>Last Status Message: </span>{this.props.progressMessage}</p>
-                      <p><span style={{ color: 'black' }}>Resources Loaded: </span>{this.props.resourcesLoadedCount}</p>
-                    </div>
-                  </>
-                }
-              </div>
-            }
+            <ErrorMessage {...this.props} />
 
           </div>
           : <div>

@@ -31,9 +31,9 @@ import { ErrorPage } from "./components/error-page/ErrorPage";
 
 import ConditionEditForm from './components/edit-forms/ConditionEditForm';
 import GoalEditForm from './components/edit-forms/GoalEditForm';
-import ProviderLogin from "./components/shared-data/ProviderLogin"
-import ShareData from "./components/shared-data/ShareData"
-import SharedDataSummary from "./components/shared-data/SharedDataSummary"
+import ProviderLogin from "./components/shared-data/ProviderLogin";
+import ShareData from "./components/shared-data/ShareData";
+import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 
 interface AppProps {
 }
@@ -86,7 +86,7 @@ export default class App extends React.Component<AppProps, AppState> {
                     this.setResourcesLoadedCountState)
                 this.setFhirDataStates(data)
             } catch (err) {
-                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Loading has been halted. Please try a different launcher or select a different provider.',
+                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Please try a different launcher or select a different provider.',
                     'Failure calling getFHIRData from App.tsx componentDidMount.', err)
             }
         }
