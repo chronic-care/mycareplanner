@@ -1,8 +1,8 @@
-import React from 'react'
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
-import { createTheme, ThemeProvider } from '@mui/material'
-import { SummaryRow } from './SummaryRow'
+import React from 'react';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { SummaryRow } from './SummaryRow';
 
 export interface SummaryRowItem {
   isHeader: boolean,

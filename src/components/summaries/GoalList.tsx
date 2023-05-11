@@ -1,12 +1,12 @@
-import '../../Home.css'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources'
-import { PatientSummary, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary'
-import { getGoalSummary } from '../../data-services/mccCqlService'
-import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
-import { BusySpinner } from '../busy-spinner/BusySpinner'
+import '../../Home.css';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
+import { getGoalSummary } from '../../data-services/mccCqlService';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface GoalListProps {
   fhirData?: FHIRData,

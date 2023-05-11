@@ -1,12 +1,12 @@
-import '../../Home.css'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary'
-import { getConditionSummary } from '../../data-services/mccCqlService'
-import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
-import { BusySpinner } from '../busy-spinner/BusySpinner'
+import '../../Home.css';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary';
+import { getConditionSummary } from '../../data-services/mccCqlService';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ConditionListProps {
   fhirData?: FHIRData,

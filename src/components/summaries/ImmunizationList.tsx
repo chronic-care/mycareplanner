@@ -1,10 +1,10 @@
-import '../../Home.css'
-import React from 'react'
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources'
-import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary'
-import { Summary, SummaryRowItem, SummaryRowItems } from './Summary'
-import { Immunization } from '../../data-services/fhir-types/fhir-r4'
-import { BusySpinner } from '../busy-spinner/BusySpinner'
+import '../../Home.css';
+import React from 'react';
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
+import { Immunization } from '../../data-services/fhir-types/fhir-r4';
+import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,

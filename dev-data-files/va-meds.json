@@ -1,0 +1,510 @@
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-HGDUM7NJQI32SR25M66BIVWWWE000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-ONFO5TTRHGLQLNN22PB6R7F2VI000000",
+        "display": "Hydrochlorothiazide 25 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1980-05-07T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "Hydrochlorothiazide 25 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1980-05-07T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-2CZBLY7NGYNPQZXSVLSOITLQIE000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1980-05-07T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1980-05-07T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-OLEMC7VSF3KEMWOVN3OIJHIUIM000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1980-05-07T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1980-05-07T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-ZZXDUGFRO6URIHLL34D542T5QM000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-ONFO5TTRHGLQLNN22PB6R7F2VI000000",
+        "display": "Hydrochlorothiazide 25 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1982-05-19T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "Hydrochlorothiazide 25 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1982-05-19T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-CVDPP4MLMLGFAHWYRSSXYVPPCA000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1983-05-25T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1983-05-25T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-ULGZ4CRZX3DHJXB7GUGTQEWPC4000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-ONFO5TTRHGLQLNN22PB6R7F2VI000000",
+        "display": "Hydrochlorothiazide 25 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1985-06-05T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "Hydrochlorothiazide 25 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1985-06-05T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-YAGECAT5OBNCBPWVFV4RMAOQGY000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1985-06-05T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1985-06-05T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-HF5OEPLGY5OLHE4F6XKCBXOL6I000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-ONFO5TTRHGLQLNN22PB6R7F2VI000000",
+        "display": "Hydrochlorothiazide 25 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1985-06-05T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "Hydrochlorothiazide 25 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1985-06-05T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-XOTORAD3VPN5NT6FN2NUP4BQ3A000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1985-06-05T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1985-06-05T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)
+[Log
+] {
+    "resourceType": "MedicationRequest",
+    "id": "I2-JSG2KYOQWWH6DC425CERWWZN54000000",
+    "meta": {
+        "lastUpdated": "2022-11-25T00:00:00Z"
+    },
+    "status": "completed",
+    "intent": "plan",
+    "reportedBoolean": true,
+    "medicationReference": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Medication/I2-CQFUUUHFFFQ7XFHHCZ7HQLHR74000000",
+        "display": "lisinopril 10 MG Oral Tablet"
+    },
+    "subject": {
+        "reference": "https://sandbox-api.va.gov/services/fhir/v0/r4/Patient/59",
+        "display": "Mr. Tod265 Dale454 McLaughlin530 MD"
+    },
+    "authoredOn": "1986-06-11T08:53:01Z",
+    "_requester": {
+        "extension": [
+            {
+                "url": "https://hl7.org/fhir/extension-data-absent-reason.html",
+                "valueCode": "unknown"
+            }
+        ]
+    },
+    "note": [
+        {
+            "text": "lisinopril 10 MG Oral Tablet"
+        }
+    ],
+    "dosageInstruction": [
+        {
+            "text": "Take 1 time(s) every 1.0 day(s) - spread out evenly.",
+            "timing": {
+                "repeat": {
+                    "boundsPeriod": {
+                        "start": "1986-06-11T08:53:01Z"
+                    }
+                },
+                "code": {
+                    "text": "As directed by physician."
+                }
+            },
+            "route": {
+                "text": "As directed by physician."
+            }
+        }
+    ]
+} (main.2ee36bed.chunk.js, line 1)

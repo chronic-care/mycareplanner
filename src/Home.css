@@ -1,5 +1,6 @@
 .home-view {
     min-height: 80vh;
+    width: 100%;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -63,6 +64,7 @@
     text-align: left;
     flex-direction: column;
     justify-content: left;
+    width: 100%;
 }
 
 table {

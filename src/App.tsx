@@ -31,9 +31,9 @@ import { ErrorPage } from "./components/error-page/ErrorPage";
 
 import ConditionEditForm from './components/edit-forms/ConditionEditForm';
 import GoalEditForm from './components/edit-forms/GoalEditForm';
-import ProviderLogin from "./components/shared-data/ProviderLogin"
-import ShareData from "./components/shared-data/ShareData"
-import SharedDataSummary from "./components/shared-data/SharedDataSummary"
+import ProviderLogin from "./components/shared-data/ProviderLogin";
+import ShareData from "./components/shared-data/ShareData";
+import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 
 interface AppProps {
 }
@@ -46,7 +46,15 @@ interface AppState {
     patientSummary?: PatientSummary,
     screenings?: [ScreeningSummary],
     tasks?: [Task],
-    ErrorMessage?: string
+
+    progressMessage: string,
+    progressValue: number,
+    resourcesLoadedCount: number
+
+    errorType: string | undefined,
+    userErrorMessage: string | undefined,
+    developerErrorMessage: string | undefined,
+    errorCaught: Error | string | unknown,
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -57,16 +65,65 @@ export default class App extends React.Component<AppProps, AppState> {
             planTabIndex: "5",
             statusTabIndex: "9",
             fhirData: undefined,
+
+            progressMessage: "Initializing",
+            progressValue: 0,
+            resourcesLoadedCount: 0,
+
+            errorType: undefined,
+            userErrorMessage: undefined,
+            developerErrorMessage: undefined,
+            errorCaught: undefined
         }
     }
 
-    componentDidMount() {
-        getFHIRData().then((data: FHIRData) => {
-            this.setState({ fhirData: data })
-            this.setState({ patientSummary: getPatientSummary(data) })
-            this.setState({ screenings: executeScreenings(data) })
-            this.setState({ tasks: undefined })
-        })
+    async componentDidMount() {
+        console.log("App.tsx componentDidMount()")
+        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
+            try {
+                console.log("getting and setting fhirData state in componentDidMount")
+                let data = await getFHIRData(false, null, this.setAndLogProgressState,
+                    this.setResourcesLoadedCountState)
+                this.setFhirDataStates(data)
+            } catch (err) {
+                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Please try a different launcher or select a different provider.',
+                    'Failure calling getFHIRData from App.tsx componentDidMount.', err)
+            }
+        }
+    }
+
+    // callback function to update fhir data states and give ProviderLogin access to it
+    setFhirDataStates = (data: FHIRData | undefined) => {
+        console.log("setFhirDataStates(data: FHIRData | undefined): void")
+        this.setState({ fhirData: data })
+        this.setState({ patientSummary: data ? getPatientSummary(data) : undefined })
+        this.setState({ screenings: data ? executeScreenings(data) : undefined })
+        this.setState({ tasks: undefined })
+    }
+
+    // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
+    setAndLogProgressState = (message: string, value: number) => {
+        console.log(`ProgressMessage: ${message}`)
+        this.setState({ progressMessage: message })
+        this.setState({ progressValue: value })
+    }
+    // callback function to update resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
+    setResourcesLoadedCountState = (count: number) => {
+        this.setState({ resourcesLoadedCount: count })
+    }
+
+    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
+        console.log(`${errorType} Error: ${userErrorMessage} | Technical Message: ${developerErrorMessage} | Error Caught: ${errorCaught}`)
+        this.setState({ errorType: errorType })
+        this.setState({ userErrorMessage: userErrorMessage })
+        this.setState({ developerErrorMessage: developerErrorMessage })
+        let errorCaughtString: string = 'N/A'
+        if (errorCaught instanceof Error) {
+            errorCaughtString = errorCaught.message
+        } else if (typeof errorCaught === "string") {
+            errorCaughtString = errorCaught
+        }
+        this.setState({ errorCaught: errorCaughtString })
     }
 
     public render(): JSX.Element {
@@ -95,7 +152,17 @@ export default class App extends React.Component<AppProps, AppState> {
                         <GoalEditForm {...editFormData} />
                     </Route>
 
-                    <Route path="/provider-login" component={ProviderLogin} />
+                    {/* <Route path="/provider-login" component={ProviderLogin} /> */}
+                    <Route path="/provider-login"
+                        render={(routeProps) => (
+                            <ProviderLogin
+                                setFhirDataStates={this.setFhirDataStates}
+                                setAndLogProgressState={this.setAndLogProgressState}
+                                setResourcesLoadedCountState={this.setResourcesLoadedCountState}
+                                {...routeProps}
+                            />
+                        )}
+                    />
                     <Route path="/share-data" component={ShareData} />
                     <Route path="/shared-data-summary" component={SharedDataSummary} />
 
