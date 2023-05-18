@@ -153,11 +153,12 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
 
 export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void,
+  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
+    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
   console.log("Enter getFHIRData()")
 
   try {
-
     if (process.env.REACT_APP_LOAD_MELD_ON_STARTUP === 'true') {
       // TODO: Implement when time
       console.log('Attempting to load meld sandbox automatically w/o a user-provided launcher and on startup')
@@ -232,7 +233,11 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     return await getFHIRResources(client, clientScope, supportsInclude,
       setAndLogProgressState, setResourcesLoadedCountState)
   } catch (err) {
-    console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
+    // setAndLogErrorMessageState('Terminating',
+    //   process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT ? process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT : 'undefined',
+    //   'Failure in getFHIRData either asynchronously resolving FHIR.oath2.ready() promise or synchronously creating a new client.', err)
+    // Error is thrown so will be caught and set by the whatever calls this getFHIRData function instead of here which will allow for speceficity in the error.
+    // It must be thorwn Since getFHIRData guarantees a promise of type FHIRData
     throw (err)
   }
 

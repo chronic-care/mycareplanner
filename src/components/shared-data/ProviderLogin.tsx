@@ -25,6 +25,9 @@ interface Props extends RouteComponentProps {
   setFhirDataStates: (data: FHIRData | undefined) => void,
   setAndLogProgressState: (message: string, value: number) => void,
   setResourcesLoadedCountState: (count: number) => void,
+  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
+    developerErrorMessage: string, errorCaught: Error | string | unknown) => void,
+  resetErrorMessageState: () => void,
 }
 
 interface LocationState {
@@ -185,15 +188,18 @@ export default function ProviderLogin(props: Props) {
             try {
               console.log('setting fhirData to undefined so progess indicator is triggered while new data is loaded subsequently')
               props.setFhirDataStates(undefined)
+              props.resetErrorMessageState()
               console.log("redirecting to '/'")
               history.push('/')
               console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
               fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, props.setAndLogProgressState,
-                props.setResourcesLoadedCountState)
+                props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
             } catch (err) {
               console.log(`Failure calling getFHIRData(true, issServerUrl!) from ProviderLogin.tsx handleSubmit: ${err}`)
               console.log('fallback to authorization due to above failure')
               // TODO: Add logic to ensure that fhirAccess obj and array are not updated (or are reverted) from a faulty no-auth load attempt
+              // Note: We don't need to setAndLogErrorMessageState/can catch the error because we have provided an alternative application path
+              // Once the application redirects, when it reloads, any error will be handled by the getFhirData call in componentDidMount
               FHIR.oauth2.authorize(endpoint.config!)
             } finally {
               console.log('Set fhir data states with Route prop directly using App callback function')
@@ -209,7 +215,11 @@ export default function ProviderLogin(props: Props) {
           }
         } else {
           console.log("NOT last endpoint and NOT still authorized - reauthorizing")
-          FHIR.oauth2.authorize(endpoint.config!)
+          FHIR.oauth2.authorize(endpoint.config!).catch(err => {
+            // Todo: Handle this (and all other redirects) properly in the UI (notify the user) and in the logic if needed
+            // Also, may need a time out if the server is not returning an error and it just infinitely loads otherwise
+            console.log("Failed to redirect and authorize: " + err)
+          })
         }
       }
     }

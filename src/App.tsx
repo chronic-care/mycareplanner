@@ -83,11 +83,12 @@ export default class App extends React.Component<AppProps, AppState> {
             try {
                 console.log("getting and setting fhirData state in componentDidMount")
                 let data = await getFHIRData(false, null, this.setAndLogProgressState,
-                    this.setResourcesLoadedCountState)
+                    this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                 this.setFhirDataStates(data)
             } catch (err) {
-                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Please try a different launcher or select a different provider.',
-                    'Failure calling getFHIRData from App.tsx componentDidMount.', err)
+                this.setAndLogErrorMessageState('Terminating',
+                    process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT ? process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT : 'undefined',
+                    'Failure in getFHIRData called from App.tsx componentDidMount.', err)
             }
         }
     }
@@ -113,9 +114,11 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
-        console.log(`${errorType} Error: ${userErrorMessage} | Technical Message: ${developerErrorMessage} | Error Caught: ${errorCaught}`)
+        this.logErrorMessage(errorType, userErrorMessage, developerErrorMessage, errorCaught)
+        // TODO: Consider converting errorType, userErrorMessage, developerErrorMessage, and errorCaught into an array so we can store all of the errors in the chain and display them.
+        // If we do this, we would remove the if check for truthy on all of them, as, we would set a new index in the array vs overwrite
+        // Even further, consider converting all 4 states into one state object, ErrorDetails (or ErrorMessage) and storing having an array of those objects in state
         this.setState({ errorType: errorType })
-        this.setState({ userErrorMessage: userErrorMessage })
         this.setState({ developerErrorMessage: developerErrorMessage })
         let errorCaughtString: string = 'N/A'
         if (errorCaught instanceof Error) {
@@ -124,6 +127,28 @@ export default class App extends React.Component<AppProps, AppState> {
             errorCaughtString = errorCaught
         }
         this.setState({ errorCaught: errorCaughtString })
+        this.setState({ userErrorMessage: this.determineUserErrorMessage(userErrorMessage, errorCaughtString) })
+    }
+
+    logErrorMessage = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
+        console.log(`${errorType} Error: ${userErrorMessage}`)
+        console.log(`Technical Message: ${developerErrorMessage}`)
+        console.log(`Error Caught: ${errorCaught}`)
+    }
+
+    determineUserErrorMessage = (defaultUserErrorMessage: string, errorCaughtString: string): string => {
+        if (errorCaughtString.includes("Session expired!")) {
+            return process.env.REACT_APP_USER_ERROR_MESSAGE_SESSION_EXPIRED ?
+                process.env.REACT_APP_USER_ERROR_MESSAGE_SESSION_EXPIRED : defaultUserErrorMessage
+        } // TODO: Add remaining errors in else ifs here...
+        return defaultUserErrorMessage
+    }
+
+    resetErrorMessageState = () => {
+        this.setState({ errorType: undefined })
+        this.setState({ developerErrorMessage: undefined })
+        this.setState({ errorCaught: undefined })
+        this.setState({ userErrorMessage: undefined })
     }
 
     public render(): JSX.Element {
@@ -159,6 +184,8 @@ export default class App extends React.Component<AppProps, AppState> {
                                 setFhirDataStates={this.setFhirDataStates}
                                 setAndLogProgressState={this.setAndLogProgressState}
                                 setResourcesLoadedCountState={this.setResourcesLoadedCountState}
+                                setAndLogErrorMessageState={this.setAndLogErrorMessageState}
+                                resetErrorMessageState={this.resetErrorMessageState}
                                 {...routeProps}
                             />
                         )}
@@ -175,7 +202,10 @@ export default class App extends React.Component<AppProps, AppState> {
                         <TabContext value={this.state.mainTabIndex}>
                             <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                 <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                    <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{ "& .Mui-selected, .Mui-selected > svg": { color: "#FFFFFF !important", bgcolor: "#355CA8" } }} TabIndicatorProps={{ style: { display: "none" } }}>
+                                    <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
+                                        "& .Mui-selected, .Mui-selected > svg":
+                                            { color: "#FFFFFF !important", bgcolor: "#355CA8" }
+                                    }} TabIndicatorProps={{ style: { display: "none" } }}>
                                         <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
                                         <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
                                         <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
