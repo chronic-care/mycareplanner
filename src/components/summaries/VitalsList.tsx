@@ -1,33 +1,20 @@
 import '../../Home.css';
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary';
-import { getVitalSignSummary } from '../../data-services/mccCqlService';
+import { ObservationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
   fhirData?: FHIRData,
-  patientSummary?: PatientSummary,
-  screenings?: [ScreeningSummary]
+  vitalSignSummary?: [ObservationSummary],
 }
 
 interface VitalsListState {
-  vitalSignSummary?: ObservationSummary[]
 }
 
 export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) => {
-
-  const [vitalSignSummary, setVitalSignSummary] = useState<ObservationSummary[] | undefined>([
-    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
-  ])
-
-  useEffect(() => {
-    console.time('getVitalSignSummary()')
-    setVitalSignSummary(getVitalSignSummary(props.fhirData))
-    console.timeEnd('getVitalSignSummary()')
-  }, [props.fhirData])
+  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("VitalsList component RENDERED!")
 
   return (
     <div className="home-view">
@@ -41,13 +28,13 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
           </>
         }
 
-        {vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
+        {props.vitalSignSummary && props.vitalSignSummary.length > 0 && props.vitalSignSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!vitalSignSummary || vitalSignSummary.length < 1) && props.fhirData !== undefined
+          : (!props.vitalSignSummary || props.vitalSignSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>
-              {vitalSignSummary?.map((obs, idx) => (
+              {props.vitalSignSummary?.map((obs, idx) => (
                 <Summary key={idx} id={idx} rows={buildRows(obs)} />
               ))}
             </>

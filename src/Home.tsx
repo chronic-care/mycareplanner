@@ -27,7 +27,6 @@ interface HomeProps {
 }
 
 interface HomeState {
-
 }
 
 export default class Home extends React.Component<HomeProps, HomeState> {
@@ -81,7 +80,9 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <p>Resources loaded: {this.props.resourcesLoadedCount}</p>
               </>
             }
-            <ErrorMessage {...this.props} />
+            <ErrorMessage fhirData={this.props.fhirData}
+              progressMessage={this.props.progressMessage} progressValue={this.props.progressValue} resourcesLoadedCount={this.props.resourcesLoadedCount}
+              errorType={this.props.errorType} userErrorMessage={this.props.userErrorMessage} developerErrorMessage={this.props.developerErrorMessage} errorCaught={this.props.errorCaught} />
 
           </div>
           : <div>

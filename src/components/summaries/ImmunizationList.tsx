@@ -1,21 +1,16 @@
 import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { Immunization } from '../../data-services/fhir-types/fhir-r4';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ImmunizationListProps {
   fhirData?: FHIRData,
-  patientSummary?: PatientSummary,
-  screenings?: [ScreeningSummary]
-}
-
-interface ImmunizationListState {
 }
 
 export const ImmunizationList: React.FC<ImmunizationListProps> = (props: ImmunizationListProps) => {
+  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ImmunizationList component RENDERED!")
 
   let immunizations = props.fhirData?.immunizations
   // Sort by descending occurrence date

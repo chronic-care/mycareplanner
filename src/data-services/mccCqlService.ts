@@ -17,13 +17,13 @@ function getPatientSource(data: FHIRData): unknown {
   const fhirBundle = {
     resourceType: 'Bundle',
     entry: [{ resource: data.patient }, { resource: data.patientPCP },
-      ...getBundleEntries(data.conditions),
-      ...getBundleEntries(data.medications),
-      ...getBundleEntries(data.serviceRequests),
-      ...getBundleEntries(data.labResults),
-      ...getBundleEntries(data.vitalSigns),
-      ...getBundleEntries(data.goals),
-      ...getBundleEntries(data.provenance),
+    ...getBundleEntries(data.conditions),
+    ...getBundleEntries(data.medications),
+    ...getBundleEntries(data.serviceRequests),
+    ...getBundleEntries(data.labResults),
+    ...getBundleEntries(data.vitalSigns),
+    ...getBundleEntries(data.goals),
+    ...getBundleEntries(data.provenance),
     ]
   };
 

@@ -1,32 +1,21 @@
 import '../../Home.css';
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { PatientSummary, ScreeningSummary, MedicationSummary } from '../../data-services/models/cqlSummary';
-import { getMedicationSummary } from '../../data-services/mccCqlService';
+import { MedicationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface MedicationListProps {
   fhirData?: FHIRData,
-  patientSummary?: PatientSummary,
-  screenings?: [ScreeningSummary]
+  medicationSummary?: MedicationSummary[],
 }
 
 interface MedicationListState {
-  medicationSummary?: MedicationSummary[]
 }
 
 export const MedicationList: React.FC<MedicationListProps> = (props: MedicationListProps) => {
-
-  const [medicationSummary, setMedicationSummary] = useState<MedicationSummary[] | undefined>([{ ConceptName: 'init' }])
-
-  useEffect(() => {
-    console.time('getMedicationSummary()')
-    setMedicationSummary(getMedicationSummary(props.fhirData))
-    console.timeEnd('getMedicationSummary()')
-  }, [props.fhirData])
+  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("MedicationList component RENDERED!")
 
   return (
     <div className="home-view">
@@ -40,13 +29,13 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
           </>
         }
 
-        {medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init'
+        {props.medicationSummary && props.medicationSummary.length > 0 && props.medicationSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!medicationSummary || medicationSummary.length < 1) && props.fhirData !== undefined
+          : (!props.medicationSummary || props.medicationSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>
-              {medicationSummary?.map((med, idx) => (
+              {props.medicationSummary?.map((med, idx) => (
                 <Summary key={idx} id={idx} rows={buildRows(med)} />
               ))}
             </>
