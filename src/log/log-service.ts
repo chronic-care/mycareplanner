@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_PATH = process.env.LOG_ENDPOINT_URI;
-const BEARER_TOKEN = process.env.LOG_API_KEY;
+const API_PATH = process.env.REACT_APP_LOG_ENDPOINT_URI;
+const BEARER_TOKEN = process.env.REACT_APP_LOG_API_KEY;
 
 export type LogRequest = {
   level?: 'error' | 'warn' | 'info' | 'debug';
@@ -29,6 +29,7 @@ export const doLog = async (request: LogRequest): Promise<LogResponse> => new Pr
     }
 
     const response = await axios.post(url, request, config);
+    console.log("Checking logging by Sai");
     resolve(response.data)
   } catch (error) {
     // Should continue with the app even if logging fails
