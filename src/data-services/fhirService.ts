@@ -11,6 +11,7 @@ import { responseToJSON } from 'fhirclient/lib/lib'
 import {
   persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint
 } from './persistenceService'
+import { doLog } from '../log';
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
   const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
@@ -98,6 +99,12 @@ function recordProvenance(resources: Resource[] | undefined) {
 
 export async function getConditions(client: Client): Promise<Condition[]> {
   var resources: Resource[] = []
+  await  doLog({
+    level: 'debug',
+    event: 'getConditions',
+    page: 'get Conditions',
+    message: `getConditions: success`
+  })
   // workaround for Allscripts lack of support for both category and status args
   if (client.state.serverUrl.includes('allscripts.com')) {
     const conditionsPath = 'Condition?category=problem-list-item,health-concern' + provenanceSearch
@@ -117,6 +124,12 @@ export async function getConditions(client: Client): Promise<Condition[]> {
 
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // Workaround for Cerner and Epic Sandbox that takes many minutes to request vital-signs, or times out completely
+ await  doLog({
+    level: 'debug',
+    event: 'getVitalSigns',
+    page: 'get Vital Signs',
+    message: `getVitalSigns: success`
+  })
   if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4'
     || client.state.serverUrl.includes('cerner.com')) {
     return []
