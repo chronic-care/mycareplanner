@@ -99,7 +99,7 @@ function recordProvenance(resources: Resource[] | undefined) {
 
 export async function getConditions(client: Client): Promise<Condition[]> {
   var resources: Resource[] = []
-  await  doLog({
+  await doLog({
     level: 'debug',
     event: 'getConditions',
     page: 'get Conditions',
@@ -124,7 +124,7 @@ export async function getConditions(client: Client): Promise<Condition[]> {
 
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // Workaround for Cerner and Epic Sandbox that takes many minutes to request vital-signs, or times out completely
- await  doLog({
+  await doLog({
     level: 'debug',
     event: 'getVitalSigns',
     page: 'get Vital Signs',
@@ -389,13 +389,19 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   recordProvenance(diagnosticReportData)
   diagnosticReportData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
+  // Fix for mcc-project#292 Continue loading FHIR data after partial failure
+  let immunizations: Immunization[] | undefined
+  let immunizationData: Resource[] | undefined
   setAndLogProgressState('Immunization request: ' + new Date().toLocaleTimeString(), 70)
-  const immunizationData = (hasScope(clientScope, 'Immunization.read')
-    ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
-    : undefined)
-  const immunizations =
-    immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
-  recordProvenance(immunizationData)
+  try {
+    immunizationData = (hasScope(clientScope, 'Immunization.read')
+      ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
+      : undefined)
+    immunizations = immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
+    recordProvenance(immunizationData)
+  } catch (err) {
+    console.log("immunizations query failure: ", err)
+  }
   immunizationData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('LabResult request: ' + new Date().toLocaleTimeString(), 75)
