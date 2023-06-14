@@ -244,7 +244,7 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     console.log(console.log(JSON.stringify(client)))
 
     return await getFHIRResources(client, clientScope, supportsInclude,
-      setAndLogProgressState, setResourcesLoadedCountState)
+      setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
   } catch (err) {
     // setAndLogErrorMessageState('Terminating',
     //   process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT ? process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT : 'undefined',
@@ -258,7 +258,9 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
 
 const getFHIRResources = async (client: Client, clientScope: string | undefined, supportsInclude: boolean,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void,
+  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
+    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
   /*
    *  Allscripts does not return patient, so also try user if patient is missing.
    */
@@ -299,7 +301,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
     // we allow undefined or true as we want the default to always be to load the queries
     setAndLogProgressState("Retrieving FHIR queries", 35)
     fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP,
-      setAndLogProgressState, setResourcesLoadedCountState)
+      setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
   }
 
   return {
@@ -315,7 +317,9 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
 const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   supportsInclude: boolean, patientPCP: Practitioner | undefined,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void,
+  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
+    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
   console.time('FHIR queries')
 
   let resourcesLoadedCount: number = 0
@@ -400,7 +404,9 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     immunizations = immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
     recordProvenance(immunizationData)
   } catch (err) {
-    console.log("immunizations query failure: ", err)
+    setAndLogErrorMessageState('Non-terminating',
+      process.env.REACT_APP_NT_USER_ERROR_MESSAGE_FAILED_IMMUNIZATIONS ? process.env.REACT_APP_NT_USER_ERROR_MESSAGE_FAILED_IMMUNIZATIONS : 'undefined',
+      'Failure in getFHIRData retrieving immunization data using: resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)', err)
   }
   immunizationData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
