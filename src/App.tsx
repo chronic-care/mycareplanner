@@ -202,12 +202,16 @@ export default class App extends React.Component<AppProps, AppState> {
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
     }
-    // callback function to update resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
+    // callback functions to update/access resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
     setResourcesLoadedCountState = (count: number) => {
         this.setState({ resourcesLoadedCount: count })
     }
+    getResourcesLoadedCountState = (): number => {
+        return this.state.resourcesLoadedCount
+    }
 
-    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
+    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string,
+        errorCaught: Error | string | unknown) => {
         this.logErrorMessage(errorType, userErrorMessage, developerErrorMessage, errorCaught)
         // TODO: Consider converting errorType, userErrorMessage, developerErrorMessage, and errorCaught into an array so we can store all of the errors in the chain and display them.
         // If we do this, we would remove the if check for truthy on all of them, as, we would set a new index in the array vs overwrite
