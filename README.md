@@ -74,7 +74,7 @@ This code is under active development for pilot testing with patients and caregi
 * To build with docker, run 'docker build .' from the root directory:
   * `docker build .`
 * This will build a container which serves content on port 80. Run this container with:
-  * `docker run -p 80:80 <hash>`
+  * `docker run -i -p 8000:8000 <hash>`
 
 ## Style guide
 * For consistent readability and isolated commit diffs, a specific style should be used for the project
