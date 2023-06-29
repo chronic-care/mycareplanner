@@ -56,7 +56,8 @@ This code is under active development for pilot testing with patients and caregi
 ## Mange 'yarn.lock'
 * In general, do not commit updates to 'package.json' unless:
     * There is a valid and intentional dependency update to 'package.json'
-      * e.g. New dependencies are added, old dependencies are removed, dependency versions are updated for security or for preferential reasons
+        * e.g. New dependencies are added, old dependencies are removed, dependency versions are updated for security or for preferential reasons
+           * If there is a valid update, and it causes changes to yarn.lock, ensure those changes are committed. This is why yarn.lock is in the repo, so that the entire team is exactly synchronized
 * TODO: Create a combined ticket to address/update this and 'package.json' maintenance.
   * See the following link for an implementation option: https://11sigma.com/blog/2021/09/03/yarn-lock-how-it-works-and-what-you-risk-without-maintaining-yarn-dependencies-deep-dive/
 
@@ -75,6 +76,7 @@ This code is under active development for pilot testing with patients and caregi
   * `docker build .`
 * This will build a container which serves content on port 80. Run this container with:
   * `docker run -i -p 8000:8000 <hash>`
+* Note: yarn.lock is required for the build to run correctly. Do not remove the relevant COPY command
 
 ## Style guide
 * For consistent readability and isolated commit diffs, a specific style should be used for the project
