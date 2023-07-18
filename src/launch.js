@@ -12,7 +12,7 @@ const epicProviderScope = "launch launch/patient openid fhirUser user/Patient.re
 const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/MedicationRequest.read patient/RelatedPerson.read patient/Provenance.read"
 const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
 
-const nexgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
+const nextgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
 
 FHIR.oauth2.authorize([
     {
@@ -86,11 +86,11 @@ FHIR.oauth2.authorize([
         scope: athenaScopePilot
     },
     {
-        // NexGen production and sandbox
+        // NextGen production and sandbox
         issMatch: "https://fhir.nextgen.com/nge/prod/fhir-api-r4/fhir/r4",
         redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_nexgen,
-        scope: nexgenScope
+        clientId: process.env.REACT_APP_CLIENT_ID_nextgen,
+        scope: nextgenScope
     },
     {
         // Cerner sandbox

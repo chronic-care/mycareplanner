@@ -51,7 +51,7 @@ const problemListPath = 'Condition?category=problem-list-item&clinical-status=ac
 const healthConcernPath = 'Condition?category=health-concern&clinical-status=active' + provenanceSearch
 
 const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
-// date parameter not supported by NexGen (or likely the ge comparator)
+// date parameter not supported by NextGen (or likely the ge comparator)
 // const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
 const labResultsPath = 'Observation?category=laboratory&_count=500' + provenanceSearch
 
