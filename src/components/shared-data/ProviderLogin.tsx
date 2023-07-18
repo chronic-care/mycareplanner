@@ -130,6 +130,20 @@ export default function ProviderLogin(props: Props) {
     )
   }
 
+  if (process.env.REACT_APP_ADD_NEXGEN_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    endpoints.push(
+      {
+        name: 'Test Data: NexGen Sandbox',
+        config: {
+          iss: process.env.REACT_APP_NEXGEN_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_nexgen,
+          scope: process.env.REACT_APP_NEXGEN_SANDBOX_ENDPOINT_SCOPE
+        }
+      }
+    )
+  }
+
   const [endpoint, setEndpoint] = React.useState<ProviderEndpoint | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
