@@ -7,7 +7,6 @@ import {
 import { FHIRData, hasScope } from './models/fhirResources'
 import { format } from 'date-fns'
 import Client from 'fhirclient/lib/Client'
-import { responseToJSON } from 'fhirclient/lib/lib'
 import {
   persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint
 } from './persistenceService'
@@ -162,6 +161,49 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   recordProvenance(resources)
 
   return vitals
+}
+
+/*
+* TODO: enhance this to verify current access token for SDS.
+*/
+export const supplementalDataIsAvailable = (): Boolean => {
+  const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
+  const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+  const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
+
+  return authURL !== undefined && authURL?.length > 0 
+    && sdsURL !== undefined && sdsURL?.length > 0 
+    && sdsScope !== undefined && sdsScope?.length > 0 
+}
+
+export const getSupplementalDataClient = async (): Promise<Client | undefined> => {
+  let sdsClient: Client | undefined
+  const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
+  const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+  const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
+
+  if (authURL && sdsURL && sdsScope) {
+    const authFhirAccessDataObject: fhirclient.ClientState | undefined =
+      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
+    if (authFhirAccessDataObject) {
+      // replace the serverURL and client scope with Shared Data endpoint and scope
+      var sdsFhirAccessDataObject = authFhirAccessDataObject
+      sdsFhirAccessDataObject.serverUrl = sdsURL
+      sdsFhirAccessDataObject.scope = sdsScope
+      if (sdsFhirAccessDataObject.tokenResponse) {
+        sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
+      }
+      // console.log("getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
+
+      sdsClient = FHIR.client(sdsFhirAccessDataObject)
+      console.log("getSupplementalDataClient() client = ", sdsClient)
+    }
+    else {
+      console.log("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
+    }
+  }
+
+  return sdsClient
 }
 
 export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
@@ -594,29 +636,35 @@ const setAndLogNonTerminatingErrorMessageStateForResource = async (
     `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
 }
 
-export function createResource(resource: Resource) {
-  return FHIR.oauth2.ready()
-    .then((client: Client) => {
-      return client.create(resource as fhirclient.FHIR.Resource)
+export function createSharedDataResource(resource: Resource) {
+  return getSupplementalDataClient()
+    .then((client: Client | undefined) => {
+      // console.log('SDS client: ' + JSON.stringify(client))
+      return client?.create(resource as fhirclient.FHIR.Resource)
     })
     .then((response) => {
-      console.log('Created new resource: ' + responseToJSON)
       return response
     }).catch(error => {
-      console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return
     })
 }
 
-export function updateResource(resource: Resource) {
-  return FHIR.oauth2.ready()
-    .then((client: Client) => {
-      return client.update(resource as fhirclient.FHIR.Resource)
+export function updateSharedDataResource(resource: Resource) {
+  return getSupplementalDataClient()
+    .then((client: Client | undefined) => {
+      console.log('SDS client: ' + JSON.stringify(client))
+      try {
+        return client?.update(resource as fhirclient.FHIR.Resource)
+      }
+      catch (err) {
+        console.log("Errror updating shared data resource: " + JSON.stringify(err))
+      }
     })
     .then((response) => {
       return response
     }).catch(error => {
-      console.log('Cannot update resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return
     })
 }

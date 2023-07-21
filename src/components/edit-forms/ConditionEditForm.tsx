@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { EditFormData } from '../../data-services/models/cqlSummary';
 import { Condition } from '../../data-services/fhir-types/fhir-r4';
-import { createResource } from '../../data-services/fhirService';
+import { createSharedDataResource } from '../../data-services/fhirService';
 
 export default function ConditionEditForm(formData?: EditFormData) {
   let history = useHistory()
@@ -87,7 +87,7 @@ export default function ConditionEditForm(formData?: EditFormData) {
     }
     console.log('New Condition: ' + JSON.stringify(condition))
 
-    createResource(condition)
+    createSharedDataResource(condition)
 
     // update FHIRData shared state
 
