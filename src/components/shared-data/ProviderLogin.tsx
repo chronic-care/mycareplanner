@@ -13,12 +13,22 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
-import NativeSelect from '@mui/material/NativeSelect'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { FHIRData } from '../../data-services/models/fhirResources'
 
+import { Theme, useTheme } from '@mui/material/styles'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import MenuItem from '@mui/material/MenuItem'
+import Chip from '@mui/material/Chip';
+
 class ProviderEndpoint {
-  name?: string
+  name: string
   config?: fhirclient.AuthorizeParams
+
+  constructor(name: string, config?: fhirclient.AuthorizeParams) {
+    this.name = name
+    this.config = config
+  }
 }
 
 interface Props extends RouteComponentProps {
@@ -39,7 +49,7 @@ export default function ProviderLogin(props: Props) {
 
   let history = useHistory()
 
-  const endpoints: ProviderEndpoint[] = [
+  const availableEndpoints: ProviderEndpoint[] = [
     {
       name: 'OCHIN',
       config: {
@@ -73,7 +83,7 @@ export default function ProviderLogin(props: Props) {
   ]
 
   if (process.env.REACT_APP_ADD_MELD_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    endpoints.push(
+    availableEndpoints.push(
       {
         name: 'Test Data: Meld Sandbox',
         config: {
@@ -87,7 +97,7 @@ export default function ProviderLogin(props: Props) {
   }
 
   if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    endpoints.push(
+    availableEndpoints.push(
       {
         name: 'Test Data: Epic Sandbox',
         config: {
@@ -102,7 +112,7 @@ export default function ProviderLogin(props: Props) {
   }
 
   if (process.env.REACT_APP_ADD_CERNER_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    endpoints.push(
+    availableEndpoints.push(
       {
         name: 'Test Data: Cerner Sandbox',
         config: {
@@ -116,7 +126,7 @@ export default function ProviderLogin(props: Props) {
   }
 
   if (process.env.REACT_APP_ADD_VA_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    endpoints.push(
+    availableEndpoints.push(
       {
         name: 'Test Data: VA Sandbox',
         config: {
@@ -130,23 +140,20 @@ export default function ProviderLogin(props: Props) {
     )
   }
 
-  const [endpoint, setEndpoint] = React.useState<ProviderEndpoint | null>(null);
+  const [selectedEndpointNames, setselectedEndpointNames] = React.useState<string[]>([]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (event.target.value === '') {
-      setEndpoint(null)
-    }
-    else {
-      let endpoint: ProviderEndpoint | null = JSON.parse(event.target.value)
-      setEndpoint(endpoint)
-    }
+  const getMatchingProviderEndpoints = async (availableEndpoints: ProviderEndpoint[],
+    selectedEndpointNames: string[]): Promise<ProviderEndpoint[]> => {
+    return availableEndpoints.filter(availableEndpoint => {
+      console.log('availableEndpoint.name: ', availableEndpoint.name)
+      return selectedEndpointNames.includes(availableEndpoint.name);
+    })
   }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    if (endpoint !== null) {
-      const issServerUrl = endpoint.config!.iss
+  const loadSelectedEndpoint = async (selectedEndpoint: ProviderEndpoint, isMultipleProviders: boolean): Promise<void> => {
+    console.log('loadSelectedEndpoint(): isMultipleProviders: ' + isMultipleProviders)
+    if (selectedEndpoint !== null) {
+      const issServerUrl = selectedEndpoint.config!.iss
       console.log('issServerUrl:', issServerUrl)
       if (await isGivenEndpointMatchesLastActiveEndpoint(issServerUrl!)) {
         console.log("is last endpoint")
@@ -170,13 +177,13 @@ export default function ProviderLogin(props: Props) {
               console.log("fhirData is falsey, reauthorizing as data cannot be trusted/does not exist:", fhirData)
             // TODO: Consider externalizing logic in "NOT last endpoint but IS already/still authorized" and use that in this case
             // It should work fine as the local storage fhirAccessState should be in tact and we can fetch the data from the server w/o a reauth
-            FHIR.oauth2.authorize(endpoint.config!)
+            FHIR.oauth2.authorize(selectedEndpoint.config!)
           }
         } else {
           console.log("is last endpoint but is NOT authorized - reauthorizing")
           // Techincally, if needed, we could redirect w/o refresh as in the "is last endpoint and IS authorized" path,
           // but for now we are going to assume the data may have changed enough at this point to require a reauthorization
-          FHIR.oauth2.authorize(endpoint.config!)
+          FHIR.oauth2.authorize(selectedEndpoint.config!)
         }
       } else {
         console.log("NOT last endpoint")
@@ -200,7 +207,7 @@ export default function ProviderLogin(props: Props) {
               // TODO: Add logic to ensure that fhirAccess obj and array are not updated (or are reverted) from a faulty no-auth load attempt
               // Note: We don't need to setAndLogErrorMessageState/can catch the error because we have provided an alternative application path
               // Once the application redirects, when it reloads, any error will be handled by the getFhirData call in componentDidMount
-              FHIR.oauth2.authorize(endpoint.config!)
+              FHIR.oauth2.authorize(selectedEndpoint.config!)
             } finally {
               console.log('Set fhir data states with Route prop directly using App callback function')
               props.setFhirDataStates(fhirDataFromStoredEndpoint!)
@@ -211,55 +218,165 @@ export default function ProviderLogin(props: Props) {
             console.log(`Failure setting fhir data states after getFHIRData call in ProviderLogin.tsx handleSubmit: ${err}`)
             console.log('fallback to authorization due to above failure')
             // TODO: Add logic to ensure that fhirAccess obj and array are not updated (or are reverted) from a faulty no-auth load attempt
-            FHIR.oauth2.authorize(endpoint.config!)
+            FHIR.oauth2.authorize(selectedEndpoint.config!)
           }
         } else {
           console.log("NOT last endpoint and NOT still authorized - reauthorizing")
-          FHIR.oauth2.authorize(endpoint.config!).catch(err => {
+          FHIR.oauth2.authorize(selectedEndpoint.config!).catch(err => {
             // Todo: Handle this (and all other redirects) properly in the UI (notify the user) and in the logic if needed
             // Also, may need a time out if the server is not returning an error and it just infinitely loads otherwise
             console.log("Failed to redirect and authorize: " + err)
           })
         }
       }
+    } else {
+      console.error("endpoint === null")
     }
+  }
+
+  // TODO: Finish logic so that we end up with more than one provider loaded at once, vs overwriting with latest
+  const loadSelectedEndpoints = async (getMatchingProviderEndpoints: ProviderEndpoint[]): Promise<void> => {
+    console.log('loadSelectedEndpoints()')
+    let i: number = 1;
+    for (const curSelectedEndpoint of getMatchingProviderEndpoints) {
+      console.log('curSelectedEndpoint #' + i + ' at index: ' + (i - 1) + ' with value:', curSelectedEndpoint)
+      await loadSelectedEndpoint(curSelectedEndpoint, true)
+      i++;
+    }
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (selectedEndpointNames) {
+
+      if (selectedEndpointNames.length === 0) {
+        console.log("selectedEndpoint array is empty")
+        // Cannot continue so returning but this should not be possible since we have disabled the login button in this case
+        return
+      } else if (selectedEndpointNames.length > 0) {
+
+        console.log("selectedEndpoint array has data")
+
+        let matchingProviderEndpoints: ProviderEndpoint[] =
+          await getMatchingProviderEndpoints(availableEndpoints, selectedEndpointNames)
+        console.log('matchingProviderEndpoints: ', matchingProviderEndpoints);
+
+        if (matchingProviderEndpoints && matchingProviderEndpoints.length > 0) {
+          let selectedEndpoint = null
+          if (matchingProviderEndpoints.length === 1) {
+            console.log("single provider")
+            // select first provider since there is only 1
+            selectedEndpoint = matchingProviderEndpoints[0]
+            await loadSelectedEndpoint(selectedEndpoint, false)
+          } else if (matchingProviderEndpoints.length > 1) {
+            console.log("multiple providers: length: " + matchingProviderEndpoints.length)
+            // Loop selectedEndpoint logic for all available providers
+            console.log(`DISABLED FOR NOW as there is no way to combine the data yet`)
+            /*
+            loadSelectedEndpoints(matchingProviderEndpoints)
+              .then(() => {
+                console.log('All matchingProviderEndpoints loaded...');
+              })
+              .catch((error) => {
+                console.error('Error loading matchingProviderEndpoints:', error);
+              })
+            */
+          }
+        } else {
+          console.error('matchingProviderEndpoints is untruthy or empty')
+        }
+
+      }
+
+    } else {
+      console.error('selectedEndpointNames is untruthy', selectedEndpointNames)
+    }
+
   }
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
     history.goBack()
   }
 
+  const handleChange = (event: SelectChangeEvent<typeof selectedEndpointNames>) => {
+    const targetVal = event.target.value
+    console.log('targetVal:', targetVal)
+
+    if (!targetVal) {
+      console.error("selectedEndpointNames is somehow untruthy, setting to empty")
+      setselectedEndpointNames([])
+    } else {
+      const parsedProviderEndpoints: string[] =
+        typeof targetVal === 'string' ? targetVal.split(',') : targetVal
+      setselectedEndpointNames(parsedProviderEndpoints)
+      console.log('selectedEndpointNames (parsedProviderEndpoints)', selectedEndpointNames)
+    }
+  }
+
+  const theme = useTheme();
+  const getStyles = (availableEndpointName: string, selectedEndpointNames: string[] | null,
+    theme: Theme): any => {
+    return {
+      fontWeight:
+        selectedEndpointNames?.indexOf(availableEndpointName) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightBold
+    }
+  }
+
   return (
     <>
       <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
+
+        {/* <h4>selectedEndpointNames: {selectedEndpointNames}</h4> */}
+
         <Typography variant="h5" gutterBottom>
           Health Provider Login
         </Typography>
+
         <Grid container spacing={3}>
 
           <Grid item xs={12}>
             <FormControl fullWidth>
+
               <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Select your healthcare provider
+                Select one or more healthcare providers
               </InputLabel>
-              <NativeSelect
-                // defaultValue={}
-                inputProps={{
-                  name: 'provider',
-                  id: 'uncontrolled-native',
-                }}
+
+              <Select
+                labelId="multiple-provider-selection-label"
+                id="multiple-provider-selection"
+                multiple
+                value={selectedEndpointNames}
                 onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-provider-chip" label="multiple-provider-chip" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected?.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
               >
-                <option key={'not-selected'} value=''></option>
-                {endpoints.map((endpoint: ProviderEndpoint) => {
-                  return <option key={endpoint.name} value={JSON.stringify(endpoint)}>{endpoint.name}</option>
-                })}
-              </NativeSelect>
+                {availableEndpoints.map((availableEndpoint: ProviderEndpoint) => (
+                  <MenuItem
+                    key={availableEndpoint.name}
+                    value={availableEndpoint.name}
+                    style={getStyles(availableEndpoint.name ? availableEndpoint.name : '',
+                      selectedEndpointNames, theme)}
+                  >
+                    {availableEndpoint.name}
+                  </MenuItem>
+                ))}
+              </Select>
+
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Button type="submit" disabled={endpoint === null} fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button type="submit" disabled={!selectedEndpointNames || selectedEndpointNames.length < 1}
+              fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Login
             </Button>
           </Grid>
@@ -273,4 +390,5 @@ export default function ProviderLogin(props: Props) {
       </Box>
     </>
   )
+
 }
