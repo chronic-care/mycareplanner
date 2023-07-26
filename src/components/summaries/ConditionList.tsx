@@ -1,7 +1,8 @@
 import '../../Home.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources';
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { supplementalDataIsAvailable } from '../../data-services/fhirService';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -29,7 +30,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
           </>
         }
 
-        {hasScope(props.fhirData?.clientScope, 'Goal.write')
+        { supplementalDataIsAvailable()
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
           : <p />}
 

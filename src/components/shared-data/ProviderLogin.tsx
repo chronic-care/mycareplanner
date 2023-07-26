@@ -140,6 +140,20 @@ export default function ProviderLogin(props: Props) {
     )
   }
 
+  if (process.env.REACT_APP_ADD_NEXTGEN_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    availableEndpoints.push(
+      {
+        name: 'Test Data: NextGen Sandbox',
+        config: {
+          iss: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_nextgen,
+          scope: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_SCOPE
+        }
+      }
+    )
+  }
+
   const [selectedEndpointNames, setselectedEndpointNames] = React.useState<string[]>([]);
 
   const getMatchingProviderEndpoints = async (availableEndpoints: ProviderEndpoint[],
