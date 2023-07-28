@@ -41,6 +41,8 @@ import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
+import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
+import SessionExpiredHandler from './components/session-timeout/SessionExpiredHandler';
 
 interface AppProps {
 }
@@ -68,6 +70,8 @@ interface AppState {
     medicationSummary?: [MedicationSummary],
     labResultSummary?: [ObservationSummary],
     vitalSignSummary?: [ObservationSummary],
+    isActiveSession: boolean,
+    isLogout: boolean,
 }
 
 type SummaryFunctionType = (fhirData?: FHIRData) => [GoalSummary] | [ConditionSummary] | [ObservationSummary] | [MedicationSummary] | undefined
@@ -95,7 +99,9 @@ export default class App extends React.Component<AppProps, AppState> {
             conditionSummary: [{ ConceptName: 'init' }],
             medicationSummary: [{ ConceptName: 'init' }],
             labResultSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }],
-            vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }]
+            vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }],
+            isActiveSession: true,
+            isLogout: false,
         }
     }
 
@@ -249,6 +255,11 @@ export default class App extends React.Component<AppProps, AppState> {
         this.setState({ userErrorMessage: undefined })
     }
 
+    private handleLogout = () => {
+        this.setState({ isLogout: true })
+        sessionStorage.clear();
+    }
+
     public render(): JSX.Element {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("APP component RENDERED!")
 
@@ -260,6 +271,21 @@ export default class App extends React.Component<AppProps, AppState> {
 
         return (
             <div className="app">
+
+                <SessionExpiredHandler
+                    onLogout={this.handleLogout}
+                    isLoggedOut={this.state.isLogout}
+                />
+
+                <SessionTimeOutHandler
+                    onActive={() => { this.setState({ isActiveSession: true }) }}
+                    onIdle={() => { this.setState({ isActiveSession: false }) }}
+                    onLogout={this.handleLogout}
+                    isLoggedOut={this.state.isLogout}
+                    timeOutInterval={+process.env.REACT_APP_CLIENT_IDLE_TIMEOUT!}
+                />
+
+
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
                     <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
