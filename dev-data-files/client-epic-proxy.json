@@ -1,0 +1,49 @@
+{
+    "units": {},
+    "state": {
+        "clientId": "8ffd571d-1e2e-4b90-b71f-c8db7e7b7adb",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/ServiceRequest.read patient/Provenance.read patient/Organization.read",
+        "redirectUri": "http://localhost:8000/mycareplanner/index.html",
+        "serverUrl": "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
+        "tokenResponse": {
+            "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1cm46b2lkOmZoaXIiLCJjbGllbnRfaWQiOiI4ZmZkNTcxZC0xZTJlLTRiOTAtYjcxZi1jOGRiN2U3YjdhZGIiLCJlcGljLmVjaSI6InVybjplcGljOk9wZW4uRXBpYy1jdXJyZW50IiwiZXBpYy5tZXRhZGF0YSI6ImJjdGtoTndjTzNMZTlJd1VKZEl5NXVSNXl4VFFFSkhVUkE1Q0RHdlVNZTNlVjdfU0pXTDcwQlZWUDRfdE5QWVVkMjI1cmdNNjlRRy1tT2xSNUNaYlBwX2JLV1JwNVpBajMzU0lteF9UX2NlYnk1bnZ2QUtLalZMVVFmQzFGOW9HIiwiZXBpYy50b2tlbnR5cGUiOiJhY2Nlc3MiLCJleHAiOjE2OTA0ODQwMzYsImlhdCI6MTY5MDQ4MDQzNiwiaXNzIjoidXJuOm9pZDpmaGlyIiwianRpIjoiNjdhNjIxY2ItYTY0My00Nzg0LTkwZmEtYTMyOTJiNWY1N2M4IiwibmJmIjoxNjkwNDgwNDM2LCJzdWIiOiJlenhtdW80SlhUakRHLkVyZS02R0xMUTMifQ.sA7e_fikbCxI9xvHBcTskThmNQSH6_AmbuHcJwkcT6g1DsrtBYZ6MDS8_rq-Wob-rAfJ5l6-ppdZyHsQoApD21xnMndesJiBB8VWB1QIEkZ0M23mAM7mpBJUsKyP2s2MZfVsmM6GDhzE5Lol3c85Jj6JJxBQV78lRjJij_9exx-xHXyNcxvXkveNC1mJ4GhP-3wuRXR0fimNT_Kb9_rnCtXBVOIhInCKbEFxhTp1YtQx9YNWIwbLjYUjR7UMi0w01MQLv6Yuo4HJkcR5-FeGdvZrr2_lLh1JSeLoZmFqEIUfJo-BggmBGN535ZZTl0diZBiSqbDgdimCQ-5gWnP3sQ",
+            "token_type": "Bearer",
+            "expires_in": 3600,
+            "scope": "system/DynamicClient.register patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/DiagnosticReport.read patient/Encounter.read patient/Goal.read patient/Immunization.read patient/Location.read patient/Medication.read patient/MedicationRequest.read patient/Observation.read patient/Patient.read patient/Practitioner.read patient/Procedure.read patient/Provenance.read patient/RelatedPerson.Read fhirUser launch/patient openid",
+            "state": "X9s3966iGZ9vLYNP",
+            "__epic.dstu2.patient": "TRntnG.Rzp9wDIQLIGgwsFbMZLkevDWipJ6EPLQkdUg8B",
+            "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imo1ME83NmQyM3NpYVF3Y0tvZGpFUDd6amRsODBMTzJBa2EwVFc0cmNuTk09IiwidHlwIjoiSldUIn0.eyJhdWQiOiI4ZmZkNTcxZC0xZTJlLTRiOTAtYjcxZi1jOGRiN2U3YjdhZGIiLCJleHAiOjE2OTA0ODA3MzYsImZoaXJVc2VyIjoiaHR0cHM6Ly9maGlyLmVwaWMuY29tL2ludGVyY29ubmVjdC1maGlyLW9hdXRoL2FwaS9GSElSL1I0L1JlbGF0ZWRQZXJzb24vZTdIWDRoLWRnVkNLMW5yUGF4dXJQaU5NbXVtWS5IMDdkamsucWZvdVZKS0UzIiwiaWF0IjoxNjkwNDgwNDM2LCJpc3MiOiJodHRwczovL2ZoaXIuZXBpYy5jb20vaW50ZXJjb25uZWN0LWZoaXItb2F1dGgvb2F1dGgyIiwic3ViIjoiZTdIWDRoLWRnVkNLMW5yUGF4dXJQaU5NbXVtWS5IMDdkamsucWZvdVZKS0UzIn0.EPrmN7EiE19xAI8GopvrCmUhQigXSsvcszghSB6VgZvNXhiDfQoRXUWuYGZoE0lvHQS1pZg63pHRTx3SF6WsfeIQdMlB92RgMUPe93oqpkx_CiMDyEsEbZzE4b_6HnAaZnRzlJZgMSKpO3qPAXWuiromuvsuaOEh0P_B3gp4VruNLc5fn8WqnZfoJvgyqf2zVmzbd9sPrH8vKfXtA9ZrGf8J4t2TdN8tuqRT9TMTOWz31MOFC4WOneFHHNkBeXFWgXCuPRSudmjEVDlkK_EjUGzgqQUNhat0LQKYR1VaH8jNt4b7iKqZV7YGyGLaJcyLO8T_hyj-Lg6gcNgb5X9ulQ",
+            "patient": "evYS76EX6LLeCX2PlRLhvwg3"
+        },
+        "key": "X9s3966iGZ9vLYNP",
+        "registrationUri": "",
+        "authorizeUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize",
+        "tokenUri": "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token",
+        "codeChallengeMethods": [],
+        "codeChallenge": "CI4ct4tS6QOwKRIYZ8oa9_2_dpPWfyPVlThVsfjxHp8",
+        "codeVerifier": "ZZ2y_3tdZzPylP1mLRVFqPFclkf3ROOw1Bie2oZafg6AAj3s0TyGI3jHmXIeEcmQ8qAWKtvVjgWWkvaqzjzwj-pmEfVVyLp38iQ0L9yjH1xgRBki71ZEyuTnkBkREGAS",
+        "expiresAt": 1690484036
+    },
+    "environment": {
+        "_url": "http://localhost:8000/mycareplanner/index.html",
+        "_storage": {},
+        "security": {},
+        "options": {
+            "replaceBrowserHistory": true,
+            "fullSessionStorageSupport": true,
+            "refreshTokenWithCredentials": "same-origin"
+        }
+    },
+    "_refreshTask": null,
+    "patient": {
+        "id": "evYS76EX6LLeCX2PlRLhvwg3"
+    },
+    "encounter": {
+        "id": null
+    },
+    "user": {
+        "fhirUser": "RelatedPerson/e7HX4h-dgVCK1nrPaxurPiNMmumY.H07djk.qfouVJKE3",
+        "id": "e7HX4h-dgVCK1nrPaxurPiNMmumY.H07djk.qfouVJKE3",
+        "resourceType": "RelatedPerson"
+    }
+}
