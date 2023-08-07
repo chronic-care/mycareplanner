@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import SessionExpiredReminderModal from './SessionExpiredReminderModal';
 
@@ -28,13 +28,8 @@ const SessionExpiredHandler = (props: SessionExpiredHandlerProps) => {
     const [isLogout, setLogout] = useState(false)
     const [remainingTime, setRemainingTime] = useState(0)
     const [isContinueSession, setContinueSession] = useState(false)
-    const [sessionStartTime, setSessionStartTime] = useState(moment().unix())
 
     let timer: any = useRef(null);
-
-    const sessionStartTimeddd = useMemo(() => {
-        return moment().unix()
-    }, [isContinueSession])
 
     const startExpiryChecker = useCallback(() => {
         if (!isLogout) {
@@ -42,17 +37,9 @@ const SessionExpiredHandler = (props: SessionExpiredHandlerProps) => {
                 const smartKey = JSON.parse(sessionStorage.getItem('SMART_KEY') || '{}')
                 const tokenData: TokenData | null = JSON.parse(sessionStorage.getItem(smartKey || '') || '{}')
 
-                const sessionExpiredTimeout = +process.env.REACT_APP_CLIENT_SESSION_TIMEOUT_REMINDER! || 600;
-                const expiresMoment = sessionStartTime+sessionExpiredTimeout;
-                const diffExpiry = moment().unix()-expiresMoment;
-
-
-                console.error('startExpiryChecker  sessionStartTime '+ sessionStartTime); 
-                console.error('startExpiryChecker  sessionExpiredTimeout '+ sessionExpiredTimeout); 
-                console.error('startExpiryChecker  expiresMoment '+ expiresMoment); 
-                console.error('startExpiryChecker  diffExpiry '+ diffExpiry); 
-                console.error('startExpiryChecker  diffExpiry '+ (diffExpiry > sessionExpiredTimeout)); 
-               
+                const expiresMoment = moment.unix(tokenData?.expiresAt || 0);
+                const diffExpiry = moment().diff(expiresMoment);
+                const reminderTimeout = +process.env.REACT_APP_CLIENT_SESSION_TIMEOUT_REMINDER! || -60000;
                 setRemainingTime(diffExpiry)
 
                 // logout if expired
@@ -61,14 +48,10 @@ const SessionExpiredHandler = (props: SessionExpiredHandlerProps) => {
                     setLogout(true)
                     props.onLogout();
                     setShowModal(false)
-                    window.location.reload();
                 }
 
-                // // reminder to set in one minute before expiry
-
-                console.error('startExpiryChecker  (diffExpiry+60 > sessionExpiredTimeout) '+(diffExpiry+60 > sessionExpiredTimeout)); 
-
-                if (diffExpiry > -60) {
+                // reminder to set in one minute before expiry
+                if (tokenData && diffExpiry > reminderTimeout && !isContinueSession) {
                     setShowModal(true)
                 }
             }, 1000)
@@ -80,13 +63,7 @@ const SessionExpiredHandler = (props: SessionExpiredHandlerProps) => {
 
     const handleContinue = useCallback(() => {
         setShowModal(false)
-        setContinueSession(true)      
-        setSessionStartTime(moment().unix()) 
-        console.error('handleContinue '+ sessionStartTime); 
-        console.error('handleContinue '+ sessionStartTime); 
-        console.error('handleContinue '+ sessionStartTime); 
-        
-
+        setContinueSession(true)
     }, [])
 
     const handleLogout = useCallback(() => {
@@ -94,14 +71,16 @@ const SessionExpiredHandler = (props: SessionExpiredHandlerProps) => {
         setLogout(true)
         props.onLogout();
         setShowModal(false)
-        window.location.reload();
 
     }, [props, setLogout, setShowModal])
 
     useEffect(() => {
-        startExpiryChecker();
+        const bufferBeforeCheck = setTimeout(() => {
+            startExpiryChecker();
+        }, 1000)
         return () => {
             clearInterval(timer.current);
+            clearTimeout(bufferBeforeCheck);
         }
     }, [startExpiryChecker])
 

@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
 import { Task } from './data-services/fhir-types/fhir-r4';
@@ -41,10 +41,11 @@ import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
-import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
 import SessionExpiredHandler from './components/session-timeout/SessionExpiredHandler';
+import SessionProtected from './components/session-timeout/SessionProtected';
+import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
 
-interface AppProps {
+interface AppProps extends RouteComponentProps {
 }
 
 interface AppState {
@@ -77,7 +78,7 @@ interface AppState {
 type SummaryFunctionType = (fhirData?: FHIRData) => [GoalSummary] | [ConditionSummary] | [ObservationSummary] | [MedicationSummary] | undefined
 
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
-export default class App extends React.Component<AppProps, AppState> {
+class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
@@ -107,7 +108,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     async componentDidMount() {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
-        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
+        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
             try {
                 console.log("getting and setting fhirData state in componentDidMount")
                 let data = await getFHIRData(false, null, this.setAndLogProgressState,
@@ -256,8 +257,12 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     private handleLogout = () => {
-        this.setState({ isLogout: true })
-        sessionStorage.clear();
+        if (!this.state.isLogout) {
+            this.setState({ isLogout: true })
+            sessionStorage.clear();
+            this.props.history.push('/logout');
+        }
+
     }
 
     public render(): JSX.Element {
@@ -277,15 +282,6 @@ export default class App extends React.Component<AppProps, AppState> {
                     isLoggedOut={this.state.isLogout}
                 />
 
-                <SessionTimeOutHandler
-                    onActive={() => { this.setState({ isActiveSession: true }) }}
-                    onIdle={() => { this.setState({ isActiveSession: false }) }}
-                    onLogout={this.handleLogout}
-                    isLoggedOut={this.state.isLogout}
-                    timeOutInterval={+process.env.REACT_APP_CLIENT_IDLE_TIMEOUT!}
-                />
-
-
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
                     <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
@@ -294,10 +290,14 @@ export default class App extends React.Component<AppProps, AppState> {
 
                 <Switch>
                     <Route path="/condition-edit">
-                        <ConditionEditForm {...editFormData} />
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <ConditionEditForm {...editFormData} />
+                        </SessionProtected>
                     </Route>
                     <Route path="/goal-edit">
-                        <GoalEditForm {...editFormData} />
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <GoalEditForm {...editFormData} />
+                        </SessionProtected>
                     </Route>
 
                     {/* <Route path="/provider-login" component={ProviderLogin} /> */}
@@ -313,28 +313,51 @@ export default class App extends React.Component<AppProps, AppState> {
                             />
                         )}
                     />
-                    <Route path="/share-data" component={ShareData} />
-                    <Route path="/shared-data-summary" component={SharedDataSummary} />
+                    <Route path="/share-data">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <ShareData />
+                        </SessionProtected>
+                    </Route>
+                    <Route path="/shared-data-summary">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <SharedDataSummary />
+                        </SessionProtected>
+                    </Route>
 
-                    <Route path="/decision" component={ScreeningDecision} />
-                    <Route path="/questionnaire" component={QuestionnaireHandler} />
-                    <Route path='/confirmation' component={ConfirmationPage} />
+                    <Route path="/decision">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <ScreeningDecision />
+                        </SessionProtected>
+                    </Route>
+                    <Route path="/questionnaire">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <QuestionnaireHandler />
+                        </SessionProtected>
+                    </Route>
+                    <Route path='/confirmation'>
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <ConfirmationPage />
+                        </SessionProtected>
+                    </Route>
                     <Route path="/error" component={ErrorPage} />
 
+                    <Route path="/logout" component={SessionTimeoutPage} />
+
                     <Route path="/">
-                        <TabContext value={this.state.mainTabIndex}>
-                            <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
-                                <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                    <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
-                                        "& .Mui-selected, .Mui-selected > svg":
-                                            { color: "#FFFFFF !important", bgcolor: "#355CA8" }
-                                    }} TabIndicatorProps={{ style: { display: "none" } }}>
-                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
-                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
-                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
-                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
-                                    </TabList>
-                                </Paper>
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <TabContext value={this.state.mainTabIndex}>
+                                <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
+                                    <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
+                                        <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
+                                            "& .Mui-selected, .Mui-selected > svg":
+                                                { color: "#FFFFFF !important", bgcolor: "#355CA8" }
+                                        }} TabIndicatorProps={{ style: { display: "none" } }}>
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                        </TabList>
+                                    </Paper>
 
                                 <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
                                     <Home fhirData={this.state.fhirData} patientSummary={this.state.patientSummary} screenings={this.state.screenings}
@@ -390,6 +413,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                 </TabPanel>
                             </Box>
                         </TabContext>
+		    </SessionProtected>
                     </Route>
                 </Switch>
 
@@ -397,3 +421,5 @@ export default class App extends React.Component<AppProps, AppState> {
         )
     }
 }
+
+export default App;
