@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-import FHIR from 'fhirclient'
+import { getSupplementalDataClient } from '../../data-services/fhirService'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -12,12 +12,10 @@ export default function SharedDataSummary() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    FHIR.oauth2.authorize({
-      iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
-      clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
-      scope: process.env.REACT_APP_SHARED_DATA_SCOPE,
-      redirectUri: process.env.REACT_APP_SHARED_DATA_REDIRECT_URI
-    })
+    let sdsClient = getSupplementalDataClient()
+    if (sdsClient !== undefined) {
+      // Get and display Shared Data
+    }
   }
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {

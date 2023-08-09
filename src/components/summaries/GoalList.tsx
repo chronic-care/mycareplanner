@@ -1,31 +1,22 @@
 import '../../Home.css';
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources';
-import { PatientSummary, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
-import { getGoalSummary } from '../../data-services/mccCqlService';
+import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { supplementalDataIsAvailable } from '../../data-services/fhirService';
+import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface GoalListProps {
   fhirData?: FHIRData,
-  patientSummary?: PatientSummary
+  goalSummary?: [GoalSummary],
 }
 
 interface GoalListState {
-  goalSummary?: GoalSummary[]
 }
 
 export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
-
-  const [goalSummary, setGoalSummary] = useState<GoalSummary[] | undefined>([{ Description: 'init' }])
-
-  useEffect(() => {
-    console.time('getGoalSummary()')
-    setGoalSummary(getGoalSummary(props.fhirData))
-    console.timeEnd('getGoalSummary()')
-  }, [props.fhirData])
+  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
 
   return (
     <div className="home-view">
@@ -39,17 +30,17 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
           </>
         }
 
-        {hasScope(props.fhirData?.clientScope, 'Goal.write')
+        { supplementalDataIsAvailable()
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirData: props.fhirData } }}>Add a New Goal</Link></p>
           : <p />}
 
-        {goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
+        {props.goalSummary && props.goalSummary.length > 0 && props.goalSummary[0]?.Description === 'init'
           ? <p>Loading...</p>
-          : (!goalSummary || goalSummary.length < 1) && props.fhirData !== undefined
+          : (!props.goalSummary || props.goalSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>
-              {goalSummary?.map((goal, idx) => (
+              {props.goalSummary?.map((goal, idx) => (
                 <Summary key={idx} id={idx} rows={buildRows(goal)} />
               ))}
             </>

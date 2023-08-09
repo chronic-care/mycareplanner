@@ -1,0 +1,33 @@
+.sesstion-timeout-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 99vh;
+    margin: 0 10px;
+    color: var(--color-dark);
+    border: 1px solid #000000;
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+/* Ipad specific media queries */
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    .session-timeout-page {
+        height: 1024px;
+        overflow: scroll;
+        -webkit-overflow-scrolling:touch; 
+    }
+}
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
+    .session-timeout-page {
+      height: 768px;
+      overflow: scroll;
+      -webkit-overflow-scrolling:touch; 
+    }
+}
+
+.session-timeout-icon path {
+    fill: #d9534f !important;
+}

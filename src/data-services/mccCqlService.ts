@@ -8,6 +8,7 @@ import { FHIRData } from './models/fhirResources';
 import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } from './models/cqlSummary';
 
 import { mccCodeService, mccConditionsLibrary, mccGoalsLibrary, mccLabResultsLibrary, mccMedicationsLibrary, mccVitalSignsLibrary } from './mccCqlLibraries';
+import { doLog } from '../log';
 
 function getBundleEntries(resources?: Resource[]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
@@ -17,13 +18,13 @@ function getPatientSource(data: FHIRData): unknown {
   const fhirBundle = {
     resourceType: 'Bundle',
     entry: [{ resource: data.patient }, { resource: data.patientPCP },
-      ...getBundleEntries(data.conditions),
-      ...getBundleEntries(data.medications),
-      ...getBundleEntries(data.serviceRequests),
-      ...getBundleEntries(data.labResults),
-      ...getBundleEntries(data.vitalSigns),
-      ...getBundleEntries(data.goals),
-      ...getBundleEntries(data.provenance),
+    ...getBundleEntries(data.conditions),
+    ...getBundleEntries(data.medications),
+    ...getBundleEntries(data.serviceRequests),
+    ...getBundleEntries(data.labResults),
+    ...getBundleEntries(data.vitalSigns),
+    ...getBundleEntries(data.goals),
+    ...getBundleEntries(data.provenance),
     ]
   };
 
@@ -44,6 +45,12 @@ export const getConditionSummary = (fhirData?: FHIRData): [ConditionSummary] | u
 }
 
 export const getGoalSummary = (fhirData?: FHIRData): [GoalSummary] | undefined => {
+  doLog({
+    level: 'debug',
+    event: 'getConditions',
+    page: 'get Conditions',
+    message: `getConditions: success`
+  })
   if (fhirData === undefined) { return undefined }
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource);
