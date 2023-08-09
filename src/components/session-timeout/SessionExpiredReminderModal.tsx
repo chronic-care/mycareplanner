@@ -9,10 +9,10 @@ interface SessionTimeOutModalProps {
     remainingTime: number;
 }
 
-const secondsToMinutesAndSeconds = (millis: number) => {
-    const minutes = Math.floor(millis / 60);
-    const seconds = +((millis % 60)).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+const millisToMinutesAndSeconds = (millis: number) => {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = +((millis % 60000) / 1000).toFixed(0);
+    return minutes + " minutes " + (seconds < 10 ? '0' : '') + seconds + " seconds";
 }
 
 const SessionTimeOutModal = ({ showModal, handleContinue, handleLogout, remainingTime }: SessionTimeOutModalProps) => {
@@ -20,13 +20,10 @@ const SessionTimeOutModal = ({ showModal, handleContinue, handleLogout, remainin
     return (
         <Modal show={showModal} onHide={handleContinue}>
             <Modal.Header closeButton>
-                <Modal.Title>Your session has almost expired!</Modal.Title>
+                <Modal.Title>Are you still there?</Modal.Title>
             </Modal.Header>
-            <Modal.Body>You will be automatically logged out in {secondsToMinutesAndSeconds( Math.abs(remainingTime))}</Modal.Body>
+            <Modal.Body>You will be automatically logged out due to inactivity in <br /> {millisToMinutesAndSeconds(Math.abs(remainingTime))}</Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={handleLogout}>
-                    Logout now
-                </Button>
                 <Button variant="primary" onClick={handleContinue}>
                     Continue Session
                 </Button>
