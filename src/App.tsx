@@ -41,9 +41,9 @@ import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
-import SessionExpiredHandler from './components/session-timeout/SessionExpiredHandler';
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
+import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
 
 interface AppProps extends RouteComponentProps {
 }
@@ -277,9 +277,16 @@ class App extends React.Component<AppProps, AppState> {
         return (
             <div className="app">
 
-                <SessionExpiredHandler
+                {/* <SessionExpiredHandler
                     onLogout={this.handleLogout}
                     isLoggedOut={this.state.isLogout}
+                /> */}
+                <SessionTimeOutHandler
+                    onActive={() => { this.setState({ isActiveSession: true }) }}
+                    onIdle={() => { this.setState({ isActiveSession: false }) }}
+                    onLogout={this.handleLogout}
+                    isLoggedOut={this.state.isLogout}
+                    timeOutInterval={+process.env.REACT_APP_CLIENT_IDLE_TIMEOUT!}
                 />
 
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
