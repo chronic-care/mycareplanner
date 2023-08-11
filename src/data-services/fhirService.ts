@@ -7,10 +7,10 @@ import {
 import { FHIRData, hasScope } from './models/fhirResources'
 import { format } from 'date-fns'
 import Client from 'fhirclient/lib/Client'
+import { responseToJSON } from 'fhirclient/lib/lib'
 import {
   persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint
 } from './persistenceService'
-import { doLog } from '../log';
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
   const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
@@ -50,7 +50,7 @@ const problemListPath = 'Condition?category=problem-list-item&clinical-status=ac
 const healthConcernPath = 'Condition?category=health-concern&clinical-status=active' + provenanceSearch
 
 const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
-// date parameter not supported by NextGen (or likely the ge comparator)
+// date parameter not supported by NexGen (or likely the ge comparator)
 // const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
 const labResultsPath = 'Observation?category=laboratory&_count=500' + provenanceSearch
 
@@ -66,7 +66,7 @@ const diagnosticReportPath = 'DiagnosticReport?date=' + getDateParameter(threeYe
 const socialHistoryPath = 'Observation?category=social-history' + provenanceSearch
 
 /// category=survey returns 400 error from Epic, so include another category recognized by Epic
-const surveyResultsPath = 'Observation?category=survey,functional-mental-status' + provenanceSearch
+// const surveyResultsPath = 'Observation?category=survey,functional-mental-status' + provenanceSearch
 
 const fhirOptions: fhirclient.FhirOptions = {
   pageLimit: 0,
@@ -98,12 +98,6 @@ function recordProvenance(resources: Resource[] | undefined) {
 
 export async function getConditions(client: Client): Promise<Condition[]> {
   var resources: Resource[] = []
-  await doLog({
-    level: 'debug',
-    event: 'getConditions',
-    page: 'get Conditions',
-    message: `getConditions: success`
-  })
   // workaround for Allscripts lack of support for both category and status args
   if (client.state.serverUrl.includes('allscripts.com')) {
     const conditionsPath = 'Condition?category=problem-list-item,health-concern' + provenanceSearch
@@ -123,12 +117,6 @@ export async function getConditions(client: Client): Promise<Condition[]> {
 
 export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // Workaround for Cerner and Epic Sandbox that takes many minutes to request vital-signs, or times out completely
-  await doLog({
-    level: 'debug',
-    event: 'getVitalSigns',
-    page: 'get Vital Signs',
-    message: `getVitalSigns: success`
-  })
   if (client.state.serverUrl === 'https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4'
     || client.state.serverUrl.includes('cerner.com')) {
     return []
@@ -163,57 +151,13 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   return vitals
 }
 
-/*
-* TODO: enhance this to verify current access token for SDS.
-*/
-export const supplementalDataIsAvailable = (): Boolean => {
-  const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
-  const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
-  const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
-
-  return authURL !== undefined && authURL?.length > 0 
-    && sdsURL !== undefined && sdsURL?.length > 0 
-    && sdsScope !== undefined && sdsScope?.length > 0 
-}
-
-export const getSupplementalDataClient = async (): Promise<Client | undefined> => {
-  let sdsClient: Client | undefined
-  const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
-  const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
-  const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
-
-  if (authURL && sdsURL && sdsScope) {
-    const authFhirAccessDataObject: fhirclient.ClientState | undefined =
-      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
-    if (authFhirAccessDataObject) {
-      // replace the serverURL and client scope with Shared Data endpoint and scope
-      var sdsFhirAccessDataObject = authFhirAccessDataObject
-      sdsFhirAccessDataObject.serverUrl = sdsURL
-      sdsFhirAccessDataObject.scope = sdsScope
-      if (sdsFhirAccessDataObject.tokenResponse) {
-        sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
-      }
-      // console.log("getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
-
-      sdsClient = FHIR.client(sdsFhirAccessDataObject)
-      console.log("getSupplementalDataClient() client = ", sdsClient)
-    }
-    else {
-      console.log("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
-    }
-  }
-
-  return sdsClient
-}
-
 export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void,
-  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
-    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   console.log("Enter getFHIRData()")
 
   try {
+
     if (process.env.REACT_APP_LOAD_MELD_ON_STARTUP === 'true') {
       // TODO: Implement when time
       console.log('Attempting to load meld sandbox automatically w/o a user-provided launcher and on startup')
@@ -286,13 +230,9 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     console.log(console.log(JSON.stringify(client)))
 
     return await getFHIRResources(client, clientScope, supportsInclude,
-      setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
+      setAndLogProgressState, setResourcesLoadedCountState)
   } catch (err) {
-    // setAndLogErrorMessageState('Terminating',
-    //   process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT ? process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT : UNSET_MESSAGE,
-    //   'Failure in getFHIRData either asynchronously resolving FHIR.oath2.ready() promise or synchronously creating a new client.', err)
-    // Error is thrown so will be caught and set by the whatever calls this getFHIRData function instead of here which will allow for speceficity in the error.
-    // It must be thorwn Since getFHIRData guarantees a promise of type FHIRData
+    console.log(`Failure resolving FHIR.oath2.ready() promise in getFHIRData: ${err}`)
     throw (err)
   }
 
@@ -300,9 +240,7 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
 
 const getFHIRResources = async (client: Client, clientScope: string | undefined, supportsInclude: boolean,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void,
-  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
-    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   /*
    *  Allscripts does not return patient, so also try user if patient is missing.
    */
@@ -343,7 +281,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
     // we allow undefined or true as we want the default to always be to load the queries
     setAndLogProgressState("Retrieving FHIR queries", 35)
     fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP,
-      setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
+      setAndLogProgressState, setResourcesLoadedCountState)
   }
 
   return {
@@ -359,13 +297,10 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
 const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   supportsInclude: boolean, patientPCP: Practitioner | undefined,
   setAndLogProgressState: (message: string, value: number) => void,
-  setResourcesLoadedCountState: (count: number) => void,
-  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
-    developerErrorMessage: string, errorCaught: Error | string | unknown) => void): Promise<FHIRData> => {
+  setResourcesLoadedCountState: (count: number) => void): Promise<FHIRData> => {
   console.time('FHIR queries')
 
   let resourcesLoadedCount: number = 0
-  let curResourceName: string = "Unknown"
 
   var careTeamMembers = new Map<string, Practitioner>()
 
@@ -373,149 +308,151 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     careTeamMembers.set(patientPCP?.id!, patientPCP!)
   }
 
-  // Load FHIR Queries...
-  // Note: Authentication form allows patient to un-select individual types from allowed scope
+  // Authentication form allows patient to un-select individual types from allowed scope
+  setAndLogProgressState('CarePlan request: ' + new Date().toLocaleTimeString(), 40)
+  const carePlanData = (hasScope(clientScope, 'CarePlan.read')
+    ? resourcesFrom(await client.patient.request(carePlanPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const carePlans = carePlanData?.filter((item: any) => item.resourceType === 'CarePlan') as CarePlan[]
+  recordProvenance(carePlanData)
+  carePlanData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  const carePlans: CarePlan[] | undefined = await loadFHIRQuery<CarePlan>('Care Plan', 'CarePlan',
-    carePlanPath, true, client, clientScope, 40, setAndLogProgressState, setAndLogErrorMessageState)
-  carePlans && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-  curResourceName = 'Care Team'
-  let careTeams: CareTeam[] | undefined
-  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 45)
-  try {
-    const _careTeamPath = supportsInclude ? careTeamPath_include : careTeamPath
-    let careTeamData: Resource[] | undefined = (hasScope(clientScope, 'CareTeam.read')
-      ? resourcesFrom(await client.patient.request(_careTeamPath, fhirOptions) as fhirclient.JsonObject)
-      : undefined)
-    careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
-    const careTeamPractitioners =
-      careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
-    careTeamPractitioners?.forEach((pract: Practitioner) => {
-      if (pract.id !== undefined && careTeamMembers.get(pract.id!) === undefined) {
-        careTeamMembers.set(pract.id!, pract)
-      }
-    })
-    recordProvenance(careTeamData)
-  } catch (err) {
-    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
-  } finally {
-    careTeams && setResourcesLoadedCountState(++resourcesLoadedCount)
-  }
-
-  const goals: Goal[] | undefined = await loadFHIRQuery<Goal>('Goal', 'Goal',
-    goalsPath, true, client, clientScope, 50, setAndLogProgressState, setAndLogErrorMessageState)
-  goals && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-  curResourceName = 'Condition'
-  let conditions: Condition[] | undefined
-  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 55)
-  try {
-    conditions = (hasScope(clientScope, `${curResourceName}.read`)
-      ? await getConditions(client)
-      : undefined)
-  } catch (err) {
-    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
-  } finally {
-    conditions && setResourcesLoadedCountState(++resourcesLoadedCount)
-  }
-
-  curResourceName = 'Procedure'
-  let procedures: Procedure[] | undefined
-  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 60)
-  try {
-    let procedureData: Resource[] | undefined = (hasScope(clientScope, `${curResourceName}.read`)
-      ? resourcesFrom(await client.patient.request(proceduresTimePath, fhirOptions) as fhirclient.JsonObject)
-      : undefined)
-    // if no procedures found in past 3 years, get _count=100
-    if (procedureData === undefined || procedureData.entries?.length === 0) {
-      procedureData = (hasScope(clientScope, `${curResourceName}.read`)
-        ? resourcesFrom(await client.patient.request(proceduresCountPath, fhirOptions) as fhirclient.JsonObject)
-        : undefined)
+  setAndLogProgressState('CareTeam request: ' + new Date().toLocaleTimeString(), 45)
+  const _careTeamPath = supportsInclude ? careTeamPath_include : careTeamPath
+  // console.log('CareTeam path: ' + _careTeamPath)
+  const careTeamData = (hasScope(clientScope, 'CareTeam.read')
+    ? resourcesFrom(await client.patient.request(_careTeamPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const careTeams = careTeamData?.filter((item: any) => item.resourceType === 'CareTeam') as CareTeam[]
+  const careTeamPractitioners =
+    careTeamData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
+  careTeamPractitioners?.forEach((pract: Practitioner) => {
+    if (pract.id !== undefined && careTeamMembers.get(pract.id!) === undefined) {
+      careTeamMembers.set(pract.id!, pract)
     }
-    procedures = procedureData?.filter((item: any) => item.resourceType === curResourceName) as Procedure[]
-    recordProvenance(procedureData)
-  } catch (err) {
-    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
-  } finally {
-    procedures && setResourcesLoadedCountState(++resourcesLoadedCount)
-  }
+  })
+  recordProvenance(careTeamData)
+  careTeamData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  const diagnosticReports: DiagnosticReport[] | undefined = await loadFHIRQuery<DiagnosticReport>('DiagnosticReport', 'DiagnosticReport',
-    diagnosticReportPath, true, client, clientScope, 65, setAndLogProgressState, setAndLogErrorMessageState)
-  diagnosticReports && setResourcesLoadedCountState(++resourcesLoadedCount)
+  setAndLogProgressState('Goal request: ' + new Date().toLocaleTimeString(), 50)
+  const goalData = (hasScope(clientScope, 'Goal.read')
+    ? resourcesFrom(await client.patient.request(goalsPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const goals = goalData?.filter((item: any) => item.resourceType === 'Goal') as Goal[]
+  recordProvenance(goalData)
+  goalData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  const immunizations: Immunization[] | undefined = await loadFHIRQuery<Immunization>('Immunizations', 'Immunization',
-    immunizationsPath, true, client, clientScope, 70, setAndLogProgressState, setAndLogErrorMessageState)
-  immunizations && setResourcesLoadedCountState(++resourcesLoadedCount)
+  setAndLogProgressState('Condition request: ' + new Date().toLocaleTimeString(), 55)
+  const conditions = (hasScope(clientScope, 'Condition.read')
+    ? await getConditions(client)
+    : undefined)
+  conditions && setResourcesLoadedCountState(++resourcesLoadedCount)
 
-  const labResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Lab Results', 'Observation',
-    labResultsPath, true, client, clientScope, 75, setAndLogProgressState, setAndLogErrorMessageState)
-  labResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-  curResourceName = 'Medication Request'
-  let medications: MedicationRequest[] | undefined
-  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 80)
-  try {
-    if (hasScope(clientScope, 'MedicationRequest.read')) {
-      // fetch all active meds
-      let medicationRequestData: Resource[] | undefined =
-        resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
-      setAndLogProgressState('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.', 81)
-      // medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-      // also fetch the last 10 inactive meds
-      let inactiveMeds = resourcesFrom(await client.patient.request(medicationRequestInactivePath, fhirOptions) as fhirclient.JsonObject)
-      // remove any inactive meds also in the active list (VA does not support the status parameter)
-      setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).', 82)
-      inactiveMeds = inactiveMeds?.filter((item: any) => medicationRequestData?.find((resource: Resource) => resource.id === item.id) === undefined)
-      // inactiveMeds && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-      setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).', 83)
-      medicationRequestData = (medicationRequestData ?? []).concat(inactiveMeds ?? [])
-
-      medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
-      recordProvenance(medicationRequestData)
-    } else {
-      medications = undefined
-    }
-  } catch (err) {
-    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
-  } finally {
-    medications && setResourcesLoadedCountState(++resourcesLoadedCount)
-  }
-
-  const serviceRequests: ServiceRequest[] | undefined = await loadFHIRQuery<ServiceRequest>('ServiceRequest', 'ServiceRequest',
-    serviceRequestPath, true, client, clientScope, 85, setAndLogProgressState, setAndLogErrorMessageState)
-  serviceRequests && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-  const socialHistory: Observation[] | undefined = await loadFHIRQuery<Observation>('SocialHistory', 'Observation',
-    socialHistoryPath, true, client, clientScope, 90, setAndLogProgressState, setAndLogErrorMessageState)
-  socialHistory && setResourcesLoadedCountState(++resourcesLoadedCount)
-
-  // We may need to comment this out due to a prior known issue of a 400 error from Epic.
-  // However, the loadFHIRQuery function should handle it regardless via it's catch and non-terminating error reporting/continuation.
-  // Thus, it has been converted and added back for testing purposes.
-  const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
-    surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
-  surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-  // const surveyResults = undefined // required if we decide not to use the above code as was the case prior
-
-  curResourceName = 'Vitals'
-  let vitalSigns: Observation[] | undefined
-  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 95)
-  try {
-    vitalSigns = (hasScope(clientScope, 'Observation.read')
-      ? await getVitalSigns(client)
+  setAndLogProgressState('Procedure request: ' + new Date().toLocaleTimeString(), 60)
+  var procedureData = (hasScope(clientScope, 'Procedure.read')
+    ? resourcesFrom(await client.patient.request(proceduresTimePath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  // if no procedures found in past 3 years, get _count=100
+  if (procedureData === undefined || procedureData.entries?.length === 0) {
+    procedureData = (hasScope(clientScope, 'Procedure.read')
+      ? resourcesFrom(await client.patient.request(proceduresCountPath, fhirOptions) as fhirclient.JsonObject)
       : undefined)
-  } catch (err) {
-    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
-  } finally {
-    vitalSigns && setResourcesLoadedCountState(++resourcesLoadedCount)
   }
+  const procedures = procedureData?.filter((item: any) => item.resourceType === 'Procedure') as Procedure[]
+  recordProvenance(procedureData)
+  procedureData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  setAndLogProgressState('DiagnosticReport request: ' + new Date().toLocaleTimeString(), 65)
+  const diagnosticReportData = (hasScope(clientScope, 'DiagnosticReport.read')
+    ? resourcesFrom(await client.patient.request(diagnosticReportPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const diagnosticReports =
+    diagnosticReportData?.filter((item: any) => item.resourceType === 'DiagnosticReport') as DiagnosticReport[]
+  recordProvenance(diagnosticReportData)
+  diagnosticReportData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  setAndLogProgressState('Immunization request: ' + new Date().toLocaleTimeString(), 70)
+  const immunizationData = (hasScope(clientScope, 'Immunization.read')
+    ? resourcesFrom(await client.patient.request(immunizationsPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const immunizations =
+    immunizationData?.filter((item: any) => item.resourceType === 'Immunization') as Immunization[]
+  recordProvenance(immunizationData)
+  immunizationData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  setAndLogProgressState('LabResult request: ' + new Date().toLocaleTimeString(), 75)
+  const labResultData = (hasScope(clientScope, 'Observation.read')
+    ? resourcesFrom(await client.patient.request(labResultsPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const labResults = labResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  recordProvenance(labResultData)
+  labResultData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  setAndLogProgressState('MedicationRequest request: ' + new Date().toLocaleTimeString(), 80)
+  var medications = undefined
+  if (hasScope(clientScope, 'MedicationRequest.read')) {
+    var medicationRequestData: Resource[] = []
+    // fetch all active meds
+    medicationRequestData = resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
+    setAndLogProgressState('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.', 81)
+    medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+    // also fetch the last 10 inactive meds
+    var inactiveMeds = resourcesFrom(await client.patient.request(medicationRequestInactivePath, fhirOptions) as fhirclient.JsonObject)
+    // remove any inactive meds also in the active list (VA does not support the status parameter)
+    setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (before filtering).', 82)
+    inactiveMeds = inactiveMeds?.filter((item: any) => medicationRequestData?.find((resource: Resource) => resource.id === item.id) === undefined)
+    inactiveMeds && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+    setAndLogProgressState('Found ' + (inactiveMeds?.length ?? 0) + ' inactive medication requests (after removing duplicates).', 83)
+    medicationRequestData = (medicationRequestData ?? []).concat(inactiveMeds ?? [])
+    medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+    medications = medicationRequestData?.filter((item: any) => item.resourceType === 'MedicationRequest') as MedicationRequest[]
+    recordProvenance(medicationRequestData)
+  }
+  else {
+    medications = undefined
+  }
+
+  setAndLogProgressState('ServiceRequest request: ' + new Date().toLocaleTimeString(), 85)
+  const serviceRequestData = (hasScope(clientScope, 'ServiceRequest.read')
+    ? resourcesFrom(await client.patient.request(serviceRequestPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const serviceRequests =
+    serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
+  recordProvenance(serviceRequestData)
+  serviceRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  setAndLogProgressState('SocialHistory request: ' + new Date().toLocaleTimeString(), 90)
+  const socialHistoryData = (hasScope(clientScope, 'Observation.read')
+    ? resourcesFrom(await client.patient.request(socialHistoryPath, fhirOptions) as fhirclient.JsonObject)
+    : undefined)
+  const socialHistory =
+    socialHistoryData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  recordProvenance(socialHistoryData)
+  socialHistoryData && setResourcesLoadedCountState(++resourcesLoadedCount)
+
+  // setProgressMessageState('Obs Survey request: ' + new Date().toLocaleTimeString(), 93)
+  // const surveyResultData = (hasScope(clientScope, 'Observation.read')
+  //   ? resourcesFrom(await client.patient.request(surveyResultsPath, fhirOptions) as fhirclient.JsonObject)
+  //   : undefined)
+  // const surveyResults =
+  //  surveyResultData?.filter((item: any) => item.resourceType === 'Observation') as Observation[]
+  // recordProvenance(surveyResultData)
+  // surveyResultData && setResourcesLoadedCountState(++resourcesLoadedCount)
+  const surveyResults = undefined
+
+  setAndLogProgressState('Vitals request: ' + new Date().toLocaleTimeString(), 95)
+  const vitalSigns = (hasScope(clientScope, 'Observation.read')
+    // ? resourcesFrom(await client.patient.request(vitalSignsPath, fhirOptions) as fhirclient.JsonObject)
+    ? await getVitalSigns(client)
+    : undefined)
+  vitalSigns && setResourcesLoadedCountState(++resourcesLoadedCount)
 
   setAndLogProgressState('All FHIR requests finished: ' + new Date().toLocaleTimeString(), 100)
   console.timeEnd('FHIR queries')
+
 
   console.log("Provenance resources: " + provenance?.length ?? 0)
   // provenance?.forEach((resource) => {
@@ -600,71 +537,29 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   }
 }
 
-const loadFHIRQuery = async <T extends Resource>(
-  resourceCommonName: string, resourceSrcCodeName: string, resourcePath: string,
-  isRecordProvenance: boolean, client: Client, clientScope: string | undefined, progressValue: number,
-  setAndLogProgressState: (message: string, value: number) => void,
-  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
-    developerErrorMessage: string, errorCaught: Error | string | unknown) => void)
-  : Promise<T[] | undefined> => {
-
-  let resourceData: Resource[] | undefined
-  let resources: T[] | undefined
-  setAndLogProgressState(`${resourceCommonName} request: ` + new Date().toLocaleTimeString(), progressValue)
-  try {
-    resourceData = (hasScope(clientScope, `${resourceSrcCodeName}.read`)
-      ? resourcesFrom(await client.patient.request(resourcePath, fhirOptions) as fhirclient.JsonObject)
-      : undefined)
-    resources = resourceData?.filter((item: any) => item.resourceType === resourceSrcCodeName) as T[]
-    isRecordProvenance && recordProvenance(resourceData)
-  } catch (err) {
-    await setAndLogNonTerminatingErrorMessageStateForResource(resourceCommonName, err, setAndLogErrorMessageState)
-  }
-  return resources
-}
-
-const setAndLogNonTerminatingErrorMessageStateForResource = async (
-  resourceName: string, errorCaught: Error | string | unknown,
-  setAndLogErrorMessageState: (errorType: string, userErrorMessage: string,
-    developerErrorMessage: string, errorCaught: Error | string | unknown) => void)
-  : Promise<void> => {
-
-  const message: string = process.env.REACT_APP_NT_USER_ERROR_MESSAGE_FAILED_RESOURCE ?
-    process.env.REACT_APP_NT_USER_ERROR_MESSAGE_FAILED_RESOURCE : 'None: Environment variable for message not set.'
-
-  setAndLogErrorMessageState('Non-terminating', message.replaceAll('<RESOURCE_NAME>', resourceName),
-    `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
-}
-
-export function createSharedDataResource(resource: Resource) {
-  return getSupplementalDataClient()
-    .then((client: Client | undefined) => {
-      // console.log('SDS client: ' + JSON.stringify(client))
-      return client?.create(resource as fhirclient.FHIR.Resource)
+export function createResource(resource: Resource) {
+  return FHIR.oauth2.ready()
+    .then((client: Client) => {
+      return client.create(resource as fhirclient.FHIR.Resource)
     })
     .then((response) => {
+      console.log('Created new resource: ' + responseToJSON)
       return response
     }).catch(error => {
-      console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      console.log('Cannot create new resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return
     })
 }
 
-export function updateSharedDataResource(resource: Resource) {
-  return getSupplementalDataClient()
-    .then((client: Client | undefined) => {
-      console.log('SDS client: ' + JSON.stringify(client))
-      try {
-        return client?.update(resource as fhirclient.FHIR.Resource)
-      }
-      catch (err) {
-        console.log("Errror updating shared data resource: " + JSON.stringify(err))
-      }
+export function updateResource(resource: Resource) {
+  return FHIR.oauth2.ready()
+    .then((client: Client) => {
+      return client.update(resource as fhirclient.FHIR.Resource)
     })
     .then((response) => {
       return response
     }).catch(error => {
-      console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      console.log('Cannot update resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return
     })
 }

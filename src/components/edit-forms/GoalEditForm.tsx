@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { EditFormData } from '../../data-services/models/cqlSummary';
 import { Goal } from '../../data-services/fhir-types/fhir-r4';
-import { createSharedDataResource } from '../../data-services/fhirService';
+import { createResource } from '../../data-services/fhirService';
 
 export default function GoalEditForm(formData?: EditFormData) {
   let history = useHistory()
@@ -68,7 +68,7 @@ export default function GoalEditForm(formData?: EditFormData) {
     }
     console.log('New Goal: ' + JSON.stringify(goal))
 
-    createSharedDataResource(goal)
+    createResource(goal)
 
     // update FHIRData shared state
 

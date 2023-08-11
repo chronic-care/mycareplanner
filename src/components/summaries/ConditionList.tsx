@@ -1,22 +1,32 @@
 import '../../Home.css';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { supplementalDataIsAvailable } from '../../data-services/fhirService';
-import { ConditionSummary } from '../../data-services/models/cqlSummary';
+import { FHIRData, hasScope, displayDate } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary, ConditionSummary } from '../../data-services/models/cqlSummary';
+import { getConditionSummary } from '../../data-services/mccCqlService';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ConditionListProps {
   fhirData?: FHIRData,
-  conditionSummary?: [ConditionSummary],
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface ConditionListState {
+  conditionSummary?: [ConditionSummary]
 }
 
 export const ConditionList: React.FC<ConditionListProps> = (props: ConditionListProps) => {
-  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ConditionList component RENDERED!")
+
+  const [conditionSummary, setConditionSummary] = useState<ConditionSummary[] | undefined>([{ ConceptName: 'init' }])
+
+  useEffect(() => {
+    console.time('getConditionSummary()')
+    setConditionSummary(getConditionSummary(props.fhirData))
+    console.timeEnd('getConditionSummary()')
+  }, [props.fhirData])
 
   return (
     <div className="home-view">
@@ -30,16 +40,16 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
           </>
         }
 
-        { supplementalDataIsAvailable()
+        {hasScope(props.fhirData?.clientScope, 'Goal.write')
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
           : <p />}
 
-        {props.conditionSummary && props.conditionSummary.length > 0 && props.conditionSummary[0]?.ConceptName === 'init'
+        {conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!props.conditionSummary || props.conditionSummary.length < 1) && props.fhirData !== undefined ? <p>No records found.</p>
+          : (!conditionSummary || conditionSummary.length < 1) && props.fhirData !== undefined ? <p>No records found.</p>
             :
             <>
-              {props.conditionSummary?.map((cond, idx) => (
+              {conditionSummary?.map((cond, idx) => (
                 <Summary key={idx} id={idx} rows={buildRows(cond)} />
               ))}
             </>

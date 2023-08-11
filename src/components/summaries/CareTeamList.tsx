@@ -1,12 +1,18 @@
 import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
 import { Summary } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
   fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
+}
+
+interface CareTeamListState {
 }
 
 function flatten(arr?: any) {
@@ -21,8 +27,6 @@ function resolve(ref?: Reference, members?: Map<string, Practitioner>) {
 }
 
 export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListProps) => {
-  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("CareTeamList component RENDERED!")
-
   // an array of arrays
   let participantArrays = props.fhirData?.careTeams?.map((team) => team.participant)
   // flatten into CareTeamParticipant[]

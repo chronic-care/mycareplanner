@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { Switch, Route, RouteComponentProps } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
 import { Task } from './data-services/fhir-types/fhir-r4';
@@ -12,26 +12,19 @@ import LineAxisIcon from '@mui/icons-material/LineAxis';
 import PeopleIcon from '@mui/icons-material/People';
 
 import Home from "./Home";
-
 import { FHIRData } from './data-services/models/fhirResources';
 import { PatientSummary, ScreeningSummary, EditFormData } from './data-services/models/cqlSummary';
 import { getFHIRData } from './data-services/fhirService';
 import { getPatientSummary, executeScreenings } from './data-services/mpcCqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
-
-import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { getGoalSummary, getLabResultSummary, getConditionSummary, getMedicationSummary, getVitalSignSummary } from './data-services/mccCqlService';
-
-import { GoalList } from "./components/summaries/GoalList";
+import { CareTeamList } from "./components/summaries/CareTeamList";
 import { ConditionList } from "./components/summaries/ConditionList";
+import { GoalList } from "./components/summaries/GoalList";
+import { ImmunizationList } from "./components/summaries/ImmunizationList";
 import { MedicationList } from "./components/summaries/MedicationList";
+import { ServiceRequestList } from "./components/summaries/ServiceRequestList";
 import { LabResultList } from "./components/summaries/LabResultList";
 import { VitalsList } from "./components/summaries/VitalsList";
-
-import { CareTeamList } from "./components/summaries/CareTeamList";
-import { ImmunizationList } from "./components/summaries/ImmunizationList";
-import { ServiceRequestList } from "./components/summaries/ServiceRequestList";
-
 import { QuestionnaireHandler } from "./components/questionnaire/QuestionnaireHandler";
 import { ConfirmationPage } from './components/confirmation-page/ConfirmationPage'
 import { ErrorPage } from "./components/error-page/ErrorPage";
@@ -41,11 +34,8 @@ import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
-import SessionExpiredHandler from './components/session-timeout/SessionExpiredHandler';
-import SessionProtected from './components/session-timeout/SessionProtected';
-import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
 
-interface AppProps extends RouteComponentProps {
+interface AppProps {
 }
 
 interface AppState {
@@ -65,20 +55,9 @@ interface AppState {
     userErrorMessage: string | undefined,
     developerErrorMessage: string | undefined,
     errorCaught: Error | string | unknown,
-
-    goalSummary?: [GoalSummary],
-    conditionSummary?: [ConditionSummary],
-    medicationSummary?: [MedicationSummary],
-    labResultSummary?: [ObservationSummary],
-    vitalSignSummary?: [ObservationSummary],
-    isActiveSession: boolean,
-    isLogout: boolean,
 }
 
-type SummaryFunctionType = (fhirData?: FHIRData) => [GoalSummary] | [ConditionSummary] | [ObservationSummary] | [MedicationSummary] | undefined
-
-// TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
-class App extends React.Component<AppProps, AppState> {
+export default class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
@@ -94,109 +73,28 @@ class App extends React.Component<AppProps, AppState> {
             errorType: undefined,
             userErrorMessage: undefined,
             developerErrorMessage: undefined,
-            errorCaught: undefined,
-
-            goalSummary: [{ Description: 'init' }],
-            conditionSummary: [{ ConceptName: 'init' }],
-            medicationSummary: [{ ConceptName: 'init' }],
-            labResultSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }],
-            vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }],
-            isActiveSession: true,
-            isLogout: false,
+            errorCaught: undefined
         }
     }
 
     async componentDidMount() {
-        process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
-        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
+        console.log("App.tsx componentDidMount()")
+        if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true') {
             try {
                 console.log("getting and setting fhirData state in componentDidMount")
                 let data = await getFHIRData(false, null, this.setAndLogProgressState,
-                    this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    this.setResourcesLoadedCountState)
                 this.setFhirDataStates(data)
             } catch (err) {
-                this.setAndLogErrorMessageState('Terminating',
-                    process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT ?
-                        process.env.REACT_APP_USER_ERROR_MESSAGE_FAILED_TO_CONNECT : 'undefined',
-                    'Failure in getFHIRData called from App.tsx componentDidMount.', err)
+                this.setAndLogErrorMessageState('Terminating', 'Failed to connect to the FHIR client and load data. No further attempt will be made. Please try a different launcher or select a different provider.',
+                    'Failure calling getFHIRData from App.tsx componentDidMount.', err)
             }
         }
     }
 
-    async componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): Promise<void> {
-        process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidUpdate()")
-        this.setSummaries(prevState)
-    }
-
-    setSummaries = async (prevState: Readonly<AppState>): Promise<void> => {
-        // Warning: Don't call anything else in this function w/o a very limited condition!
-        // Check if fhirData changed and if so update state (like useEffect with fhirData as the dependency)
-        if (this.state.fhirData && (this.state.fhirData !== prevState.fhirData)) {
-            // new fhirData is loaded now
-            process.env.REACT_APP_DEBUG_LOG === "true" && console.log("this.state.fhirData !== prevState.fhirData")
-
-            // Dyanmic version:
-            await this.setSummary('getGoalSummary()', 'goalSummary', getGoalSummary);
-            await this.setSummary('getConditionSummary()', 'conditionSummary', getConditionSummary)
-            await this.setSummary('getMedicationSummary()', 'medicationSummary', getMedicationSummary)
-            await this.setSummary('getLabResultSummary()', 'labResultSummary', getLabResultSummary)
-            await this.setSummary('getVitalSignSummary()', 'vitalSignSummary', getVitalSignSummary)
-
-            // Static version:
-            // console.time('getGoalSummary()')
-            // this.setState({ goalSummary: getGoalSummary(this.state.fhirData) })
-            // console.timeEnd('getGoalSummary()')
-
-            // console.time('getConditionSummary()')
-            // this.setState({ conditionSummary: getConditionSummary(this.state.fhirData) })
-            // console.timeEnd('getConditionSummary()')
-
-            // console.time('getMedicationSummary()')
-            // this.setState({ medicationSummary: getMedicationSummary(this.state.fhirData) })
-            // console.timeEnd('getMedicationSummary()')
-
-            // console.time('getLabResultSummary()')
-            // this.setState({ labResultSummary: getLabResultSummary(this.state.fhirData) })
-            // console.timeEnd('getLabResultSummary()')
-
-            // console.time('getVitalSignSummary()')
-            // this.setState({ vitalSignSummary: getVitalSignSummary(this.state.fhirData) })
-            // console.timeEnd('getVitalSignSummary()')
-        }
-    }
-
-    setSummary = async (message: string, propertyName: keyof AppState, summaryProcessor: SummaryFunctionType): Promise<void> => {
-        console.time(message);
-        const summary = summaryProcessor(this.state.fhirData)
-        // Timeout set to 0 makes async and defers processing until after the event loop so it doesn't block UI
-        // TODO: Consider updating to a worker instead when time for a more complete solution
-        //       I don't think the timeout solution is needed because we are on a loading page, and,
-        //       since these states are local now we are techincally fully loading them as part of the progress.
-        //       We know we don't want to lazy load, so this is a start, but will want to consider if we want to spread the loading
-        //       out past inital progress and not wait during that. If staying like this, will want to update progress to show that.
-        // setTimeout(() => {
-        this.setState(prevState => {
-            return { ...prevState, [propertyName]: summary }
-        })
-        // }, 0)
-        console.timeEnd(message)
-    }
-
-    // TODO: Need to set this 1x, during load, (or find another way to solve) so that if a user navigates out of home, they don't see old data loaded.
-    // Note: Low priority because the issue can only be reproduced on a non-redirect provider selection (so not a launcher or redirect provider selection)
-    initializeSummaries = () => {
-        this.setState({ goalSummary: [{ Description: 'init' }] })
-        this.setState({ conditionSummary: [{ ConceptName: 'init' }] })
-        this.setState({ medicationSummary: [{ ConceptName: 'init' }] })
-        this.setState({ labResultSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }] })
-        this.setState({ vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }] })
-    }
-
-    // TODO: Performance: Examine if we even need this callback or not as it may be called more than needed (before and after change vs just after):
-    //       We can likely just put the code(or call to the function) in a componentDidUpdate fhirData state change check
     // callback function to update fhir data states and give ProviderLogin access to it
     setFhirDataStates = (data: FHIRData | undefined) => {
-        process.env.REACT_APP_DEBUG_LOG === "true" && console.log("setFhirDataStates(data: FHIRData | undefined): void")
+        console.log("setFhirDataStates(data: FHIRData | undefined): void")
         this.setState({ fhirData: data })
         this.setState({ patientSummary: data ? getPatientSummary(data) : undefined })
         this.setState({ screenings: data ? executeScreenings(data) : undefined })
@@ -209,21 +107,15 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
     }
-    // callback functions to update/access resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
+    // callback function to update resourcesLoadedCount state (passed to fhirService functions as arg and ProviderLogin as prop)
     setResourcesLoadedCountState = (count: number) => {
         this.setState({ resourcesLoadedCount: count })
     }
-    getResourcesLoadedCountState = (): number => {
-        return this.state.resourcesLoadedCount
-    }
 
-    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string,
-        errorCaught: Error | string | unknown) => {
-        this.logErrorMessage(errorType, userErrorMessage, developerErrorMessage, errorCaught)
-        // TODO: Consider converting errorType, userErrorMessage, developerErrorMessage, and errorCaught into an array so we can store all of the errors in the chain and display them.
-        // If we do this, we would remove the if check for truthy on all of them, as, we would set a new index in the array vs overwrite
-        // Even further, consider converting all 4 states into one state object, ErrorDetails (or ErrorMessage) and storing having an array of those objects in state
+    setAndLogErrorMessageState = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
+        console.log(`${errorType} Error: ${userErrorMessage} | Technical Message: ${developerErrorMessage} | Error Caught: ${errorCaught}`)
         this.setState({ errorType: errorType })
+        this.setState({ userErrorMessage: userErrorMessage })
         this.setState({ developerErrorMessage: developerErrorMessage })
         let errorCaughtString: string = 'N/A'
         if (errorCaught instanceof Error) {
@@ -232,42 +124,9 @@ class App extends React.Component<AppProps, AppState> {
             errorCaughtString = errorCaught
         }
         this.setState({ errorCaught: errorCaughtString })
-        this.setState({ userErrorMessage: this.determineUserErrorMessage(userErrorMessage, errorCaughtString) })
-    }
-
-    logErrorMessage = (errorType: string, userErrorMessage: string, developerErrorMessage: string, errorCaught: Error | string | unknown) => {
-        console.log(`${errorType} Error: ${userErrorMessage}`)
-        console.log(`Technical Message: ${developerErrorMessage}`)
-        console.log(`Error Caught: ${errorCaught}`)
-    }
-
-    determineUserErrorMessage = (defaultUserErrorMessage: string, errorCaughtString: string): string => {
-        if (errorCaughtString.includes("Session expired!")) {
-            return process.env.REACT_APP_USER_ERROR_MESSAGE_SESSION_EXPIRED ?
-                process.env.REACT_APP_USER_ERROR_MESSAGE_SESSION_EXPIRED : defaultUserErrorMessage
-        } // TODO: Add remaining errors in else ifs here...
-        return defaultUserErrorMessage
-    }
-
-    resetErrorMessageState = () => {
-        this.setState({ errorType: undefined })
-        this.setState({ developerErrorMessage: undefined })
-        this.setState({ errorCaught: undefined })
-        this.setState({ userErrorMessage: undefined })
-    }
-
-    private handleLogout = () => {
-        if (!this.state.isLogout) {
-            this.setState({ isLogout: true })
-            sessionStorage.clear();
-            this.props.history.push('/logout');
-        }
-
     }
 
     public render(): JSX.Element {
-        process.env.REACT_APP_DEBUG_LOG === "true" && console.log("APP component RENDERED!")
-
         let patient = this.state.patientSummary;
         let editFormData: EditFormData = {
             fhirData: this.state.fhirData,
@@ -276,12 +135,6 @@ class App extends React.Component<AppProps, AppState> {
 
         return (
             <div className="app">
-
-                <SessionExpiredHandler
-                    onLogout={this.handleLogout}
-                    isLoggedOut={this.state.isLogout}
-                />
-
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
                     <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
@@ -289,15 +142,14 @@ class App extends React.Component<AppProps, AppState> {
                 </header>
 
                 <Switch>
+                    <Route path="/goals">
+                        <GoalList {...this.state} />
+                    </Route>
                     <Route path="/condition-edit">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ConditionEditForm {...editFormData} />
-                        </SessionProtected>
+                        <ConditionEditForm {...editFormData} />
                     </Route>
                     <Route path="/goal-edit">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <GoalEditForm {...editFormData} />
-                        </SessionProtected>
+                        <GoalEditForm {...editFormData} />
                     </Route>
 
                     {/* <Route path="/provider-login" component={ProviderLogin} /> */}
@@ -307,62 +159,32 @@ class App extends React.Component<AppProps, AppState> {
                                 setFhirDataStates={this.setFhirDataStates}
                                 setAndLogProgressState={this.setAndLogProgressState}
                                 setResourcesLoadedCountState={this.setResourcesLoadedCountState}
-                                setAndLogErrorMessageState={this.setAndLogErrorMessageState}
-                                resetErrorMessageState={this.resetErrorMessageState}
                                 {...routeProps}
                             />
                         )}
                     />
-                    <Route path="/share-data">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ShareData />
-                        </SessionProtected>
-                    </Route>
-                    <Route path="/shared-data-summary">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <SharedDataSummary />
-                        </SessionProtected>
-                    </Route>
+                    <Route path="/share-data" component={ShareData} />
+                    <Route path="/shared-data-summary" component={SharedDataSummary} />
 
-                    <Route path="/decision">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ScreeningDecision />
-                        </SessionProtected>
-                    </Route>
-                    <Route path="/questionnaire">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <QuestionnaireHandler />
-                        </SessionProtected>
-                    </Route>
-                    <Route path='/confirmation'>
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ConfirmationPage />
-                        </SessionProtected>
-                    </Route>
+                    <Route path="/decision" component={ScreeningDecision} />
+                    <Route path="/questionnaire" component={QuestionnaireHandler} />
+                    <Route path='/confirmation' component={ConfirmationPage} />
                     <Route path="/error" component={ErrorPage} />
 
-                    <Route path="/logout" component={SessionTimeoutPage} />
-
                     <Route path="/">
-                        <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <TabContext value={this.state.mainTabIndex}>
-                                <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
-                                    <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                        <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
-                                            "& .Mui-selected, .Mui-selected > svg":
-                                                { color: "#FFFFFF !important", bgcolor: "#355CA8" }
-                                        }} TabIndicatorProps={{ style: { display: "none" } }}>
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
-                                        </TabList>
-                                    </Paper>
+                        <TabContext value={this.state.mainTabIndex}>
+                            <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
+                                <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
+                                    <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{ "& .Mui-selected, .Mui-selected > svg": { color: "#FFFFFF !important", bgcolor: "#355CA8" } }} TabIndicatorProps={{ style: { display: "none" } }}>
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
+                                        <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                    </TabList>
+                                </Paper>
 
                                 <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
-                                    <Home fhirData={this.state.fhirData} patientSummary={this.state.patientSummary} screenings={this.state.screenings}
-                                        progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                        errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
+                                    <Home {...this.state} />
                                 </TabPanel>
                                 <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
                                     <TabContext value={this.state.planTabIndex}>
@@ -373,16 +195,16 @@ class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Activities" value="8" wrapped />
                                         </TabList>
                                         <TabPanel value="5" sx={{ padding: '0px 15px' }}>
-                                            <GoalList fhirData={this.state.fhirData} goalSummary={this.state.goalSummary} />
+                                            <GoalList {...this.state} />
                                         </TabPanel>
                                         <TabPanel value="6" sx={{ padding: '0px 15px' }}>
-                                            <ConditionList fhirData={this.state.fhirData} conditionSummary={this.state.conditionSummary} />
+                                            <ConditionList {...this.state} />
                                         </TabPanel>
                                         <TabPanel value="7" sx={{ padding: '0px 15px' }}>
-                                            <MedicationList fhirData={this.state.fhirData} medicationSummary={this.state.medicationSummary} />
+                                            <MedicationList {...this.state} />
                                         </TabPanel>
                                         <TabPanel value="8" sx={{ padding: '0px 15px' }}>
-                                            <ServiceRequestList fhirData={this.state.fhirData} />
+                                            <ServiceRequestList {...this.state} />
                                         </TabPanel>
                                     </TabContext>
                                 </TabPanel>
@@ -394,32 +216,47 @@ class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Immunization" value="11" wrapped />
                                         </TabList>
                                         <TabPanel value="9" sx={{ padding: '0px 15px' }}>
-                                            <LabResultList fhirData={this.state.fhirData} labResultSummary={this.state.labResultSummary} />
+                                            <LabResultList {...this.state} />
                                         </TabPanel>
                                         <TabPanel value="10" sx={{ padding: '0px 15px' }}>
-                                            <VitalsList fhirData={this.state.fhirData} vitalSignSummary={this.state.vitalSignSummary} />
+                                            <VitalsList {...this.state} />
                                         </TabPanel>
                                         {/* <TabPanel>
                                             <h4 className="title">Assessment Results</h4>
                                             <p>Coming soon...</p>
                                         </TabPanel> */}
                                         <TabPanel value="11">
-                                            <ImmunizationList fhirData={this.state.fhirData} />
+                                            <ImmunizationList {...this.state} />
                                         </TabPanel>
                                     </TabContext>
                                 </TabPanel>
                                 <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
-                                    <CareTeamList fhirData={this.state.fhirData} />
+                                    <CareTeamList {...this.state} />
                                 </TabPanel>
                             </Box>
                         </TabContext>
-		    </SessionProtected>
                     </Route>
                 </Switch>
+
+                {/*
+            <Switch>
+                <Route path="/decision" component= { ScreeningDecision }/>
+                <Route path="/conditions" component= { ConditionList }/>
+                <Route path="/goals" component= { GoalList }/>
+                <Route path="/immunizations" component= { ImmunizationList }/>
+                <Route path="/medications" component= { MedicationList }/>
+                <Route path="/observations" component= { ObservationList }/>
+                <Route path="/questionnaire" component= { QuestionnaireHandler }/>
+                <Route path='/confirmation' component= { ConfirmationPage } />
+                <Route path="/error" component= { ErrorPage }/>
+
+                <Route path="/">
+                    <Home {...this.state} />
+                </Route>
+            </Switch>
+            */}
 
             </div>
         )
     }
 }
-
-export default App;

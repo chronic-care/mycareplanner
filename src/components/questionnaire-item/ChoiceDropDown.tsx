@@ -1,6 +1,6 @@
 import React, {createRef} from 'react';
 import './ChoiceButton.css';
-import { ButtonGroup, DropdownButton, Dropdown, Col, Form } from 'react-bootstrap';
+import { ButtonGroup, DropdownButton, Dropdown, Col, Form, NavItem } from 'react-bootstrap';
 import { QuestionnaireItemAnswerOption } from '../../data-services/fhir-types/fhir-r4';
 
 // push/receive STATE on parent component

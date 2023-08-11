@@ -1,16 +1,18 @@
 import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
+import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { ServiceRequest, TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
   fhirData?: FHIRData,
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
-  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!")
 
   let serviceRequests = props.fhirData?.serviceRequests
 

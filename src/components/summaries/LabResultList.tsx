@@ -1,21 +1,34 @@
 import '../../Home.css';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { ObservationSummary } from '../../data-services/models/cqlSummary';
+import { PatientSummary, ScreeningSummary, ObservationSummary } from '../../data-services/models/cqlSummary';
+import { getLabResultSummary } from '../../data-services/mccCqlService';
 import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface LabResultListProps {
   fhirData?: FHIRData,
-  labResultSummary?: [ObservationSummary],
+  patientSummary?: PatientSummary,
+  screenings?: [ScreeningSummary]
 }
 
 interface LabResultListState {
+  labResultSummary?: ObservationSummary[]
 }
 
 export const LabResultList: React.FC<LabResultListProps> = (props: LabResultListProps) => {
-  process.env.REACT_APP_DEBUG_LOG === "true" && console.log("LabResultList component RENDERED!")
+
+  const [labResultSummary, setLabResultSummary] = useState<ObservationSummary[] | undefined>([
+    { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+  ])
+
+  useEffect(() => {
+    console.time('getLabResultSummary()')
+    setLabResultSummary(getLabResultSummary(props.fhirData))
+    console.timeEnd('getLabResultSummary()')
+  }, [props.fhirData])
 
   return (
     <div className="home-view">
@@ -29,13 +42,13 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
           </>
         }
 
-        {props.labResultSummary && props.labResultSummary.length > 0 && props.labResultSummary[0]?.ConceptName === 'init'
+        {labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!props.labResultSummary || props.labResultSummary.length < 1) && props.fhirData !== undefined
+          : (!labResultSummary || labResultSummary.length < 1) && props.fhirData !== undefined
             ? <p>No records found.</p>
             :
             <>
-              {props.labResultSummary?.map((obs, idx) => (
+              {labResultSummary?.map((obs, idx) => (
                 <Summary key={idx} id={idx} rows={buildRows(obs)} />
               ))}
             </>

@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import { QuestionnaireItem, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
+import { QuestionnaireItem, QuestionnaireItemAnswerOption, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
 import './QuestionnaireItemComponent.css';
 import { Card, Button } from 'react-bootstrap';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
@@ -8,9 +8,9 @@ import ChoiceDropDown from './ChoiceDropDown';
 // import MultiSelectButtonComponent from '../multi-select-button/MultiSelectButton';
 import parser from 'html-react-parser';
 import YouTube from 'react-youtube';
-// import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
-// import { isNullOrUndefined } from 'util';
+import { isNullOrUndefined } from 'util';
 import Grid from '@mui/material/Grid'
 
 interface QuestionnaireItemState {
@@ -86,20 +86,20 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     } else {
       text = this.props.QuestionnaireItem.text
     }
-    // const percentage = (item: number, length: number): number => {
-    //   item = Number(item)
-    //   if (!isNaN(item) && item !== null) {
-    //     let percent = (item - 1) / length;
-    //     if (!isNaN(percent)) {
-    //       return Math.round(percent * 100);
-    //     } else {
-    //       return 0;
-    //     }
+    const percentage = (item: number, length: number): number => {
+      item = Number(item)
+      if (!isNaN(item) && item !== null) {
+        let percent = (item - 1) / length;
+        if (!isNaN(percent)) {
+          return Math.round(percent * 100);
+        } else {
+          return 0;
+        }
 
-    //   } else {
-    //     return 0;
-    //   }
-    // }
+      } else {
+        return 0;
+      }
+    }
 
 
     let recordWebsiteVisit = (event: any) => {
@@ -271,46 +271,46 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
   private populateGroupType(props: any) {
     let groupItem = props.QuestionnaireItem
 
-    // let receiveData = (childData: QuestionnaireResponseItem, answer: any) => {
-    //   let childResponse: QuestionnaireResponseItem = {
-    //     linkId: childData.linkId,
-    //     text: childData.text,
-    //     answer: [JSON.parse(answer)]
-    //   };
+    let receiveData = (childData: QuestionnaireResponseItem, answer: any) => {
+      let childResponse: QuestionnaireResponseItem = {
+        linkId: childData.linkId,
+        text: childData.text,
+        answer: [JSON.parse(answer)]
+      };
 
-    //   const checkResponseArray = (obj: QuestionnaireResponseItem) => obj.linkId === childResponse.linkId;
-    //   const stateQuestionnaireResponse = this.state.questionnaireResponse;
+      const checkResponseArray = (obj: QuestionnaireResponseItem) => obj.linkId === childResponse.linkId;
+      const stateQuestionnaireResponse = this.state.questionnaireResponse;
 
-    //   if (!stateQuestionnaireResponse.item!.some(checkResponseArray)) {
-    //     this.setState(state => {
-    //       const questionnaireResponse = {
-    //         linkId: state.questionnaireResponse.linkId,
-    //         text: state.questionnaireResponse.text,
-    //         item: state.questionnaireResponse.item!.concat([childResponse])
-    //       };
-    //       return {
-    //         showReview: this.state.showReview,
-    //         questionnaireResponse
-    //       }
+      if (!stateQuestionnaireResponse.item!.some(checkResponseArray)) {
+        this.setState(state => {
+          const questionnaireResponse = {
+            linkId: state.questionnaireResponse.linkId,
+            text: state.questionnaireResponse.text,
+            item: state.questionnaireResponse.item!.concat([childResponse])
+          };
+          return {
+            showReview: this.state.showReview,
+            questionnaireResponse
+          }
 
-    //     }, () => {
-    //       this.props.onChange(this.state.questionnaireResponse);
-    //     })
-    //   } else if (stateQuestionnaireResponse.item!.some(checkResponseArray)) {
+        }, () => {
+          this.props.onChange(this.state.questionnaireResponse);
+        })
+      } else if (stateQuestionnaireResponse.item!.some(checkResponseArray)) {
 
-    //     this.setState(state => {
-    //       for (let i in stateQuestionnaireResponse.item!) {
-    //         if (stateQuestionnaireResponse.item[i].linkId === childResponse.linkId) {
-    //           stateQuestionnaireResponse.item[i].answer = childResponse.answer
-    //         }
-    //       }
+        this.setState(state => {
+          for (let i in stateQuestionnaireResponse.item!) {
+            if (stateQuestionnaireResponse.item[i].linkId === childResponse.linkId) {
+              stateQuestionnaireResponse.item[i].answer = childResponse.answer
+            }
+          }
 
-    //     }, () => {
-    //       this.props.onChange(this.state.questionnaireResponse);
-    //     })
-    //   }
+        }, () => {
+          this.props.onChange(this.state.questionnaireResponse);
+        })
+      }
 
-    // }
+    }
 
     return (
       <div>
@@ -372,5 +372,34 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
         }
       </div>
     )
+
+    // if (props.QuestionnaireItem.code![0].code === 'pain-location' || props.QuestionnaireItem.code![0].code === 'about-my-treatments') {
+    //   return (
+    //     <div>
+    //       {
+    //         props.QuestionnaireItem.item?.map((item: any) => {
+    //           return (
+    //             <MultiSelectButtonComponent sectionCode={props.QuestionnaireItem.code![0].code} parentCallback={receiveData} key={JSON.stringify(item)}  {...item}>{item.answerOption}</MultiSelectButtonComponent>
+    //           )
+    //         })
+    //       }
+    //     </div>
+    //   );
+    // } else {
+    // return (
+    //   <div>
+    //     {
+    //       props.QuestionnaireItem.item?.map((item: QuestionnaireItemAnswerOption) => {
+    //         return (
+    //           <ChoiceButton parentCallback={receiveData} key={JSON.stringify(item)} {...item}></ChoiceButton>
+    //         )
+    //       })
+
+    //     }
+    //   </div>
+    // )
+    // }
+    // }
+
   }
 }

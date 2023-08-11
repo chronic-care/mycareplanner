@@ -33,7 +33,6 @@
         "localforage": "^1.10.0",
         "minimist": "1.2.6",
         "moment": "^2.29.4",
-        "axios": "^0.27.2",
         "react": "^16.13.1",
         "react-bootstrap": "^1.0.1",
         "react-breakpoint-fix": "^1.0.7",
