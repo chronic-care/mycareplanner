@@ -6,13 +6,15 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection. 1 index was added (noted where added)
+  fhirDataCollection?: FHIRData[],
 }
 
 export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!")
 
-  let serviceRequests = props.fhirData?.serviceRequests
+  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
+  let serviceRequests = props.fhirDataCollection && props.fhirDataCollection[0]?.serviceRequests
 
   // Sort by descending occurrenceTiming start date
   serviceRequests?.sort((sr1, sr2) => {
@@ -42,13 +44,13 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
 
         <h4 className="title">Planned Activities</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        {(serviceRequests === undefined || serviceRequests?.length < 1) && props.fhirData !== undefined
+        {(serviceRequests === undefined || serviceRequests?.length < 1) && props.fhirDataCollection !== undefined
           ? <p>No records found.</p>
           :
           <>

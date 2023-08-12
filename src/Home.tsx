@@ -11,8 +11,8 @@ import { ErrorMessage } from './components/error-message/ErrorMessage';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
-  fhirData?: FHIRData,
-  patientSummary?: PatientSummary,
+  fhirDataCollection?: FHIRData[],
+  patientSummaries?: PatientSummary[],
   screenings?: [ScreeningSummary],
   // tasks?: [Task] | undefined,
 
@@ -37,9 +37,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     };
   }
 
+  // TODO:MULTI-PROVIDER: Update view to itterate fhirDataCollection if needed
+  // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
-    let fhirData = this.props.fhirData
-    let patient = this.props.patientSummary;
+    let fhirDataCollection = this.props.fhirDataCollection
+    let patients = this.props.patientSummaries;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
     // let tasks = this.props.tasks;
 
@@ -55,19 +57,35 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             </>
           }
 
-          {(fhirData?.caregiverName === undefined) ? '' :
-            <p className="subheadline">Caregiver <b>{fhirData?.caregiverName}</b></p>
+          {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' :
+            <p className="subheadline">Caregiver <b>{fhirDataCollection && fhirDataCollection[0]?.caregiverName}</b></p>
           }
-          {(patient === undefined) ? '' :
-            <p className="subheadline">
-              {(fhirData?.caregiverName === undefined) ? '' : 'for '}
+          {(patients === undefined) ? '' :
+            <div className="subheadline">
+              {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' : 'for '}
               {/* <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age} */}
-              <b>{patient?.fullName}</b> (age {patient?.age})
-            </p>
+              {
+                (fhirDataCollection && fhirDataCollection.length > 0) &&
+
+                  fhirDataCollection.length === 1
+                  ?
+                  <><b>{patients[0]?.fullName}</b> <span>(age {patients[0]?.age})</span></>
+                  :
+                  <ol>
+                    {patients.map((curPatient, index) => {
+                      return (
+                        <li key={index}>
+                          <b>{curPatient?.fullName}</b> (age {curPatient?.age})
+                        </li>
+                      )
+                    })}
+                  </ol>
+              }
+            </div>
           }
         </div>
 
-        {(this.props.fhirData === undefined)
+        {(fhirDataCollection === undefined)
           ? <div className="welcome">
 
             {
@@ -80,9 +98,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 <p>Resources loaded: {this.props.resourcesLoadedCount}</p>
               </>
             }
-            <ErrorMessage fhirData={this.props.fhirData}
-              progressMessage={this.props.progressMessage} progressValue={this.props.progressValue} resourcesLoadedCount={this.props.resourcesLoadedCount}
-              errorType={this.props.errorType} userErrorMessage={this.props.userErrorMessage} developerErrorMessage={this.props.developerErrorMessage} errorCaught={this.props.errorCaught} />
+            <ErrorMessage fhirDataCollection={this.props.fhirDataCollection}
+              progressMessage={this.props.progressMessage} progressValue={this.props.progressValue}
+              resourcesLoadedCount={this.props.resourcesLoadedCount}
+              errorType={this.props.errorType} userErrorMessage={this.props.userErrorMessage}
+              developerErrorMessage={this.props.developerErrorMessage} errorCaught={this.props.errorCaught} />
 
           </div>
           : <div>
@@ -91,15 +111,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <Link to={{
               pathname: '/questionnaire',
-              state: { patientSummary: this.props.patientSummary, questionnaireId: 'PROMIS-29-questionnaire' }
+              state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'PROMIS-29-questionnaire' }
             }} ><strong>General Health Assessment</strong></Link><br />
             <Link to={{
               pathname: '/questionnaire',
-              state: { patientSummary: this.props.patientSummary, questionnaireId: 'PRAPARE-questionnaire' }
+              state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'PRAPARE-questionnaire' }
             }} ><strong>Social Support Assessment</strong></Link><br />
             <Link to={{
               pathname: '/questionnaire',
-              state: { patientSummary: this.props.patientSummary, questionnaireId: 'caregiver-strain-questionnaire' }
+              state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'caregiver-strain-questionnaire' }
             }} ><strong>Caregiver Strain Assessment</strong></Link><br />
             {/* <Link to={{pathname: '/questionnaire',
                       state: { patientSummary: this.props.patientSummary, questionnaireId: 'mypain-questionnaire' }
@@ -126,7 +146,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 {screenings?.map((s, idx) => (
                   <li key={idx.toString()}><Link to={{
                     pathname: '/decision',
-                    state: { patientSummary: this.props.patientSummary, screening: s }
+                    state: { patientSummaries: this.props.patientSummaries, screening: s }
                   }}>{s.name}</Link>
                     <ul><li>{s.title}</li></ul>
                   </li>))}
@@ -137,7 +157,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             <Link to={{
               pathname: '/provider-login',
               state: {
-                fhirData: this.props.fhirData
+                fhirDataCollection: this.props.fhirDataCollection
               }
             }}>Retrieve records from other healthcare providers</Link>
             {/*

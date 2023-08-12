@@ -7,7 +7,9 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface MedicationListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // We didn't change any indexes to 0, so it might just be that we have to update getMedicationSummary to a matrix
+  fhirDataCollection?: FHIRData[],
   medicationSummary?: MedicationSummary[],
 }
 
@@ -23,15 +25,15 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
         <h4 className="title">Medications</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
         {props.medicationSummary && props.medicationSummary.length > 0 && props.medicationSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!props.medicationSummary || props.medicationSummary.length < 1) && props.fhirData !== undefined
+          : (!props.medicationSummary || props.medicationSummary.length < 1) && props.fhirDataCollection !== undefined
             ? <p>No records found.</p>
             :
             <>

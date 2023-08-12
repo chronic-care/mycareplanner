@@ -8,8 +8,8 @@ export interface CQLLibrary {
 }
 
 export interface EditFormData {
-  fhirData?: FHIRData,
-  patientSummary?: PatientSummary
+  fhirDataCollection?: FHIRData[],
+  patientSummaries?: PatientSummary[]
 }
 
 export interface SummaryData {

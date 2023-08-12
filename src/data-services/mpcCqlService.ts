@@ -17,14 +17,14 @@ function getPatientSource(data: FHIRData): unknown {
   const fhirBundle = {
     resourceType: 'Bundle',
     entry: [{ resource: data.patient }, { resource: data.patientPCP },
-      ...getBundleEntries(data.conditions),
-      ...getBundleEntries(data.procedures),
-      ...getBundleEntries(data.diagnosticReports),
-      ...getBundleEntries(data.medications),
-      ...getBundleEntries(data.immunizations),
-      ...getBundleEntries(data.labResults),
-      ...getBundleEntries(data.vitalSigns),
-      ...getBundleEntries(data.socialHistory),
+    ...getBundleEntries(data.conditions),
+    ...getBundleEntries(data.procedures),
+    ...getBundleEntries(data.diagnosticReports),
+    ...getBundleEntries(data.medications),
+    ...getBundleEntries(data.immunizations),
+    ...getBundleEntries(data.labResults),
+    ...getBundleEntries(data.vitalSigns),
+    ...getBundleEntries(data.socialHistory),
     ]
   };
 
@@ -34,26 +34,60 @@ function getPatientSource(data: FHIRData): unknown {
   return patientSource;
 }
 
-export const getPatientSummary = (fhirData: FHIRData): PatientSummary => {
+export const extractPatientSummary = (fhirData: FHIRData): PatientSummary => {
   const fhirBundle = {
     resourceType: 'Bundle',
     entry: [{ resource: fhirData.patient }, { resource: fhirData.patientPCP }]
-  };
+  }
 
-  const patientSource = cqlfhir.PatientSource.FHIRv401();
-  patientSource.loadBundles([fhirBundle]);
+  const patientSource = cqlfhir.PatientSource.FHIRv401()
+  patientSource.loadBundles([fhirBundle])
 
-  const executor = new cql.Executor(patientSummaryLibrary, codeService);
-  const results = executor.exec(patientSource);
-  const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]];
+  const executor = new cql.Executor(patientSummaryLibrary, codeService)
+  const results = executor.exec(patientSource)
+  const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]]
 
-  return extractedSummary.PatientSummary;
-};
+  return extractedSummary.PatientSummary
+}
 
-export const executeScreenings = (fhirData: FHIRData): [ScreeningSummary] => {
+export const getPatientSummaries = (fhirDataCollection: FHIRData[]): PatientSummary[] => {
+  let patientSummaries: PatientSummary[] = []
+  for (const curFhirData of fhirDataCollection) {
+    const patientSummary = extractPatientSummary(curFhirData)
+    patientSummaries.push(patientSummary)
+  }
+  return patientSummaries
+}
+
+// TODO: This static test can be removed since a dynamic version is above
+// export const getPatientSummaries = (fhirData: FHIRData): PatientSummary[] => {
+//   const fhirBundle = {
+//     resourceType: 'Bundle',
+//     entry: [{ resource: fhirData.patient }, { resource: fhirData.patientPCP }]
+//   };
+
+//   const patientSource = cqlfhir.PatientSource.FHIRv401();
+//   patientSource.loadBundles([fhirBundle]);
+
+//   const executor = new cql.Executor(patientSummaryLibrary, codeService);
+//   const results = executor.exec(patientSource);
+//   const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]];
+
+//   const PatientSummary1TestOriginal: PatientSummary = extractedSummary.PatientSummary
+//   let PatientSummary3TestUnique: PatientSummary = { ...PatientSummary1TestOriginal }
+//   PatientSummary3TestUnique.fullName = 'John Doe'
+//   PatientSummary3TestUnique.age = '21'
+
+//   // temporary solution to test as an array...
+//   // TODO: will need to run this for each PatientSummary and aggregate the Patients array
+//   return [PatientSummary1TestOriginal, PatientSummary1TestOriginal, PatientSummary3TestUnique]
+//   // return extractedSummary.PatientSummary;
+// }
+
+export const executeScreenings = (fhirDataCollection: FHIRData[]): [ScreeningSummary] => {
   // Cannot reuse patientSource for multiple library executions.
   return cancerScreeningLibraries.map((library: any) => (
-    executeScreeningLibrary(library, codeService, getPatientSource(fhirData))
+    executeScreeningLibrary(library, codeService, getPatientSource(fhirDataCollection[0])) // TODO:MULTI-PROVIDER: Handle fhirDataCollection vs just using index 0 :
   )) as [ScreeningSummary]
 }
 
@@ -65,5 +99,5 @@ const executeScreeningLibrary = (library: any, codeService: any, patientSource: 
   // console.log("ScreeningSummary: " + JSON.stringify(screeningSummary));
   // console.log("CQL Results: " + JSON.stringify(extractedSummary));
 
-  return screeningSummary;
+  return screeningSummary
 }

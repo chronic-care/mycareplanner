@@ -8,7 +8,9 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface GoalListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // We didn't change any indexes to 0, so it might just be limited to updating getGoalSummary to a matrix
+  fhirDataCollection?: FHIRData[],
   goalSummary?: [GoalSummary],
 }
 
@@ -24,19 +26,19 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
         <h4 className="title">Health Goals</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        { supplementalDataIsAvailable()
-          ? <p><Link to={{ pathname: '/goal-edit', state: { fhirData: props.fhirData } }}>Add a New Goal</Link></p>
+        {supplementalDataIsAvailable()
+          ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 
         {props.goalSummary && props.goalSummary.length > 0 && props.goalSummary[0]?.Description === 'init'
           ? <p>Loading...</p>
-          : (!props.goalSummary || props.goalSummary.length < 1) && props.fhirData !== undefined
+          : (!props.goalSummary || props.goalSummary.length < 1) && props.fhirDataCollection !== undefined
             ? <p>No records found.</p>
             :
             <>

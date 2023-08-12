@@ -6,7 +6,9 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // We didn't change any indexes to 0, so it might just be that we have to update getVitalSignSummary to a matrix
+  fhirDataCollection?: FHIRData[],
   vitalSignSummary?: [ObservationSummary],
 }
 
@@ -22,15 +24,15 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
         <h4 className="title">Vitals</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
         {props.vitalSignSummary && props.vitalSignSummary.length > 0 && props.vitalSignSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!props.vitalSignSummary || props.vitalSignSummary.length < 1) && props.fhirData !== undefined
+          : (!props.vitalSignSummary || props.vitalSignSummary.length < 1) && props.fhirDataCollection !== undefined
             ? <p>No records found.</p>
             :
             <>

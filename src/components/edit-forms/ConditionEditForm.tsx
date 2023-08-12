@@ -21,18 +21,22 @@ export default function ConditionEditForm(formData?: EditFormData) {
   const [description, setDescription] = React.useState<string | null>('');
   const [onsetDate, setStartDate] = React.useState<Date | null>(null);
 
-  const fhirData = formData?.fhirData
-  const patientSummary = formData?.patientSummary
-  const hasPatientId = fhirData?.patient?.id !== undefined;
-  const hasUserId = fhirData?.fhirUser?.id !== undefined;
+  // TODO:MULTI-PROVIDER Make fhirDataCollection[0] make sense for a collection instead of just first available index...
+  const fhirDataCollection = formData?.fhirDataCollection
+  const patients = formData?.patientSummaries
+  const hasPatientId = fhirDataCollection && fhirDataCollection[0]?.patient?.id !== undefined;
+  const hasUserId = fhirDataCollection && fhirDataCollection[0]?.fhirUser?.id !== undefined;
 
   const subjectRef = hasPatientId ? {
-    reference: 'Patient/' + fhirData?.patient?.id,
-    display: patientSummary?.fullName
+    reference: 'Patient/' + (fhirDataCollection && fhirDataCollection[0]?.patient?.id),
+    display: (patients && patients[0]) ?
+      patients[0]?.fullName : 'Unknown name' // TODO:MULTI-PROVIDER: Support all patiens in array vs just picking 1st index
   } : undefined
   const recorderRef = hasUserId ? {
-    reference: fhirData?.fhirUser?.resourceType + '/' + fhirData?.fhirUser?.id,
-    display: fhirData?.caregiverName as string ?? patientSummary?.fullName
+    reference: fhirDataCollection && (fhirDataCollection[0]?.fhirUser?.resourceType + '/' + fhirDataCollection[0]?.fhirUser?.id),
+    display: (fhirDataCollection && (fhirDataCollection[0]?.caregiverName as string)) ??
+      ((patients && patients[0]) ?
+        patients[0]?.fullName : 'Unknown name') // TODO:MULTI-PROVIDER: Support all patiens in array vs just picking 1st index
   } : undefined
 
   const clinicalStatus = {

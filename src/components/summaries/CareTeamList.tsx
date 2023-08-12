@@ -6,7 +6,10 @@ import { Summary } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection. 4 indexs were added (noted where added)
+  // We likely have to update the what get Summary method that returns immunizations as well???
+  // Maybe we are all good with just updating fhirDataCollection since immunizations appears to come right from it...
+  fhirDataCollection?: FHIRData[],
 }
 
 function flatten(arr?: any) {
@@ -24,12 +27,14 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("CareTeamList component RENDERED!")
 
   // an array of arrays
-  let participantArrays = props.fhirData?.careTeams?.map((team) => team.participant)
+  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
+  let participantArrays = props.fhirDataCollection && props.fhirDataCollection[0]?.careTeams?.map((team) => team.participant)
   // flatten into CareTeamParticipant[]
   let participants: CareTeamParticipant[] | undefined = flatten(participantArrays) as CareTeamParticipant[]
 
   //  Map<string,Practitioner>
-  let careTeamMembers = props.fhirData?.careTeamMembers
+  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
+  let careTeamMembers = props.fhirDataCollection && props.fhirDataCollection[0]?.careTeamMembers
   // let practitioners = careTeamMembers != undefined ? Array.from(careTeamMembers!.values()) : []
 
   // TODO sort care team participants by family name
@@ -39,19 +44,20 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
       <div className="welcome">
 
         <h5 className="sectiontitle">Primary Care Physician</h5>
-        {props.fhirData?.patientPCP === undefined ? <p>Not available</p> :
-          <p>{props.fhirData?.patientPCP?.name?.[0].text ?? "Name not provided"}</p>
+        {/* TODO:MULTI-PROVIDER index added on next 2 lines but need to support full collection */}
+        {props.fhirDataCollection && props.fhirDataCollection[0]?.patientPCP === undefined ? <p>Not available</p> :
+          <p>{(props.fhirDataCollection && props.fhirDataCollection[0]?.patientPCP?.name?.[0].text) ?? "Name not provided"}</p>
         }
 
         <h4 className="title">Care Team</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        {((participants?.length ?? 0) < 1) && props.fhirData !== undefined
+        {((participants?.length ?? 0) < 1) && props.fhirDataCollection !== undefined
           ? <p>No records found.</p>
           :
           <>

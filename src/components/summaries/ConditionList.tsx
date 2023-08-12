@@ -8,7 +8,9 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ConditionListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // We didn't change any indexes to 0, though, so it might limited to needing a matrix for getConditionSummary
+  fhirDataCollection?: FHIRData[],
   conditionSummary?: [ConditionSummary],
 }
 
@@ -24,19 +26,19 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
         <h4 className="title">Current Health Issues</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        { supplementalDataIsAvailable()
-          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
+        {supplementalDataIsAvailable()
+          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirDataCollection } }}>Add a Health Concern</Link></p>
           : <p />}
 
         {props.conditionSummary && props.conditionSummary.length > 0 && props.conditionSummary[0]?.ConceptName === 'init'
           ? <p>Loading...</p>
-          : (!props.conditionSummary || props.conditionSummary.length < 1) && props.fhirData !== undefined ? <p>No records found.</p>
+          : (!props.conditionSummary || props.conditionSummary.length < 1) && props.fhirDataCollection !== undefined ? <p>No records found.</p>
             :
             <>
               {props.conditionSummary?.map((cond, idx) => (
