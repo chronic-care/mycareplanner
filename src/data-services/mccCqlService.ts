@@ -20,21 +20,38 @@ function getPatientSource(dataCollection: FHIRData[]): unknown {
   // This is is required to fully work in the view
   // We can only process one at a time, but, we need to process the correct one...
   // If passing the data is messy, it may be best to set the array using a callback in App.tsx which sets all summaries, since they are local to that file.
-  const fhirBundle = {
-    resourceType: 'Bundle',
-    entry: [{ resource: dataCollection[0].patient }, { resource: dataCollection[0].patientPCP },
-    ...getBundleEntries(dataCollection[0].conditions),
-    ...getBundleEntries(dataCollection[0].medications),
-    ...getBundleEntries(dataCollection[0].serviceRequests),
-    ...getBundleEntries(dataCollection[0].labResults),
-    ...getBundleEntries(dataCollection[0].vitalSigns),
-    ...getBundleEntries(dataCollection[0].goals),
-    ...getBundleEntries(dataCollection[0].provenance),
-    ]
-  };
+  
+  const totalCollection = dataCollection.map((eachItem)=>{
+    return {
+      resourceType: 'Bundle',
+      entry: [{ resource: eachItem.patient }, { resource: eachItem.patientPCP },
+      ...getBundleEntries(eachItem.conditions),
+      ...getBundleEntries(eachItem.medications),
+      ...getBundleEntries(eachItem.serviceRequests),
+      ...getBundleEntries(eachItem.labResults),
+      ...getBundleEntries(eachItem.vitalSigns),
+      ...getBundleEntries(eachItem.goals),
+      ...getBundleEntries(eachItem.provenance),
+      ]
+    }
+  });
+
+  console.log('totalCollection',totalCollection)
+  // const fhirBundle = {
+  //   resourceType: 'Bundle',
+  //   entry: [{ resource: dataCollection[0].patient }, { resource: dataCollection[0].patientPCP },
+  //   ...getBundleEntries(dataCollection[0].conditions),
+  //   ...getBundleEntries(dataCollection[0].medications),
+  //   ...getBundleEntries(dataCollection[0].serviceRequests),
+  //   ...getBundleEntries(dataCollection[0].labResults),
+  //   ...getBundleEntries(dataCollection[0].vitalSigns),
+  //   ...getBundleEntries(dataCollection[0].goals),
+  //   ...getBundleEntries(dataCollection[0].provenance),
+  //   ]
+  // };
 
   const patientSource = cqlfhir.PatientSource.FHIRv401();
-  patientSource.loadBundles([fhirBundle]);
+  patientSource.loadBundles(totalCollection);
 
   return patientSource;
 }

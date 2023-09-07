@@ -139,7 +139,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     return (
       <Card ref={this.questionnaireItemRef} className={"questionnaire-item"} id={this.props.QuestionnaireItem.linkId}>
         <div className="questionnaire-section-header">
-          {this.props.QuestionnaireItem.linkId === '1' ? ('')
+          {/* {this.props.QuestionnaireItem.linkId === '1' ? ('')
             :
             (
               <Button className="btn-outline-secondary previous-button"
@@ -149,7 +149,16 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
                   icon={faArrowAltCircleLeft}
                   onClick={(event: any) => this.handlePreviousQuestionScroll(this.props.QuestionnaireItem.linkId)} />
               </Button>
-            )}
+            )} */}
+            {this.props.QuestionnaireItem.linkId !== ('physical-function')? (
+              <Button className="btn-outline-secondary previous-button"
+                value={this.props.QuestionnaireItem.linkId}
+                onClick={(event: any) => this.handlePreviousQuestionScroll(event.target.value)}>
+                <FontAwesomeIcon
+                  icon={faArrowAltCircleLeft}
+                  onClick={(event: any) => this.handlePreviousQuestionScroll(this.props.QuestionnaireItem.linkId)} />
+              </Button>
+            ): null}
           {this.props.QuestionnaireItem.prefix !== undefined ? <div className="prefix-text">
             <h3>{this.props.QuestionnaireItem.prefix}</h3>
           </div> : <div />}
