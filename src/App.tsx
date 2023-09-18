@@ -354,7 +354,7 @@ class App extends React.Component<AppProps, AppState> {
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <TabContext value={this.state.mainTabIndex}>
                                 <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
-                                    <Paper variant="outlined" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
+                                    <Paper variant="elevation" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
                                         <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
                                             "& .Mui-selected, .Mui-selected > svg":
                                                 { color: "#FFFFFF !important", bgcolor: "#355CA8" }
