@@ -6,7 +6,8 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection. 1 index was added (noted where added)
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // Note: 1 index was added (noted where added)
   fhirDataCollection?: FHIRData[],
 }
 

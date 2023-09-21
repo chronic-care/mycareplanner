@@ -6,10 +6,8 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // We didn't change any indexes to 0, so it might just be that we have to update getVitalSignSummary to a matrix
   fhirDataCollection?: FHIRData[],
-  vitalSignSummary?: [ObservationSummary],
+  vitalSignSummaryMatrix?: ObservationSummary[][],
 }
 
 interface VitalsListState {
@@ -17,6 +15,8 @@ interface VitalsListState {
 
 export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("VitalsList component RENDERED!")
+
+  const vitSignSumMatrix: ObservationSummary[][] | undefined = props.vitalSignSummaryMatrix
 
   return (
     <div className="home-view">
@@ -30,16 +30,28 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
           </>
         }
 
-        {props.vitalSignSummary && props.vitalSignSummary.length > 0 && props.vitalSignSummary[0]?.ConceptName === 'init'
-          ? <p>Loading...</p>
-          : (!props.vitalSignSummary || props.vitalSignSummary.length < 1) && props.fhirDataCollection !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.vitalSignSummary?.map((obs, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(obs)} />
-              ))}
-            </>
+        {
+          vitSignSumMatrix?.map((vitalSignSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
+                    ? <p>Loading...</p>
+                    : (!vitalSignSummary || vitalSignSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {vitalSignSummary?.map((obs, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(obs)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>

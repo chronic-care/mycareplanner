@@ -87,7 +87,9 @@ export const getPatientSummaries = (fhirDataCollection: FHIRData[]): PatientSumm
 export const executeScreenings = (fhirDataCollection: FHIRData[]): [ScreeningSummary] => {
   // Cannot reuse patientSource for multiple library executions.
   return cancerScreeningLibraries.map((library: any) => (
-    executeScreeningLibrary(library, codeService, getPatientSource(fhirDataCollection[0])) // TODO:MULTI-PROVIDER: Handle fhirDataCollection vs just using index 0 :
+    // TODO:MULTI-PROVIDER: Handle fhirDataCollection vs just using index 0
+    // May need to update getPatientSource to support FHIR Collection
+    executeScreeningLibrary(library, codeService, getPatientSource(fhirDataCollection[0]))
   )) as [ScreeningSummary]
 }
 

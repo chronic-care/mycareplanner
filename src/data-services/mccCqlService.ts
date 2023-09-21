@@ -14,106 +14,138 @@ function getBundleEntries(resources?: Resource[]) {
   return resources?.map((r: Resource) => ({ resource: r })) || []
 }
 
-function getPatientSource(dataCollection: FHIRData[]): unknown {
-  // TODO:MULTI-PROVIDER: Merely updated to comple for now with a fhirDataCollection by using 1st index
-  // We need to create a 2d array of CQL results and push (maybe to a temporary arrray and hen set) unique data to the array
-  // This is is required to fully work in the view
-  // We can only process one at a time, but, we need to process the correct one...
-  // If passing the data is messy, it may be best to set the array using a callback in App.tsx which sets all summaries, since they are local to that file.
-  
-  // console.log('dataCollection',dataCollection)
+function getPatientSource(data: FHIRData): unknown {
+  const fhirBundle = {
+    resourceType: 'Bundle',
+    entry: [{ resource: data.patient }, { resource: data.patientPCP },
+    ...getBundleEntries(data.conditions),
+    ...getBundleEntries(data.medications),
+    ...getBundleEntries(data.serviceRequests),
+    ...getBundleEntries(data.labResults),
+    ...getBundleEntries(data.vitalSigns),
+    ...getBundleEntries(data.goals),
+    ...getBundleEntries(data.provenance),
+    ]
+  }
 
-  const totalCollection = dataCollection.map((eachItem)=>{
-    return {
-      resourceType: 'Bundle',
-      entry: [{ resource: eachItem.patient }, { resource: eachItem.patientPCP },
-      ...getBundleEntries(eachItem.conditions),
-      ...getBundleEntries(eachItem.medications),
-      ...getBundleEntries(eachItem.serviceRequests),
-      ...getBundleEntries(eachItem.labResults),
-      ...getBundleEntries(eachItem.vitalSigns),
-      ...getBundleEntries(eachItem.goals),
-      ...getBundleEntries(eachItem.provenance),
-      ]
-    }
-  });
-  
-  // const fhirBundle = {
-  //   resourceType: 'Bundle',
-  //   entry: [{ resource: dataCollection[0].patient }, { resource: dataCollection[0].patientPCP },
-  //   ...getBundleEntries(dataCollection[0].conditions),
-  //   ...getBundleEntries(dataCollection[0].medications),
-  //   ...getBundleEntries(dataCollection[0].serviceRequests),
-  //   ...getBundleEntries(dataCollection[0].labResults),
-  //   ...getBundleEntries(dataCollection[0].vitalSigns),
-  //   ...getBundleEntries(dataCollection[0].goals),
-  //   ...getBundleEntries(dataCollection[0].provenance),
-  //   ]
-  // };
+  const patientSource = cqlfhir.PatientSource.FHIRv401()
+  patientSource.loadBundles([fhirBundle])
 
-  // console.log('totalCollection',totalCollection)
-  const patientSource = cqlfhir.PatientSource.FHIRv401();
-  patientSource.loadBundles(totalCollection);
-
-  return patientSource;
+  return patientSource
 }
 
-export const getConditionSummary = (fhirDataCollection?: FHIRData[]): [ConditionSummary] | undefined => {
+const extractConditionSummary = (fhirData?: FHIRData): ConditionSummary[] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource)
+
+  console.log("CQL Results in extractConditionSummary: " + JSON.stringify(extractedSummary))
+  console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary))
+  return extractedSummary.ConditionSummary
+}
+export const getConditionSummaries = (fhirDataCollection?: FHIRData[]): ConditionSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
-  const patientSource = getPatientSource(fhirDataCollection!)
-  const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource);
 
-  // console.log("CQL Results: " + JSON.stringify(extractedSummary));
-  // console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary));
-  return extractedSummary.ConditionSummary;
+  let conditionSummariesMatrix: ConditionSummary[][] | undefined = []
+  for (const curFhirData of fhirDataCollection) {
+    const conSummary: ConditionSummary[] | undefined = extractConditionSummary(curFhirData)
+    conditionSummariesMatrix.push(conSummary ? conSummary : [])
+  }
+  return conditionSummariesMatrix
 }
 
-export const getGoalSummary = (fhirDataCollection?: FHIRData[]): [GoalSummary] | undefined => {
+const extractGoalSummary = (fhirData?: FHIRData): GoalSummary[] | undefined => {
   doLog({
     level: 'debug',
     event: 'getConditions',
     page: 'get Conditions',
     message: `getConditions: success`
   })
-  if (fhirDataCollection === undefined) { return undefined }
-  const patientSource = getPatientSource(fhirDataCollection!)
-  const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource);
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource)
 
-  // console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary));
-  return extractedSummary.GoalSummary;
+  console.log("CQL Results in extractGetGoalSummary: " + JSON.stringify(extractedSummary))
+  console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary))
+  return extractedSummary.GoalSummary
+}
+export const getGoalSummaries = (fhirDataCollection?: FHIRData[]): GoalSummary[][] | undefined => {
+  if (fhirDataCollection === undefined) { return undefined }
+
+  let goalSummariesMatrix: GoalSummary[][] | undefined = []
+  for (const curFhirData of fhirDataCollection) {
+    const goalSummary: GoalSummary[] | undefined = extractGoalSummary(curFhirData)
+    goalSummariesMatrix.push(goalSummary ? goalSummary : [])
+  }
+  return goalSummariesMatrix
 }
 
-export const getLabResultSummary = (fhirDataCollection?: FHIRData[]): [ObservationSummary] | undefined => {
-  if (fhirDataCollection === undefined) { return undefined }
-  const patientSource = getPatientSource(fhirDataCollection!)
-  const extractedSummary = executeLibrary(mccLabResultsLibrary, mccCodeService, patientSource);
+const extractLabResultSummary = (fhirData?: FHIRData): ObservationSummary[] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccLabResultsLibrary, mccCodeService, patientSource)
 
-  // console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary));
-  return extractedSummary.LabResultSummary;
+  console.log("CQL Results in extractLabResultSummary: " + JSON.stringify(extractedSummary))
+  console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary))
+  return extractedSummary.LabResultSummary
+}
+export const getLabResultSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
+  if (fhirDataCollection === undefined) { return undefined }
+
+  let labSummariesMatrix: ObservationSummary[][] | undefined = []
+  for (const curFhirData of fhirDataCollection) {
+    const labSummary: ObservationSummary[] | undefined = extractLabResultSummary(curFhirData)
+    labSummariesMatrix.push(labSummary ? labSummary : [])
+  }
+  return labSummariesMatrix
 }
 
-export const getMedicationSummary = (fhirDataCollection?: FHIRData[]): [MedicationSummary] | undefined => {
-  if (fhirDataCollection === undefined) { return undefined }
-  const patientSource = getPatientSource(fhirDataCollection!)
-  const extractedSummary = executeLibrary(mccMedicationsLibrary, mccCodeService, patientSource);
+const extractMedicationSummary = (fhirData?: FHIRData): MedicationSummary[] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccMedicationsLibrary, mccCodeService, patientSource)
 
-  // console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary));
-  return extractedSummary.MedicationSummary;
+  console.log("CQL Results in extractMedicationSummary: " + JSON.stringify(extractedSummary))
+  console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary))
+  return extractedSummary.MedicationSummary
+}
+export const getMedicationSummaries = (fhirDataCollection?: FHIRData[]): MedicationSummary[][] | undefined => {
+  if (fhirDataCollection === undefined) { return undefined }
+
+  let medSummariesMatrix: MedicationSummary[][] | undefined = []
+  for (const curFhirData of fhirDataCollection) {
+    const medSummary: MedicationSummary[] | undefined = extractMedicationSummary(curFhirData)
+    medSummariesMatrix.push(medSummary ? medSummary : [])
+  }
+  return medSummariesMatrix
 }
 
-export const getVitalSignSummary = (fhirDataCollection?: FHIRData[]): [ObservationSummary] | undefined => {
-  if (fhirDataCollection === undefined) { return undefined }
-  const patientSource = getPatientSource(fhirDataCollection!)
-  const extractedSummary = executeLibrary(mccVitalSignsLibrary, mccCodeService, patientSource);
+const extractVitalSignSummary = (fhirData?: FHIRData): ObservationSummary[] | undefined => {
+  if (fhirData === undefined) { return undefined }
+  const patientSource = getPatientSource(fhirData!)
+  const extractedSummary = executeLibrary(mccVitalSignsLibrary, mccCodeService, patientSource)
 
-  // console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary));
-  return extractedSummary.VitalSignsSummary;
+  console.log("CQL Results in extractVitalSignSummary: " + JSON.stringify(extractedSummary))
+  console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary))
+  return extractedSummary.VitalSignsSummary
+}
+export const getVitalSignSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
+  if (fhirDataCollection === undefined) { return undefined }
+
+  let vitalSignSummariesMatrix: ObservationSummary[][] | undefined = []
+  for (const curFhirData of fhirDataCollection) {
+    const vitalSummary: ObservationSummary[] | undefined = extractVitalSignSummary(curFhirData)
+    vitalSignSummariesMatrix.push(vitalSummary ? vitalSummary : [])
+  }
+  return vitalSignSummariesMatrix
 }
 
 const executeLibrary = (library: any, codeService: any, patientSource: any): any => {
-  const executor = new cql.Executor(library, codeService);
-  const results = executor.exec(patientSource);
-  const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]];
+  const executor = new cql.Executor(library, codeService)
+  const results = executor.exec(patientSource)
+  // Note: This array index of 0 is not related to multi providers. It was setup this way prior to multi proviuders.
+  const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]]
+  console.log("CQL Results in executeLibrary: " + JSON.stringify(extractedSummary));
 
-  return extractedSummary;
+  return extractedSummary
 }

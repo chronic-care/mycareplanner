@@ -6,9 +6,8 @@ import { Summary } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection. 4 indexs were added (noted where added)
-  // We likely have to update the what get Summary method that returns immunizations as well???
-  // Maybe we are all good with just updating fhirDataCollection since immunizations appears to come right from it...
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
+  // Note: 4 indexs were added (noted where added)
   fhirDataCollection?: FHIRData[],
 }
 
@@ -32,12 +31,17 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
   // flatten into CareTeamParticipant[]
   let participants: CareTeamParticipant[] | undefined = flatten(participantArrays) as CareTeamParticipant[]
 
-  //  Map<string,Practitioner>
-  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
+  // Map<string, Practitioner>
+  // IN PROGRESS:MULTI-PROVIDER index added on next line but need to support full collection
+  // single-provider
   let careTeamMembers = props.fhirDataCollection && props.fhirDataCollection[0]?.careTeamMembers
-  // let practitioners = careTeamMembers != undefined ? Array.from(careTeamMembers!.values()) : []
+  // multi-provider
+  let careTeamMembersCollection = props.fhirDataCollection?.map((fhirDataInstance: FHIRData) => {
+    return fhirDataInstance?.careTeamMembers
+  })
 
-  // TODO sort care team participants by family name
+  // TODO: Sort care team participants by family name
+  // let practitioners = careTeamMembers != undefined ? Array.from(careTeamMembers!.values()) : []
 
   return (
     <div className="home-view">

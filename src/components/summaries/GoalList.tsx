@@ -8,10 +8,8 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface GoalListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // We didn't change any indexes to 0, so it might just be limited to updating getGoalSummary to a matrix
   fhirDataCollection?: FHIRData[],
-  goalSummary?: [GoalSummary],
+  goalSummaryMatrix?: GoalSummary[][],
 }
 
 interface GoalListState {
@@ -19,6 +17,8 @@ interface GoalListState {
 
 export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
+
+  const goalSumMatrix: GoalSummary[][] | undefined = props.goalSummaryMatrix
 
   return (
     <div className="home-view">
@@ -36,16 +36,28 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 
-        {props.goalSummary && props.goalSummary.length > 0 && props.goalSummary[0]?.Description === 'init'
-          ? <p>Loading...</p>
-          : (!props.goalSummary || props.goalSummary.length < 1) && props.fhirDataCollection !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.goalSummary?.map((goal, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(goal)} />
-              ))}
-            </>
+        {
+          goalSumMatrix?.map((goalSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
+                    ? <p>Loading...</p>
+                    : (!goalSummary || goalSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {goalSummary?.map((goal, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(goal)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>

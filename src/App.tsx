@@ -22,7 +22,10 @@ import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
 import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints } from './data-services/persistenceService'
-import { getGoalSummary, getLabResultSummary, getConditionSummary, getMedicationSummary, getVitalSignSummary } from './data-services/mccCqlService';
+import {
+    getGoalSummaries, getLabResultSummaries, getConditionSummaries,
+    getMedicationSummaries, getVitalSignSummaries
+} from './data-services/mccCqlService';
 import {
     ProviderEndpoint, buildAvailableEndpoints,
     getMatchingProviderEndpointsFromUrl
@@ -69,19 +72,21 @@ interface AppState {
     developerErrorMessage: string | undefined,
     errorCaught: Error | string | unknown,
 
-    goalSummary?: [GoalSummary],
-    conditionSummary?: [ConditionSummary],
-    medicationSummary?: [MedicationSummary],
-    labResultSummary?: [ObservationSummary],
-    vitalSignSummary?: [ObservationSummary],
+    goalSummaries?: GoalSummary[][],
+    conditionSummaries?: ConditionSummary[][],
+    medicationSummaries?: MedicationSummary[][],
+    labResultSummaries?: ObservationSummary[][],
+    vitalSignSummaries?: ObservationSummary[][],
 }
 
-type SummaryFunctionType = (fhirData?: FHIRData[]) => [GoalSummary] | [ConditionSummary] | [ObservationSummary] | [MedicationSummary] | undefined
+type SummaryFunctionType = (fhirData?: FHIRData[]) =>
+    GoalSummary[][] | ConditionSummary[][] | ObservationSummary[][] | MedicationSummary[][] | undefined
 
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
 export default class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
+
         this.state = {
             mainTabIndex: "1",
             planTabIndex: "5",
@@ -97,12 +102,14 @@ export default class App extends React.Component<AppProps, AppState> {
             developerErrorMessage: undefined,
             errorCaught: undefined,
 
-            goalSummary: [{ Description: 'init' }],
-            conditionSummary: [{ ConceptName: 'init' }],
-            medicationSummary: [{ ConceptName: 'init' }],
-            labResultSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }],
-            vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }]
+            goalSummaries: undefined,
+            conditionSummaries: undefined,
+            medicationSummaries: undefined,
+            labResultSummaries: undefined,
+            vitalSignSummaries: undefined,
         }
+
+        this.initializeSummaries()
     }
 
     // TODO: Externalize everything we can out of componentDidMount into unique functions
@@ -242,7 +249,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     async componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): Promise<void> {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidUpdate()")
-        this.setSummaries(prevState)
+        this.setSummary(prevState)
     }
 
     // TODO: MULTI-PROVIDER: This code is copioed into this class for now from the function in ProviderLOgin
@@ -258,7 +265,7 @@ export default class App extends React.Component<AppProps, AppState> {
             // console.log("redirecting to '/' right away as loading multiple endpoints")
             // history.push('/')
 
-            let index: number = 0;
+            let index: number = 0
             for (const curSelectedEndpoint of endpointsToLoad) {
                 console.log('curSelectedEndpoint #' + (index + 1) + ' at index: ' + index + ' with value:', curSelectedEndpoint)
 
@@ -268,7 +275,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 // !FUNCTION DIFF!: props to this for setFhirDataStates, may need to pass in what we need to set specifically and set that
                 this.setFhirDataStates(undefined)
                 // !FUNCTION DIFF!: props to this for resetErrorMessageState, may need to pass in what we need to set specifically and set that
-                this.resetErrorMessageState() // TODO:AGG: Does this error message logic need to be rewritten for multi?
+                this.resetErrorMessageState()
 
                 const curFhirDataLoaded: FHIRData | undefined =
                     await this.loadAuthorizedSelectedEndpointMulti(curSelectedEndpoint, true, index)
@@ -317,7 +324,7 @@ export default class App extends React.Component<AppProps, AppState> {
         }
     }
 
-    setSummaries = async (prevState: Readonly<AppState>): Promise<void> => {
+    setSummary = async (prevState: Readonly<AppState>): Promise<void> => {
         // Warning: Don't call anything else in this function w/o a very limited condition!
         // Check if fhirData changed and if so update state (like useEffect with fhirData as the dependency)
         if (this.state.fhirDataCollection && (this.state.fhirDataCollection !== prevState.fhirDataCollection)) {
@@ -325,38 +332,38 @@ export default class App extends React.Component<AppProps, AppState> {
             process.env.REACT_APP_DEBUG_LOG === "true" && console.log("this.state.fhirData !== prevState.fhirData")
 
             // Dyanmic version:
-            await this.setSummary('getGoalSummary()', 'goalSummary', getGoalSummary);
-            await this.setSummary('getConditionSummary()', 'conditionSummary', getConditionSummary)
-            await this.setSummary('getMedicationSummary()', 'medicationSummary', getMedicationSummary)
-            await this.setSummary('getLabResultSummary()', 'labResultSummary', getLabResultSummary)
-            await this.setSummary('getVitalSignSummary()', 'vitalSignSummary', getVitalSignSummary)
+            await this.setSummaries('getGoalSummaries()', 'goalSummaries', getGoalSummaries);
+            await this.setSummaries('getConditionSummaries()', 'conditionSummaries', getConditionSummaries)
+            await this.setSummaries('getMedicationSummaries()', 'medicationSummaries', getMedicationSummaries)
+            await this.setSummaries('getLabResultSummaries()', 'labResultSummaries', getLabResultSummaries)
+            await this.setSummaries('getVitalSignSummaries()', 'vitalSignSummaries', getVitalSignSummaries)
 
             // Static version:
-            // console.time('getGoalSummary()')
-            // this.setState({ goalSummary: getGoalSummary(this.state.fhirData) })
-            // console.timeEnd('getGoalSummary()')
+            // console.time('getGoalSummaries()')
+            // this.setState({ goalSummaries: getGoalSummaries(this.state.fhirData) })
+            // console.timeEnd('getGoalSummaries()')
 
-            // console.time('getConditionSummary()')
-            // this.setState({ conditionSummary: getConditionSummary(this.state.fhirData) })
-            // console.timeEnd('getConditionSummary()')
+            // console.time('getConditionSummaries()')
+            // this.setState({ conditionSummaries: getConditionSummaries(this.state.fhirData) })
+            // console.timeEnd('getConditionSummaries()')
 
-            // console.time('getMedicationSummary()')
-            // this.setState({ medicationSummary: getMedicationSummary(this.state.fhirData) })
-            // console.timeEnd('getMedicationSummary()')
+            // console.time('getMedicationSummaries()')
+            // this.setState({ medicationSummaries: getMedicationSummaries(this.state.fhirData) })
+            // console.timeEnd('getMedicationSummaries()')
 
-            // console.time('getLabResultSummary()')
-            // this.setState({ labResultSummary: getLabResultSummary(this.state.fhirData) })
-            // console.timeEnd('getLabResultSummary()')
+            // console.time('getLabResultSummaries()')
+            // this.setState({ labResultSummaries: getLabResultSummaries(this.state.fhirData) })
+            // console.timeEnd('getLabResultSummaries()')
 
-            // console.time('getVitalSignSummary()')
-            // this.setState({ vitalSignSummary: getVitalSignSummary(this.state.fhirData) })
-            // console.timeEnd('getVitalSignSummary()')
+            // console.time('getVitalSignSummaries()')
+            // this.setState({ vitalSignSummaries: getVitalSignSummaries(this.state.fhirData) })
+            // console.timeEnd('getVitalSignSummaries()')
         }
     }
 
-    setSummary = async (message: string, propertyName: keyof AppState, summaryProcessor: SummaryFunctionType): Promise<void> => {
+    setSummaries = async (message: string, propertyName: keyof AppState, summariesProcessor: SummaryFunctionType): Promise<void> => {
         console.time(message);
-        const summary = summaryProcessor(this.state.fhirDataCollection)
+        const Summaries = summariesProcessor(this.state.fhirDataCollection)
         // Timeout set to 0 makes async and defers processing until after the event loop so it doesn't block UI
         // TODO: Consider updating to a worker instead when time for a more complete solution
         //       I don't think the timeout solution is needed because we are on a loading page, and,
@@ -365,20 +372,49 @@ export default class App extends React.Component<AppProps, AppState> {
         //       out past inital progress and not wait during that. If staying like this, will want to update progress to show that.
         // setTimeout(() => {
         this.setState(prevState => {
-            return { ...prevState, [propertyName]: summary }
+            return { ...prevState, [propertyName]: Summaries }
         })
         // }, 0)
         console.timeEnd(message)
     }
 
+    getConditionAndMedicationSummariesInit = () => {
+        return [
+            [
+                { ConceptName: 'init' }
+            ]
+        ]
+    }
+    getLabResultAndVitalSignSummariesInit = () => {
+        return [
+            [
+                { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
+            ]
+        ]
+    }
+
     // TODO: Need to set this 1x, during load, (or find another way to solve) so that if a user navigates out of home, they don't see old data loaded.
     // Note: Low priority because the issue can only be reproduced on a non-redirect provider selection (so not a launcher or redirect provider selection)
     initializeSummaries = () => {
-        this.setState({ goalSummary: [{ Description: 'init' }] })
-        this.setState({ conditionSummary: [{ ConceptName: 'init' }] })
-        this.setState({ medicationSummary: [{ ConceptName: 'init' }] })
-        this.setState({ labResultSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }] })
-        this.setState({ vitalSignSummary: [{ ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }] })
+        this.setState({
+            goalSummaries: [
+                [
+                    { Description: 'init' }
+                ]
+            ]
+        })
+        this.setState({
+            conditionSummaries: this.getConditionAndMedicationSummariesInit()
+        })
+        this.setState({
+            medicationSummaries: this.getConditionAndMedicationSummariesInit()
+        })
+        this.setState({
+            labResultSummaries: this.getLabResultAndVitalSignSummariesInit()
+        })
+        this.setState({
+            vitalSignSummaries: this.getLabResultAndVitalSignSummariesInit()
+        })
     }
 
     // TODO: Performance: Examine if we even need this callback or not as it may be called more than needed (before and after change vs just after):
@@ -520,13 +556,14 @@ export default class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Activities" value="8" wrapped />
                                         </TabList>
                                         <TabPanel value="5" sx={{ padding: '0px 15px' }}>
-                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummary={this.state.goalSummary} />
+                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} />
                                         </TabPanel>
                                         <TabPanel value="6" sx={{ padding: '0px 15px' }}>
-                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummary={this.state.conditionSummary} />
+                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} />
                                         </TabPanel>
                                         <TabPanel value="7" sx={{ padding: '0px 15px' }}>
-                                            <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} />
+                                            {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
+                                            <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummaryMatrix={this.state.medicationSummaries} />
                                         </TabPanel>
                                         <TabPanel value="8" sx={{ padding: '0px 15px' }}>
                                             <ServiceRequestList fhirDataCollection={this.state.fhirDataCollection} />
@@ -541,10 +578,10 @@ export default class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Immunization" value="11" wrapped />
                                         </TabList>
                                         <TabPanel value="9" sx={{ padding: '0px 15px' }}>
-                                            <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummary={this.state.labResultSummary} />
+                                            <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummaryMatrix={this.state.labResultSummaries} />
                                         </TabPanel>
                                         <TabPanel value="10" sx={{ padding: '0px 15px' }}>
-                                            <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummary={this.state.vitalSignSummary} />
+                                            <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummaryMatrix={this.state.vitalSignSummaries} />
                                         </TabPanel>
                                         {/* <TabPanel>
                                             <h4 className="title">Assessment Results</h4>

@@ -7,10 +7,8 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface LabResultListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // We didn't change any indexes to 0, so, it might just be that we have to update getLabResultSummary to a metrix
   fhirDataCollection?: FHIRData[],
-  labResultSummary?: [ObservationSummary],
+  labResultSummaryMatrix?: ObservationSummary[][],
 }
 
 interface LabResultListState {
@@ -18,6 +16,8 @@ interface LabResultListState {
 
 export const LabResultList: React.FC<LabResultListProps> = (props: LabResultListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("LabResultList component RENDERED!")
+
+  const labResMatrix: ObservationSummary[][] | undefined = props.labResultSummaryMatrix
 
   return (
     <div className="home-view">
@@ -31,16 +31,28 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
           </>
         }
 
-        {props.labResultSummary && props.labResultSummary.length > 0 && props.labResultSummary[0]?.ConceptName === 'init'
-          ? <p>Loading...</p>
-          : (!props.labResultSummary || props.labResultSummary.length < 1) && props.fhirDataCollection !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.labResultSummary?.map((obs, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(obs)} />
-              ))}
-            </>
+        {
+          labResMatrix?.map((labResultSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init'
+                    ? <p>Loading...</p>
+                    : (!labResultSummary || labResultSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {labResultSummary?.map((obs, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(obs)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>
