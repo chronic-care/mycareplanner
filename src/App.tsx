@@ -333,12 +333,12 @@ class App extends React.Component<AppProps, AppState> {
 
                     <Route path="/decision">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ScreeningDecision />
+                            <ScreeningDecision {...this.props}/>
                         </SessionProtected>
                     </Route>
                     <Route path="/questionnaire">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <QuestionnaireHandler />
+                            <QuestionnaireHandler {...this.props}/>
                         </SessionProtected>
                     </Route>
                     <Route path='/confirmation'>
