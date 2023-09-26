@@ -4,7 +4,7 @@ import { FHIRData } from '../../data-services/models/fhirResources';
 import './ErrorMessage.css';
 
 interface ErrorMessageProps {
-  fhirData?: FHIRData,
+  fhirDataCollection?: FHIRData[],
 
   progressMessage: string,
   progressValue: number,
@@ -37,7 +37,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = (props: ErrorMessagePro
           <Link to={{
             pathname: '/provider-login',
             state: {
-              fhirData: props.fhirData
+              fhirDataCollection: props.fhirDataCollection
             }
           }}>Retrieve records from other healthcare providers</Link>
           <br />

@@ -7,8 +7,8 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface MedicationListProps {
-  fhirData?: FHIRData,
-  medicationSummary?: MedicationSummary[],
+  fhirDataCollection?: FHIRData[],
+  medicationSummaryMatrix?: MedicationSummary[][],
 }
 
 interface MedicationListState {
@@ -17,28 +17,46 @@ interface MedicationListState {
 export const MedicationList: React.FC<MedicationListProps> = (props: MedicationListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("MedicationList component RENDERED!")
 
+  const medSumMatrix: MedicationSummary[][] | undefined = props.medicationSummaryMatrix
+
   return (
     <div className="home-view">
       <div className="welcome">
 
         <h4 className="title">Medications</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        {props.medicationSummary && props.medicationSummary.length > 0 && props.medicationSummary[0]?.ConceptName === 'init'
-          ? <p>Loading...</p>
-          : (!props.medicationSummary || props.medicationSummary.length < 1) && props.fhirData !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.medicationSummary?.map((med, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(med)} />
-              ))}
-            </>
+        {
+          medSumMatrix?.map((medicationSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {/* TODO:MULTI-PROVIDER: ConceptName === 'init' needs to refer to either medSumMatrix as a whole,
+                 or, we need to initialize all possible rows (how do we know the # ahead of time?) to init vs just the first row.
+                 Or, we need a better solution altogether. This applies to ALL summaries which use a summary matrix for display data
+                 For now though, it's irrelevant as the data is all loaded ahead of time. If it's a massive data set, it may become relevant */}
+                {
+                  medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init'
+                    ? <p>Loading...</p>
+                    : (!medicationSummary || medicationSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {medicationSummary?.map((med, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(med)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>

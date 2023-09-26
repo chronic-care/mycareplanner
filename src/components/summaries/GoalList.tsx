@@ -8,8 +8,8 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface GoalListProps {
-  fhirData?: FHIRData,
-  goalSummary?: [GoalSummary],
+  fhirDataCollection?: FHIRData[],
+  goalSummaryMatrix?: GoalSummary[][],
 }
 
 interface GoalListState {
@@ -18,32 +18,46 @@ interface GoalListState {
 export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
 
+  const goalSumMatrix: GoalSummary[][] | undefined = props.goalSummaryMatrix
+
   return (
     <div className="home-view">
       <div className="welcome">
 
         <h4 className="title">Health Goals</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        { supplementalDataIsAvailable()
-          ? <p><Link to={{ pathname: '/goal-edit', state: { fhirData: props.fhirData } }}>Add a New Goal</Link></p>
+        {supplementalDataIsAvailable()
+          ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 
-        {props.goalSummary && props.goalSummary.length > 0 && props.goalSummary[0]?.Description === 'init'
-          ? <p>Loading...</p>
-          : (!props.goalSummary || props.goalSummary.length < 1) && props.fhirData !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.goalSummary?.map((goal, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(goal)} />
-              ))}
-            </>
+        {
+          goalSumMatrix?.map((goalSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
+                    ? <p>Loading...</p>
+                    : (!goalSummary || goalSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {goalSummary?.map((goal, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(goal)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>

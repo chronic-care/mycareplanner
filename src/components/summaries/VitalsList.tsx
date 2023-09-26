@@ -6,8 +6,8 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
-  fhirData?: FHIRData,
-  vitalSignSummary?: [ObservationSummary],
+  fhirDataCollection?: FHIRData[],
+  vitalSignSummaryMatrix?: ObservationSummary[][],
 }
 
 interface VitalsListState {
@@ -16,28 +16,42 @@ interface VitalsListState {
 export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("VitalsList component RENDERED!")
 
+  const vitSignSumMatrix: ObservationSummary[][] | undefined = props.vitalSignSummaryMatrix
+
   return (
     <div className="home-view">
       <div className="welcome">
 
         <h4 className="title">Vitals</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        {props.vitalSignSummary && props.vitalSignSummary.length > 0 && props.vitalSignSummary[0]?.ConceptName === 'init'
-          ? <p>Loading...</p>
-          : (!props.vitalSignSummary || props.vitalSignSummary.length < 1) && props.fhirData !== undefined
-            ? <p>No records found.</p>
-            :
-            <>
-              {props.vitalSignSummary?.map((obs, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(obs)} />
-              ))}
-            </>
+        {
+          vitSignSumMatrix?.map((vitalSignSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
+                    ? <p>Loading...</p>
+                    : (!vitalSignSummary || vitalSignSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {vitalSignSummary?.map((obs, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(obs)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>
