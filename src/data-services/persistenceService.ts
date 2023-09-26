@@ -1,10 +1,14 @@
 import localForage from 'localforage'
 import { fhirclient } from 'fhirclient/lib/types'
 
-// it's best practice to use a suffix to ensure a unique key so we don't load data for another website
+// It's best practice to use a suffix to ensure a unique key so we don't load data for another website
 const LF_ID = '-MCP'
 const fcCurrentStateKey = 'fhir-client-state' + LF_ID
 const fcAllStatesKey = 'fhir-client-states-array' + LF_ID
+
+const selectedEndpointsKey = 'selected-endpoints' + LF_ID
+
+// FHIR ACCESS DATA //
 
 const saveFHIRAccessData = async (key: string, data: any, isArray: boolean): Promise<any> => {
   if (data) {
@@ -35,7 +39,7 @@ const saveFHIRAccessData = async (key: string, data: any, isArray: boolean): Pro
 const isFHIRAccessData = async (key: string): Promise<boolean> => {
   try {
     const data: any = await localForage.getItem(key)
-    // if the key does not exist, getItem() in the localForage API will return null specifically to indicate it
+    // If the key does not exist, getItem() in the localForage API will return null specifically to indicate it
     if (data !== null) {
       console.log('Key ' + key + ' exists in localForage')
       return true
@@ -234,5 +238,103 @@ export const persistFHIRAccessData = async (clientState: fhirclient.ClientState)
     // test persisted data recovery for localFhirClientStates
     const localFhirClientStates = await getFHIRAccessData(fcAllStatesKey)
     console.log('localFhirClientStates', localFhirClientStates)
+
+    // test persisted data recovery for selectedEndpoints
+    const selectedEndpoints = await getSelectedEndpoints()
+    console.log('selectedEndpoints', selectedEndpoints)
+  }
+
+}
+
+// SELECTED ENDPOINTS //
+
+export const saveSelectedEndpoints = async (endpoints: string[]): Promise<string[] | undefined> => {
+  if (endpoints) {
+    if (endpoints.length > 0) {
+      return await localForage.setItem(selectedEndpointsKey, endpoints)
+    } else {
+      console.error("fetchedEndpoints length is less than 1, will not save")
+    }
+  } else {
+    console.error("saveSelectedEndpoints endpoints array arg is not truthy, will not save: " + endpoints)
+  }
+  console.error("Unknown error saving selected endppoints, returning undefined")
+  return undefined
+}
+
+const isSelectedEndpoints = async (): Promise<boolean> => {
+  try {
+    const endpoints: string[] = await localForage.getItem(selectedEndpointsKey) as string[]
+    // If the key does not exist, getItem() in the localForage API will return null specifically to indicate it
+    if (endpoints !== null) {
+      console.log('Key ' + selectedEndpointsKey + ' exists in localForage')
+      return true
+    }
+    console.log('Key ' + selectedEndpointsKey + ' does NOT exist in localForage')
+    return false
+  } catch (e) {
+    console.log(`Failure calling localForage.getItem(selectedEndpointsKey) from persistenceService.isSelectedEndpoints: ${e}`)
+    return false
   }
 }
+
+export const getSelectedEndpoints = async (): Promise<string[] | undefined> => {
+  try {
+    const isSelectedEndpointsResult: boolean = await isSelectedEndpoints()
+    if (isSelectedEndpointsResult) {
+      const selectedEndpoints: string[] = await localForage.getItem(selectedEndpointsKey) as string[]
+      if (selectedEndpoints) {
+        if (selectedEndpoints.length > 0) {
+          console.log("getSelectedEndpoints selectedEndpoints is truthy and length is > 0," +
+            "Returning data: ", JSON.stringify(selectedEndpoints))
+          return selectedEndpoints
+        } else {
+          console.error("getSelectedEndpoints selectedEndpoints length is less than 1" +
+            "Returning an empty array")
+          return []
+        }
+      } else {
+        console.error("getSelectedEndpoints selectedEndpoints is not truthy" +
+          "Returning an empty array")
+        return []
+      }
+    }
+  } catch (e) {
+    console.log(`Failure calling isFHIRAccessData(key) from persistenceService.getFHIRAccessData: ${e}`)
+  }
+  return undefined
+}
+
+export const deleteSelectedEndpoints = async (): Promise<void> => {
+  try {
+    const isSelectedEndpointsResult: boolean = await isSelectedEndpoints()
+    if (isSelectedEndpointsResult) {
+      await localForage.removeItem(selectedEndpointsKey)
+    } else {
+      console.log("There is no matching key to delete...")
+    }
+  } catch (e) {
+    console.error("Failure deletiing deleteSelectedEndpoints: " + e)
+  }
+}
+
+// // Unused, not needed, and incomplete at this time
+// const saveEndpointToSelectedEndpointsArray = async (endpoint: string): Promise<any> => {
+//   const key = selectedEndpointsKey
+//   if (endpoint) {
+//     // get existing endpoints from local storage
+//     const fetchedEndpoints: string[] = await localForage.getItem(key) as string[]
+//     if (fetchedEndpoints) {
+//       if (fetchedEndpoints.length > 0) {
+//         // create updatedEndpoints array, add fetchedEndpoints to it, then push the new endpoint to that and save
+//         return await localForage.setItem(key, endpoint)
+//       } else {
+//         console.log("fetchedEndpoints length is less than 1")
+//       }
+//     } else {
+//       console.log("fetchedEndpoints are not truthy")
+//     }
+//   } else {
+//     console.error("saveEndpointToSelectedEndpointsArray endpoint is not truthy: " + endpoint)
+//   }
+// }

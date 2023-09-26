@@ -6,13 +6,15 @@ import { Immunization } from '../../data-services/fhir-types/fhir-r4';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ImmunizationListProps {
-  fhirData?: FHIRData,
+  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection. 1 index was added (noted where added)
+  fhirDataCollection?: FHIRData[],
 }
 
 export const ImmunizationList: React.FC<ImmunizationListProps> = (props: ImmunizationListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ImmunizationList component RENDERED!")
 
-  let immunizations = props.fhirData?.immunizations
+  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
+  let immunizations = props.fhirDataCollection && props.fhirDataCollection[0]?.immunizations
   // Sort by descending occurrence date
   immunizations?.sort((r1, r2) => {
     let r1DateString = r1.occurrenceDateTime ?? r1.recorded
@@ -41,13 +43,13 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
 
         <h4 className="title">Immunizations</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        {(immunizations === undefined || immunizations?.length < 1) && props.fhirData !== undefined
+        {(immunizations === undefined || immunizations?.length < 1) && props.fhirDataCollection !== undefined
           ? <p>No records found.</p>
           :
           <>
