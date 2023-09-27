@@ -8,8 +8,8 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ConditionListProps {
-  fhirData?: FHIRData,
-  conditionSummary?: [ConditionSummary],
+  fhirDataCollection?: FHIRData[],
+  conditionSummaryMatrix?: ConditionSummary[][],
 }
 
 interface ConditionListState {
@@ -18,31 +18,46 @@ interface ConditionListState {
 export const ConditionList: React.FC<ConditionListProps> = (props: ConditionListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ConditionList component RENDERED!")
 
+  const conSumMatrix: ConditionSummary[][] | undefined = props.conditionSummaryMatrix
+
   return (
     <div className="home-view">
       <div className="welcome">
 
         <h4 className="title">Current Health Issues</h4>
 
-        {props.fhirData === undefined
+        {props.fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirData === undefined} />
+            <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
 
-        { supplementalDataIsAvailable()
-          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirData } }}>Add a Health Concern</Link></p>
+        {supplementalDataIsAvailable()
+          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirDataCollection } }}>Add a Health Concern</Link></p>
           : <p />}
 
-        {props.conditionSummary && props.conditionSummary.length > 0 && props.conditionSummary[0]?.ConceptName === 'init'
-          ? <p>Loading...</p>
-          : (!props.conditionSummary || props.conditionSummary.length < 1) && props.fhirData !== undefined ? <p>No records found.</p>
-            :
-            <>
-              {props.conditionSummary?.map((cond, idx) => (
-                <Summary key={idx} id={idx} rows={buildRows(cond)} />
-              ))}
-            </>
+        {
+          conSumMatrix?.map((conditionSummary, index) => {
+
+            return (
+              <div key={'outerArray-' + index}>
+                <p><b>Provider {index + 1}:</b></p>
+                {
+                  conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
+                    ? <p>Loading...</p>
+                    : (!conditionSummary || conditionSummary.length < 1) && props.fhirDataCollection !== undefined
+                      ? <p>No records found.</p>
+                      :
+                      <div>
+                        {conditionSummary?.map((cond, idx) => (
+                          <Summary key={idx} id={idx} rows={buildRows(cond)} />
+                        ))}
+                      </div>
+                }
+              </div>
+            )
+
+          })
         }
 
       </div>
