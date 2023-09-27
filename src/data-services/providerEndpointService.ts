@@ -15,7 +15,7 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     {
       name: 'OHSU POC Dev',
       config: {
-        iss: "https://epicmobile.ohsu.edu/FHIRDEV",
+        iss: "https://epicmobile.ohsu.edu/FHIRDEV/api/FHIR/R4",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirdev,
         scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
@@ -25,7 +25,7 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     {
       name: 'OHSU Prod',
       config: {
-        iss: "https://epicmobile.ohsu.edu/FHIRPRD",
+        iss: "https://epicmobile.ohsu.edu/FHIRPRD/api/FHIR/R4",
         redirectUri: "./index.html",
         clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirprd,
         scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
