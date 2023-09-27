@@ -13,6 +13,26 @@ export class ProviderEndpoint {
 export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
   const availableEndpoints: ProviderEndpoint[] = [
     {
+      name: 'OHSU POC Dev',
+      config: {
+        iss: "https://epicmobile.ohsu.edu/FHIRDEV",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirdev,
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+        pkceMode: "unsafeV1"
+      }
+    },
+    {
+      name: 'OHSU Prod',
+      config: {
+        iss: "https://epicmobile.ohsu.edu/FHIRPRD",
+        redirectUri: "./index.html",
+        clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirprd,
+        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+        pkceMode: "unsafeV1"
+      }
+    },
+    {
       name: 'OCHIN',
       config: {
         iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
