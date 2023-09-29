@@ -72,7 +72,7 @@ const buildRows = (obs: ObservationSummary): SummaryRowItems => {
           <Link to="route" target="_blank"
             onClick={
               (event) => { event.preventDefault(); window.open(obs.LearnMore); }
-            }><i>Learn&nbsp;More</i>
+            }><div className='LearnMoreTypography'><i>Learn&nbsp;More</i></div>
           </Link>,
       },
       {

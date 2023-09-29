@@ -88,7 +88,7 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
           <Link to="route" target="_blank"
             onClick={
               (event) => { event.preventDefault(); window.open(cond.LearnMore); }
-            }><i>Learn&nbsp;More</i>
+            }><div className='LearnMoreTypography'><i>Learn&nbsp;More</i></div>
           </Link>,
       }
   if (author !== undefined) {
