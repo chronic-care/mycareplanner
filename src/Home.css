@@ -1,3 +1,11 @@
+a{
+    color: #0056B3;
+}
+
+a:hover{
+    color: #004A99;
+}
+
 .home-view {
     min-height: 80vh;
     width: 100%;
