@@ -76,7 +76,7 @@ const buildRows = (med: MedicationSummary): SummaryRowItems => {
           <Link to="route" target="_blank"
             onClick={
               (event) => { event.preventDefault(); window.open(med.LearnMore); }
-            }><div className='LearnMoreTypography'><i>Learn&nbsp;More</i></div>
+            }><i>Learn&nbsp;More</i>
           </Link>,
       },
       {

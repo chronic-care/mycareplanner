@@ -108,7 +108,7 @@ const buildRows = (goal: GoalSummary): SummaryRowItems => {
       <Link to="route" target="_blank"
         onClick={
           (event) => { event.preventDefault(); window.open(goal.LearnMore); }
-        }><div className='LearnMoreTypography'><i>Learn&nbsp;More</i></div>
+        }><i>Learn&nbsp;More</i>
       </Link>,
     data2: '',
   }

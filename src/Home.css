@@ -1,3 +1,11 @@
+a{
+    color: #0056B3;
+}
+
+a:hover{
+    color: #004A99;
+}
+
 .home-view {
     min-height: 80vh;
     width: 100%;
@@ -101,8 +109,4 @@ th, td {
     align-self: center;
     color: #000000 !important;
     margin-top: 1rem;
-}
-
-.LearnMoreTypography{
-    color: #0071EB;
 }
