@@ -2,7 +2,6 @@ import '../../Home.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { supplementalDataIsAvailable } from '../../data-services/fhirService';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -10,6 +9,7 @@ import { BusySpinner } from '../busy-spinner/BusySpinner';
 interface GoalListProps {
   fhirDataCollection?: FHIRData[],
   goalSummaryMatrix?: GoalSummary[][],
+  canShareData?: boolean,
 }
 
 interface GoalListState {
@@ -32,7 +32,7 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
           </>
         }
 
-        {supplementalDataIsAvailable()
+        {props.canShareData
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 

@@ -2,7 +2,6 @@ import '../../Home.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
-import { supplementalDataIsAvailable } from '../../data-services/fhirService';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -10,6 +9,7 @@ import { BusySpinner } from '../busy-spinner/BusySpinner';
 interface ConditionListProps {
   fhirDataCollection?: FHIRData[],
   conditionSummaryMatrix?: ConditionSummary[][],
+  canShareData?: boolean,
 }
 
 interface ConditionListState {
@@ -32,7 +32,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
           </>
         }
 
-        {supplementalDataIsAvailable()
+        {props.canShareData
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirDataCollection } }}>Add a Health Concern</Link></p>
           : <p />}
 

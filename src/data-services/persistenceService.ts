@@ -63,7 +63,7 @@ const getFHIRAccessData = async (key: string): Promise<any> => {
   }
 }
 
-const isSavedTokenStillValid = async (fhirAccessData: fhirclient.ClientState): Promise<boolean> => {
+export const isSavedTokenStillValid = async (fhirAccessData: fhirclient.ClientState): Promise<boolean> => {
   // TODO: Create getter function for expiresAt and use that here
   console.log('enter isSavedTokenStillValid()')
   // Example: "expiresAt": 1666288471

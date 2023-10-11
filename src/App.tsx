@@ -15,13 +15,14 @@ import Home from "./Home";
 
 import { FHIRData } from './data-services/models/fhirResources';
 import FHIR from 'fhirclient'
+import Client from 'fhirclient/lib/Client'
 import { PatientSummary, ScreeningSummary, EditFormData } from './data-services/models/cqlSummary';
-import { getFHIRData, createAndPersistClientForNewProvider } from './data-services/fhirService';
+import { getFHIRData, createAndPersistClientForNewProvider, getSupplementalDataClient } from './data-services/fhirService';
 import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints } from './data-services/persistenceService'
+import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
     getMedicationSummaries, getVitalSignSummaries
@@ -65,6 +66,9 @@ interface AppState {
     patientSummaries?: PatientSummary[],
     screenings?: [ScreeningSummary],
     tasks?: [Task],
+
+    supplementalDataClient?: Client,
+    canShareData?: boolean,
 
     progressMessage: string,
     progressValue: number,
@@ -244,6 +248,8 @@ class App extends React.Component<AppProps, AppState> {
                         this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                     this.setFhirDataStates([data])
                 }
+
+                this.setSupplementalDataClient()
 
             } catch (err) {
                 this.setAndLogErrorMessageState('Terminating',
@@ -437,6 +443,20 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ tasks: undefined })
     }
 
+    setSupplementalDataClient = async (): Promise<void> => {
+        console.log('setSupplementalDataClient()')
+        const client = await getSupplementalDataClient()
+        if (client) {
+            const stillValid = await isSavedTokenStillValid(client.state)
+            this.setState({ supplementalDataClient: client })
+            this.setState({ canShareData: stillValid })
+
+            // console.log("***** PatientID = " + client.getPatientId() ?? "")
+            // console.log("***** User ID = " + client.getUserId() ?? "")
+            // console.log("***** Can share data = " + stillValid ?? "?")
+        }
+    }
+
     // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
     setAndLogProgressState = (message: string, value: number) => {
         console.log(`ProgressMessage: ${message}`)
@@ -505,7 +525,9 @@ class App extends React.Component<AppProps, AppState> {
         let patient = this.state.patientSummaries;
         let editFormData: EditFormData = {
             fhirDataCollection: this.state.fhirDataCollection,
-            patientSummaries: this.state.patientSummaries
+            patientSummaries: this.state.patientSummaries,
+            supplementalDataClient: this.state.supplementalDataClient,
+            canShareData: this.state.canShareData
         }
 
         return (
@@ -572,7 +594,7 @@ class App extends React.Component<AppProps, AppState> {
                     </Route>
                     <Route path="/questionnaire">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <QuestionnaireHandler {...this.props}/>
+                            <QuestionnaireHandler canShareData={this.state.canShareData} supplementalDataClient={this.state.supplementalDataClient} {...this.props}/>
                         </SessionProtected>
                     </Route>
                     <Route path='/confirmation'>
@@ -614,10 +636,10 @@ class App extends React.Component<AppProps, AppState> {
                                             <Tab label="Activities" value="8" wrapped />
                                         </TabList>
                                         <TabPanel value="5" sx={{ padding: '0px 15px' }}>
-                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} />
+                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} canShareData={this.state.canShareData} />
                                         </TabPanel>
                                         <TabPanel value="6" sx={{ padding: '0px 15px' }}>
-                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} />
+                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} canShareData={this.state.canShareData} />
                                         </TabPanel>
                                         <TabPanel value="7" sx={{ padding: '0px 15px' }}>
                                             {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
