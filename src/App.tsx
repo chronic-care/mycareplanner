@@ -32,6 +32,7 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
+import { doLog, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";
@@ -91,6 +92,20 @@ interface AppState {
 
 type SummaryFunctionType = (fhirData?: FHIRData[]) =>
     GoalSummary[][] | ConditionSummary[][] | ObservationSummary[][] | MedicationSummary[][] | undefined
+
+const tabList = {
+    1:"Home",
+    2:"Care Plan",
+    3:"Health Status",
+    4:"Care Team",
+    5:"Goals",
+    6:"Concerns",
+    7:"Medications",
+    8:"Activities",
+    9:"Tests",
+    10:"Vitals",
+    11:"Immunization",
+}
 
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
 class App extends React.Component<AppProps, AppState> {
@@ -379,6 +394,9 @@ class App extends React.Component<AppProps, AppState> {
     setSummaries = async (message: string, propertyName: keyof AppState, summariesProcessor: SummaryFunctionType): Promise<void> => {
         console.time(message);
         const Summaries = summariesProcessor(this.state.fhirDataCollection)
+
+        this.updateLogSummariesCount(this.state.fhirDataCollection) // Logging the count for the patient details bundle.
+
         // Timeout set to 0 makes async and defers processing until after the event loop so it doesn't block UI
         // TODO: Consider updating to a worker instead when time for a more complete solution
         //       I don't think the timeout solution is needed because we are on a loading page, and,
@@ -406,6 +424,33 @@ class App extends React.Component<AppProps, AppState> {
                 { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
             ]
         ]
+    }
+
+    updateLogSummariesCount = async (fhirDataCollectionCount:  FHIRData[] | undefined)=>{
+
+        if (fhirDataCollectionCount !== undefined) {
+            for (const dictionary of fhirDataCollectionCount) {
+                for (const key of Object.keys(dictionary)){
+                    // Disable type checking for this line
+                    // @ts-ignore
+                    const values = dictionary[key];
+                    if (Array.isArray(values)) {
+                        const length = values.length;
+                        const request: LogRequest = {
+                            level: 'info',
+                            event: 'Summaries Loading',
+                            message: `Resource Count for ${key}: ${length}`,
+                            resourceCount: length,
+                          };
+                          doLog(request);
+                    }
+                }
+            }
+        }
+
+        else{
+            console.error("fhirDataCollectionCount is undefined");
+        }
     }
 
     // TODO: Need to set this 1x, during load, (or find another way to solve) so that if a user navigates out of home, they don't see old data loaded.
@@ -460,6 +505,14 @@ class App extends React.Component<AppProps, AppState> {
     // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
     setAndLogProgressState = (message: string, value: number) => {
         console.log(`ProgressMessage: ${message}`)
+        let logMessage = `ProgressMessage: ${message}`
+        let request : LogRequest = {
+            level:'info',
+            event: 'Patient information loading',
+            page:'Home',
+            message: logMessage,
+            }
+        doLog(request)
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
     }
@@ -516,6 +569,57 @@ class App extends React.Component<AppProps, AppState> {
             sessionStorage.clear();
             this.props.history.push('/logout');
         }
+
+    }
+
+    updateLogMainTab = async (event:any,value:any)=>{
+        this.setState({ mainTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+        let message= `User has visted ${tab}`;
+
+        let request : LogRequest = {
+            level:'info',
+            event:'Clicked',
+            page: tab,
+            message,
+            }
+        doLog(request)
+    }
+
+    updateLogPanelTab = async (event:any,value:any)=>{
+        this.setState({ planTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+
+        let message= `User has visted ${tab}`;
+
+        let request : LogRequest={
+        level:"info",
+        event:'Clicked',
+        page: tab,
+        message,
+        }
+
+        doLog(request)
+    }
+
+    updateLogStatusTab = async (event:any,value:any)=>{
+        this.setState({ statusTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+        let message= `user has visited ${tab}`;
+
+        let request : LogRequest={
+        level:"info",
+        event:'Clicked',
+        page: tab,
+        message,
+        }
+        doLog(request)
 
     }
 
@@ -611,7 +715,7 @@ class App extends React.Component<AppProps, AppState> {
                             <TabContext value={this.state.mainTabIndex}>
                                 <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                     <Paper variant="elevation" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                        <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
+                                        <TabList onChange={(event,value)=>this.updateLogMainTab(event,value)} variant="fullWidth" centered sx={{
                                             "& .Mui-selected, .Mui-selected > svg":
                                                 { color: "#FFFFFF !important", bgcolor: "#355CA8" }
                                         }} TabIndicatorProps={{ style: { display: "none" } }}>
@@ -629,7 +733,7 @@ class App extends React.Component<AppProps, AppState> {
                                 </TabPanel>
                                 <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
                                     <TabContext value={this.state.planTabIndex}>
-                                        <TabList onChange={(event, value) => this.setState({ planTabIndex: value })} variant="fullWidth" centered>
+                                        <TabList onChange={(event,value)=>this.updateLogPanelTab(event,value)} variant="fullWidth" centered>
                                             <Tab label="Goals" value="5" wrapped />
                                             <Tab label="Concerns" value="6" wrapped />
                                             <Tab label="Medications" value="7" wrapped />
@@ -652,7 +756,7 @@ class App extends React.Component<AppProps, AppState> {
                                 </TabPanel>
                                 <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
                                     <TabContext value={this.state.statusTabIndex}>
-                                        <TabList onChange={(event, value) => this.setState({ statusTabIndex: value })} variant="fullWidth" centered>
+                                        <TabList onChange={(event,value)=>this.updateLogStatusTab(event,value)} variant="fullWidth" centered>
                                             <Tab label="Tests" value="9" wrapped />
                                             <Tab label="Vitals" value="10" wrapped />
                                             <Tab label="Immunization" value="11" wrapped />

@@ -10,6 +10,7 @@ import { Button } from 'react-bootstrap';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { doLog, LogRequest } from '../../log';
 // import { ConfirmationPage } from '../confirmation-page/ConfirmationPage';
 
 interface QuestionnaireState {
@@ -27,6 +28,18 @@ export default class QuestionnaireComponent extends React.Component<any, Questio
             showModal: false
         }
     }
+
+    componentDidMount(): void {
+
+        let request : LogRequest={
+            level:"info",
+            event:'Clicked',
+            page: 'Questionnaire',
+            message:'User has Visited Questionnaire Tab',
+            }
+
+            doLog(request)
+      }
 
     questionnaireResponse: QuestionnaireResponse = this.props.questionnaireResponse;
     receiveData = (showReview: boolean) => {
