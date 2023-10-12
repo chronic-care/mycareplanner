@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { PatientSummary, ScreeningSummary } from '../../data-services/models/cqlSummary';
 import { Questionnaire } from '../../data-services/fhir-types/fhir-r4';
+import { doLog, LogRequest } from '../../log';
 
 interface ScreeningDecisionProps {
     history?: any,
@@ -15,6 +16,18 @@ interface ScreeningDecisionState {
 }
 
 export class ScreeningDecision extends React.Component<ScreeningDecisionProps, ScreeningDecisionState> {
+
+  componentDidMount(): void {
+
+    let request : LogRequest={
+        level:"info",
+        event:'Clicked',
+        page: 'Screening Decision',
+        message:'User has Visited Screening Decision tab',
+        }
+
+        doLog(request)
+  }
 
   constructor(props: ScreeningDecisionProps) {
     super(props);

@@ -8,6 +8,7 @@ export type LogRequest = {
   event?: string;
   page?: string;
   message: string;
+  resourceCount?: any;
 }
 
 export type LogResponse = {
@@ -29,7 +30,6 @@ export const doLog = async (request: LogRequest): Promise<LogResponse> => new Pr
     }
 
     const response = await axios.post(url, request, config);
-    console.log("Checking logging by Sai");
     resolve(response.data)
   } catch (error) {
     // Should continue with the app even if logging fails
