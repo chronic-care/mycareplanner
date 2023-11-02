@@ -6,8 +6,6 @@ import { Summary } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // Note: 4 indexs were added (noted where added)
   fhirDataCollection?: FHIRData[],
 }
 
@@ -25,80 +23,61 @@ function resolve(ref?: Reference, members?: Map<string, Practitioner>) {
 export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("CareTeamList component RENDERED!")
 
-  // an array of arrays
-  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
-  let participantArrays = props.fhirDataCollection && props.fhirDataCollection[0]?.careTeams?.map((team) => team.participant)
-  // flatten into CareTeamParticipant[]
-  let participants: CareTeamParticipant[] | undefined = flatten(participantArrays) as CareTeamParticipant[]
-
-  // Map<string, Practitioner>
-  // IN PROGRESS:MULTI-PROVIDER index added on next line but need to support full collection
-  // single-provider
-  let careTeamMembers = props.fhirDataCollection && props.fhirDataCollection[0]?.careTeamMembers
-  // multi-provider
-  let careTeamMembersCollection = props.fhirDataCollection?.map((fhirDataInstance: FHIRData) => {
-    return fhirDataInstance?.careTeamMembers
-  })
-
-  // TODO: Sort care team participants by family name
-  // let practitioners = careTeamMembers != undefined ? Array.from(careTeamMembers!.values()) : []
-
   return (
     <div className="home-view">
       <div className="welcome">
 
-        <h5 className="sectiontitle">Primary Care Physician</h5>
-        {/* TODO:MULTI-PROVIDER index added on next 2 lines but need to support full collection */}
-        {props.fhirDataCollection && props.fhirDataCollection[0]?.patientPCP === undefined ? <p>Not available</p> :
-          <p>{(props.fhirDataCollection && props.fhirDataCollection[0]?.patientPCP?.name?.[0].text) ?? "Name not provided"}</p>
-        }
+        {props.fhirDataCollection?.map((data, idx) => {
+          let participants: CareTeamParticipant[] = [];
+          if (data.careTeams) {
+            let partArrays = data.careTeams.map(team => team.participant);
+            participants = flatten(partArrays) as CareTeamParticipant[];
+          }
 
-        <h4 className="title">Care Team</h4>
+          let careTeamMembers = data.careTeamMembers || new Map();
 
-        {props.fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirDataCollection === undefined} />
-          </>
-        }
+          return (
+            <div key={idx}>
+              <h5 className="sectiontitle">{`Provider${idx + 1} - Primary Care Physician`}</h5>
+              <p>{data.patientPCP?.name?.[0].text ?? "Name not provided"}</p>
 
-        {((participants?.length ?? 0) < 1) && props.fhirDataCollection !== undefined
-          ? <p>No records found.</p>
-          :
-          <>
-            {participants?.map((participant, idx) => (
+              <h4 className="title">{`Provider${idx + 1} - Care Team`}</h4>
 
-              <Summary key={idx} id={idx} rows={[
-                {
-                  isHeader: true,
-                  twoColumns: false,
-                  data1: resolve(participant.member, careTeamMembers)?.name?.[0].text
-                    ?? participant.member?.display
-                    ?? participant.member?.reference ?? "No name",
-                  data2: '',
-                },
-                {
-                  isHeader: false,
-                  twoColumns: false,
-                  data1: "Role: " + (participant.role?.[0].text ?? "No role"),
-                  data2: '',
-                },
-                {
-                  isHeader: false,
-                  twoColumns: false,
-                  data1: participant.period === undefined ? '' : "Time Period: " + displayPeriod(participant.period),
-                  data2: '',
-                },
-              ]} />
-
-            ))}
-          </>
-
-          /* May need to be implemented in header:
-            <tr><td><b>{participant.member?.display ?? "No name"}</b></td></tr> */
-        }
+              {participants.length < 1
+                ? <p>No records found.</p>
+                :
+                <>
+                  {participants.map((participant, pIdx) => (
+                    <Summary key={pIdx} id={pIdx} rows={[
+                      {
+                        isHeader: true,
+                        twoColumns: false,
+                        data1: resolve(participant.member, careTeamMembers)?.name?.[0].text
+                          ?? participant.member?.display
+                          ?? participant.member?.reference ?? "No name",
+                        data2: '',
+                      },
+                      {
+                        isHeader: false,
+                        twoColumns: false,
+                        data1: "Role: " + (participant.role?.[0].text ?? "No role"),
+                        data2: '',
+                      },
+                      {
+                        isHeader: false,
+                        twoColumns: false,
+                        data1: participant.period === undefined ? '' : "Time Period: " + displayPeriod(participant.period),
+                        data2: '',
+                      },
+                    ]} />
+                  ))}
+                </>
+              }
+            </div>
+          )
+        })}
 
       </div>
     </div>
   )
-
 }
