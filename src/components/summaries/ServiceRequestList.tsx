@@ -6,19 +6,25 @@ import { Summary, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // Note: 1 index was added (noted where added)
   fhirDataCollection?: FHIRData[],
 }
 
 export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!")
 
-  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
-  let serviceRequests = props.fhirDataCollection && props.fhirDataCollection[0]?.serviceRequests
+  let serviceRequests: ServiceRequest[] = [];
+
+  // Extracting serviceRequests from all fhirDataCollection entries
+  if (props.fhirDataCollection) {
+    props.fhirDataCollection.forEach(data => {
+      if (data.serviceRequests) {
+        serviceRequests = serviceRequests.concat(data.serviceRequests);
+      }
+    });
+  }
 
   // Sort by descending occurrenceTiming start date
-  serviceRequests?.sort((sr1, sr2) => {
+  serviceRequests.sort((sr1, sr2) => {
     let sr1BoundsPeriod = (sr1.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
     let sr1StartDate = sr1BoundsPeriod?.start !== undefined ? new Date(sr1BoundsPeriod.start) : undefined
     let sr2BoundsPeriod = (sr2.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
@@ -37,7 +43,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
       return -1;
     }
     return 0;
-  })
+  });
 
   return (
     <div className="home-view">
@@ -64,7 +70,6 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
       </div>
     </div>
   )
-
 }
 
 const buildRows = (service: ServiceRequest): SummaryRowItems => {
