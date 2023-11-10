@@ -85,7 +85,7 @@ interface AppState {
     medicationSummaries?: MedicationSummary[][],
     labResultSummaries?: ObservationSummary[][],
     vitalSignSummaries?: ObservationSummary[][],
-        
+
     isActiveSession: boolean,
     isLogout: boolean,
 }
@@ -94,17 +94,17 @@ type SummaryFunctionType = (fhirData?: FHIRData[]) =>
     GoalSummary[][] | ConditionSummary[][] | ObservationSummary[][] | MedicationSummary[][] | undefined
 
 const tabList = {
-    1:"Home",
-    2:"Care Plan",
-    3:"Health Status",
-    4:"Care Team",
-    5:"Goals",
-    6:"Concerns",
-    7:"Medications",
-    8:"Activities",
-    9:"Tests",
-    10:"Vitals",
-    11:"Immunization",
+    1: "Home",
+    2: "Care Plan",
+    3: "Health Status",
+    4: "Care Team",
+    5: "Goals",
+    6: "Concerns",
+    7: "Medications",
+    8: "Activities",
+    9: "Tests",
+    10: "Vitals",
+    11: "Immunization",
 }
 
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
@@ -146,10 +146,9 @@ class App extends React.Component<AppProps, AppState> {
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
             try {
                 console.log("Checking if this is a multi-select, single, or a loader...")
-                // It's a multi select as selected endpoints exist/were not deleted
                 const selectedEndpoints: string[] | undefined = await getSelectedEndpoints()
-
                 if (selectedEndpoints && selectedEndpoints.length > 0) {
+                    // It's a multi select as selected endpoints exist/were not deleted
                     const isAnyEndpointNullOrUndefined: boolean = selectedEndpoints.some((endpoint) => {
                         console.log("isAnyEndpointNullOrUndefined selectedEndpoints.some(endpoint) : " + endpoint)
                         return endpoint === null || endpoint === undefined
@@ -167,7 +166,7 @@ class App extends React.Component<AppProps, AppState> {
                             await getMatchingProviderEndpointsFromUrl(buildAvailableEndpoints(), selectedEndpoints)
                         console.log('endpointsToLoad (once authorized)', JSON.stringify(endpointsToAuthorize))
 
-                        // Check truthyness of endpointsToAUthorize and trigger termintating error if not truthy
+                        // Check truthyness of endpointsToAuthorize and trigger termintating error if not truthy
                         if (endpointsToAuthorize && endpointsToAuthorize.length > 0) {
                             console.log("endpointsToAuthorize && endpointsToAuthorize.length > 0")
                         } else {
@@ -204,7 +203,7 @@ class App extends React.Component<AppProps, AppState> {
 
                                         // Do NOT need to save data for endpoints to be loaded as we don't need to reload the app
                                         // Deleting multi-select endpoints from local storage so they don't intefere with future selections
-                                        // and so that this logic is not run if there are no mulit-endpoints to auth/loca
+                                        // and so that this logic is not run if there are no mulit-endpoints to auth/local
                                         // but instead, a loader is run or a single endpoint is run in such a case
                                         console.log("Deleting multi-select endpoints from local storage")
                                         deleteSelectedEndpoints()
@@ -244,8 +243,6 @@ class App extends React.Component<AppProps, AppState> {
                                     }
 
                                     FHIR.oauth2.authorize(curEndpoint.config!)
-
-                                    console.log("Interestingly, this is still called called after authorize...")
                                     break
                                 } // end not authorized case
                             } else {
@@ -255,10 +252,12 @@ class App extends React.Component<AppProps, AppState> {
                     } // end else for isAnyEndpointNullOrUndefined
 
                 } else { // else for selectedEndpoints null or length check
-                    // It's a loader, a reload of the last endpoint, or a load of a single selected endpoint
+                    // It's a launcher OR a reload of the last endpoint
                     // Load a single item in an array
                     // TODO: MULTI-PROVIDER:: Determine how to handle a reload (refresh-situation) when the last load was a multi-select
                     console.log("Getting and setting fhirData state in componentDidMount")
+                    // false: authorized null: serverUrl
+                    // We don't have access to the server URL for a launcher until we create a client
                     let data = await getFHIRData(false, null, this.setAndLogProgressState,
                         this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                     this.setFhirDataStates([data])
@@ -367,27 +366,6 @@ class App extends React.Component<AppProps, AppState> {
             await this.setSummaries('getMedicationSummaries()', 'medicationSummaries', getMedicationSummaries)
             await this.setSummaries('getLabResultSummaries()', 'labResultSummaries', getLabResultSummaries)
             await this.setSummaries('getVitalSignSummaries()', 'vitalSignSummaries', getVitalSignSummaries)
-
-            // Static version:
-            // console.time('getGoalSummaries()')
-            // this.setState({ goalSummaries: getGoalSummaries(this.state.fhirData) })
-            // console.timeEnd('getGoalSummaries()')
-
-            // console.time('getConditionSummaries()')
-            // this.setState({ conditionSummaries: getConditionSummaries(this.state.fhirData) })
-            // console.timeEnd('getConditionSummaries()')
-
-            // console.time('getMedicationSummaries()')
-            // this.setState({ medicationSummaries: getMedicationSummaries(this.state.fhirData) })
-            // console.timeEnd('getMedicationSummaries()')
-
-            // console.time('getLabResultSummaries()')
-            // this.setState({ labResultSummaries: getLabResultSummaries(this.state.fhirData) })
-            // console.timeEnd('getLabResultSummaries()')
-
-            // console.time('getVitalSignSummaries()')
-            // this.setState({ vitalSignSummaries: getVitalSignSummaries(this.state.fhirData) })
-            // console.timeEnd('getVitalSignSummaries()')
         }
     }
 
@@ -411,6 +389,33 @@ class App extends React.Component<AppProps, AppState> {
         console.timeEnd(message)
     }
 
+    updateLogSummariesCount = async (fhirDataCollectionCount: FHIRData[] | undefined) => {
+
+        if (fhirDataCollectionCount !== undefined) {
+            for (const dictionary of fhirDataCollectionCount) {
+                for (const key of Object.keys(dictionary)) {
+                    // Disable type checking for this line
+                    // @ts-ignore
+                    const values = dictionary[key];
+                    if (Array.isArray(values)) {
+                        const length = values.length;
+                        const request: LogRequest = {
+                            level: 'info',
+                            event: 'Summaries Loading',
+                            message: `Resource Count for ${key}: ${length}`,
+                            resourceCount: length,
+                        };
+                        doLog(request);
+                    }
+                }
+            }
+        }
+
+        else {
+            console.error("fhirDataCollectionCount is undefined");
+        }
+    }
+
     getConditionAndMedicationSummariesInit = () => {
         return [
             [
@@ -424,33 +429,6 @@ class App extends React.Component<AppProps, AppState> {
                 { ConceptName: 'init', DisplayName: 'init', ResultText: 'init' }
             ]
         ]
-    }
-
-    updateLogSummariesCount = async (fhirDataCollectionCount:  FHIRData[] | undefined)=>{
-
-        if (fhirDataCollectionCount !== undefined) {
-            for (const dictionary of fhirDataCollectionCount) {
-                for (const key of Object.keys(dictionary)){
-                    // Disable type checking for this line
-                    // @ts-ignore
-                    const values = dictionary[key];
-                    if (Array.isArray(values)) {
-                        const length = values.length;
-                        const request: LogRequest = {
-                            level: 'info',
-                            event: 'Summaries Loading',
-                            message: `Resource Count for ${key}: ${length}`,
-                            resourceCount: length,
-                          };
-                          doLog(request);
-                    }
-                }
-            }
-        }
-
-        else{
-            console.error("fhirDataCollectionCount is undefined");
-        }
     }
 
     // TODO: Need to set this 1x, during load, (or find another way to solve) so that if a user navigates out of home, they don't see old data loaded.
@@ -506,12 +484,12 @@ class App extends React.Component<AppProps, AppState> {
     setAndLogProgressState = (message: string, value: number) => {
         console.log(`ProgressMessage: ${message}`)
         let logMessage = `ProgressMessage: ${message}`
-        let request : LogRequest = {
-            level:'info',
+        let request: LogRequest = {
+            level: 'info',
             event: 'Patient information loading',
-            page:'Home',
+            page: 'Home',
             message: logMessage,
-            }
+        }
         doLog(request)
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
@@ -572,52 +550,52 @@ class App extends React.Component<AppProps, AppState> {
 
     }
 
-    updateLogMainTab = async (event:any,value:any)=>{
+    updateLogMainTab = async (event: any, value: any) => {
         this.setState({ mainTabIndex: value });
 
         const key: keyof typeof tabList = value;
         const tab = tabList[key]; // No error
-        let message= `User has visted ${tab}`;
+        let message = `User has visted ${tab}`;
 
-        let request : LogRequest = {
-            level:'info',
-            event:'Clicked',
+        let request: LogRequest = {
+            level: 'info',
+            event: 'Clicked',
             page: tab,
             message,
-            }
+        }
         doLog(request)
     }
 
-    updateLogPanelTab = async (event:any,value:any)=>{
+    updateLogPanelTab = async (event: any, value: any) => {
         this.setState({ planTabIndex: value });
 
         const key: keyof typeof tabList = value;
         const tab = tabList[key]; // No error
 
-        let message= `User has visted ${tab}`;
+        let message = `User has visted ${tab}`;
 
-        let request : LogRequest={
-        level:"info",
-        event:'Clicked',
-        page: tab,
-        message,
+        let request: LogRequest = {
+            level: "info",
+            event: 'Clicked',
+            page: tab,
+            message,
         }
 
         doLog(request)
     }
 
-    updateLogStatusTab = async (event:any,value:any)=>{
+    updateLogStatusTab = async (event: any, value: any) => {
         this.setState({ statusTabIndex: value });
 
         const key: keyof typeof tabList = value;
         const tab = tabList[key]; // No error
-        let message= `user has visited ${tab}`;
+        let message = `user has visited ${tab}`;
 
-        let request : LogRequest={
-        level:"info",
-        event:'Clicked',
-        page: tab,
-        message,
+        let request: LogRequest = {
+            level: "info",
+            event: 'Clicked',
+            page: tab,
+            message,
         }
         doLog(request)
 
@@ -693,12 +671,12 @@ class App extends React.Component<AppProps, AppState> {
 
                     <Route path="/decision">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ScreeningDecision {...this.props}/>
+                            <ScreeningDecision {...this.props} />
                         </SessionProtected>
                     </Route>
                     <Route path="/questionnaire">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <QuestionnaireHandler canShareData={this.state.canShareData} supplementalDataClient={this.state.supplementalDataClient} {...this.props}/>
+                            <QuestionnaireHandler canShareData={this.state.canShareData} supplementalDataClient={this.state.supplementalDataClient} {...this.props} />
                         </SessionProtected>
                     </Route>
                     <Route path='/confirmation'>
@@ -715,7 +693,7 @@ class App extends React.Component<AppProps, AppState> {
                             <TabContext value={this.state.mainTabIndex}>
                                 <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                     <Paper variant="elevation" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                        <TabList onChange={(event,value)=>this.updateLogMainTab(event,value)} variant="fullWidth" centered sx={{
+                                        <TabList onChange={(event, value) => this.updateLogMainTab(event, value)} variant="fullWidth" centered sx={{
                                             "& .Mui-selected, .Mui-selected > svg":
                                                 { color: "#FFFFFF !important", bgcolor: "#355CA8" }
                                         }} TabIndicatorProps={{ style: { display: "none" } }}>
@@ -726,62 +704,62 @@ class App extends React.Component<AppProps, AppState> {
                                         </TabList>
                                     </Paper>
 
-                                <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
-                                    <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
-                                        progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                        errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
-                                </TabPanel>
-                                <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
-                                    <TabContext value={this.state.planTabIndex}>
-                                        <TabList onChange={(event,value)=>this.updateLogPanelTab(event,value)} variant="fullWidth" centered>
-                                            <Tab label="Goals" value="5" wrapped />
-                                            <Tab label="Concerns" value="6" wrapped />
-                                            <Tab label="Medications" value="7" wrapped />
-                                            <Tab label="Activities" value="8" wrapped />
-                                        </TabList>
-                                        <TabPanel value="5" sx={{ padding: '0px 15px' }}>
-                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} canShareData={this.state.canShareData} />
-                                        </TabPanel>
-                                        <TabPanel value="6" sx={{ padding: '0px 15px' }}>
-                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} canShareData={this.state.canShareData} />
-                                        </TabPanel>
-                                        <TabPanel value="7" sx={{ padding: '0px 15px' }}>
-                                            {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
-                                            <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummaryMatrix={this.state.medicationSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="8" sx={{ padding: '0px 15px' }}>
-                                            <ServiceRequestList fhirDataCollection={this.state.fhirDataCollection} />
-                                        </TabPanel>
-                                    </TabContext>
-                                </TabPanel>
-                                <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
-                                    <TabContext value={this.state.statusTabIndex}>
-                                        <TabList onChange={(event,value)=>this.updateLogStatusTab(event,value)} variant="fullWidth" centered>
-                                            <Tab label="Tests" value="9" wrapped />
-                                            <Tab label="Vitals" value="10" wrapped />
-                                            <Tab label="Immunization" value="11" wrapped />
-                                        </TabList>
-                                        <TabPanel value="9" sx={{ padding: '0px 15px' }}>
-                                            <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummaryMatrix={this.state.labResultSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="10" sx={{ padding: '0px 15px' }}>
-                                            <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummaryMatrix={this.state.vitalSignSummaries} />
-                                        </TabPanel>
-                                        {/* <TabPanel>
+                                    <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
+                                        <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
+                                            progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
+                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
+                                    </TabPanel>
+                                    <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
+                                        <TabContext value={this.state.planTabIndex}>
+                                            <TabList onChange={(event, value) => this.updateLogPanelTab(event, value)} variant="fullWidth" centered>
+                                                <Tab label="Goals" value="5" wrapped />
+                                                <Tab label="Concerns" value="6" wrapped />
+                                                <Tab label="Medications" value="7" wrapped />
+                                                <Tab label="Activities" value="8" wrapped />
+                                            </TabList>
+                                            <TabPanel value="5" sx={{ padding: '0px 15px' }}>
+                                                <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} canShareData={this.state.canShareData} />
+                                            </TabPanel>
+                                            <TabPanel value="6" sx={{ padding: '0px 15px' }}>
+                                                <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} canShareData={this.state.canShareData} />
+                                            </TabPanel>
+                                            <TabPanel value="7" sx={{ padding: '0px 15px' }}>
+                                                {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
+                                                <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummaryMatrix={this.state.medicationSummaries} />
+                                            </TabPanel>
+                                            <TabPanel value="8" sx={{ padding: '0px 15px' }}>
+                                                <ServiceRequestList fhirDataCollection={this.state.fhirDataCollection} />
+                                            </TabPanel>
+                                        </TabContext>
+                                    </TabPanel>
+                                    <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
+                                        <TabContext value={this.state.statusTabIndex}>
+                                            <TabList onChange={(event, value) => this.updateLogStatusTab(event, value)} variant="fullWidth" centered>
+                                                <Tab label="Tests" value="9" wrapped />
+                                                <Tab label="Vitals" value="10" wrapped />
+                                                <Tab label="Immunization" value="11" wrapped />
+                                            </TabList>
+                                            <TabPanel value="9" sx={{ padding: '0px 15px' }}>
+                                                <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummaryMatrix={this.state.labResultSummaries} />
+                                            </TabPanel>
+                                            <TabPanel value="10" sx={{ padding: '0px 15px' }}>
+                                                <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummaryMatrix={this.state.vitalSignSummaries} />
+                                            </TabPanel>
+                                            {/* <TabPanel>
                                             <h4 className="title">Assessment Results</h4>
                                             <p>Coming soon...</p>
                                         </TabPanel> */}
-                                        <TabPanel value="11">
-                                            <ImmunizationList fhirDataCollection={this.state.fhirDataCollection} />
-                                        </TabPanel>
-                                    </TabContext>
-                                </TabPanel>
-                                <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
-                                    <CareTeamList fhirDataCollection={this.state.fhirDataCollection} />
-                                </TabPanel>
-                            </Box>
-                        </TabContext>
-		    </SessionProtected>
+                                            <TabPanel value="11">
+                                                <ImmunizationList fhirDataCollection={this.state.fhirDataCollection} />
+                                            </TabPanel>
+                                        </TabContext>
+                                    </TabPanel>
+                                    <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
+                                        <CareTeamList fhirDataCollection={this.state.fhirDataCollection} />
+                                    </TabPanel>
+                                </Box>
+                            </TabContext>
+                        </SessionProtected>
                     </Route>
                 </Switch>
 

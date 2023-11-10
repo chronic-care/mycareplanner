@@ -1,14 +1,15 @@
-import * as React from 'react'
+import React from 'react'
+import { useState, useEffect } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router-dom'
 import FHIR from 'fhirclient'
 import { getFHIRData } from '../../data-services/fhirService'
 import {
-  ProviderEndpoint, buildAvailableEndpoints,
-  getMatchingProviderEndpointsFromName
+  ProviderEndpoint, buildAvailableEndpoints, getMatchingProviderEndpointsFromName,
+  isProviderEndpointInProviderEndpoints
 } from '../../data-services/providerEndpointService'
 import {
-  isGivenEndpointMatchesLastActiveEndpoint, isEndpointStillAuthorized,
-  saveSelectedEndpoints, deleteSelectedEndpoints
+  isGivenEndpointMatchesLastActiveEndpoint, isEndpointStillAuthorized, saveSelectedEndpoints,
+  deleteSelectedEndpoints, getLauncherData
 } from '../../data-services/persistenceService'
 
 import Box from '@mui/material/Box'
@@ -39,13 +40,27 @@ interface LocationState {
 }
 
 export default function ProviderLogin(props: Props) {
-  const { fhirDataCollection } = props.location.state as LocationState;
+  const { fhirDataCollection } = props.location.state as LocationState
 
   let history = useHistory()
 
-  const availableEndpoints: ProviderEndpoint[] = buildAvailableEndpoints()
+  const [launcherEndpointFromForage, setLauncherEndpointFromForage] =
+    useState<ProviderEndpoint | null | undefined>()
 
-  const [selectedEndpointNames, setselectedEndpointNames] = React.useState<string[]>([]);
+  useEffect(() => {
+    const fetchLauncherData = async () => {
+      try {
+        setLauncherEndpointFromForage(await getLauncherData())
+      } catch (e) {
+        console.error(`Error fetching launcher data: ${e}`)
+      }
+    }
+
+    fetchLauncherData()
+  }, []) // Empty for now as should only need to set on component mount because a new launcher is a re-mount
+
+  const availableEndpoints: ProviderEndpoint[] = buildAvailableEndpoints()
+  const [selectedEndpointNames, setselectedEndpointNames] = useState<string[]>([])
 
   const authorizeSelectedEndpoints = async (endpointsToAuthorize: ProviderEndpoint[]): Promise<void> => {
     console.log('authorizeSelectedEndpoints(): endpointsToAuthorize: ', JSON.stringify(endpointsToAuthorize))
@@ -54,7 +69,7 @@ export default function ProviderLogin(props: Props) {
       const endpointsLength = endpointsToAuthorize.length
 
       // Loop endpoints to see if any exist that are not already authorized (however unlikely that may be)
-      // TODO: Consider getting all endpoins first, then after fully looping, decide what to do
+      // TODO: Consider getting all endpoints first, then after fully looping, decide what to do
       for (let i = 0; i < endpointsLength; i++) {
         const curEndpoint: ProviderEndpoint = endpointsToAuthorize[i]
         console.log("curEndpoint", curEndpoint)
@@ -205,24 +220,33 @@ export default function ProviderLogin(props: Props) {
         console.log('matchingProviderEndpoints: ', matchingProviderEndpoints);
 
         if (matchingProviderEndpoints && matchingProviderEndpoints.length > 0) {
-          let selectedEndpoint = null
-          if (matchingProviderEndpoints.length === 1) {
-            console.log("single provider")
-            // select first provider since there is only 1
-            const firstProviderIndex = 0
-            selectedEndpoint = matchingProviderEndpoints[firstProviderIndex]
-            await loadSelectedEndpointSingle(selectedEndpoint, false, firstProviderIndex)
-          } else if (matchingProviderEndpoints.length > 1) {
-            console.log("multiple providers: length: " + matchingProviderEndpoints.length)
-            try {
-              // Loop selectedEndpoint logic for all available providers
-              await authorizeSelectedEndpoints(matchingProviderEndpoints)
-              // TODO: MULTI-PROVIDER: Consider calling loadSelectedEndpoints if we have authorizeSelectedEndpoints return
-              // a boolean and base the call on that being true in the limited cases
-              console.log('Finished loading multiple matching provider endpoints...');
-            } catch (error) {
-              console.error('Error loading multiple matching provider Endpoints:', error);
+          console.log(`${matchingProviderEndpoints.length} additional providers selected.`)
+
+          try {
+            // Always include the launcher endpoint in addition to other providers selected:
+            if (launcherEndpointFromForage) {
+              console.log("launcherEndpointFromForage: ", launcherEndpointFromForage)
+              // Only add if NOT already selected/existing somehow in matchingProviderEndpoints
+              if (!isProviderEndpointInProviderEndpoints(launcherEndpointFromForage, matchingProviderEndpoints)) {
+                console.log(`Adding launcher ${JSON.stringify(launcherEndpointFromForage)}
+                to the beginning of the matchingProviderEndpoints ProviderEndpoint[]`)
+                matchingProviderEndpoints.unshift(launcherEndpointFromForage)
+              } else {
+                console.log("Won't add launcher as it is already selected")
+              }
+            } else {
+              console.error(`LauncherEndpointFromLocalStorage is
+              ${launcherEndpointFromForage === null ? null : undefined}! Cannot add it to other providers...`)
             }
+
+            // Loop selectedEndpoint logic for all available providers
+            await authorizeSelectedEndpoints(matchingProviderEndpoints)
+            // TODO: MULTI-PROVIDER: Consider calling loadSelectedEndpoints if we have authorizeSelectedEndpoints return
+            // a boolean and base the call on that being true in the limited cases
+            console.log('Finished loading multiple matching provider endpoints...');
+
+          } catch (error) {
+            console.error('Error loading multiple matching provider Endpoints:', error);
           }
 
         } else {
@@ -237,7 +261,11 @@ export default function ProviderLogin(props: Props) {
 
   }
 
-  // TODO: MULTI-PROVIDER: For now this version works for only 1 provider, not multi. We should look to refactor for code re-use
+  // TODO: Consider this as a feature for TEST/DEBUG purposes, only visible in debug mode, to call this function, which will only load a single endpoint
+  // The ProviderLogin component is for loading additional EHRs which are in addition to the launcher EHR. Therefore, the only single login in the future
+  // Would be the launcher. In the future it will always be a multi-login (unless there's an error and the laucnher is unknown, but multi can handle that),
+  // the launcher EHR, plus 1..* additional EHRs, giving us a 2..* total logins from ProviderLogin at (almost) all times.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadSelectedEndpointSingle = async (selectedEndpoint: ProviderEndpoint,
     isMultipleProviders: boolean, fhirDataCollectionIndex: number): Promise<void> => {
     console.log('loadSelectedEndpointSingle(): selectedEndpoint: ' + selectedEndpoint)
@@ -386,8 +414,13 @@ export default function ProviderLogin(props: Props) {
 
         {/* <h4>selectedEndpointNames: {selectedEndpointNames}</h4> */}
 
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" style={{ marginBottom: '30px' }}>
           Health Provider Login
+        </Typography>
+        <Typography variant="subtitle1" align="left" gutterBottom>
+          <span style={{ fontStyle: 'italic' }}>Original Provider:</span> {launcherEndpointFromForage ?
+            launcherEndpointFromForage?.name :
+            'Unknown: Please select the original provider manually from the list in addtion to other providers.'}
         </Typography>
 
         <Grid container spacing={3}>
@@ -396,7 +429,7 @@ export default function ProviderLogin(props: Props) {
             <FormControl fullWidth>
 
               <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                Select one or more healthcare providers
+                Select one or more additional healthcare providers
               </InputLabel>
 
               <Select

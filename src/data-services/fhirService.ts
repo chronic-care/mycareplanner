@@ -8,7 +8,8 @@ import { FHIRData, hasScope } from './models/fhirResources'
 import { format } from 'date-fns'
 import Client from 'fhirclient/lib/Client'
 import {
-  persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint
+  persistFHIRAccessData, extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint,
+  persistLauncherData
 } from './persistenceService'
 import { doLog } from '../log';
 
@@ -344,7 +345,8 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
         throw new Error("Given serverUrl is null, cannot connect to client or load FHIR data")
       }
     } else { // prior/default
-      console.log("Not known to be authorized, but could be, either a launcher, app startup, or FHIR.oauth2.authorize was called due to expiration")
+      console.log("Not known to be authorized, but could be, either a launcher, app startup, " +
+        "or FHIR.oauth2.authorize was called due to expiration")
       console.log('Starting default OAuth2 authentication')
       setAndLogProgressState("Connecting to FHIR client", 10)
       client = await FHIR.oauth2.ready()
@@ -362,6 +364,10 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     const clientState: fhirclient.ClientState = client?.state
     if (clientState) {
       await persistFHIRAccessData(clientState)
+      if (!authorized && !serverUrl) {
+        // Likely a launcher TODO: May need further identification
+        await persistLauncherData(clientState)
+      }
     } else {
       console.log("Unable to persist data as no client?.state<fhirclient.ClientState> is available")
     }

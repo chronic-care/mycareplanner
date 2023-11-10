@@ -167,3 +167,35 @@ export const getMatchingProviderEndpointsFromUrl = async (availableEndpoints: Pr
     return false
   })
 }
+
+// Given a pre-populated ProivderEndpoint[], typically populated with data from providerEndpointService.buildAvailableEndpoints,
+// and given a fhirclient.ClientState,
+// returns a ProviderEndpoint populated with the full matching data
+export const getProviderEndpointTypeFromClientStateType = async (availableEndpoints: ProviderEndpoint[],
+  clientState: fhirclient.ClientState): Promise<ProviderEndpoint | undefined> => {
+  if (clientState) {
+    const clientIss: string = clientState?.serverUrl
+    // TODO: consider beefing up the security of this by checking for another matching prop as well: clientId
+    // const clientId: string | undefined = clientState?.clientId
+    if (clientIss) {
+      const matchingEndpoint = availableEndpoints.find(availableEndpoint => {
+        const availableEndpointIss = availableEndpoint.config?.iss
+        if (availableEndpointIss) {
+          console.log('availableEndpoint.config?.iss (availableEndpointIss): ', availableEndpointIss)
+          return clientIss === availableEndpointIss
+        }
+        return undefined
+      })
+      return matchingEndpoint
+    }
+  }
+}
+
+export const isProviderEndpointInProviderEndpoints = (endpointToFind: ProviderEndpoint,
+  endpointsToSearch: ProviderEndpoint[]): boolean => {
+  return endpointsToSearch.some(endpoint => {
+    console.log("endpoint?.name", endpoint?.name)
+    console.log("endpointToFind?.name", endpointToFind?.name)
+    return endpoint?.name === endpointToFind?.name
+  })
+}
