@@ -396,7 +396,7 @@ class App extends React.Component<AppProps, AppState> {
                 for (const key of Object.keys(dictionary)) {
                     // Disable type checking for this line
                     // @ts-ignore
-                    const values = dictionary[key];
+                    const values = dictionary[key]
                     if (Array.isArray(values)) {
                         const length = values.length;
                         const request: LogRequest = {
@@ -405,7 +405,7 @@ class App extends React.Component<AppProps, AppState> {
                             message: `Resource Count for ${key}: ${length}`,
                             resourceCount: length,
                         };
-                        doLog(request);
+                        doLog(request)
                     }
                 }
             }

@@ -437,9 +437,9 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
 
 
   let fhirQueries = {} // empty object for speed of development/testing purposes, remains empty if env var is false
-  const getFhirQuereiesEnvVar = process.env.REACT_APP_GET_FHIR_QUERIES
-  console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQuereiesEnvVar)
-  if (getFhirQuereiesEnvVar === undefined || getFhirQuereiesEnvVar === 'true') {
+  const getFhirQueriesEnvVar = process.env.REACT_APP_GET_FHIR_QUERIES
+  console.log('process.env.REACT_APP_GET_FHIR_QUERIES', getFhirQueriesEnvVar)
+  if (getFhirQueriesEnvVar === undefined || getFhirQueriesEnvVar === 'true') {
     // we allow undefined or true as we want the default to always be to load the queries
     setAndLogProgressState("Retrieving FHIR queries", 35)
     fhirQueries = await getFHIRQueries(client, clientScope, supportsInclude, patientPCP,
