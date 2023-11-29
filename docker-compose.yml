@@ -1,0 +1,25 @@
+services:
+  mycareplannerdevelop:
+    tty: true
+    stdin_open: true # without this node doesn't start
+    image: chroniccare/mycareplanner:latest
+    container_name: mycareplannerdevelop
+    network_mode: default
+    environment:
+      - REACT_APP_MELD_SANDBOX_NAME=MCCDevelopment
+      - REACT_APP_MELD_SANDBOX_CLIENT_ID=<<IDHERE>>
+    ports:
+      - "8000:8000"
+    restart: always
+  mycareplannertesting:
+    tty: true
+    stdin_open: true # without this node doesn't start
+    image: chroniccare/mycareplanner:latest
+    container_name: mycareplannertesting
+    network_mode: default
+    environment:
+      - REACT_APP_MELD_SANDBOX_NAME=MCCTesting
+      - REACT_APP_MELD_SANDBOX_CLIENT_ID=<<IDHERE>>
+    ports:
+      - "8100:8000"
+    restart: always    
