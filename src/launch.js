@@ -14,6 +14,14 @@ const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
 
 const nextgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
 
+const meldScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
+
+
+const meldmatch = "https://gw.interop.community/"+process.env.REACT_APP_MELD_SANDBOX_NAME+"/data"
+
+//  
+
+
 FHIR.oauth2.authorize([
     {
         // OHSU FHIR dev
@@ -30,32 +38,11 @@ FHIR.oauth2.authorize([
         scope: epicPilotScope
     },
     {
-        // Meld CarePlanning QA sandbox
-        issMatch: /\bgw.interop.community\/CarePlanningQA\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_qa,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
-    },
-    {
         // Meld Synthea test data sandbox
-        issMatch: /\bgw.interop.community\/SyntheaTest8\b/i,
+        issMatch: iss => iss.startsWith(meldmatch),
         redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_synthea,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
-    },
-    {
-        // Meld MCC CarePlanning sandbox
-        issMatch: /\bgw.interop.community\/CarePlanning\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-    },
-    {
-        // Meld CHC Pilot Test sandbox
-        issMatch: /\bgw.interop.community\/CHCPilotTest\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_chc,
-        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+        clientId: process.env.REACT_APP_MELD_SANDBOX_CLIENT_ID,
+        scope:meldScope
     },
     {
         // Logica sandbox
