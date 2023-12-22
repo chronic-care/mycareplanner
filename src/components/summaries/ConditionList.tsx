@@ -41,7 +41,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+             
                 {
                   conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>

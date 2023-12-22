@@ -35,7 +35,7 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+                
                 {
                   vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>

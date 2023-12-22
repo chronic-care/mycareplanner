@@ -36,7 +36,7 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+             
                 {/* TODO:MULTI-PROVIDER: ConceptName === 'init' needs to refer to either medSumMatrix as a whole,
                  or, we need to initialize all possible rows (how do we know the # ahead of time?) to init vs just the first row.
                  Or, we need a better solution altogether. This applies to ALL summaries which use a summary matrix for display data

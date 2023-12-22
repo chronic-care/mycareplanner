@@ -36,7 +36,7 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+             
                 {
                   labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>
