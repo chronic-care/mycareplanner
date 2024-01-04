@@ -30,7 +30,7 @@ const oneDay = 24 * 3600 * 1000
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 // const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
-const provenanceSearch = '&_revInclude=Provenance:target'
+const provenanceSearch = '&_revinclude=Provenance:target'
 
 /// Epic category codes
 // const carePlanPath = 'CarePlan?status=active&category=38717003,736271009,assess-plan' + provenanceSearch
