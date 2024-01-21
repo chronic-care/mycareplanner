@@ -160,6 +160,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 fhirDataCollection: this.props.fhirDataCollection
               }
             }}>Retrieve records from additional healthcare providers</Link>
+
+         
+        <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>  
+         <Link to={{ pathname: '/share-data' }}>Share your health data</Link>
+          
+
+           
+           
+
             {/*
             <br /><Link to={{ pathname: '/share-data' }}>Share your health data</Link>
             <br /><Link to={{ pathname: '/shared-data-summary' }}>Summary of shared health data</Link>
