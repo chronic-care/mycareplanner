@@ -412,6 +412,8 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
   // so it's not null, and can be populated in most cases
   setAndLogProgressState("Reading patient data", 20)
+  
+
   const patient: Patient = client.patient.id !== null
     ? await client.patient.read() as Patient
     : await client.user.read() as Patient
@@ -430,6 +432,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   setAndLogProgressState("Reading User data", 30)
   const patientPath = 'Patient/' + client.getPatientId();
   const fhirUserPath = client.getFhirUser();
+  const serverUrl = client.state.serverUrl;
   const fhirUser: Practitioner | Patient | RelatedPerson | undefined =
     fhirUserPath ? await client.request(fhirUserPath) : undefined;
   const caregiverName: String | undefined =
@@ -447,6 +450,7 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   }
 
   return {
+    serverUrl,
     clientScope,
     fhirUser,
     caregiverName,
@@ -750,15 +754,23 @@ export function createSharedDataResource(resource: Resource) {
     })
 }
 
-export function updateSharedDataResource(resource: Resource) {
+export function updateSharedDataResource(resource: Resource,serverUrl?: string ) {
   return getSupplementalDataClient()
     .then((client: Client | undefined) => {
-      console.log('SDS client: ' + JSON.stringify(client))
-      try {
-        return client?.update(resource as fhirclient.FHIR.Resource)
+      try {   
+        if (serverUrl) {
+          const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
+          const fhirHeaders = new Headers(); //
+          fhirHeaders.append('X-Partition-Name',serverUrl);
+          fhirHeaderRequestOption.headers = fhirHeaders;
+          return client?.update(resource as fhirclient.FHIR.Resource,fhirHeaderRequestOption)
+        }  else {         
+          return client?.update(resource as fhirclient.FHIR.Resource)
+        }
       }
       catch (err) {
-        console.log("Errror updating shared data resource: " + JSON.stringify(err))
+        console.error("Error updating shared data resource: " + JSON.stringify(resource))
+        console.error("Error updating shared data resource: " + JSON.stringify(err))
       }
     })
     .then((response) => {

@@ -2,7 +2,7 @@ import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
-import { Summary, SummaryRowItems } from './Summary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface VitalsListProps {
@@ -44,7 +44,7 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
                       :
                       <div>
                         {vitalSignSummary?.map((obs, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(obs)} />
+                          <Summary key={idx} id={idx} rows={buildRows(obs,props.fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }
@@ -60,7 +60,7 @@ export const VitalsList: React.FC<VitalsListProps> = (props: VitalsListProps) =>
 
 }
 
-const buildRows = (obs: ObservationSummary): SummaryRowItems => {
+const buildRows = (obs: ObservationSummary, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -82,6 +82,20 @@ const buildRows = (obs: ObservationSummary): SummaryRowItems => {
         data2: '',
       },
     ]
+
+
+  if (theSource) {
+    const rowItem: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: "From " + theSource,
+      data2: '',
+    };
+    rows.push(rowItem);
+  }
+ 
+    
+    
 
   const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
     {

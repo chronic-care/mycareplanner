@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { MedicationSummary } from '../../data-services/models/cqlSummary';
-import { Summary, SummaryRowItems } from './Summary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface MedicationListProps {
@@ -49,7 +49,7 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
                       :
                       <div>
                         {medicationSummary?.map((med, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(med)} />
+                          <Summary key={idx} id={idx} rows={buildRows(med,props.fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }
@@ -65,7 +65,7 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
 
 }
 
-const buildRows = (med: MedicationSummary): SummaryRowItems => {
+const buildRows = (med: MedicationSummary, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -103,6 +103,16 @@ const buildRows = (med: MedicationSummary): SummaryRowItems => {
   ))
   if (notes?.length) {
     rows = rows.concat(notes)
+  }
+
+  if (theSource) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'From ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   const provenance: SummaryRowItems | undefined = med.Provenance?.map((provenance) => (

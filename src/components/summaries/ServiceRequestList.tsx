@@ -2,7 +2,7 @@ import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
 import { ServiceRequest, TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
-import { Summary, SummaryRowItems } from './Summary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
@@ -13,12 +13,20 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!")
 
   let serviceRequests: ServiceRequest[] = [];
+  let hashMap = new Map<ServiceRequest, string>();
 
   // Extracting serviceRequests from all fhirDataCollection entries
   if (props.fhirDataCollection) {
     props.fhirDataCollection.forEach(data => {
       if (data.serviceRequests) {
         serviceRequests = serviceRequests.concat(data.serviceRequests);
+
+        if (data.serverName) {
+          data.serviceRequests.forEach((sr) => { hashMap.set(sr,data.serverName!);}  );
+        } else {
+          data.serviceRequests.forEach((sr) => { hashMap.set(sr,'');}  );
+        }
+      
       }
     });
   }
@@ -62,7 +70,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
           :
           <>
             {serviceRequests?.map((service, idx) => (
-              <Summary key={idx} id={idx} rows={buildRows(service)} />
+              <Summary key={idx} id={idx} rows={buildRows(service, hashMap.get(service)   )} />
             ))}
           </>
         }
@@ -72,7 +80,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
   )
 }
 
-const buildRows = (service: ServiceRequest): SummaryRowItems => {
+const buildRows = (service: ServiceRequest, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -118,6 +126,14 @@ const buildRows = (service: ServiceRequest): SummaryRowItems => {
   if (notes?.length) {
     rows = rows.concat(notes)
   }
-
+  if (theSource) {
+    const rowItem: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: "From " + theSource,
+      data2: '',
+    };
+    rows.push(rowItem);
+  }
   return rows
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
-import { Summary, SummaryRowItems } from './Summary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface LabResultListProps {
@@ -45,7 +45,7 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
                       :
                       <div>
                         {labResultSummary?.map((obs, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(obs)} />
+                          <Summary key={idx} id={idx} rows={buildRows(obs,props.fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }
@@ -61,7 +61,7 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
 
 }
 
-const buildRows = (obs: ObservationSummary): SummaryRowItems => {
+const buildRows = (obs: ObservationSummary, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -93,6 +93,15 @@ const buildRows = (obs: ObservationSummary): SummaryRowItems => {
       ))} */
     ]
 
+    if (theSource) {
+      const source: SummaryRowItem = {
+        isHeader: false,
+        twoColumns: false,
+        data1: 'From ' + theSource,
+        data2: '',
+      }
+      rows.push(source)
+    }
   const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
     {
       isHeader: false,

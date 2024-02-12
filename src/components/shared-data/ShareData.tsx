@@ -11,7 +11,7 @@ import { ConditionSummary } from '../../data-services/models/cqlSummary'
 // import { getSupplementalDataClient } from '../../data-services/fhirService'
 // import Client from 'fhirclient/lib/Client'
 import { createSharedDataResource, getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
-import { Condition, Goal } from '../../data-services/fhir-types/fhir-r4'
+import { Condition, Goal, Practitioner, Resource } from '../../data-services/fhir-types/fhir-r4'
 import Client from 'fhirclient/lib/Client'
 interface ShareDataProps {
 
@@ -30,57 +30,51 @@ export default function ShareData(props: ShareDataProps) {
     getSupplementalDataClient().then(sdsClient => {
 
       if (sdsClient) {
-        const patientID = sdsClient.getPatientId()
-        const patientName: string | null = null
-
-        const subjectRef = patientID != null ? {
-          reference: 'Patient/' + patientID,
-          display: (patientName) ? patientName : undefined
-        } : undefined
-
         props.fhirDataCollection!.forEach((fhirData) => {
-          updateSharedDataResource(fhirData.patient!);
 
-          fhirData.conditions?.forEach((condition) => {
-            updateSharedDataResource(condition)
+          console.error(fhirData.serverUrl);
+        // collect the practitioners
+        let practitioners = new Array<Practitioner>();
+          fhirData?.careTeamMembers?.forEach((value: Practitioner, key: string) => {
+            console.log(key, value);
+            practitioners.push(value);
+        });
+
+          Promise.all(practitioners.map(practitioner => updateSharedDataResource(practitioner))).then(resource => {
+
+            updateSharedDataResource(fhirData.patient!).then(( ) => {
+
+              Promise.all(fhirData.conditions!.map(condition => updateSharedDataResource(condition))).then(() => { }  );
+
+              Promise.all(fhirData.goals!.map(goal => updateSharedDataResource(goal))).then(() => { }  );
+
+              Promise.all(fhirData.immunizations!.map(immunization => updateSharedDataResource(immunization))).then(() => { }  );
+
+              Promise.all(fhirData.medications!.map(medication => updateSharedDataResource(medication))).then(() => { }  );
+
+              Promise.all(fhirData.serviceRequests!.map(serviceRequest => updateSharedDataResource(serviceRequest))).then(() => { }  );
+
+              Promise.all(fhirData.procedures!.map(procedure => updateSharedDataResource(procedure))).then(() => { }  );
+
+              Promise.all(fhirData.labResults!.map(labResult => updateSharedDataResource(labResult))).then(() => { }  );
+
+              Promise.all(fhirData.vitalSigns!.map(vitalSign => updateSharedDataResource(vitalSign))).then(() => { }  );
+
+              Promise.all(fhirData.socialHistory!.map(socialHistory => updateSharedDataResource(socialHistory))).then(() => { }  );
+
+              Promise.all(fhirData.surveyResults!.map(surveyResult => updateSharedDataResource(surveyResult))).then(() => { }  );
+
+            })
           });
 
-          fhirData.goals?.forEach((goal) => {
-            updateSharedDataResource(goal)
-          });
 
-          fhirData.goals?.forEach((immunization) => {
-            updateSharedDataResource(immunization)
-          });
 
-          fhirData.goals?.forEach((medication) => {
-            updateSharedDataResource(medication)
-          });
+    
+         
 
-          fhirData.goals?.forEach((serviceRequests) => {
-            updateSharedDataResource(serviceRequests)
-          });
+      
 
-          fhirData.procedures?.forEach((procedures) => {
-            updateSharedDataResource(procedures)
-          });
-
-          fhirData.labResults?.forEach((labResults) => {
-            updateSharedDataResource(labResults)
-          });
-
-          fhirData.vitalSigns?.forEach((vitalSigns) => {
-            updateSharedDataResource(vitalSigns)
-          });
-
-          fhirData.socialHistory?.forEach((socialHistory) => {
-            updateSharedDataResource(socialHistory)
-          });
-
-          fhirData.surveyResults?.forEach((surveyResults) => {
-            updateSharedDataResource(surveyResults)
-          });
-
+   
         });
       }
     })
@@ -129,3 +123,6 @@ export default function ShareData(props: ShareDataProps) {
     </React.Fragment>
   )
 }
+
+
+ 
