@@ -10,8 +10,8 @@ import { FHIRData } from '../../data-services/models/fhirResources'
 import { ConditionSummary } from '../../data-services/models/cqlSummary'
 // import { getSupplementalDataClient } from '../../data-services/fhirService'
 // import Client from 'fhirclient/lib/Client'
-import { createSharedDataResource, getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
-import { Condition, Goal, Practitioner, Resource } from '../../data-services/fhir-types/fhir-r4'
+import { getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
+import { Practitioner } from '../../data-services/fhir-types/fhir-r4'
 import Client from 'fhirclient/lib/Client'
 interface ShareDataProps {
 
@@ -31,50 +31,37 @@ export default function ShareData(props: ShareDataProps) {
 
       if (sdsClient) {
         props.fhirDataCollection!.forEach((fhirData) => {
-
-          console.error(fhirData.serverUrl);
-        // collect the practitioners
         let practitioners = new Array<Practitioner>();
           fhirData?.careTeamMembers?.forEach((value: Practitioner, key: string) => {
-            console.log(key, value);
             practitioners.push(value);
         });
 
-          Promise.all(practitioners.map(practitioner => updateSharedDataResource(practitioner))).then(resource => {
+          Promise.all(practitioners.map(practitioner => updateSharedDataResource(practitioner,fhirData.serverUrl))).then(resource => {
 
-            updateSharedDataResource(fhirData.patient!).then(( ) => {
+            updateSharedDataResource(fhirData.patient!,fhirData.serverUrl).then(( ) => {
 
-              Promise.all(fhirData.conditions!.map(condition => updateSharedDataResource(condition))).then(() => { }  );
+              Promise.all(fhirData.conditions!.map(condition => updateSharedDataResource(condition,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.goals!.map(goal => updateSharedDataResource(goal))).then(() => { }  );
+              Promise.all(fhirData.goals!.map(goal => updateSharedDataResource(goal,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.immunizations!.map(immunization => updateSharedDataResource(immunization))).then(() => { }  );
+              Promise.all(fhirData.immunizations!.map(immunization => updateSharedDataResource(immunization,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.medications!.map(medication => updateSharedDataResource(medication))).then(() => { }  );
+              Promise.all(fhirData.medications!.map(medication => updateSharedDataResource(medication,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.serviceRequests!.map(serviceRequest => updateSharedDataResource(serviceRequest))).then(() => { }  );
+              Promise.all(fhirData.serviceRequests!.map(serviceRequest => updateSharedDataResource(serviceRequest,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.procedures!.map(procedure => updateSharedDataResource(procedure))).then(() => { }  );
+              Promise.all(fhirData.procedures!.map(procedure => updateSharedDataResource(procedure,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.labResults!.map(labResult => updateSharedDataResource(labResult))).then(() => { }  );
+              Promise.all(fhirData.labResults!.map(labResult => updateSharedDataResource(labResult,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.vitalSigns!.map(vitalSign => updateSharedDataResource(vitalSign))).then(() => { }  );
+              Promise.all(fhirData.vitalSigns!.map(vitalSign => updateSharedDataResource(vitalSign,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.socialHistory!.map(socialHistory => updateSharedDataResource(socialHistory))).then(() => { }  );
+              Promise.all(fhirData.socialHistory!.map(socialHistory => updateSharedDataResource(socialHistory,fhirData.serverUrl))).then(() => { }  );
 
-              Promise.all(fhirData.surveyResults!.map(surveyResult => updateSharedDataResource(surveyResult))).then(() => { }  );
+              Promise.all(fhirData.surveyResults!.map(surveyResult => updateSharedDataResource(surveyResult,fhirData.serverUrl))).then(() => { }  );
 
             })
           });
-
-
-
-    
-         
-
-      
-
-   
         });
       }
     })
