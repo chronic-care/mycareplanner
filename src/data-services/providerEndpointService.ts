@@ -136,6 +136,20 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     )
   }
 
+  if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
+    availableEndpoints.push(
+      {
+        name: 'Shared Data Store',
+        config: {
+          iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
+          scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+        }
+      }
+    )
+  }
+
   return availableEndpoints
 }
 
