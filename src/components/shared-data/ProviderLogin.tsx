@@ -274,7 +274,6 @@ export default function ProviderLogin(props: Props) {
             // 1: Launcher, 2: SDS 1..*, 3: Additional Providers
             if (sdsClient) { // TODO: Either here or in getSupplementalDataClient or in the useEffect, check URL is valid
               console.log("SDS is truthy, adding to selected endpoints")
-
               const sdsEndpoint: ProviderEndpoint =
               {
                 // The name could be an env variable too, everything could be... 'SDS' could be there by default to enforce logic
