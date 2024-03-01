@@ -13,16 +13,13 @@ const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/
 const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
 
 const nextgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
-
 const meldScope = "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
 
 
 const meldmatch = "https://gw.interop.community/"+process.env.REACT_APP_MELD_SANDBOX_NAME+"/data"
 
-//  
-
-
-FHIR.oauth2.authorize([
+ 
+const availableEndpoints = [
     {
         // OHSU FHIR dev
         issMatch: /\bepicmobile.ohsu.edu\/FHIRDEV\b/i,
@@ -126,21 +123,18 @@ FHIR.oauth2.authorize([
         scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
         pkceMode: "unsafeV1"
     }
+]
 
-    /*
-    {
-        // This config will be used if the ISS is local
-        issMatch: iss => iss.startsWith("http://localhost") || iss.startsWith("http://127.0.0.1"),
+if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID 
+        && process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE) {
+    availableEndpoints.push(
+      {
+        issMatch: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
         redirectUri: "./index.html",
-        clientId: "my_local_client_id",
-        scope: "...",
-        patientId: "123", // include if you want to emulate selected patient ID
-        encounterId: "234", // include if you want to emulate selected encounter ID
-        launch: "whatever",
-        fakeTokenResponse: { // include if you want to emulate current user
-            // We are only parsing the JWT body so tokens can be faked like so
-            id_token: `fakeToken.${btoa('{"profile":"Practitioner/345"}')}.`
-        }
-    }
-    */
-])
+        clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
+        scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+      }
+    )
+  }
+
+FHIR.oauth2.authorize(availableEndpoints)

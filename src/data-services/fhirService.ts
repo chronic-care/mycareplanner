@@ -182,8 +182,16 @@ export const getSupplementalDataClient = async (): Promise<Client | undefined> =
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
   const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
   const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
+  const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
-  if (authURL && sdsURL && sdsScope) {
+  if (sdsClientId && sdsURL) {
+    const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
+      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
+    if (sdsFhirAccessDataObject) {
+      sdsClient = FHIR.client(sdsFhirAccessDataObject)
+    }
+  }
+  else if (authURL && sdsURL && sdsScope) {
     const authFhirAccessDataObject: fhirclient.ClientState | undefined =
       await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
     if (authFhirAccessDataObject) {
@@ -779,4 +787,26 @@ export function updateSharedDataResource(resource: Resource,serverUrl?: string )
       console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return
     })
+}
+
+export async function getSharedGoals(): Promise<Goal[]> {
+  console.log("getSharedGoals()")
+  var resources: Resource[] = []
+  var client = await getSupplementalDataClient()
+  // console.log("Patient.id = " + client?.patient.id)
+  await client?.patient.read()
+  try {
+    resources = resources.concat(resourcesFrom(await client?.patient.request(goalsPath, fhirOptions) as fhirclient.JsonObject))
+  }
+  catch (err) {
+    console.log("Error reading shared Goals: " + JSON.stringify(err))
+  }
+
+  let goals = resources.filter((item: any) => item?.resourceType === 'Goal') as Goal[]
+  console.log("getSharedGoals() Goals:")
+  goals?.forEach(function (resource) {
+    console.log(JSON.stringify(resource))
+  })
+
+  return goals
 }
