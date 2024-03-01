@@ -27,7 +27,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
 
 import { getSupplementalDataClient } from '../../data-services/fhirService'
-import { fhirclient } from 'fhirclient/lib/types'
 import Client from 'fhirclient/lib/Client'
 
 interface Props extends RouteComponentProps {
