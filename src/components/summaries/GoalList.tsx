@@ -41,7 +41,11 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+                <p><b>
+                  {props.fhirDataCollection &&
+                    (props.fhirDataCollection[index].isSDS ? 'SDS' : ('Provider ' + (index + 1)))}
+                  :
+                </b></p>
                 {
                   goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
                     ? <p>Loading...</p>

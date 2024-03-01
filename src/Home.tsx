@@ -73,11 +73,19 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                   :
                   <ol>
                     {patients.map((curPatient, index) => {
+                      // only display (unique) patients that aren't from SDS
+                      // if (fhirDataCollection && (!fhirDataCollection[index].isSDS)) {
                       return (
                         <li key={index}>
-                          <b>{curPatient?.fullName}</b> (age {curPatient?.age})
+                          {
+                            fhirDataCollection && fhirDataCollection[index].isSDS ?
+                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age})</> :
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age})</>
+                            // TODO: Consider adding an isLauncher option (need to add to datatype first)
+                          }
                         </li>
                       )
+                      // }
                     })}
                   </ol>
               }

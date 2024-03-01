@@ -3,6 +3,8 @@ import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, Me
   Observation, Patient, Practitioner, Procedure, Provenance, RelatedPerson, CodeableConcept, Period, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
+  isSDS: boolean, // tracks if this set of data is from a supplemental data store or not
+  // isLauncher: boolean, // this is a placeholder for the future, commented out for now...
   clientScope?: string,
   fhirUser?: Practitioner | Patient | RelatedPerson | undefined,
   caregiverName?: String,
@@ -93,16 +95,16 @@ export function displayValue(obs: Observation): string | undefined {
   if (loincCode === '85354-9' || loincCode === '55284-4') {
     obs.component?.forEach( comp => {
         let compCode = comp.code?.coding?.filter((c) => c.system === 'http://loinc.org')?.[0]?.code
-        if (compCode === '8480-6') { 
+      if (compCode === '8480-6') {
           systolic = comp.valueQuantity?.value?.toString() }
-        else if (compCode === '8462-4') { 
+      else if (compCode === '8462-4') {
           diastolic = comp.valueQuantity?.value?.toString() }
         else { }
     })
     display = (systolic ?? '') + '/' + (diastolic ?? '') + ' mmHg'
   }
   else {
-    let valueString = obs.valueQuantity?.value 
+    let valueString = obs.valueQuantity?.value
         ?? obs.valueCodeableConcept?.text ?? obs.valueCodeableConcept?.coding?.[0]?.display
         ?? obs.valueString
         ?? ''

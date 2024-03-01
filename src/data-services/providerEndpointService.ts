@@ -10,7 +10,7 @@ export class ProviderEndpoint {
   }
 }
 
-export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
+export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): ProviderEndpoint[] => {
   const availableEndpoints: ProviderEndpoint[] = [
     {
       name: 'OHSU POC Dev',
@@ -64,7 +64,8 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     }
   ]
 
-  if (process.env.REACT_APP_ADD_MELD_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+  // Ensure that REACT_APP_ADD_MELD_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN is false if testing dynamic launcher
+  if (process.env.REACT_APP_ADD_MELD_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
     availableEndpoints.push(
       {
         name: 'Test Data: Meld Sandbox',
@@ -77,6 +78,45 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
       }
     )
   }
+
+  // TODO: Remove this from the drop down list, but, leave it in availableEndpoints build.
+  // Maybe these should be two dif things, what is seen/can be selected, and what exists.
+  // Maybe don't need this at all... maybe can find a better way to track... (local forage,
+  // or buiding from SDS client data, or just building from SDS env vars
+  // Maybe we need this though so that when the application leaves, and returns, for a new auth,
+  // And it tries to access the localFOrage version of selectedEndpoints, it has something to reference?
+  // SO probably need to add this, and remove from dropdown, but keep in build?
+  // if (process.env.REACT_APP_ADD_SDS_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+  // ...Summary:
+  // The SDS cannot be a launcher, however, the endpoint NEEDS to be added for the application logic to work.
+  // Because, when one leaves the application to authorize, these endpoints are saved to local storage (temporarilly),
+  // and referenced in the logic in that scenario to know what to load on a fresh application launch.
+  // Thus, we should probably separate this list and the dropdown list, or, at a minimum, remove this from the dropdown
+  // list visually, or just not add it, within that logic
+  // Original Meld Test Data SDS
+  availableEndpoints.push(
+    {
+      name: 'SDS Test Data: eCareSharedData Meld Sandbox',
+      config: {
+        iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+        redirectUri: "./index.html",
+        clientId: 'xxx', // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
+        scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+      }
+    }
+  )
+  // Petient-specific SDS
+  // availableEndpoints.push(
+  // {
+  //   name: 'SDS Test Data: eCarePatientData Meld Sandbox',
+  //   config: {
+  //      iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+  //      redirectUri: "./index.html",
+  //      clientId: 'xxx',
+  //      scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+  //   }
+  // }
+  // )
 
   if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
     availableEndpoints.push(
@@ -134,6 +174,12 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
         }
       }
     )
+  }
+
+  // Add any additional endpoints if needed (***Note: this is not yet held in any state...)
+  if (endpointsToAdd) {
+    availableEndpoints.concat(endpointsToAdd)
+    console.log("availableEndpoints afer add: ", availableEndpoints)
   }
 
   return availableEndpoints
