@@ -40,6 +40,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   // TODO:MULTI-PROVIDER: Update view to itterate fhirDataCollection if needed
   // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
+
+    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT;
+  
+
     let fhirDataCollection = this.props.fhirDataCollection
     let patients = this.props.patientSummaries;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
@@ -153,6 +157,9 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               </ul>
             }
 
+
+
+
             <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
             <Link to={{
               pathname: '/provider-login',
@@ -160,10 +167,27 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 fhirDataCollection: this.props.fhirDataCollection
               }
             }}>Retrieve records from additional healthcare providers</Link>
-            {/*
-            <br /><Link to={{ pathname: '/share-data' }}>Share your health data</Link>
-            <br /><Link to={{ pathname: '/shared-data-summary' }}>Summary of shared health data</Link>
-            */}
+
+
+
+
+            <div>
+              {typeof sdsurl !== 'undefined' ? (
+                <p>
+                  <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
+                  <Link to={{ pathname: '/share-data' }}>Share your health data</Link></p>
+              ) : ( <p></p> )}
+            </div>
+
+
+
+
+
+
+
+
+
+
 
             <h5 style={{ paddingTop: '20px' }}>Disclaimer</h5>
             <p>This application is provided for informational purposes only and does not constitute medical advice or professional services. The information provided should not be used for diagnosing or treating a health problem or disease, and those seeking personal medical advice should consult with a licensed physician. Always seek the advice of your doctor or other qualified health provider regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read in this application. If you think you may have a medical emergency, call 911 or go to the nearest emergency room immediately. No physician-patient relationship is created by this application or its use. Neither OHSU, nor its employees, nor any contributor to this application, makes any representations, express or implied, with respect to the information herein or to its use.</p>

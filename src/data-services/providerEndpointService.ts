@@ -1,5 +1,9 @@
 import { fhirclient } from 'fhirclient/lib/types'
 
+
+
+import fs from 'fs'
+
 export class ProviderEndpoint {
   name: string
   config?: fhirclient.AuthorizeParams
@@ -11,71 +15,115 @@ export class ProviderEndpoint {
 }
 
 export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
-  const availableEndpoints: ProviderEndpoint[] = [
-    {
-      name: 'OHSU POC Dev',
-      config: {
-        iss: "https://epicmobile.ohsu.edu/FHIRDEV/api/FHIR/R4",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirdev,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-        pkceMode: "unsafeV1"
+  let availableEndpoints: ProviderEndpoint[] = [];
+  
+  if (process.env.REACT_APP_ADD_OHSU_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    availableEndpoints.push(
+      {
+        name: 'OHSU POC Dev',
+        config: {
+          iss: "https://epicmobile.ohsu.edu/FHIRDEV/api/FHIR/R4",
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirdev,
+          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+          pkceMode: "unsafeV1"
+        }
+      })
+
+    // availableEndpoints.push(
+    //   {
+    //     name: 'OHSU Prod',
+    //     config: {
+    //       iss: "https://epicmobile.ohsu.edu/FHIRPRD/api/FHIR/R4",
+    //       redirectUri: "./index.html",
+    //       clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirprd,
+    //       scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+    //       pkceMode: "unsafeV1"
+    //     }
+    //   })
+
+    // availableEndpoints.push(
+    //   {
+    //     name: 'OCHIN',
+    //     config: {
+    //       iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
+    //       redirectUri: "./index.html",
+    //       clientId: process.env.REACT_APP_CLIENT_ID_epic,
+    //       scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+    //       pkceMode: "unsafeV1"
+    //     }
+    //   })
+  }
+
+  if (process.env.REACT_APP_ADD_PROVIDENCE_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+    availableEndpoints.push(
+      {
+        name: 'Providence in Oregon/California',
+        config: {
+          iss: "https://haikuor.providence.org/fhirproxy/api/FHIR/R4/",
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_epic,
+          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+          pkceMode: "unsafeV1"
+        }
+      })
+
+    availableEndpoints.push(
+      {
+        name: 'Providence in Washington/Montana',
+        config: {
+          iss: "https://haikuwa.providence.org/fhirproxy/api/FHIR/R4/",
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_epic,
+          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
+          pkceMode: "unsafeV1"
+        }
       }
-    },
-    {
-      name: 'OHSU Prod',
-      config: {
-        iss: "https://epicmobile.ohsu.edu/FHIRPRD/api/FHIR/R4",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirprd,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-        pkceMode: "unsafeV1"
-      }
-    },
-    {
-      name: 'OCHIN',
-      config: {
-        iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-        pkceMode: "unsafeV1"
-      }
-    },
-    {
-      name: 'Providence in Oregon/California',
-      config: {
-        iss: "https://haikuor.providence.org/fhirproxy/api/FHIR/R4/",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-        pkceMode: "unsafeV1"
-      }
-    },
-    {
-      name: 'Providence in Washington/Montana',
-      config: {
-        iss: "https://haikuwa.providence.org/fhirproxy/api/FHIR/R4/",
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_epic,
-        scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-        pkceMode: "unsafeV1"
-      }
-    }
-  ]
+    )
+  }
 
   if (process.env.REACT_APP_ADD_MELD_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
     availableEndpoints.push(
       {
-        name: 'Test Data: Meld Sandbox',
+        name: 'MCC Develop Sandbox',
         config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_ENDPOINT_ISS,
+          iss: process.env.REACT_APP_MELD_SANDBOX_DEVELOP_ENDPOINT_ISS,
           redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
+          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCDEVELOP,
           scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
         }
       }
     )
+
+    availableEndpoints.push(
+      {
+        name: 'MCC Testing Sandbox',
+        config: {
+          iss: process.env.REACT_APP_MELD_SANDBOX_TESTING_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCTESTING,
+          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+        }
+      }
+    )
+
+    availableEndpoints.push(
+      {
+        name: 'MCC Staging Sandbox',
+        config: {
+          iss: process.env.REACT_APP_MELD_SANDBOX_STAGING_ENDPOINT_ISS,
+          redirectUri: "./index.html",
+          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCSTAGING,
+          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+        }
+      }
+    )
+
+
+
+
+
+
   }
 
   if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
@@ -136,6 +184,7 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     )
   }
 
+ 
   if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
     availableEndpoints.push(
       {
@@ -149,7 +198,6 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
       }
     )
   }
-
   return availableEndpoints
 }
 

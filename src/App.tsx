@@ -660,7 +660,7 @@ class App extends React.Component<AppProps, AppState> {
                     />
                     <Route path="/share-data">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ShareData />
+                            <ShareData fhirDataCollection={this.state.fhirDataCollection}  />
                         </SessionProtected>
                     </Route>
                     <Route path="/shared-data-summary">

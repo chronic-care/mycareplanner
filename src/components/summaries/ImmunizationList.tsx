@@ -50,11 +50,11 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
 
           return (
             <div key={idx}>
-              <h5 className="sectiontitle">{`Provider${idx + 1}`}</h5>
+              
 
               {immunizations && immunizations.length > 0
                 ? immunizations.map((med, mIdx) => (
-                  <Summary key={mIdx} id={mIdx} rows={buildRows(med)} />
+                  <Summary key={mIdx} id={mIdx} rows={buildRows(med,props.fhirDataCollection![idx].serverName)} />
                 ))
                 : <p>No immunization records for this provider.</p>
               }
@@ -67,7 +67,7 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
   )
 }
 
-const buildRows = (med: Immunization): SummaryRowItems => {
+const buildRows = (med: Immunization, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -104,6 +104,16 @@ const buildRows = (med: Immunization): SummaryRowItems => {
   ))
   if (notes?.length) {
     rows = rows.concat(notes)
+  }
+
+  if (theSource) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'From ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   return rows

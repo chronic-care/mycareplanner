@@ -3,6 +3,8 @@ import { CarePlan, CareTeam, Condition, DiagnosticReport, Goal, Immunization, Me
   Observation, Patient, Practitioner, Procedure, Provenance, RelatedPerson, CodeableConcept, Period, Timing, TimingRepeat } from '../fhir-types/fhir-r4';
 
 export interface FHIRData {
+  serverName? : string,
+  serverUrl?: string,
   clientScope?: string,
   fhirUser?: Practitioner | Patient | RelatedPerson | undefined,
   caregiverName?: String,

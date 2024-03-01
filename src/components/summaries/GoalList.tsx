@@ -41,7 +41,7 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+              
                 {
                   goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
                     ? <p>Loading...</p>
@@ -50,7 +50,7 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
                       :
                       <div>
                         {goalSummary?.map((goal, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(goal)} />
+                          <Summary key={idx} id={idx} rows={buildRows(goal,props.fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }
@@ -66,7 +66,7 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
 }
 
-const buildRows = (goal: GoalSummary): SummaryRowItems => {
+const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -124,6 +124,16 @@ const buildRows = (goal: GoalSummary): SummaryRowItems => {
   ))
   if (notes?.length) {
     rows = rows.concat(notes)
+  }
+
+  if (theSource) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'From ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   const provenance: SummaryRowItems | undefined = goal.Provenance?.map((provenance) => (

@@ -20,6 +20,8 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
   const conSumMatrix: ConditionSummary[][] | undefined = props.conditionSummaryMatrix
 
+ 
+
   return (
     <div className="home-view">
       <div className="welcome">
@@ -41,7 +43,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
             return (
               <div key={'outerArray-' + index}>
-                <p><b>Provider {index + 1}:</b></p>
+             
                 {
                   conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>
@@ -50,7 +52,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
                       :
                       <div>
                         {conditionSummary?.map((cond, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(cond)} />
+                          <Summary key={idx} id={idx} rows={buildRows(cond,props.fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }
@@ -66,7 +68,7 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
 }
 
-const buildRows = (cond: ConditionSummary): SummaryRowItems => {
+const buildRows = (cond: ConditionSummary, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems = []
 
   const conditionName: SummaryRowItem = {
@@ -128,6 +130,17 @@ const buildRows = (cond: ConditionSummary): SummaryRowItems => {
   if (notes?.length) {
     rows = rows.concat(notes)
   }
+
+  if (theSource) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'From ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
+  }
+ 
 
   const provenance: SummaryRowItems | undefined = cond.Provenance?.map((provenance) => (
     {
