@@ -187,6 +187,8 @@ export default function ProviderLogin(props: Props) {
           await loadAuthorizedSelectedEndpointMulti(curSelectedEndpoint, true, index)
         if (curFhirDataLoaded) {
           curFhirDataLoaded.serverName =   curSelectedEndpoint.name;
+
+          console.log("curFhirDataLoaded.serverName:", curFhirDataLoaded.serverName)
           console.log("curFhirDataLoaded:", curFhirDataLoaded)
           console.log("fhirDataCollection:", fhirDataCollection)
           console.log("Adding curFhirDataLoaded to fhirDataCollection")

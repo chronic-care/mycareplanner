@@ -16,7 +16,7 @@ export class ProviderEndpoint {
 
 export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
   let availableEndpoints: ProviderEndpoint[] = [];
-  
+
   if (process.env.REACT_APP_ADD_OHSU_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
     availableEndpoints.push(
       {
@@ -29,30 +29,6 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
           pkceMode: "unsafeV1"
         }
       })
-
-    // availableEndpoints.push(
-    //   {
-    //     name: 'OHSU Prod',
-    //     config: {
-    //       iss: "https://epicmobile.ohsu.edu/FHIRPRD/api/FHIR/R4",
-    //       redirectUri: "./index.html",
-    //       clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirprd,
-    //       scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-    //       pkceMode: "unsafeV1"
-    //     }
-    //   })
-
-    // availableEndpoints.push(
-    //   {
-    //     name: 'OCHIN',
-    //     config: {
-    //       iss: "https://webprd.ochin.org/prd-fhir/api/FHIR/R4/",
-    //       redirectUri: "./index.html",
-    //       clientId: process.env.REACT_APP_CLIENT_ID_epic,
-    //       scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-    //       pkceMode: "unsafeV1"
-    //     }
-    //   })
   }
 
   if (process.env.REACT_APP_ADD_PROVIDENCE_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
@@ -118,12 +94,6 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
         }
       }
     )
-
-
-
-
-
-
   }
 
   if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
@@ -184,7 +154,7 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
     )
   }
 
- 
+
   if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
     availableEndpoints.push(
       {
@@ -198,6 +168,10 @@ export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
       }
     )
   }
+
+
+
+
   return availableEndpoints
 }
 
