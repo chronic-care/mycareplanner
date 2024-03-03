@@ -1,7 +1,11 @@
 import { fhirclient } from 'fhirclient/lib/types'
 
+import MELDProviders from './endpoints/meldproviders.json';
 
 
+ 
+
+const fs = require('fs');
 export class ProviderEndpoint {
   name: string
   config?: fhirclient.AuthorizeParams
@@ -14,59 +18,16 @@ export class ProviderEndpoint {
 
 export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): ProviderEndpoint[] => {
 
-  fetch('./data/meldproviders.json')
-  .then((res) => res.json())
-  .then((data) => {
-    console.log('aaaaa data:', data);
-  })
-
-  fetch('./data/meldproviders.json')
-  .then((res) => res.text())
-  .then((data) => {
-    console.log('bbbbb data:', data);
-  })
-
-  
   let availableEndpoints: ProviderEndpoint[] = [];
+  let jsonArray = JSON.parse(JSON.stringify(MELDProviders).toString());
+  const meldProviders: ProviderEndpoint[] = jsonArray.map((item: any) => {
+    return {
+        name: item.name,
+        config: item.config
+    };
+});
+  availableEndpoints = availableEndpoints.concat(meldProviders);
 
-  // Ensure that REACT_APP_ADD_MELD_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN is false if testing dynamic launcher
-  if (process.env.REACT_APP_ADD_MELD_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'MCC Develop Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_DEVELOP_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCDEVELOP,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-
-    availableEndpoints.push(
-      {
-        name: 'MCC Testing Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_TESTING_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCTESTING,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-
-    availableEndpoints.push(
-      {
-        name: 'MCC Staging Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_STAGING_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCSTAGING,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-  }
 
   // TODO: Remove this from the drop down list, but, leave it in availableEndpoints build.
   // Maybe these should be two dif things, what is seen/can be selected, and what exists.
@@ -106,90 +67,6 @@ export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): Pr
   //   }
   // }
   // )
-
-  if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: Epic Sandbox',
-        config: {
-          iss: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_CERNER_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: Cerner Sandbox',
-        config: {
-          iss: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
-          scope: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_VA_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: VA Sandbox',
-        config: {
-          iss: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_va,
-          scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_NEXTGEN_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: NextGen Sandbox',
-        config: {
-          iss: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_nextgen,
-          scope: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_SCOPE
-        }
-      }
-    )
-  }
-
- 
-  if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
-    availableEndpoints.push(
-      {
-        name: 'Shared Data Store',
-        config: {
-          iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
-          scope: process.env.REACT_APP_SHARED_DATA_SCOPE
-        }
-      }
-    )
-  }
-
-
-
-
- 
-  // Add any additional endpoints if needed (***Note: this is not yet held in any state...)
-  if (endpointsToAdd) {
-    availableEndpoints.concat(endpointsToAdd)
-    console.log("availableEndpoints afer add: ", availableEndpoints)
-  }
-
  
   return availableEndpoints
 }
