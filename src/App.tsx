@@ -22,7 +22,7 @@ import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlSe
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid } from './data-services/persistenceService'
+import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid, getLauncherData } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
     getMedicationSummaries, getVitalSignSummaries
@@ -69,7 +69,7 @@ interface AppState {
     tasks?: [Task],
 
     supplementalDataClient?: Client,
-    canShareData?: boolean,
+    canShareData: boolean,
 
     progressMessage: string,
     progressValue: number,
@@ -118,6 +118,8 @@ class App extends React.Component<AppProps, AppState> {
             statusTabIndex: "9",
             fhirDataCollection: undefined,
 
+            canShareData: false,
+
             progressMessage: "Initializing",
             progressValue: 0,
             resourcesLoadedCount: 0,
@@ -144,6 +146,13 @@ class App extends React.Component<AppProps, AppState> {
     async componentDidMount() {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
+
+            // For Now, setting this right away so that it is not null.
+            // However, we may need to wait until after a launcher is loaded
+            // If so, there are multiple areas to identify it's a launcher (possible 100%?_ and include the logic:
+            // (mutli login code here and in ProviderLogin
+            await this.setSupplementalDataClient('somePatientId')
+
             try {
                 console.log("Checking if this is a multi-select, single, or a loader...")
                 const selectedEndpoints: string[] | undefined = await getSelectedEndpoints()
@@ -169,6 +178,30 @@ class App extends React.Component<AppProps, AppState> {
                         // Check truthyness of endpointsToAuthorize and trigger termintating error if not truthy
                         if (endpointsToAuthorize && endpointsToAuthorize.length > 0) {
                             console.log("endpointsToAuthorize && endpointsToAuthorize.length > 0")
+                            // To supoort a dynamic launcher, and not have to have the launcher in availableEndpoints
+                            // Add launcher if missing. It will be missing if it doesn't exist in availableEndpoints
+                            try {
+                                const launcherEndpointFromForage: ProviderEndpoint | null | undefined =
+                                    await getLauncherData()
+                                console.log("launcherEndpointFromForage to add to endpointsToAuthorize: ",
+                                    launcherEndpointFromForage)
+                                if (launcherEndpointFromForage) {
+                                    const isLauncherAlreadyInEndpointsToAuthorize: boolean =
+                                        endpointsToAuthorize.some(endpoint => {
+                                            return endpoint?.config?.iss === launcherEndpointFromForage?.config?.iss
+                                        })
+                                    if (!isLauncherAlreadyInEndpointsToAuthorize) {
+                                        console.log("Adding launcher to endpointsToAuthorize")
+                                        endpointsToAuthorize.unshift(launcherEndpointFromForage)
+                                        console.log('endpointsToLoad (after adding launcher)',
+                                            JSON.stringify(endpointsToAuthorize))
+                                    } else {
+                                        console.log("Not adding launcher to endpointsToAuthorize as it's already there")
+                                    }
+                                }
+                            } catch (e) {
+                                console.error(`Error fetching launcher data within App.tsx(): ${e}`)
+                            }
                         } else {
                             throw new Error("endpointsToAuthorize is null or undefined")
                         }
@@ -203,7 +236,7 @@ class App extends React.Component<AppProps, AppState> {
 
                                         // Do NOT need to save data for endpoints to be loaded as we don't need to reload the app
                                         // Deleting multi-select endpoints from local storage so they don't intefere with future selections
-                                        // and so that this logic is not run if there are no mulit-endpoints to auth/local
+                                        // and so that this logic is not run if there are no multi-endpoints to auth/local
                                         // but instead, a loader is run or a single endpoint is run in such a case
                                         console.log("Deleting multi-select endpoints from local storage")
                                         deleteSelectedEndpoints()
@@ -258,12 +291,23 @@ class App extends React.Component<AppProps, AppState> {
                     console.log("Getting and setting fhirData state in componentDidMount")
                     // false: authorized null: serverUrl
                     // We don't have access to the server URL for a launcher until we create a client
-                    let data = await getFHIRData(false, null, this.setAndLogProgressState,
-                        this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
-                    this.setFhirDataStates([data])
-                }
 
-                this.setSupplementalDataClient()
+                    // LAUNCHER
+                    let launcherData: FHIRData = await getFHIRData(false, null, null,
+                        this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    console.log('launcherData: Check for patient name...is it in here to use vs using launcherClient.tokenResponse?.patient from client itself?', launcherData)
+                    const launcherPatientId = launcherData.patient?.id
+                    console.log('launcherPatientId: ', launcherPatientId)
+
+                    // SDS
+                    // Note that this else always happens at least once, as the launcher is always chosen first
+                    // So, maybe this is the only time we need to call setSupplementalDataClient
+                    // But, if we leave the app, we need to call again, so, will need to call every time for now
+                    // Until we optimize and write a way to track that in local forage
+                    // Note: SDS must be run after launcher is loaded if it's based off of it (may not always be the case anymore)
+                    // Note: In order to make this work with multi, SDS would need to merge with them too, not just launcher
+                    await this.setLoadAndMergeSDSIfAvailable(launcherPatientId, launcherData)
+                }
 
             } catch (err) {
                 this.setAndLogErrorMessageState('Terminating',
@@ -279,6 +323,39 @@ class App extends React.Component<AppProps, AppState> {
     async componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): Promise<void> {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidUpdate()")
         this.setSummary(prevState)
+    }
+
+    setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
+        if (launcherPatientId) {
+            console.log('connect to SDS so we can verify it can exist')
+            const tempSDSClient = await this.setSupplementalDataClient(launcherPatientId)
+            if (this.state.supplementalDataClient && this.state.canShareData) {
+                // TODO: convert this to use multi login code to see if that resolves issue with duplicate meld original data?
+                console.log('We can connect to the SDS, so, add it to loader (read) SDS data')
+                const serverUrl = this.state.supplementalDataClient.state.serverUrl
+                const serverUrlFromEnvVar = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+                console.log(`Dynamic SDS serverUrl (using this for now...): ${serverUrl}`)
+                console.log(`Static SDS serverUrl (verify it's the same...): ${serverUrlFromEnvVar}`)
+                console.log('tempSDSClient', tempSDSClient)
+                console.log('this.state.supplementalDataClient: Is this the same as tempSDS? It should be! If not, then we are sending the wrong data to getFhirData',
+                    this.state.supplementalDataClient)
+
+                this.setFhirDataStates(undefined)
+                this.resetErrorMessageState()
+                const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                console.log('SDS data: ', sdsData)
+                const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
+                console.log('Merged (launcher and SDS) data', mergedFhirDataCollection)
+                this.setFhirDataStates(mergedFhirDataCollection)
+            } else {
+                console.log('No SDS due to !this.state.supplementalDataClient || !this.state.canShareData, so just loading the launcher')
+                this.setFhirDataStates([launcherData])
+            }
+        } else {
+            console.log('No SDS due to !launcherPatientId, so just loading the launcher')
+            this.setFhirDataStates([launcherData])
+        }
     }
 
     // TODO: MULTI-PROVIDER: This code is copioed into this class for now from the function in ProviderLOgin
@@ -301,9 +378,9 @@ class App extends React.Component<AppProps, AppState> {
                 // Resetting state to undefined for loader and error message reset have to happen after each index is loaded
                 //  in this multi version vs all at end like in singular version
                 console.log('setting fhirData to undefined so progess indicator is triggered while new data is loaded subsequently')
-                // !FUNCTION DIFF!: props to this for setFhirDataStates, may need to pass in what we need to set specifically and set that
+                // !FUNCTION DIFF!: props converted to 'this' for setFhirDataStates, may need to pass in what we need to set specifically and set that
                 this.setFhirDataStates(undefined)
-                // !FUNCTION DIFF!: props to this for resetErrorMessageState, may need to pass in what we need to set specifically and set that
+                // !FUNCTION DIFF!: props converted to 'this' for resetErrorMessageState, may need to pass in what we need to set specifically and set that
                 this.resetErrorMessageState()
 
                 const curFhirDataLoaded: FHIRData | undefined =
@@ -314,6 +391,9 @@ class App extends React.Component<AppProps, AppState> {
                     console.log("Adding curFhirDataLoaded to fhirDataCollection")
                     fhirDataCollection.push(curFhirDataLoaded)
                     console.log("fhirDataCollection:", fhirDataCollection)
+                } else {
+                    console.error("Error: No FHIR Data loaded for the current index (" + index + "). " +
+                        curSelectedEndpoint?.name + " was not pushed to fhirDataCollection!")
                 }
                 index++;
             }
@@ -344,8 +424,16 @@ class App extends React.Component<AppProps, AppState> {
 
             console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
             // !FUNCTION DIFF!: Props changed to this for setAndLogProgressState, setResourcesLoadedCountState, and setAndLogErrorMessageState,
-            fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, this.setAndLogProgressState,
-                this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+            // TODO SDS: Maybe check if this is the sds, if it is, do the correct getFHIRData call
+            if (selectedEndpoint.name.includes('SDS') && this.state.supplementalDataClient) {
+                console.log('loading sds data in App.tsx but not on first load/with a launcher')
+                fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, this.state.supplementalDataClient,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                console.log('sdsData', fhirDataFromStoredEndpoint)
+            } else {
+                fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+            }
             console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
             return fhirDataFromStoredEndpoint
         } else {
@@ -466,18 +554,20 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ tasks: undefined })
     }
 
-    setSupplementalDataClient = async (): Promise<void> => {
+    setSupplementalDataClient = async (patientId: string): Promise<Client | undefined> => {
         console.log('setSupplementalDataClient()')
-        const client = await getSupplementalDataClient()
+        const client = await getSupplementalDataClient(patientId)
+        // const client = await getSupplementalDataClient()
         if (client) {
             const stillValid = await isSavedTokenStillValid(client.state)
             this.setState({ supplementalDataClient: client })
             this.setState({ canShareData: stillValid })
 
-            // console.log("***** PatientID = " + client.getPatientId() ?? "")
-            // console.log("***** User ID = " + client.getUserId() ?? "")
-            // console.log("***** Can share data = " + stillValid ?? "?")
+            console.log("***** PatientID = " + client.getPatientId() ?? "")
+            console.log("***** User ID = " + client.getUserId() ?? "")
+            console.log("***** Can share data = " + stillValid ?? "?")
         }
+        return client
     }
 
     // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)

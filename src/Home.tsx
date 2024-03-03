@@ -77,11 +77,19 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                   :
                   <ol>
                     {patients.map((curPatient, index) => {
+                      // only display (unique) patients that aren't from SDS
+                      // if (fhirDataCollection && (!fhirDataCollection[index].isSDS)) {
                       return (
                         <li key={index}>
-                          <b>{curPatient?.fullName}</b> (age {curPatient?.age})
+                          {
+                            fhirDataCollection && fhirDataCollection[index].isSDS ?
+                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age})</> :
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age})</>
+                            // TODO: Consider adding an isLauncher option (need to add to datatype first)
+                          }
                         </li>
                       )
+                      // }
                     })}
                   </ol>
               }
@@ -159,24 +167,21 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
 
 
-
-            <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
-            <Link to={{
-              pathname: '/provider-login',
-              state: {
-                fhirDataCollection: this.props.fhirDataCollection
-              }
-            }}>Retrieve records from additional healthcare providers</Link>
-
-
-
+            <div>
+             
+                <p>
+                  <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
+                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Retrieve records from additional healthcare providers</Link>
+                </p>
+             
+            </div>
 
             <div>
               {typeof sdsurl !== 'undefined' ? (
                 <p>
                   <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
                   <Link to={{ pathname: '/share-data' }}>Share your health data</Link></p>
-              ) : ( <p></p> )}
+              ) : (<p></p>)}
             </div>
 
 
