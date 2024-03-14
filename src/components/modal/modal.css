@@ -1,57 +1,9 @@
-.modal-overlay {
-    display: flex;
-    /* flex-direction: column; */
-    width: 500px;
-}
-
 p{
-	margin:10px;
+    margin:10px;
     padding: 1%;
 }
-.modal {
-    display: flex;
-    text-align: justify;
-    flex-direction: column;
-    justify-content: center;
-    width: 450px;
-    left: 720px;
-    padding: auto;
-    border-radius: 12px;
-}
-
-/* Close button styles */
 .close-btn {
-    position: absolute;
-    top: 23%;
-    right: 10px;
     cursor: pointer;
-    font-size: 16px;
     font-weight: bold;
     color: #0056B3;
-}
-
-/* Modal content styles */
-/* .modal-content {
-    margin-top: 10px;
-    color: #000;
-} */
-
-/* Add any additional styling based on your design requirements */
-
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
-    .modal {
-      max-height: 1024px;
-    }
-    .modal-overlay{
-        max-height: 1024px;
-    }
-}
-
-@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape){
-    .modal {
-      max-height: 768px;
-    }
-    .modal-overlay{
-        max-height: 1024px;
-    }
 }
