@@ -39,6 +39,8 @@ This code is under active development for pilot testing with patients and caregi
     * `yarn start`
 6. Open the following URL in a browser to test the local version in our test sandbox:
     * http://localhost:8000/mycareplanner/launch.html?iss=https://gw.interop.community/CarePlanning/data
+    * http://localhost:8000/mycareplanner/launch.html?iss=https://gw.interop.community/MCCDevelopment/data
+
 7. Login with credentials
 8. Select Patricia Noelle, the primary test patient to load sample data so that it can be displayed/used in the application
 

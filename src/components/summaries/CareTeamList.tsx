@@ -3,7 +3,6 @@ import React from 'react';
 import { FHIRData, displayPeriod } from '../../data-services/models/fhirResources';
 import { CareTeamParticipant, Practitioner, Reference } from '../../data-services/fhir-types/fhir-r4';
 import { Summary } from './Summary';
-import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface CareTeamListProps {
   fhirDataCollection?: FHIRData[],
@@ -11,8 +10,8 @@ interface CareTeamListProps {
 
 function flatten(arr?: any) {
   return arr?.reduce(function (flat: any, toFlatten: any) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten)
+  }, [])
 }
 
 function resolve(ref?: Reference, members?: Map<string, Practitioner>) {
@@ -38,10 +37,7 @@ export const CareTeamList: React.FC<CareTeamListProps> = (props: CareTeamListPro
 
           return (
             <div key={idx}>
-              <h5 className="sectiontitle">{`Provider${idx + 1} - Primary Care Physician`}</h5>
-              <p>{data.patientPCP?.name?.[0].text ?? "Name not provided"}</p>
-
-              <h4 className="title">{`Provider${idx + 1} - Care Team`}</h4>
+             
 
               {participants.length < 1
                 ? <p>No records found.</p>

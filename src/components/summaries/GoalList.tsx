@@ -41,7 +41,6 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
             return (
               <div key={'outerArray-' + index}>
-              
                 {
                   goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
                     ? <p>Loading...</p>
