@@ -1,5 +1,6 @@
 // components/Modal/Modal.tsx
 import React, { useEffect, useState } from 'react';
+import { Box } from '@mui/material';
 import './modal.css';
 
 interface ModalProps {
@@ -37,6 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isVisible, closeModal }) => {
             <br></br>
             <div className="modal-content">
               {/* Your warning banner text here */}
+              <Box>
               <p>
                 This system is provided for Government-authorized use only.
 
@@ -49,6 +51,7 @@ const Modal: React.FC<ModalProps> = ({ isVisible, closeModal }) => {
                 The Government may monitor, record, and audit your system usage, including usage of personal devices and email systems for official duties or to conduct HHS business. Therefore, you have no reasonable expectation of privacy regarding any communication or data transiting or stored on this system. At any time, and for any lawful Government purpose, the government may monitor, intercept, and search and seize any communication or data transiting or stored on this system.
                 Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.
               </p>
+              </Box>
             </div>
           </div>
         </div>
