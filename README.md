@@ -78,6 +78,15 @@ This code is under active development for pilot testing with patients and caregi
   * `docker build .`
 * This will build a container which serves content on port 80. Run this container with:
   * `docker run -i -p 8000:8000 <hash>`
+
+* Run for meld and override providers using my providers file
+docker run -d -it \
+   -p 8000:8000 \
+   -e REACT_APP_MELD_SANDBOX_NAME=MCCDevelopment \
+   -e REACT_APP_MELD_SANDBOX_CLIENT_ID=<<IDHER>   \
+   --mount type=bind,source="$(pwd)"/myproviders.json,target=/home/node/app/src/data-services/endpoints/providers.json,readonly \
+   chroniccare/mycareplanner:latest
+
 * Note: yarn.lock is required for the build to run correctly. Do not remove the relevant COPY command
 
 ## Style guide
