@@ -151,7 +151,7 @@ class App extends React.Component<AppProps, AppState> {
             // However, we may need to wait until after a launcher is loaded
             // If so, there are multiple areas to identify it's a launcher (possible 100%?_ and include the logic:
             // (mutli login code here and in ProviderLogin
-            await this.setSupplementalDataClient('somePatientId')
+            // await this.setSupplementalDataClient('somePatientId')
 
             try {
                 console.log("Checking if this is a multi-select, single, or a loader...")
@@ -298,6 +298,7 @@ class App extends React.Component<AppProps, AppState> {
                     console.log('launcherData: Check for patient name...is it in here to use vs using launcherClient.tokenResponse?.patient from client itself?', launcherData)
                     const launcherPatientId = launcherData.patient?.id
                     console.log('launcherPatientId: ', launcherPatientId)
+                    launcherData.serverName = 'Launch Data'
 
                     // SDS
                     // Note that this else always happens at least once, as the launcher is always chosen first
@@ -345,6 +346,7 @@ class App extends React.Component<AppProps, AppState> {
                 const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
                     this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                 console.log('SDS data: ', sdsData)
+                sdsData.serverName = 'SDS Data'
                 const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
                 console.log('Merged (launcher and SDS) data', mergedFhirDataCollection)
                 this.setFhirDataStates(mergedFhirDataCollection)
@@ -430,9 +432,11 @@ class App extends React.Component<AppProps, AppState> {
                 fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, this.state.supplementalDataClient,
                     this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                 console.log('sdsData', fhirDataFromStoredEndpoint)
+                fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
             } else {
                 fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
                     this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
             }
             console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
             return fhirDataFromStoredEndpoint

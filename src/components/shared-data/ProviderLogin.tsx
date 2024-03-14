@@ -188,9 +188,11 @@ export default function ProviderLogin(props: Props) {
         fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, sdsClient,
           props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
         console.log('sdsData', fhirDataFromStoredEndpoint)
+        fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
       } else {
         fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
           props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+          fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
       }
       console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
 
@@ -298,7 +300,7 @@ export default function ProviderLogin(props: Props) {
                 config: {
                   iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
                   redirectUri: "./index.html",
-                  clientId: 'xxx', // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
+                  clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID, // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
                   scope: process.env.REACT_APP_SHARED_DATA_SCOPE
                 }
               }
@@ -415,6 +417,7 @@ export default function ProviderLogin(props: Props) {
               console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
               fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
                 props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+                fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
             } catch (err) {
               console.log(`Failure calling getFHIRData(true, issServerUrl!) from ProviderLogin.tsx handleSubmit: ${err}`)
               console.log('fallback to authorization due to above failure')

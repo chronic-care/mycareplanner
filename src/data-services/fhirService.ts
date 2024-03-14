@@ -416,7 +416,11 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     //   setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
     const getFHIRDataResult: FHIRData = await getFHIRResources(client, clientScope, supportsInclude,
       setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
-    if (clientOverride) getFHIRDataResult.isSDS = true
+    if (clientOverride) { 
+      getFHIRDataResult.isSDS = true
+      getFHIRDataResult.serverName = "SDS"
+    }
+
     return getFHIRDataResult
 
   } catch (err) {

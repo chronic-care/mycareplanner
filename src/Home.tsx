@@ -83,8 +83,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                         <li key={index}>
                           {
                             fhirDataCollection && fhirDataCollection[index].isSDS ?
-                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age})</> :
-                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age})</>
+                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </> :
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection![index].serverName} </>
                             // TODO: Consider adding an isLauncher option (need to add to datatype first)
                           }
                         </li>

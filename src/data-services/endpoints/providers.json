@@ -13,16 +13,16 @@
       "config": {
         "iss": "https://gw.interop.community/MCCTesting/data",
         "redirectUri": "./index.html",
-        "clientId": "0a20c6c0-8276-4606-bdcf-bc502133e04d",
+        "clientId": "5fa54c47-ed80-405b-a0b7-611eee5d0159",
         "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write patient/Provenance.read"
       }
     },
     {
-      "name": "MCC Testing Sandbox",
+      "name": "MCC Staging Sandbox",
       "config": {
         "iss": "https://gw.interop.community/MCCStaging/data",
         "redirectUri": "./index.html",
-        "clientId": "efb3503f-14f5-4f83-adfc-e0b8d23ffc1a",
+        "clientId": "5fa54c47-ed80-405b-a0b7-611eee5d0159",
         "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write patient/Provenance.read"
       }
     }

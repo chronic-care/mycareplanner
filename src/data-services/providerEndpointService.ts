@@ -1,6 +1,6 @@
 import { fhirclient } from 'fhirclient/lib/types'
 
-import MELDProviders from './endpoints/meldproviders.json';
+import Providers from './endpoints/providers.json';
 
 
  
@@ -19,14 +19,29 @@ export class ProviderEndpoint {
 export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): ProviderEndpoint[] => {
 
   let availableEndpoints: ProviderEndpoint[] = [];
-  let jsonArray = JSON.parse(JSON.stringify(MELDProviders).toString());
-  const meldProviders: ProviderEndpoint[] = jsonArray.map((item: any) => {
+  let jsonArray = JSON.parse(JSON.stringify(Providers).toString());
+  const providers: ProviderEndpoint[] = jsonArray.map((item: any) => {
     return {
         name: item.name,
         config: item.config
     };
 });
-  availableEndpoints = availableEndpoints.concat(meldProviders);
+  availableEndpoints = availableEndpoints.concat(providers);
+
+  if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID
+    && process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE) {
+     availableEndpoints = availableEndpoints.concat(
+      {
+        "name": "eCare Shared Data",
+        "config": {
+          "iss": process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+          "redirectUri": "./index.html",
+          "clientId": process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
+          "scope": process.env.REACT_APP_SHARED_DATA_SCOPE
+        }
+      }
+    )
+  } 
 
 
   // TODO: Remove this from the drop down list, but, leave it in availableEndpoints build.
