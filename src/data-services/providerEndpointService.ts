@@ -1,9 +1,11 @@
 import { fhirclient } from 'fhirclient/lib/types'
 
+import Providers from './endpoints/providers.json';
 
 
-import fs from 'fs'
+ 
 
+const fs = require('fs');
 export class ProviderEndpoint {
   name: string
   config?: fhirclient.AuthorizeParams
@@ -14,164 +16,73 @@ export class ProviderEndpoint {
   }
 }
 
-export const buildAvailableEndpoints = (): ProviderEndpoint[] => {
+export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): ProviderEndpoint[] => {
+
   let availableEndpoints: ProviderEndpoint[] = [];
+  let jsonArray = JSON.parse(JSON.stringify(Providers).toString());
+  const providers: ProviderEndpoint[] = jsonArray.map((item: any) => {
+    return {
+        name: item.name,
+        config: item.config
+    };
+});
+  availableEndpoints = availableEndpoints.concat(providers);
 
-  if (process.env.REACT_APP_ADD_OHSU_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
+  if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID
+    && process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE) {
+     availableEndpoints = availableEndpoints.concat(
       {
-        name: 'OHSU POC Dev',
-        config: {
-          iss: "https://epicmobile.ohsu.edu/FHIRDEV/api/FHIR/R4",
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_ohsu_fhirdev,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      })
-  }
-
-  if (process.env.REACT_APP_ADD_PROVIDENCE_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Providence in Oregon/California',
-        config: {
-          iss: "https://haikuor.providence.org/fhirproxy/api/FHIR/R4/",
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_epic,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      })
-
-    availableEndpoints.push(
-      {
-        name: 'Providence in Washington/Montana',
-        config: {
-          iss: "https://haikuwa.providence.org/fhirproxy/api/FHIR/R4/",
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_epic,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
+        "name": "eCare Shared Data",
+        "config": {
+          "iss": process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+          "redirectUri": "./index.html",
+          "clientId": process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
+          "scope": process.env.REACT_APP_SHARED_DATA_SCOPE
         }
       }
     )
-  }
-
-  if (process.env.REACT_APP_ADD_MELD_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'MCC Develop Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_DEVELOP_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCDEVELOP,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-
-    availableEndpoints.push(
-      {
-        name: 'MCC Testing Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_TESTING_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCTESTING,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-
-    availableEndpoints.push(
-      {
-        name: 'MCC Staging Sandbox',
-        config: {
-          iss: process.env.REACT_APP_MELD_SANDBOX_STAGING_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_MELD_MCCSTAGING,
-          scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_EPIC_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: Epic Sandbox',
-        config: {
-          iss: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_epic_sandbox,
-          scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_CERNER_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: Cerner Sandbox',
-        config: {
-          iss: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_cerner_sandbox,
-          scope: process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_VA_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: VA Sandbox',
-        config: {
-          iss: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_va,
-          scope: process.env.REACT_APP_VA_SANDBOX_ENDPOINT_SCOPE,
-          pkceMode: "unsafeV1"
-        }
-      }
-    )
-  }
-
-  if (process.env.REACT_APP_ADD_NEXTGEN_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-    availableEndpoints.push(
-      {
-        name: 'Test Data: NextGen Sandbox',
-        config: {
-          iss: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_ISS,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_CLIENT_ID_nextgen,
-          scope: process.env.REACT_APP_NEXTGEN_SANDBOX_ENDPOINT_SCOPE
-        }
-      }
-    )
-  }
+  } 
 
 
-  if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
-    availableEndpoints.push(
-      {
-        name: 'Shared Data Store',
-        config: {
-          iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
-          redirectUri: "./index.html",
-          clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
-          scope: process.env.REACT_APP_SHARED_DATA_SCOPE
-        }
-      }
-    )
-  }
-
-
-
-
+  // TODO: Remove this from the drop down list, but, leave it in availableEndpoints build.
+  // Maybe these should be two dif things, what is seen/can be selected, and what exists.
+  // Maybe don't need this at all... maybe can find a better way to track... (local forage,
+  // or buiding from SDS client data, or just building from SDS env vars
+  // Maybe we need this though so that when the application leaves, and returns, for a new auth,
+  // And it tries to access the localFOrage version of selectedEndpoints, it has something to reference?
+  // SO probably need to add this, and remove from dropdown, but keep in build?
+  // if (process.env.REACT_APP_ADD_SDS_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
+  // ...Summary:
+  // The SDS cannot be a launcher, however, the endpoint NEEDS to be added for the application logic to work.
+  // Because, when one leaves the application to authorize, these endpoints are saved to local storage (temporarilly),
+  // and referenced in the logic in that scenario to know what to load on a fresh application launch.
+  // Thus, we should probably separate this list and the dropdown list, or, at a minimum, remove this from the dropdown
+  // list visually, or just not add it, within that logic
+  // Original Meld Test Data SDS
+  // availableEndpoints.push(
+  //   {
+  //     name: 'SDS Test Data: eCareSharedData Meld Sandbox',
+  //     config: {
+  //       iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+  //       redirectUri: "./index.html",
+  //       clientId: 'xxx', // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
+  //       scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+  //     }
+  //   }
+  // )
+  // Petient-specific SDS
+  // availableEndpoints.push(
+  // {
+  //   name: 'SDS Test Data: eCarePatientData Meld Sandbox',
+  //   config: {
+  //      iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+  //      redirectUri: "./index.html",
+  //      clientId: 'xxx',
+  //      scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+  //   }
+  // }
+  // )
+ 
   return availableEndpoints
 }
 

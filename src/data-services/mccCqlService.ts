@@ -40,7 +40,7 @@ const extractConditionSummary = (fhirData?: FHIRData): ConditionSummary[] | unde
   const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource)
 
   console.log("CQL Results in extractConditionSummary: " + JSON.stringify(extractedSummary))
-  console.log("ConditionSummary: " + JSON.stringify(extractedSummary.ConditionSummary))
+  console.log("ConditionSummary: ", extractedSummary.ConditionSummary)
   return extractedSummary.ConditionSummary
 }
 export const getConditionSummaries = (fhirDataCollection?: FHIRData[]): ConditionSummary[][] | undefined => {
@@ -65,8 +65,8 @@ const extractGoalSummary = (fhirData?: FHIRData): GoalSummary[] | undefined => {
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL Results in extractGetGoalSummary: " + JSON.stringify(extractedSummary))
-  console.log("GoalSummary: " + JSON.stringify(extractedSummary.GoalSummary))
+  console.log("CQL extractedSummary: ", extractedSummary)
+  console.log("CQL extractedSummary.GoalSummary: ", extractedSummary.GoalSummary)
   return extractedSummary.GoalSummary
 }
 export const getGoalSummaries = (fhirDataCollection?: FHIRData[]): GoalSummary[][] | undefined => {
@@ -85,8 +85,8 @@ const extractLabResultSummary = (fhirData?: FHIRData): ObservationSummary[] | un
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccLabResultsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL Results in extractLabResultSummary: " + JSON.stringify(extractedSummary))
-  console.log("LabResultSummary: " + JSON.stringify(extractedSummary.LabResultSummary))
+  // console.log("CQL Results in extractLabResultSummary: " + JSON.stringify(extractedSummary))
+  // console.log("LabResultSummary: ", JSON.stringify(extractedSummary.LabResultSummary))
   return extractedSummary.LabResultSummary
 }
 export const getLabResultSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
@@ -105,8 +105,8 @@ const extractMedicationSummary = (fhirData?: FHIRData): MedicationSummary[] | un
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccMedicationsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL Results in extractMedicationSummary: " + JSON.stringify(extractedSummary))
-  console.log("MedicationSummary: " + JSON.stringify(extractedSummary.MedicationSummary))
+  // console.log("CQL Results in extractMedicationSummary: " + JSON.stringify(extractedSummary))
+  // console.log("MedicationSummary: ", JSON.stringify(extractedSummary.MedicationSummary))
   return extractedSummary.MedicationSummary
 }
 export const getMedicationSummaries = (fhirDataCollection?: FHIRData[]): MedicationSummary[][] | undefined => {
@@ -125,8 +125,8 @@ const extractVitalSignSummary = (fhirData?: FHIRData): ObservationSummary[] | un
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccVitalSignsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL Results in extractVitalSignSummary: " + JSON.stringify(extractedSummary))
-  console.log("VitalSignsSummary: " + JSON.stringify(extractedSummary.VitalSignsSummary))
+  // console.log("CQL Results in extractVitalSignSummary: " + JSON.stringify(extractedSummary))
+  // console.log("VitalSignsSummary: ", JSON.stringify(extractedSummary.VitalSignsSummary))
   return extractedSummary.VitalSignsSummary
 }
 export const getVitalSignSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
@@ -145,7 +145,7 @@ const executeLibrary = (library: any, codeService: any, patientSource: any): any
   const results = executor.exec(patientSource)
   // Note: This array index of 0 is not related to multi providers. It was setup this way prior to multi proviuders.
   const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]]
-  console.log("CQL Results in executeLibrary: " + JSON.stringify(extractedSummary));
+  // console.log("CQL Results in executeLibrary: ", JSON.stringify(extractedSummary));
 
   return extractedSummary
 }

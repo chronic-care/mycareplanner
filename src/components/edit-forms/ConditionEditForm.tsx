@@ -18,9 +18,9 @@ import { createSharedDataResource } from '../../data-services/fhirService';
 export default function ConditionEditForm(formData?: EditFormData) {
   let history = useHistory()
   // const id = useParams();
-  const [description, setDescription] = React.useState<string | null>('');
-  const [onsetDate, setStartDate] = React.useState<Date | null>(null);
-  
+  const [description, setDescription] = React.useState<string | null>('')
+  const [onsetDate, setStartDate] = React.useState<Date | null>(null)
+
   const patientID = formData?.supplementalDataClient?.getPatientId()
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
   const fhirUser = formData?.supplementalDataClient?.getFhirUser()

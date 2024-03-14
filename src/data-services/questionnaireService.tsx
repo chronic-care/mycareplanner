@@ -6,7 +6,7 @@ export function getLocalQuestionnaire(id: String) {
     let publicPath = `${process.env.PUBLIC_URL}`;
     let resourcePath = publicPath + '/content/' + id + ".json";
     return fetch(resourcePath)
-        .then((response)      => {
+        .then((response) => {
             return response.json();
         })
         .then((questionnaireJson) => {
@@ -16,16 +16,16 @@ export function getLocalQuestionnaire(id: String) {
         });
 }
 
-export function getQuestionnaire(serverUrl:any, questionnaireID: string) {
-    let url:string;
-    return getSupplementalDataClient()
+export function getQuestionnaire(serverUrl: any, questionnaireID: string) {
+    let url: string;
+    return getSupplementalDataClient(null)
         .then((client: Client | undefined) => {
             if (client) {
                 url = client.state.serverUrl;
                 return client.request('Questionnaire/' + questionnaireID);
             }
         })
-        .then((questionnaire)=>{
+        .then((questionnaire) => {
             serverUrl.push(url + '/Questionnaire/' + questionnaire.id);
             return questionnaire;
         }).catch(error => {
@@ -34,7 +34,7 @@ export function getQuestionnaire(serverUrl:any, questionnaireID: string) {
 }
 
 export function submitQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
-    return getSupplementalDataClient()
+    return getSupplementalDataClient(null)
         .then((client: Client | undefined) => {
             // @ts-ignore
             return client.create(questionnaireResponse)

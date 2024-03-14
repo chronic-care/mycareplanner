@@ -26,6 +26,9 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
 
+import { getSupplementalDataClient } from '../../data-services/fhirService'
+import Client from 'fhirclient/lib/Client'
+
 interface Props extends RouteComponentProps {
   setFhirDataStates: (data: FHIRData[] | undefined) => void,
   setAndLogProgressState: (message: string, value: number) => void,
@@ -46,18 +49,35 @@ export default function ProviderLogin(props: Props) {
 
   const [launcherEndpointFromForage, setLauncherEndpointFromForage] =
     useState<ProviderEndpoint | null | undefined>()
+  const [sdsClient, setSdsClient] = useState<Client | null>(null)
 
   useEffect(() => {
     const fetchLauncherData = async () => {
       try {
         setLauncherEndpointFromForage(await getLauncherData())
       } catch (e) {
-        console.error(`Error fetching launcher data: ${e}`)
+        console.error(`Error fetching launcher data within ProviderLogin useEffect: ${e}`)
       }
     }
-
     fetchLauncherData()
   }, []) // Empty for now as should only need to set on component mount because a new launcher is a re-mount
+
+  useEffect(() => {
+    const fetchSdsClient = async () => {
+      try {
+        const sdsClient: Client | undefined = await getSupplementalDataClient(null)
+        if (sdsClient) {
+          setSdsClient(sdsClient)
+        } else {
+          console.error("SDS client is untruthy")
+        }
+      } catch (error) {
+        console.error("Error fetching SDS Client:", error)
+      }
+    }
+    fetchSdsClient();
+  }, []) // Empty dependency array to run only on component mount.
+  // If we want this everytime, just call getSupplementalDataClient where needed instead
 
   const availableEndpoints: ProviderEndpoint[] = buildAvailableEndpoints()
   const [selectedEndpointNames, setselectedEndpointNames] = useState<string[]>([])
@@ -125,8 +145,19 @@ export default function ProviderLogin(props: Props) {
           } else {
             console.log("Not last index, Authorizing index " + i)
           }
+          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
 
           FHIR.oauth2.authorize(curEndpoint.config!)
+
+          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
+
 
           break
         }
@@ -152,8 +183,17 @@ export default function ProviderLogin(props: Props) {
       let fhirDataFromStoredEndpoint: FHIRData | undefined = undefined
 
       console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
-      fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, props.setAndLogProgressState,
-        props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+      if (selectedEndpoint.name.includes('SDS') && sdsClient) {
+        console.log('loading sds data in ProviderLogin.tsx as part of a multi login')
+        fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, sdsClient,
+          props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+        console.log('sdsData', fhirDataFromStoredEndpoint)
+        fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
+      } else {
+        fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
+          props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+          fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
+      }
       console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
 
       return fhirDataFromStoredEndpoint
@@ -194,6 +234,9 @@ export default function ProviderLogin(props: Props) {
           console.log("Adding curFhirDataLoaded to fhirDataCollection")
           fhirDataCollection.push(curFhirDataLoaded)
           console.log("fhirDataCollection:", fhirDataCollection)
+        } else {
+          console.error("Error: No FHIR Data loaded for the current index (" + index + "). " +
+            curSelectedEndpoint?.name + " was not pushed to fhirDataCollection!")
         }
         index++;
       }
@@ -242,6 +285,31 @@ export default function ProviderLogin(props: Props) {
               ${launcherEndpointFromForage === null ? null : undefined}! Cannot add it to other providers...`)
             }
 
+            // Always add SDS, if not null, and add it as the 2nd item in the array so that the order is:
+            // 1: Launcher, 2: SDS 1..*, 3: Additional Providers
+            if (sdsClient) { // TODO: Either here or in getSupplementalDataClient or in the useEffect, check URL is valid
+              console.log("SDS is truthy, adding to selected endpoints")
+              const sdsEndpoint: ProviderEndpoint =
+              {
+                // The name could be an env variable too, everything could be... 'SDS' could be there by default to enforce logic
+                // If there's only ever one SDS, name could just be, SDS, and not ever be an env var
+                // For now, some of this is hardcoded
+                // But, if not using env vars, we could make a function that creates a name based on the client id
+                // or other identifying information within the sdsClient
+                name: 'SDS',
+                config: {
+                  iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+                  redirectUri: "./index.html",
+                  clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID, // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
+                  scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+                }
+              }
+              matchingProviderEndpoints.splice(1, 0, sdsEndpoint) // inject at index 1 (2nd position)
+            } else {
+              console.log("SDS is untruthy, not adding to selected endpoints")
+            }
+
+
             // Loop selectedEndpoint logic for all available providers
             await authorizeSelectedEndpoints(matchingProviderEndpoints)
             // TODO: MULTI-PROVIDER: Consider calling loadSelectedEndpoints if we have authorizeSelectedEndpoints return
@@ -266,7 +334,7 @@ export default function ProviderLogin(props: Props) {
 
   // TODO: Consider this as a feature for TEST/DEBUG purposes, only visible in debug mode, to call this function, which will only load a single endpoint
   // The ProviderLogin component is for loading additional EHRs which are in addition to the launcher EHR. Therefore, the only single login in the future
-  // Would be the launcher. In the future it will always be a multi-login (unless there's an error and the laucnher is unknown, but multi can handle that),
+  // Would be the launcher. In the future it will always be a multi-login (unless there's an error and the launcher is unknown, but multi can handle that),
   // the launcher EHR, plus 1..* additional EHRs, giving us a 2..* total logins from ProviderLogin at (almost) all times.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadSelectedEndpointSingle = async (selectedEndpoint: ProviderEndpoint,
@@ -347,8 +415,9 @@ export default function ProviderLogin(props: Props) {
               console.log("redirecting to '/'")
               history.push('/')
               console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
-              fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, props.setAndLogProgressState,
-                props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+              fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
+                props.setAndLogProgressState, props.setResourcesLoadedCountState, props.setAndLogErrorMessageState)
+                fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
             } catch (err) {
               console.log(`Failure calling getFHIRData(true, issServerUrl!) from ProviderLogin.tsx handleSubmit: ${err}`)
               console.log('fallback to authorization due to above failure')

@@ -27,7 +27,7 @@ export default function ShareData(props: ShareDataProps) {
 
     event.preventDefault();
 
-    getSupplementalDataClient().then(sdsClient => {
+    getSupplementalDataClient(null).then(sdsClient => {
 
       if (sdsClient) {
         props.fhirDataCollection!.forEach((fhirData) => {

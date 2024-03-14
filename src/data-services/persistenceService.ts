@@ -382,8 +382,30 @@ export const persistLauncherData = async (clientState: fhirclient.ClientState) =
   const convertedProviderEndpoint: ProviderEndpoint | undefined =
     await getProviderEndpointTypeFromClientStateType(buildAvailableEndpoints(), clientState)
 
+  // Use convertedProviderEndpoint if it's truthy/in our list of available endpoints
+  // Otherwise, it's not defined, and we need to create it
+  // Later, in that case, we persist it so that we can add it if missing on load
+  // such as would be the case with a launcher that has not been pre-configured
+  const providerEndpointToSave: ProviderEndpoint = convertedProviderEndpoint ?? {
+    name: 'Launcher (Dynamic)',
+    config: {
+      iss: clientState.serverUrl,
+      redirectUri: "./index.html",
+      clientId: clientState.clientId,
+      scope: clientState.scope
+    }
+  }
+  console.log("providerEndpointToSave: ", providerEndpointToSave)
+
+  if (convertedProviderEndpoint === undefined) {
+    console.log("convertedProviderEndpoint === undefined, will save a dynamic launcher")
+  }
+
   // Persist converted data
-  await saveLauncherData(launcherDataKey, convertedProviderEndpoint).then(() => {
+  try {
+    await saveLauncherData(launcherDataKey, providerEndpointToSave)
     console.log('launcherDataKey save attempted/promise returned')
-  }).catch((e) => console.log(e))
+  } catch (e) {
+    console.error('Error saving launcher data:', e)
+  }
 }
