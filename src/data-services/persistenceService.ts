@@ -1,12 +1,16 @@
 import localForage from 'localforage'
 import { fhirclient } from 'fhirclient/lib/types'
+import {
+  ProviderEndpoint, getProviderEndpointTypeFromClientStateType,
+  buildAvailableEndpoints
+} from './providerEndpointService'
 
 // It's best practice to use a suffix to ensure a unique key so we don't load data for another website
 const LF_ID = '-MCP'
 const fcCurrentStateKey = 'fhir-client-state' + LF_ID
 const fcAllStatesKey = 'fhir-client-states-array' + LF_ID
-
 const selectedEndpointsKey = 'selected-endpoints' + LF_ID
+const launcherDataKey = 'launcher-data' + LF_ID
 
 // FHIR ACCESS DATA //
 
@@ -63,7 +67,7 @@ const getFHIRAccessData = async (key: string): Promise<any> => {
   }
 }
 
-const isSavedTokenStillValid = async (fhirAccessData: fhirclient.ClientState): Promise<boolean> => {
+export const isSavedTokenStillValid = async (fhirAccessData: fhirclient.ClientState): Promise<boolean> => {
   // TODO: Create getter function for expiresAt and use that here
   console.log('enter isSavedTokenStillValid()')
   // Example: "expiresAt": 1666288471
@@ -164,17 +168,6 @@ export const extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint =
   }
 
 export const persistFHIRAccessData = async (clientState: fhirclient.ClientState) => {
-  /* TODO:
-   -support multiple logins using the data with the following logic:
-   1: (on launch?) If the saved token is still valid,
-      use those token(s) to query all required patient data from each endpoint without new login
-   2: If tokens are expired, and we have a saved list of the user's selected endpoints.
-      That code should already exist in the fhirService,
-      prompt to log in to each (and save the new token)
-   3: After logging in and saving tokens,
-      iterate through the tokens to query all required data from its endpoint
-   4: Display all data in our app from all data sources
-  */
 
   // Holds the currently active state object in localForage
   await saveFHIRAccessData(fcCurrentStateKey, clientState, false).then(() => {
@@ -184,9 +177,6 @@ export const persistFHIRAccessData = async (clientState: fhirclient.ClientState)
   // test persisted data recovery for currentLocalFhirClientState
   const currentLocalFhirClientState = await getFHIRAccessData(fcCurrentStateKey) as fhirclient.ClientState
   console.log('currentLocalFhirClientState', currentLocalFhirClientState)
-  // test having a new unique state by changing the URL (remove this code later)
-  // currentLocalFhirClientState.clientId = 'TestUniqueClientId'
-  // currentLocalFhirClientState.serverUrl = 'TestUniqueServerUrl'
 
   // holds an array of state objects previously accessed in localForage
   const isLocalFhirClientStates: boolean = await isFHIRAccessData(fcAllStatesKey)
@@ -338,3 +328,84 @@ export const deleteSelectedEndpoints = async (): Promise<void> => {
 //     console.error("saveEndpointToSelectedEndpointsArray endpoint is not truthy: " + endpoint)
 //   }
 // }
+
+// LAUNCHER ENDPOINT //
+
+const saveLauncherData = async (key: string, data: ProviderEndpoint | undefined): Promise<ProviderEndpoint | null> => {
+  if (data) {
+    if (data.name && data.config) {
+      console.log(`Object: localForage.setItem(key: ${key}, data: <see next line>`, data)
+      return await localForage.setItem(key, data)
+    } else {
+      console.log('Ignore previous logs, NOT updating data in local storage:')
+      console.log('Data is missing data.name || data.config')
+    }
+  } else {
+    // TODO: This situation could have drastic effects on the logic. Need to figure out how to properly handle it.
+    console.error("convertedProviderEndpoint data is undefined. Cannot save launcher data.")
+  }
+  console.error("Unknown error saving launcher data, returning null")
+  return null
+}
+
+const isLauncherData = async (): Promise<boolean> => {
+  try {
+    const data: ProviderEndpoint = await localForage.getItem(launcherDataKey) as ProviderEndpoint
+    // If the key does not exist, getItem() in the localForage API will return null specifically to indicate it
+    if (data !== null) {
+      console.log('Key ' + launcherDataKey + ' exists in localForage')
+      return true
+    }
+    console.log('Key ' + launcherDataKey + ' does NOT exist in localForage')
+    return false
+  } catch (e) {
+    console.log(`Failure calling localForage.getItem(key) from persistenceService.isLauncherData: ${e}`)
+    return false
+  }
+}
+
+export const getLauncherData = async (): Promise<ProviderEndpoint | null | undefined> => {
+  try {
+    const isData: boolean = await isLauncherData()
+    if (isData) {
+      return await localForage.getItem(launcherDataKey) // null if failed
+    }
+  } catch (e) {
+    console.log(`Failure calling isLauncherData(launcherDataKey) from persistenceService.getLauncherData: ${e}`)
+  }
+  console.error("Unknown error getting launcher data, returning null")
+  return undefined
+}
+
+export const persistLauncherData = async (clientState: fhirclient.ClientState) => {
+  // Convert clientState to ProviderEndpoint
+  const convertedProviderEndpoint: ProviderEndpoint | undefined =
+    await getProviderEndpointTypeFromClientStateType(buildAvailableEndpoints(), clientState)
+
+  // Use convertedProviderEndpoint if it's truthy/in our list of available endpoints
+  // Otherwise, it's not defined, and we need to create it
+  // Later, in that case, we persist it so that we can add it if missing on load
+  // such as would be the case with a launcher that has not been pre-configured
+  const providerEndpointToSave: ProviderEndpoint = convertedProviderEndpoint ?? {
+    name: 'Launcher (Dynamic)',
+    config: {
+      iss: clientState.serverUrl,
+      redirectUri: "./index.html",
+      clientId: clientState.clientId,
+      scope: clientState.scope
+    }
+  }
+  console.log("providerEndpointToSave: ", providerEndpointToSave)
+
+  if (convertedProviderEndpoint === undefined) {
+    console.log("convertedProviderEndpoint === undefined, will save a dynamic launcher")
+  }
+
+  // Persist converted data
+  try {
+    await saveLauncherData(launcherDataKey, providerEndpointToSave)
+    console.log('launcherDataKey save attempted/promise returned')
+  } catch (e) {
+    console.error('Error saving launcher data:', e)
+  }
+}

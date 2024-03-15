@@ -15,13 +15,14 @@ import Home from "./Home";
 
 import { FHIRData } from './data-services/models/fhirResources';
 import FHIR from 'fhirclient'
+import Client from 'fhirclient/lib/Client'
 import { PatientSummary, ScreeningSummary, EditFormData } from './data-services/models/cqlSummary';
-import { getFHIRData, createAndPersistClientForNewProvider } from './data-services/fhirService';
+import { getFHIRData, createAndPersistClientForNewProvider, getSupplementalDataClient } from './data-services/fhirService';
 import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlService';
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints } from './data-services/persistenceService'
+import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid, getLauncherData } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
     getMedicationSummaries, getVitalSignSummaries
@@ -31,6 +32,7 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
+import { doLog, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";
@@ -66,6 +68,9 @@ interface AppState {
     screenings?: [ScreeningSummary],
     tasks?: [Task],
 
+    supplementalDataClient?: Client,
+    canShareData: boolean,
+
     progressMessage: string,
     progressValue: number,
     resourcesLoadedCount: number
@@ -80,13 +85,27 @@ interface AppState {
     medicationSummaries?: MedicationSummary[][],
     labResultSummaries?: ObservationSummary[][],
     vitalSignSummaries?: ObservationSummary[][],
-        
+
     isActiveSession: boolean,
     isLogout: boolean,
 }
 
 type SummaryFunctionType = (fhirData?: FHIRData[]) =>
     GoalSummary[][] | ConditionSummary[][] | ObservationSummary[][] | MedicationSummary[][] | undefined
+
+const tabList = {
+    1: "Home",
+    2: "Care Plan",
+    3: "Health Status",
+    4: "Care Team",
+    5: "Goals",
+    6: "Concerns",
+    7: "Medications",
+    8: "Activities",
+    9: "Tests",
+    10: "Vitals",
+    11: "Immunization",
+}
 
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
 class App extends React.Component<AppProps, AppState> {
@@ -98,6 +117,8 @@ class App extends React.Component<AppProps, AppState> {
             planTabIndex: "5",
             statusTabIndex: "9",
             fhirDataCollection: undefined,
+
+            canShareData: false,
 
             progressMessage: "Initializing",
             progressValue: 0,
@@ -125,12 +146,18 @@ class App extends React.Component<AppProps, AppState> {
     async componentDidMount() {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
+
+            // For Now, setting this right away so that it is not null.
+            // However, we may need to wait until after a launcher is loaded
+            // If so, there are multiple areas to identify it's a launcher (possible 100%?_ and include the logic:
+            // (mutli login code here and in ProviderLogin
+            // await this.setSupplementalDataClient('somePatientId')
+
             try {
                 console.log("Checking if this is a multi-select, single, or a loader...")
-                // It's a multi select as selected endpoints exist/were not deleted
                 const selectedEndpoints: string[] | undefined = await getSelectedEndpoints()
-
                 if (selectedEndpoints && selectedEndpoints.length > 0) {
+                    // It's a multi select as selected endpoints exist/were not deleted
                     const isAnyEndpointNullOrUndefined: boolean = selectedEndpoints.some((endpoint) => {
                         console.log("isAnyEndpointNullOrUndefined selectedEndpoints.some(endpoint) : " + endpoint)
                         return endpoint === null || endpoint === undefined
@@ -148,9 +175,33 @@ class App extends React.Component<AppProps, AppState> {
                             await getMatchingProviderEndpointsFromUrl(buildAvailableEndpoints(), selectedEndpoints)
                         console.log('endpointsToLoad (once authorized)', JSON.stringify(endpointsToAuthorize))
 
-                        // Check truthyness of endpointsToAUthorize and trigger termintating error if not truthy
+                        // Check truthyness of endpointsToAuthorize and trigger termintating error if not truthy
                         if (endpointsToAuthorize && endpointsToAuthorize.length > 0) {
                             console.log("endpointsToAuthorize && endpointsToAuthorize.length > 0")
+                            // To supoort a dynamic launcher, and not have to have the launcher in availableEndpoints
+                            // Add launcher if missing. It will be missing if it doesn't exist in availableEndpoints
+                            try {
+                                const launcherEndpointFromForage: ProviderEndpoint | null | undefined =
+                                    await getLauncherData()
+                                console.log("launcherEndpointFromForage to add to endpointsToAuthorize: ",
+                                    launcherEndpointFromForage)
+                                if (launcherEndpointFromForage) {
+                                    const isLauncherAlreadyInEndpointsToAuthorize: boolean =
+                                        endpointsToAuthorize.some(endpoint => {
+                                            return endpoint?.config?.iss === launcherEndpointFromForage?.config?.iss
+                                        })
+                                    if (!isLauncherAlreadyInEndpointsToAuthorize) {
+                                        console.log("Adding launcher to endpointsToAuthorize")
+                                        endpointsToAuthorize.unshift(launcherEndpointFromForage)
+                                        console.log('endpointsToLoad (after adding launcher)',
+                                            JSON.stringify(endpointsToAuthorize))
+                                    } else {
+                                        console.log("Not adding launcher to endpointsToAuthorize as it's already there")
+                                    }
+                                }
+                            } catch (e) {
+                                console.error(`Error fetching launcher data within App.tsx(): ${e}`)
+                            }
                         } else {
                             throw new Error("endpointsToAuthorize is null or undefined")
                         }
@@ -185,7 +236,7 @@ class App extends React.Component<AppProps, AppState> {
 
                                         // Do NOT need to save data for endpoints to be loaded as we don't need to reload the app
                                         // Deleting multi-select endpoints from local storage so they don't intefere with future selections
-                                        // and so that this logic is not run if there are no mulit-endpoints to auth/loca
+                                        // and so that this logic is not run if there are no multi-endpoints to auth/local
                                         // but instead, a loader is run or a single endpoint is run in such a case
                                         console.log("Deleting multi-select endpoints from local storage")
                                         deleteSelectedEndpoints()
@@ -225,8 +276,6 @@ class App extends React.Component<AppProps, AppState> {
                                     }
 
                                     FHIR.oauth2.authorize(curEndpoint.config!)
-
-                                    console.log("Interestingly, this is still called called after authorize...")
                                     break
                                 } // end not authorized case
                             } else {
@@ -236,13 +285,29 @@ class App extends React.Component<AppProps, AppState> {
                     } // end else for isAnyEndpointNullOrUndefined
 
                 } else { // else for selectedEndpoints null or length check
-                    // It's a loader, a reload of the last endpoint, or a load of a single selected endpoint
+                    // It's a launcher OR a reload of the last endpoint
                     // Load a single item in an array
                     // TODO: MULTI-PROVIDER:: Determine how to handle a reload (refresh-situation) when the last load was a multi-select
                     console.log("Getting and setting fhirData state in componentDidMount")
-                    let data = await getFHIRData(false, null, this.setAndLogProgressState,
-                        this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
-                    this.setFhirDataStates([data])
+                    // false: authorized null: serverUrl
+                    // We don't have access to the server URL for a launcher until we create a client
+
+                    // LAUNCHER
+                    let launcherData: FHIRData = await getFHIRData(false, null, null,
+                        this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    console.log('launcherData: Check for patient name...is it in here to use vs using launcherClient.tokenResponse?.patient from client itself?', launcherData)
+                    const launcherPatientId = launcherData.patient?.id
+                    console.log('launcherPatientId: ', launcherPatientId)
+                    launcherData.serverName = 'Launch Data'
+
+                    // SDS
+                    // Note that this else always happens at least once, as the launcher is always chosen first
+                    // So, maybe this is the only time we need to call setSupplementalDataClient
+                    // But, if we leave the app, we need to call again, so, will need to call every time for now
+                    // Until we optimize and write a way to track that in local forage
+                    // Note: SDS must be run after launcher is loaded if it's based off of it (may not always be the case anymore)
+                    // Note: In order to make this work with multi, SDS would need to merge with them too, not just launcher
+                    await this.setLoadAndMergeSDSIfAvailable(launcherPatientId, launcherData)
                 }
 
             } catch (err) {
@@ -259,6 +324,40 @@ class App extends React.Component<AppProps, AppState> {
     async componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): Promise<void> {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidUpdate()")
         this.setSummary(prevState)
+    }
+
+    setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
+        if (launcherPatientId) {
+            console.log('connect to SDS so we can verify it can exist')
+            const tempSDSClient = await this.setSupplementalDataClient(launcherPatientId)
+            if (this.state.supplementalDataClient && this.state.canShareData) {
+                // TODO: convert this to use multi login code to see if that resolves issue with duplicate meld original data?
+                console.log('We can connect to the SDS, so, add it to loader (read) SDS data')
+                const serverUrl = this.state.supplementalDataClient.state.serverUrl
+                const serverUrlFromEnvVar = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+                console.log(`Dynamic SDS serverUrl (using this for now...): ${serverUrl}`)
+                console.log(`Static SDS serverUrl (verify it's the same...): ${serverUrlFromEnvVar}`)
+                console.log('tempSDSClient', tempSDSClient)
+                console.log('this.state.supplementalDataClient: Is this the same as tempSDS? It should be! If not, then we are sending the wrong data to getFhirData',
+                    this.state.supplementalDataClient)
+
+                this.setFhirDataStates(undefined)
+                this.resetErrorMessageState()
+                const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                console.log('SDS data: ', sdsData)
+                sdsData.serverName = 'SDS Data'
+                const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
+                console.log('Merged (launcher and SDS) data', mergedFhirDataCollection)
+                this.setFhirDataStates(mergedFhirDataCollection)
+            } else {
+                console.log('No SDS due to !this.state.supplementalDataClient || !this.state.canShareData, so just loading the launcher')
+                this.setFhirDataStates([launcherData])
+            }
+        } else {
+            console.log('No SDS due to !launcherPatientId, so just loading the launcher')
+            this.setFhirDataStates([launcherData])
+        }
     }
 
     // TODO: MULTI-PROVIDER: This code is copioed into this class for now from the function in ProviderLOgin
@@ -281,9 +380,9 @@ class App extends React.Component<AppProps, AppState> {
                 // Resetting state to undefined for loader and error message reset have to happen after each index is loaded
                 //  in this multi version vs all at end like in singular version
                 console.log('setting fhirData to undefined so progess indicator is triggered while new data is loaded subsequently')
-                // !FUNCTION DIFF!: props to this for setFhirDataStates, may need to pass in what we need to set specifically and set that
+                // !FUNCTION DIFF!: props converted to 'this' for setFhirDataStates, may need to pass in what we need to set specifically and set that
                 this.setFhirDataStates(undefined)
-                // !FUNCTION DIFF!: props to this for resetErrorMessageState, may need to pass in what we need to set specifically and set that
+                // !FUNCTION DIFF!: props converted to 'this' for resetErrorMessageState, may need to pass in what we need to set specifically and set that
                 this.resetErrorMessageState()
 
                 const curFhirDataLoaded: FHIRData | undefined =
@@ -294,6 +393,9 @@ class App extends React.Component<AppProps, AppState> {
                     console.log("Adding curFhirDataLoaded to fhirDataCollection")
                     fhirDataCollection.push(curFhirDataLoaded)
                     console.log("fhirDataCollection:", fhirDataCollection)
+                } else {
+                    console.error("Error: No FHIR Data loaded for the current index (" + index + "). " +
+                        curSelectedEndpoint?.name + " was not pushed to fhirDataCollection!")
                 }
                 index++;
             }
@@ -324,8 +426,18 @@ class App extends React.Component<AppProps, AppState> {
 
             console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
             // !FUNCTION DIFF!: Props changed to this for setAndLogProgressState, setResourcesLoadedCountState, and setAndLogErrorMessageState,
-            fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, this.setAndLogProgressState,
-                this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+            // TODO SDS: Maybe check if this is the sds, if it is, do the correct getFHIRData call
+            if (selectedEndpoint.name.includes('SDS') && this.state.supplementalDataClient) {
+                console.log('loading sds data in App.tsx but not on first load/with a launcher')
+                fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, this.state.supplementalDataClient,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                console.log('sdsData', fhirDataFromStoredEndpoint)
+                fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
+            } else {
+                fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
+                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
+            }
             console.log("fhirDataFromStoredEndpoint", JSON.stringify(fhirDataFromStoredEndpoint))
             return fhirDataFromStoredEndpoint
         } else {
@@ -346,33 +458,15 @@ class App extends React.Component<AppProps, AppState> {
             await this.setSummaries('getMedicationSummaries()', 'medicationSummaries', getMedicationSummaries)
             await this.setSummaries('getLabResultSummaries()', 'labResultSummaries', getLabResultSummaries)
             await this.setSummaries('getVitalSignSummaries()', 'vitalSignSummaries', getVitalSignSummaries)
-
-            // Static version:
-            // console.time('getGoalSummaries()')
-            // this.setState({ goalSummaries: getGoalSummaries(this.state.fhirData) })
-            // console.timeEnd('getGoalSummaries()')
-
-            // console.time('getConditionSummaries()')
-            // this.setState({ conditionSummaries: getConditionSummaries(this.state.fhirData) })
-            // console.timeEnd('getConditionSummaries()')
-
-            // console.time('getMedicationSummaries()')
-            // this.setState({ medicationSummaries: getMedicationSummaries(this.state.fhirData) })
-            // console.timeEnd('getMedicationSummaries()')
-
-            // console.time('getLabResultSummaries()')
-            // this.setState({ labResultSummaries: getLabResultSummaries(this.state.fhirData) })
-            // console.timeEnd('getLabResultSummaries()')
-
-            // console.time('getVitalSignSummaries()')
-            // this.setState({ vitalSignSummaries: getVitalSignSummaries(this.state.fhirData) })
-            // console.timeEnd('getVitalSignSummaries()')
         }
     }
 
     setSummaries = async (message: string, propertyName: keyof AppState, summariesProcessor: SummaryFunctionType): Promise<void> => {
         console.time(message);
         const Summaries = summariesProcessor(this.state.fhirDataCollection)
+
+        this.updateLogSummariesCount(this.state.fhirDataCollection) // Logging the count for the patient details bundle.
+
         // Timeout set to 0 makes async and defers processing until after the event loop so it doesn't block UI
         // TODO: Consider updating to a worker instead when time for a more complete solution
         //       I don't think the timeout solution is needed because we are on a loading page, and,
@@ -385,6 +479,33 @@ class App extends React.Component<AppProps, AppState> {
         })
         // }, 0)
         console.timeEnd(message)
+    }
+
+    updateLogSummariesCount = async (fhirDataCollectionCount: FHIRData[] | undefined) => {
+
+        if (fhirDataCollectionCount !== undefined) {
+            for (const dictionary of fhirDataCollectionCount) {
+                for (const key of Object.keys(dictionary)) {
+                    // Disable type checking for this line
+                    // @ts-ignore
+                    const values = dictionary[key]
+                    if (Array.isArray(values)) {
+                        const length = values.length;
+                        const request: LogRequest = {
+                            level: 'info',
+                            event: 'Summaries Loading',
+                            message: `Resource Count for ${key}: ${length}`,
+                            resourceCount: length,
+                        };
+                        doLog(request)
+                    }
+                }
+            }
+        }
+
+        else {
+            console.error("fhirDataCollectionCount is undefined");
+        }
     }
 
     getConditionAndMedicationSummariesInit = () => {
@@ -437,9 +558,33 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ tasks: undefined })
     }
 
+    setSupplementalDataClient = async (patientId: string): Promise<Client | undefined> => {
+        console.log('setSupplementalDataClient()')
+        const client = await getSupplementalDataClient(patientId)
+        // const client = await getSupplementalDataClient()
+        if (client) {
+            const stillValid = await isSavedTokenStillValid(client.state)
+            this.setState({ supplementalDataClient: client })
+            this.setState({ canShareData: stillValid })
+
+            console.log("***** PatientID = " + client.getPatientId() ?? "")
+            console.log("***** User ID = " + client.getUserId() ?? "")
+            console.log("***** Can share data = " + stillValid ?? "?")
+        }
+        return client
+    }
+
     // callback function to update progressMessage and progressValue state, and log message to console (passed to fhirService functions as arg and ProviderLogin as prop)
     setAndLogProgressState = (message: string, value: number) => {
         console.log(`ProgressMessage: ${message}`)
+        let logMessage = `ProgressMessage: ${message}`
+        let request: LogRequest = {
+            level: 'info',
+            event: 'Patient information loading',
+            page: 'Home',
+            message: logMessage,
+        }
+        doLog(request)
         this.setState({ progressMessage: message })
         this.setState({ progressValue: value })
     }
@@ -499,13 +644,66 @@ class App extends React.Component<AppProps, AppState> {
 
     }
 
+    updateLogMainTab = async (event: any, value: any) => {
+        this.setState({ mainTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+        let message = `User has visted ${tab}`;
+
+        let request: LogRequest = {
+            level: 'info',
+            event: 'Clicked',
+            page: tab,
+            message,
+        }
+        doLog(request)
+    }
+
+    updateLogPanelTab = async (event: any, value: any) => {
+        this.setState({ planTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+
+        let message = `User has visted ${tab}`;
+
+        let request: LogRequest = {
+            level: "info",
+            event: 'Clicked',
+            page: tab,
+            message,
+        }
+
+        doLog(request)
+    }
+
+    updateLogStatusTab = async (event: any, value: any) => {
+        this.setState({ statusTabIndex: value });
+
+        const key: keyof typeof tabList = value;
+        const tab = tabList[key]; // No error
+        let message = `user has visited ${tab}`;
+
+        let request: LogRequest = {
+            level: "info",
+            event: 'Clicked',
+            page: tab,
+            message,
+        }
+        doLog(request)
+
+    }
+
     public render(): JSX.Element {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("APP component RENDERED!")
 
         let patient = this.state.patientSummaries;
         let editFormData: EditFormData = {
             fhirDataCollection: this.state.fhirDataCollection,
-            patientSummaries: this.state.patientSummaries
+            patientSummaries: this.state.patientSummaries,
+            supplementalDataClient: this.state.supplementalDataClient,
+            canShareData: this.state.canShareData
         }
 
         return (
@@ -556,7 +754,7 @@ class App extends React.Component<AppProps, AppState> {
                     />
                     <Route path="/share-data">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ShareData />
+                            <ShareData fhirDataCollection={this.state.fhirDataCollection}  />
                         </SessionProtected>
                     </Route>
                     <Route path="/shared-data-summary">
@@ -567,12 +765,12 @@ class App extends React.Component<AppProps, AppState> {
 
                     <Route path="/decision">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <ScreeningDecision {...this.props}/>
+                            <ScreeningDecision {...this.props} />
                         </SessionProtected>
                     </Route>
                     <Route path="/questionnaire">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <QuestionnaireHandler {...this.props}/>
+                            <QuestionnaireHandler canShareData={this.state.canShareData} supplementalDataClient={this.state.supplementalDataClient} {...this.props} />
                         </SessionProtected>
                     </Route>
                     <Route path='/confirmation'>
@@ -589,7 +787,7 @@ class App extends React.Component<AppProps, AppState> {
                             <TabContext value={this.state.mainTabIndex}>
                                 <Box sx={{ bgcolor: '#F7F7F7', width: '100%' }}>
                                     <Paper variant="elevation" sx={{ width: '100%', maxWidth: '500px', position: 'fixed', borderRadius: 0, bottom: 0, left: 'auto', right: 'auto' }} elevation={3}>
-                                        <TabList onChange={(event, value) => this.setState({ mainTabIndex: value })} variant="fullWidth" centered sx={{
+                                        <TabList onChange={(event, value) => this.updateLogMainTab(event, value)} variant="fullWidth" centered sx={{
                                             "& .Mui-selected, .Mui-selected > svg":
                                                 { color: "#FFFFFF !important", bgcolor: "#355CA8" }
                                         }} TabIndicatorProps={{ style: { display: "none" } }}>
@@ -600,62 +798,62 @@ class App extends React.Component<AppProps, AppState> {
                                         </TabList>
                                     </Paper>
 
-                                <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
-                                    <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
-                                        progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                        errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
-                                </TabPanel>
-                                <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
-                                    <TabContext value={this.state.planTabIndex}>
-                                        <TabList onChange={(event, value) => this.setState({ planTabIndex: value })} variant="fullWidth" centered>
-                                            <Tab label="Goals" value="5" wrapped />
-                                            <Tab label="Concerns" value="6" wrapped />
-                                            <Tab label="Medications" value="7" wrapped />
-                                            <Tab label="Activities" value="8" wrapped />
-                                        </TabList>
-                                        <TabPanel value="5" sx={{ padding: '0px 15px' }}>
-                                            <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="6" sx={{ padding: '0px 15px' }}>
-                                            <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="7" sx={{ padding: '0px 15px' }}>
-                                            {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
-                                            <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummaryMatrix={this.state.medicationSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="8" sx={{ padding: '0px 15px' }}>
-                                            <ServiceRequestList fhirDataCollection={this.state.fhirDataCollection} />
-                                        </TabPanel>
-                                    </TabContext>
-                                </TabPanel>
-                                <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
-                                    <TabContext value={this.state.statusTabIndex}>
-                                        <TabList onChange={(event, value) => this.setState({ statusTabIndex: value })} variant="fullWidth" centered>
-                                            <Tab label="Tests" value="9" wrapped />
-                                            <Tab label="Vitals" value="10" wrapped />
-                                            <Tab label="Immunization" value="11" wrapped />
-                                        </TabList>
-                                        <TabPanel value="9" sx={{ padding: '0px 15px' }}>
-                                            <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummaryMatrix={this.state.labResultSummaries} />
-                                        </TabPanel>
-                                        <TabPanel value="10" sx={{ padding: '0px 15px' }}>
-                                            <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummaryMatrix={this.state.vitalSignSummaries} />
-                                        </TabPanel>
-                                        {/* <TabPanel>
+                                    <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
+                                        <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
+                                            progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
+                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
+                                    </TabPanel>
+                                    <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
+                                        <TabContext value={this.state.planTabIndex}>
+                                            <TabList onChange={(event, value) => this.updateLogPanelTab(event, value)} variant="fullWidth" centered>
+                                                <Tab label="Goals" value="5" wrapped />
+                                                <Tab label="Concerns" value="6" wrapped />
+                                                <Tab label="Medications" value="7" wrapped />
+                                                <Tab label="Activities" value="8" wrapped />
+                                            </TabList>
+                                            <TabPanel value="5" sx={{ padding: '0px 15px' }}>
+                                                <GoalList fhirDataCollection={this.state.fhirDataCollection} goalSummaryMatrix={this.state.goalSummaries} canShareData={this.state.canShareData} />
+                                            </TabPanel>
+                                            <TabPanel value="6" sx={{ padding: '0px 15px' }}>
+                                                <ConditionList fhirDataCollection={this.state.fhirDataCollection} conditionSummaryMatrix={this.state.conditionSummaries} canShareData={this.state.canShareData} />
+                                            </TabPanel>
+                                            <TabPanel value="7" sx={{ padding: '0px 15px' }}>
+                                                {/* <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummary={this.state.medicationSummary} /> */}
+                                                <MedicationList fhirDataCollection={this.state.fhirDataCollection} medicationSummaryMatrix={this.state.medicationSummaries} />
+                                            </TabPanel>
+                                            <TabPanel value="8" sx={{ padding: '0px 15px' }}>
+                                                <ServiceRequestList fhirDataCollection={this.state.fhirDataCollection} />
+                                            </TabPanel>
+                                        </TabContext>
+                                    </TabPanel>
+                                    <TabPanel value="3" sx={{ padding: '0px 0px 100px' }}>
+                                        <TabContext value={this.state.statusTabIndex}>
+                                            <TabList onChange={(event, value) => this.updateLogStatusTab(event, value)} variant="fullWidth" centered>
+                                                <Tab label="Tests" value="9" wrapped />
+                                                <Tab label="Vitals" value="10" wrapped />
+                                                <Tab label="Immunization" value="11" wrapped />
+                                            </TabList>
+                                            <TabPanel value="9" sx={{ padding: '0px 15px' }}>
+                                                <LabResultList fhirDataCollection={this.state.fhirDataCollection} labResultSummaryMatrix={this.state.labResultSummaries} />
+                                            </TabPanel>
+                                            <TabPanel value="10" sx={{ padding: '0px 15px' }}>
+                                                <VitalsList fhirDataCollection={this.state.fhirDataCollection} vitalSignSummaryMatrix={this.state.vitalSignSummaries} />
+                                            </TabPanel>
+                                            {/* <TabPanel>
                                             <h4 className="title">Assessment Results</h4>
                                             <p>Coming soon...</p>
                                         </TabPanel> */}
-                                        <TabPanel value="11">
-                                            <ImmunizationList fhirDataCollection={this.state.fhirDataCollection} />
-                                        </TabPanel>
-                                    </TabContext>
-                                </TabPanel>
-                                <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
-                                    <CareTeamList fhirDataCollection={this.state.fhirDataCollection} />
-                                </TabPanel>
-                            </Box>
-                        </TabContext>
-		    </SessionProtected>
+                                            <TabPanel value="11">
+                                                <ImmunizationList fhirDataCollection={this.state.fhirDataCollection} />
+                                            </TabPanel>
+                                        </TabContext>
+                                    </TabPanel>
+                                    <TabPanel value="4" sx={{ padding: '10px 15px 100px' }}>
+                                        <CareTeamList fhirDataCollection={this.state.fhirDataCollection} />
+                                    </TabPanel>
+                                </Box>
+                            </TabContext>
+                        </SessionProtected>
                     </Route>
                 </Switch>
 

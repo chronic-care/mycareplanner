@@ -18,25 +18,21 @@ import { createSharedDataResource } from '../../data-services/fhirService';
 export default function ConditionEditForm(formData?: EditFormData) {
   let history = useHistory()
   // const id = useParams();
-  const [description, setDescription] = React.useState<string | null>('');
-  const [onsetDate, setStartDate] = React.useState<Date | null>(null);
+  const [description, setDescription] = React.useState<string | null>('')
+  const [onsetDate, setStartDate] = React.useState<Date | null>(null)
 
-  // TODO:MULTI-PROVIDER Make fhirDataCollection[0] make sense for a collection instead of just first available index...
-  const fhirDataCollection = formData?.fhirDataCollection
-  const patients = formData?.patientSummaries
-  const hasPatientId = fhirDataCollection && fhirDataCollection[0]?.patient?.id !== undefined;
-  const hasUserId = fhirDataCollection && fhirDataCollection[0]?.fhirUser?.id !== undefined;
+  const patientID = formData?.supplementalDataClient?.getPatientId()
+  const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
+  const fhirUser = formData?.supplementalDataClient?.getFhirUser()
+  const userName: string | null = null   // TODO: find user with matching ID from formData?patientSummaries or CareTeam
 
-  const subjectRef = hasPatientId ? {
-    reference: 'Patient/' + (fhirDataCollection && fhirDataCollection[0]?.patient?.id),
-    display: (patients && patients[0]) ?
-      patients[0]?.fullName : 'Unknown name' // TODO:MULTI-PROVIDER: Support all patiens in array vs just picking 1st index
+  const subjectRef = patientID != null ? {
+    reference: 'Patient/' + patientID,
+    display: (patientName) ? patientName : undefined
   } : undefined
-  const recorderRef = hasUserId ? {
-    reference: fhirDataCollection && (fhirDataCollection[0]?.fhirUser?.resourceType + '/' + fhirDataCollection[0]?.fhirUser?.id),
-    display: (fhirDataCollection && (fhirDataCollection[0]?.caregiverName as string)) ??
-      ((patients && patients[0]) ?
-        patients[0]?.fullName : 'Unknown name') // TODO:MULTI-PROVIDER: Support all patiens in array vs just picking 1st index
+  var recorderRef = fhirUser != null ? {
+    reference: fhirUser!,
+    display: (userName) ? userName : undefined
   } : undefined
 
   const clinicalStatus = {

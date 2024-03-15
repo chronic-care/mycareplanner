@@ -31,7 +31,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = (props: ErrorMessagePro
   return (
     <>
       {
-        ((props.userErrorMessage && props.errorType === TERMINATING) || process.env.REACT_APP_SHOW_LINK_TO_PROVIDER_LOGIN_ON_LAUNCH === 'true') &&
+        process.env.REACT_APP_SHOW_LINK_TO_PROVIDER_LOGIN_ON_LAUNCH === 'true' &&
         <>
           <p className={BLACK}><b>Navigate</b></p>
           <Link to={{

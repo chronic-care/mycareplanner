@@ -2,23 +2,37 @@ import '../../Home.css';
 import React from 'react';
 import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
 import { ServiceRequest, TimingRepeat } from '../../data-services/fhir-types/fhir-r4';
-import { Summary, SummaryRowItems } from './Summary';
+import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 
 interface ServiceRequestListProps {
-  // TODO:MULTI-PROVIDER Make fhirDataCollection make sense for a collection.
-  // Note: 1 index was added (noted where added)
   fhirDataCollection?: FHIRData[],
 }
 
 export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!")
 
-  // TODO:MULTI-PROVIDER index added on next line but need to support full collection
-  let serviceRequests = props.fhirDataCollection && props.fhirDataCollection[0]?.serviceRequests
+  let serviceRequests: ServiceRequest[] = [];
+  let hashMap = new Map<ServiceRequest, string>();
+
+  // Extracting serviceRequests from all fhirDataCollection entries
+  if (props.fhirDataCollection) {
+    props.fhirDataCollection.forEach(data => {
+      if (data.serviceRequests) {
+        serviceRequests = serviceRequests.concat(data.serviceRequests);
+
+        if (data.serverName) {
+          data.serviceRequests.forEach((sr) => { hashMap.set(sr,data.serverName!);}  );
+        } else {
+          data.serviceRequests.forEach((sr) => { hashMap.set(sr,'');}  );
+        }
+      
+      }
+    });
+  }
 
   // Sort by descending occurrenceTiming start date
-  serviceRequests?.sort((sr1, sr2) => {
+  serviceRequests.sort((sr1, sr2) => {
     let sr1BoundsPeriod = (sr1.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
     let sr1StartDate = sr1BoundsPeriod?.start !== undefined ? new Date(sr1BoundsPeriod.start) : undefined
     let sr2BoundsPeriod = (sr2.occurrenceTiming?.repeat as TimingRepeat)?.boundsPeriod
@@ -37,7 +51,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
       return -1;
     }
     return 0;
-  })
+  });
 
   return (
     <div className="home-view">
@@ -56,7 +70,7 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
           :
           <>
             {serviceRequests?.map((service, idx) => (
-              <Summary key={idx} id={idx} rows={buildRows(service)} />
+              <Summary key={idx} id={idx} rows={buildRows(service, hashMap.get(service)   )} />
             ))}
           </>
         }
@@ -64,10 +78,9 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
       </div>
     </div>
   )
-
 }
 
-const buildRows = (service: ServiceRequest): SummaryRowItems => {
+const buildRows = (service: ServiceRequest, theSource?:string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -113,6 +126,14 @@ const buildRows = (service: ServiceRequest): SummaryRowItems => {
   if (notes?.length) {
     rows = rows.concat(notes)
   }
-
+  if (theSource) {
+    const rowItem: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: "From " + theSource,
+      data2: '',
+    };
+    rows.push(rowItem);
+  }
   return rows
 }

@@ -13,8 +13,13 @@ const cernerScopeUSCDI = "launch/patient openid fhirUser offline_access patient/
 const cernerScopePilot = process.env.REACT_APP_CERNER_SANDBOX_ENDPOINT_SCOPE
 
 const nextgenScope = "launch launch/patient openid fhirUser offline_access patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
+const meldScope = "patient/Goal.write patient/Practitioner.read patient/CareTeam.read launch/patient patient/Questionnaire.read openid patient/Goal.read patient/Immunization.read launch patient/ServiceRequest.read patient/Procedure.read fhirUser patient/RelatedPerson.read patient/Provenance.read patient/MedicationRequest.read patient/Task.read patient/Patient.read patient/DiagnosticReport.read patient/Condition.write patient/Condition.read patient/QuestionnaireResponse.write patient/MedicationRequest.write patient/Observation.read patient/CarePlan.read"
 
-FHIR.oauth2.authorize([
+
+const meldmatch = "https://gw.interop.community/"+process.env.REACT_APP_MELD_SANDBOX_NAME+"/data"
+
+ 
+const availableEndpoints = [
     {
         // OHSU FHIR dev
         issMatch: /\bepicmobile.ohsu.edu\/FHIRDEV\b/i,
@@ -30,32 +35,11 @@ FHIR.oauth2.authorize([
         scope: epicPilotScope
     },
     {
-        // Meld CarePlanning QA sandbox
-        issMatch: /\bgw.interop.community\/CarePlanningQA\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_qa,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
-    },
-    {
         // Meld Synthea test data sandbox
-        issMatch: /\bgw.interop.community\/SyntheaTest8\b/i,
+        issMatch: iss => iss.startsWith(meldmatch),
         redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_synthea,
-        scope: "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write"
-    },
-    {
-        // Meld MCC CarePlanning sandbox
-        issMatch: /\bgw.interop.community\/CarePlanning\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_mcc,
-        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
-    },
-    {
-        // Meld CHC Pilot Test sandbox
-        issMatch: /\bgw.interop.community\/CHCPilotTest\b/i,
-        redirectUri: "./index.html",
-        clientId: process.env.REACT_APP_CLIENT_ID_meld_chc,
-        scope: process.env.REACT_APP_MELD_SANDBOX_SCOPE
+        clientId: process.env.REACT_APP_MELD_SANDBOX_CLIENT_ID,
+        scope:meldScope
     },
     {
         // Logica sandbox
@@ -139,21 +123,18 @@ FHIR.oauth2.authorize([
         scope: process.env.REACT_APP_EPIC_SANDBOX_ENDPOINT_SCOPE,
         pkceMode: "unsafeV1"
     }
+]
 
-    /*
-    {
-        // This config will be used if the ISS is local
-        issMatch: iss => iss.startsWith("http://localhost") || iss.startsWith("http://127.0.0.1"),
+if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID 
+        && process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE) {
+    availableEndpoints.push(
+      {
+        issMatch: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
         redirectUri: "./index.html",
-        clientId: "my_local_client_id",
-        scope: "...",
-        patientId: "123", // include if you want to emulate selected patient ID
-        encounterId: "234", // include if you want to emulate selected encounter ID
-        launch: "whatever",
-        fakeTokenResponse: { // include if you want to emulate current user
-            // We are only parsing the JWT body so tokens can be faked like so
-            id_token: `fakeToken.${btoa('{"profile":"Practitioner/345"}')}.`
-        }
-    }
-    */
-])
+        clientId: process.env.REACT_APP_SHARED_DATA_CLIENT_ID,
+        scope: process.env.REACT_APP_SHARED_DATA_SCOPE
+      }
+    )
+  }
+
+FHIR.oauth2.authorize(availableEndpoints)

@@ -43,7 +43,7 @@ const SessionTimeOutHandler = (props: SessionTimeOutHandlerProps) => {
     }, [isLogout, props])
 
     const eventHandler = useCallback((eventType) => {
-        console.log({ eventType })
+        process.env.REACT_APP_LOG_EVENTS === "true" && console.log({ eventType })
 
         if (!isLogout) {
             localStorage.setItem('lastInteractionTime', moment().toString())

@@ -8,6 +8,7 @@ import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSumm
 import { CircularProgress } from '@mui/material';
 import { DeterminateProgress } from './components/determinate-progress/DeterminateProgress';
 import { ErrorMessage } from './components/error-message/ErrorMessage';
+import Modal from './components/modal/modal';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
@@ -27,6 +28,7 @@ interface HomeProps {
 }
 
 interface HomeState {
+  isModalVisible: boolean;
 }
 
 export default class Home extends React.Component<HomeProps, HomeState> {
@@ -34,12 +36,25 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   constructor(props: HomeProps) {
     super(props);
     this.state = {
+      // isModalVisible: true
+      isModalVisible: !sessionStorage.getItem('hasSeenModal'),
     };
+    console.log('Initial isModalVisible:', this.state.isModalVisible);
   }
+
+  closeModal = () => {
+    // Set isModalVisible to true when the user clicks the X button
+    console.log("closing modal here ....", this.state.isModalVisible)
+    this.setState({ isModalVisible: false });
+  };
 
   // TODO:MULTI-PROVIDER: Update view to itterate fhirDataCollection if needed
   // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
+
+    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT;
+  
+
     let fhirDataCollection = this.props.fhirDataCollection
     let patients = this.props.patientSummaries;
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
@@ -47,8 +62,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
     return (
       <div className="home-view">
+        <Modal isVisible={this.state.isModalVisible} closeModal={this.closeModal} />
         <div className="welcome">
-
           {
             (this.props.errorType !== 'Terminating') &&
             <>
@@ -56,7 +71,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               <p>My Care Planner is a tool to help you and your care team work together to keep you healthy. It is a completely personalized way to see what steps you’ve already taken and what else you can do to check for and prevent illnesses.</p>
             </>
           }
-
           {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' :
             <p className="subheadline">Caregiver <b>{fhirDataCollection && fhirDataCollection[0]?.caregiverName}</b></p>
           }
@@ -73,11 +87,19 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                   :
                   <ol>
                     {patients.map((curPatient, index) => {
+                      // only display (unique) patients that aren't from SDS
+                      // if (fhirDataCollection && (!fhirDataCollection[index].isSDS)) {
                       return (
                         <li key={index}>
-                          <b>{curPatient?.fullName}</b> (age {curPatient?.age})
+                          {
+                            fhirDataCollection && fhirDataCollection[index].isSDS ?
+                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </> :
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection![index].serverName} </>
+                            // TODO: Consider adding an isLauncher option (need to add to datatype first)
+                          }
                         </li>
                       )
+                      // }
                     })}
                   </ol>
               }
@@ -153,17 +175,25 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               </ul>
             }
 
-            <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
-            <Link to={{
-              pathname: '/provider-login',
-              state: {
-                fhirDataCollection: this.props.fhirDataCollection
-              }
-            }}>Retrieve records from other healthcare providers</Link>
-            {/*
-            <br /><Link to={{ pathname: '/share-data' }}>Share your health data</Link>
-            <br /><Link to={{ pathname: '/shared-data-summary' }}>Summary of shared health data</Link>
-            */}
+ 
+
+            <div>
+             
+                <p>
+                  <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
+                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Retrieve records from additional healthcare providers</Link>
+                </p>
+             
+            </div>
+ 
+
+            <div>
+              {typeof sdsurl !== 'undefined' ? (
+                <p>
+                  <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
+                  <Link to={{ pathname: '/share-data' }}>Share your health data</Link></p>
+              ) : (<p></p>)}
+            </div>
 
             <h5 style={{ paddingTop: '20px' }}>Disclaimer</h5>
             <p>This application is provided for informational purposes only and does not constitute medical advice or professional services. The information provided should not be used for diagnosing or treating a health problem or disease, and those seeking personal medical advice should consult with a licensed physician. Always seek the advice of your doctor or other qualified health provider regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read in this application. If you think you may have a medical emergency, call 911 or go to the nearest emergency room immediately. No physician-patient relationship is created by this application or its use. Neither OHSU, nor its employees, nor any contributor to this application, makes any representations, express or implied, with respect to the information herein or to its use.</p>

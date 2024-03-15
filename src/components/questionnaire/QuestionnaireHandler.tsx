@@ -6,15 +6,16 @@ import { InfoModal } from '../info-modal/InfoModal';
 import QuestionnaireComponent from './QuestionnaireComponent';
 import { Questionnaire, QuestionnaireResponse, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
 import { submitQuestionnaireResponse, getLocalQuestionnaire } from '../../data-services/questionnaireService';
-import { PatientSummary } from '../../data-services/models/cqlSummary';
+import Client from 'fhirclient/lib/Client'
 
 interface QuestionnaireHandlerProps {
-  history?: any
+  history?: any,
+  canShareData?: boolean,
+  supplementalDataClient?: Client,
 }
 
 interface QuestionnaireHandlerState {
   questionnaireId?: string,
-  patientSummary?: PatientSummary,
 
   showModal: Boolean,
   busy: Boolean,
@@ -68,10 +69,20 @@ export class QuestionnaireHandler extends React.Component<QuestionnaireHandlerPr
         }
         let updatedQuestionnaire = processQuestionnaire(questionnaire);
 
-        let ptRef = "Patient/" + this.state.patientSummary?.patientId ?? "unknown"
-        let ptDisplay = String(this.state.patientSummary?.fullName)
-        this.selectQuestionnaire(updatedQuestionnaire, ptRef, ptDisplay);
+        const patientID = this.props.supplementalDataClient?.getPatientId()
+        let ptRef = patientID != null ? "Patient/" + patientID : undefined
+        const ptDisplay: string | undefined = undefined   // TODO: find patient with matching ID from patientSummaries
 
+        const authorRef = this.props.supplementalDataClient?.getFhirUser() ?? undefined
+        const authorName: string | undefined = undefined   // TODO: find user with matching ID from formData?patientSummaries or CareTeam
+
+        // TODO: display error in a way that does not prevent presenting questionnaires for demo, but warns that results are not saved.
+        // if (ptRef === undefined ) {
+        //   let message = 'Patient ID is not available: ' + this.props.supplementalDataClient?.getPatientId()
+        //   throw Error(message)
+        // }
+
+        this.selectQuestionnaire(updatedQuestionnaire, ptRef, ptDisplay, authorRef, authorName);
         this.startQuestionnaire()
 
       }).catch(error => {
@@ -81,7 +92,7 @@ export class QuestionnaireHandler extends React.Component<QuestionnaireHandlerPr
       })
   }
 
-  selectQuestionnaire(selectedQuestionnaire: Questionnaire, ptRef: string, ptDisplay: string): void {
+  selectQuestionnaire(selectedQuestionnaire: Questionnaire, ptRef?: string, ptDisplay?: string, authorRef?: string, authorName?: string): void {
     this.setState({
       selectedQuestionnaire: selectedQuestionnaire,
       questionnaireResponse: {
@@ -90,6 +101,10 @@ export class QuestionnaireHandler extends React.Component<QuestionnaireHandlerPr
         subject: {
           reference: ptRef,
           display: ptDisplay
+        },
+        author: {
+          reference: authorRef,
+          display: authorName
         },
         item: []
       }

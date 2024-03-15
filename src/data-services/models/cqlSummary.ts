@@ -1,4 +1,5 @@
 import { FHIRData } from './fhirResources';
+import Client from 'fhirclient/lib/Client'
 
 export interface CQLLibrary {
   // cql.Library reference
@@ -9,7 +10,9 @@ export interface CQLLibrary {
 
 export interface EditFormData {
   fhirDataCollection?: FHIRData[],
-  patientSummaries?: PatientSummary[]
+  patientSummaries?: PatientSummary[],
+  supplementalDataClient?: Client,
+  canShareData?: boolean
 }
 
 export interface SummaryData {
