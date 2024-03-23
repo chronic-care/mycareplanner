@@ -180,6 +180,7 @@ export const supplementalDataIsAvailable = (): Boolean => {
 // Original
 // export const getSupplementalDataClient = async (): Promise<Client | undefined> => {
 export const getSupplementalDataClient = async (patientId: string | null): Promise<Client | undefined> => {
+  console.log('getSupplementalDataClient Start');
   let sdsClient: Client | undefined
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
   const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
@@ -187,21 +188,27 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
   const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
   if (sdsClientId && sdsURL) {
+    console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')     
     const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
       await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
     if (sdsFhirAccessDataObject) {
       sdsClient = FHIR.client(sdsFhirAccessDataObject)
     }
   }
+
   else if (authURL && sdsURL && sdsScope) {
-  console.log('authURL: ', authURL)
-  console.log('sdsURL: ', sdsURL)
-  console.log('sdsScope: ', sdsScope)
+    console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
+
+  console.log('getSupplementalDataClient authURL: ', authURL)
+  console.log('getSupplementalDataClient sdsURL: ', sdsURL)
+  console.log('getSupplementalDataClient sdsScope: ', sdsScope)
 
     const authFhirAccessDataObject: fhirclient.ClientState | undefined =
       await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
+
+      console.log('getSupplementalDataClient found extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint using '  + authURL); 
     if (authFhirAccessDataObject) {
-      console.log("authFhirAccessDataObject is truthy")
+      console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
       // Replace the serverURL and client scope with Shared Data endpoint and scope
       var sdsFhirAccessDataObject = authFhirAccessDataObject
       sdsFhirAccessDataObject.serverUrl = sdsURL
@@ -209,16 +216,17 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
       if (sdsFhirAccessDataObject.tokenResponse) {
         sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
       }
-      console.log("getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
+      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
       // Connect to the client
       sdsClient = FHIR.client(sdsFhirAccessDataObject)
-      console.log("FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
+      console.log("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
     }
     else {
       console.warn("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
     }
   }
 
+  console.log('getSupplementalDataClient End');
   return sdsClient
 }
 
