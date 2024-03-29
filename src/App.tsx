@@ -791,10 +791,10 @@ class App extends React.Component<AppProps, AppState> {
                                             "& .Mui-selected, .Mui-selected > svg":
                                                 { color: "#FFFFFF !important", bgcolor: "#355CA8" }
                                         }} TabIndicatorProps={{ style: { display: "none" } }}>
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon />} label="Home" value="1" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon />} label="Care Plan" value="2" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon />} label="Health Status" value="3" wrapped />
-                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon />} label="Team" value="4" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<HomeIcon sx={{color: 'black'}} />} label="Home" value="1" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<ContentPasteIcon  sx={{color: 'black'}}/>} label="Care Plan" value="2" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<LineAxisIcon  sx={{color: 'black'}}/>} label="Health Status" value="3" wrapped />
+                                            <Tab sx={{ textTransform: 'none', margin: '-5px 0px' }} icon={<PeopleIcon sx={{color: 'black'}} />} label="Team" value="4" wrapped />
                                         </TabList>
                                     </Paper>
 
