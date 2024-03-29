@@ -39,8 +39,8 @@ const extractConditionSummary = (fhirData?: FHIRData): ConditionSummary[] | unde
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccConditionsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL Results in extractConditionSummary: " + JSON.stringify(extractedSummary))
-  console.log("ConditionSummary: ", extractedSummary.ConditionSummary)
+  // console.log("CQL Results in extractConditionSummary: " + JSON.stringify(extractedSummary))
+  // console.log("ConditionSummary: ", extractedSummary.ConditionSummary)
   return extractedSummary.ConditionSummary
 }
 export const getConditionSummaries = (fhirDataCollection?: FHIRData[]): ConditionSummary[][] | undefined => {
@@ -65,8 +65,8 @@ const extractGoalSummary = (fhirData?: FHIRData): GoalSummary[] | undefined => {
   const patientSource = getPatientSource(fhirData!)
   const extractedSummary = executeLibrary(mccGoalsLibrary, mccCodeService, patientSource)
 
-  console.log("CQL extractedSummary: ", extractedSummary)
-  console.log("CQL extractedSummary.GoalSummary: ", extractedSummary.GoalSummary)
+  // console.log("CQL extractedSummary: ", extractedSummary)
+  // console.log("CQL extractedSummary.GoalSummary: ", extractedSummary.GoalSummary)
   return extractedSummary.GoalSummary
 }
 export const getGoalSummaries = (fhirDataCollection?: FHIRData[]): GoalSummary[][] | undefined => {

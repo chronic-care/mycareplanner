@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './modal.css';
+import Box from '@mui/material/Box';
+
 
 interface ModalProps {
     isVisible: boolean;
