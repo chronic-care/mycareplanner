@@ -113,7 +113,7 @@ h3 {
 }
 
 svg path {
-    fill: rgba(var(--color-dark), 1) !important;
+    /* fill: rgba(var(--color-dark), 1) !important; */
 }
 
 .patient-container {

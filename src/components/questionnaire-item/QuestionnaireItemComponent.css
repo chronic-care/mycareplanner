@@ -24,6 +24,20 @@
     font-weight: bold;
 }
 
+.exit-button {
+    width: 40%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+.custom-modal .modal-content {
+    width: 92%;
+  }
+  
+
 .btn-outline-secondary {
     color: var(--color-dark);
     border-color: var(--color-dark);
