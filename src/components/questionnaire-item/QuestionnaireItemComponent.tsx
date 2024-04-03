@@ -12,7 +12,6 @@ import YouTube from 'react-youtube';
 import 'react-circular-progressbar/dist/styles.css'
 // import { isNullOrUndefined } from 'util';
 import Grid from '@mui/material/Grid';
-import { useHistory } from 'react-router-dom';
 
 interface QuestionnaireItemState {
   showReview: boolean,
