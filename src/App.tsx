@@ -724,7 +724,8 @@ class App extends React.Component<AppProps, AppState> {
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
                     <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/ecareplan-logo.png`} alt="My Care Planner" />
-                    {patient === undefined ? '' : <p>&npsp;&npsp;{patient[0]?.fullName}</p>}
+                    {/* {patient === undefined ? '' : <p>&npsp;&npsp;{patient[0]?.fullName}</p>} */}
+                    <p className='version'>{process.env.REACT_APP_VERSION}</p>
                 </header>
 
                 <Switch>
