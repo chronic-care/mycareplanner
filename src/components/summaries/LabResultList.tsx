@@ -1,10 +1,11 @@
 import '../../Home.css';
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
+import { SortModal } from '../sort-modal/sortModal';
 
 interface LabResultListProps {
   fhirDataCollection?: FHIRData[],
@@ -16,8 +17,102 @@ interface LabResultListState {
 
 export const LabResultList: React.FC<LabResultListProps> = (props: LabResultListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("LabResultList component RENDERED!")
-
+  const [showModal, setShowModal] = useState(false);
+  const [sortingOption, setSortingOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string>('');
+  const [sortedAndFilteredMatrix,setSortedAndFilteredMatrix] = useState<ObservationSummary[][] | undefined>();
+  const [filteringOptions, setFilteringOptions] = useState<{value: string; label: string}[]>([]);
+  
   const labResMatrix: ObservationSummary[][] | undefined = props.labResultSummaryMatrix
+
+  useEffect(() => {
+    applySortingAndFiltering();
+  }, [props.labResultSummaryMatrix, sortingOption, filteringOption]);
+
+  useEffect(() => {
+    if (props.labResultSummaryMatrix) {
+      generateFilteringOptions();
+    }
+  }, [props.labResultSummaryMatrix]);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+    setSortingOption(sortOption);
+    setFilteringOption(filterOption);
+    setShowModal(false);
+  };
+
+  const generateFilteringOptions = () => {
+    if (!props.labResultSummaryMatrix) return;
+
+    const provenanceValues: string[] = [];
+
+    props.labResultSummaryMatrix.forEach(providerObservations => {
+      providerObservations.forEach(observation => {
+        observation.Provenance?.forEach(provenance => {
+          if (provenance.Transmitter) {
+            provenanceValues.push(provenance.Transmitter);
+          }
+        });
+      });
+    });
+
+    const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
+
+    const options = uniqueProvenanceValues.map(value => ({
+      value: value,
+      label: value
+    }));
+
+    setFilteringOptions(options);
+  };
+
+  const applySortingAndFiltering = () => {
+    if (!props.labResultSummaryMatrix) return;
+
+    let sortedMatrix = props.labResultSummaryMatrix;
+    if (sortingOption === 'alphabetical-az') {
+      sortedMatrix = props.labResultSummaryMatrix.map(providerObservations =>
+        [...providerObservations].sort((a, b) =>
+          (a.DisplayName ?? '').localeCompare(b.DisplayName ?? '')
+        )
+      );
+    } else if (sortingOption === 'alphabetical-za') {
+      sortedMatrix = props.labResultSummaryMatrix.map(providerObservations =>
+        [...providerObservations].sort((a, b) =>
+          (b.DisplayName ?? '').localeCompare(a.DisplayName ?? '')
+        )
+      );
+    } else if (sortingOption === 'newest') {
+      sortedMatrix = props.labResultSummaryMatrix.map(providerObservations =>
+        [...providerObservations].sort((a, b) =>
+          (b.Date ?? '').localeCompare(a.Date ?? '')
+        )
+      );
+    } else if (sortingOption === 'oldest') {
+      sortedMatrix = props.labResultSummaryMatrix.map(providerObservations =>
+        [...providerObservations].sort((a, b) =>
+          (a.Date ?? '').localeCompare(b.Date ?? '')
+        )
+      );
+    }
+
+    let filteredMatrix = sortedMatrix;
+    if (filteringOption) {
+      filteredMatrix = sortedMatrix.map(providerObservations =>
+        providerObservations.filter(observation =>
+          observation.Provenance?.some(
+            provenance => provenance.Transmitter === filteringOption
+          )
+        )
+      );
+    }
+
+    setSortedAndFilteredMatrix(filteredMatrix);
+  };
 
   return (
     <div className="home-view">
@@ -31,8 +126,26 @@ export const LabResultList: React.FC<LabResultListProps> = (props: LabResultList
           </>
         }
 
+        <a className="text-right" onClick={() => setShowModal(true)}>
+          SORT/FILTER
+        </a>
+        {showModal ? (
+          <SortModal
+            showModal={showModal}
+            closeModal={closeModal}
+            onSubmit={handleSortFilterSubmit}
+            sortingOptions={[
+              { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+              { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+              { value: 'newest', label: 'Date: Newest' },
+              { value: 'oldest', label: 'Date: Oldest' }
+            ]}
+            filteringOptions={filteringOptions}
+          />
+        ) : null}
+
         {
-          labResMatrix?.map((labResultSummary, index) => {
+          sortedAndFilteredMatrix?.map((labResultSummary, index) => {
 
             return (
               <div key={'outerArray-' + index}>

@@ -1,10 +1,11 @@
 import '../../Home.css';
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
+import { SortModal } from '../sort-modal/sortModal';
 
 interface ConditionListProps {
   fhirDataCollection?: FHIRData[],
@@ -17,10 +18,115 @@ interface ConditionListState {
 
 export const ConditionList: React.FC<ConditionListProps> = (props: ConditionListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ConditionList component RENDERED!")
-
+  const [showModal, setShowModal] = useState(false);
+  const [sortingOption, setSortingOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string>('');
+  const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<ConditionSummary[][] | undefined>();
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
   const conSumMatrix: ConditionSummary[][] | undefined = props.conditionSummaryMatrix
 
- 
+  useEffect(() => {
+    applySortingAndFiltering();
+  }, [props.conditionSummaryMatrix, sortingOption, filteringOption]);
+
+  useEffect(() => {
+    if (props.conditionSummaryMatrix) {
+      generateFilteringOptions();
+    }
+  }, [props.conditionSummaryMatrix]);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+    setSortingOption(sortOption);
+    setFilteringOption(filterOption);
+    setShowModal(false);
+  };
+
+  const generateFilteringOptions = () => {
+    if (!props.conditionSummaryMatrix) return;
+
+    const provenanceValues: string[] = [];
+
+    props.conditionSummaryMatrix.forEach(conditionSummaries => {
+      conditionSummaries.forEach(condition => {
+        condition.Provenance?.forEach(provenance => {
+          if (provenance.Transmitter) {
+            provenanceValues.push(provenance.Transmitter);
+          }
+        });
+      });
+    });
+
+    const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
+
+    const options = uniqueProvenanceValues.map(value => ({
+      value: value,
+      label: value,
+    }));
+
+    setFilteringOptions(options);
+  };
+
+  const applySortingAndFiltering = () => {
+    if (!props.conditionSummaryMatrix) return;
+
+    let sortedMatrix = props.conditionSummaryMatrix;
+    if (sortingOption === 'alphabetical-az') {
+      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
+        [...conditionSummaries].sort((a, b) => {
+          const nameA = a.CommonName ?? a.ConceptName ?? 'Missing Condition Name';
+          const nameB = b.CommonName ?? b.ConceptName ?? 'Missing Condition Name';
+          return nameA.localeCompare(nameB);
+        })
+      );
+    } else if (sortingOption === 'alphabetical-za') {
+      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
+        [...conditionSummaries].sort((a, b) => {
+          const nameA = a.CommonName ?? a.ConceptName ?? 'Missing Condition Name';
+          const nameB = b.CommonName ?? b.ConceptName ?? 'Missing Condition Name';
+          return nameB.localeCompare(nameA);
+        })
+      );
+    } else if (sortingOption === 'newest') {
+      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
+        [...conditionSummaries].sort((a, b) => {
+          if (a.OnsetDate && b.OnsetDate) {
+            return b.OnsetDate.localeCompare(a.OnsetDate);
+          } else if (!a.OnsetDate) {
+            return 1;
+          } else {
+            return -1;
+          }
+        })
+      );
+    } else if (sortingOption === 'oldest') {
+      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
+        [...conditionSummaries].sort((a, b) => {
+          if (a.OnsetDate && b.OnsetDate) {
+            return a.OnsetDate.localeCompare(b.OnsetDate);
+          } else if (!a.OnsetDate) {
+            return -1;
+          } else {
+            return 1;
+          }
+        })
+      );
+    }
+
+    let filteredMatrix = sortedMatrix;
+    if (filteringOption) {
+      filteredMatrix = sortedMatrix.map(conditionSummaries =>
+        conditionSummaries.filter(condition =>
+          condition.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
+        )
+      );
+    }
+
+    setSortedAndFilteredMatrix(filteredMatrix);
+  };
 
   return (
     <div className="home-view">
@@ -37,9 +143,25 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
         {props.canShareData
           ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirDataCollection } }}>Add a Health Concern</Link></p>
           : <p />}
-
+        <a className="text-right" onClick={() => setShowModal(true)}>
+          SORT/FILTER
+        </a>
+        {showModal ? (
+          <SortModal
+            showModal={showModal}
+            closeModal={closeModal}
+            onSubmit={handleSortFilterSubmit}
+            sortingOptions={[
+              { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+              { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+              { value: 'newest', label: 'Date Asserted: Newest' },
+              { value: 'oldest', label: 'Date Asserted: Oldest' },
+            ]}
+            filteringOptions={filteringOptions}
+          />
+        ) : null}
         {
-          conSumMatrix?.map((conditionSummary, index) => {
+          sortedAndFilteredMatrix?.map((conditionSummary, index) => {
 
             return (
               <div key={'outerArray-' + index}>
