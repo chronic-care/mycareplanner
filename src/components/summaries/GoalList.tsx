@@ -1,24 +1,144 @@
 import '../../Home.css';
-import React from 'react';
+import React , { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
-
+import { SortModal } from '../sort-modal/sortModal';
+import { Button } from '@mui/material';
 interface GoalListProps {
   fhirDataCollection?: FHIRData[],
   goalSummaryMatrix?: GoalSummary[][],
   canShareData?: boolean,
 }
 
-interface GoalListState {
-}
-
 export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
+  const [showModal, setShowModal] = useState(false);
+  const [sortingOption, setSortingOption] = useState<string>(''); // State for sorting option
+  const [filteringOption, setFilteringOption] = useState<string>(''); // State for filtering option
+  const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<GoalSummary[][] | undefined>();
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   const goalSumMatrix: GoalSummary[][] | undefined = props.goalSummaryMatrix
+
+  useEffect(() => {
+    applySortingAndFiltering();
+  }, [goalSumMatrix, sortingOption, filteringOption]);
+
+  useEffect(() => {
+    if (goalSumMatrix) {
+        generateFilteringOptions();
+    }
+}, [goalSumMatrix]);
+
+  const closeModal = ()=>{
+    setShowModal(false)
+  }
+
+  const handleSortFilterSubmit = (sortOption: string,  filterOption: string) => {
+    setSortingOption(sortOption);
+    setFilteringOption(filterOption);
+    setShowModal(false);
+  };
+
+  const generateFilteringOptions = () => {
+    if (!goalSumMatrix) return;
+
+    const provenanceValues: string[] = [];
+
+    goalSumMatrix.forEach(providerGoals => {
+        providerGoals.forEach(goal => {
+            goal.Provenance?.forEach(provenance => {
+                if (provenance.Transmitter) {
+                    provenanceValues.push(provenance.Transmitter);
+                }
+            });
+        });
+    });
+
+    const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
+
+    const options = uniqueProvenanceValues.map(value => ({
+        value: value,
+        label: value,
+    }));
+
+    setFilteringOptions(options);
+};
+
+  const sortingOptions = [
+    { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+    { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+    { value: 'newest', label: 'Date Created: Newest' },
+    { value: 'oldest', label: 'Date Created: Oldest' }
+];
+
+
+
+const applySortingAndFiltering = () => {
+  if (!goalSumMatrix) return;
+
+  let sortedMatrix = goalSumMatrix;
+  if (sortingOption === 'alphabetical-az') {
+      sortedMatrix = goalSumMatrix.map(providerGoals =>
+          [...providerGoals].sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
+      );
+  } else if (sortingOption === 'alphabetical-za') {
+      sortedMatrix = goalSumMatrix.map(providerGoals =>
+          [...providerGoals].sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
+      );
+  } else if (sortingOption === 'newest') {
+      sortedMatrix = goalSumMatrix.map(providerGoals =>
+          [...providerGoals].sort((a, b) => {
+              if (a.StartDate && b.StartDate) {
+                  return b.StartDate.localeCompare(a.StartDate);
+              } else if (!a.StartDate) {
+                  return 1;
+              } else {
+                  return -1;
+              }
+          })
+      );
+  } else if (sortingOption === 'oldest') {
+      sortedMatrix = goalSumMatrix.map(providerGoals =>
+          [...providerGoals].sort((a, b) => {
+              if (a.StartDate && b.StartDate) {
+                  return a.StartDate.localeCompare(b.StartDate);
+              } else if (!a.StartDate) {
+                  return -1;
+              } else {
+                  return 1;
+              }
+          })
+      );
+  }
+
+  let filteredMatrix = sortedMatrix;
+  if (filteringOption) {
+    filteredMatrix = sortedMatrix.map(providerGoals =>
+        providerGoals.filter(goal =>
+            goal.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
+        )
+    );
+}
+
+  setSortedAndFilteredMatrix(filteredMatrix);
+};
+
+    // // Function to sort the goalSumMatrix based on the selected option
+    // const sortGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
+    //   // Implement sorting logic based on the selected option
+    //   // For example, you can use array.sort() method
+    //   // and update goalSumMatrix state with the sorted array
+    // };
+  
+    // // Function to filter the goalSumMatrix based on the selected option
+    // const filterGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
+    //   // Implement filtering logic based on the selected option
+    //   // and update goalSumMatrix state with the filtered array
+    // };
 
   return (
     <div className="home-view">
@@ -36,8 +156,11 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 
+        <a className='text-right' onClick={()=>setShowModal(true)}>SORT/FILTER</a>
+        {showModal ? <SortModal showModal={showModal} closeModal={closeModal} onSubmit={handleSortFilterSubmit} sortingOptions={sortingOptions} filteringOptions={filteringOptions}/>:null}
+
         {
-          goalSumMatrix?.map((goalSummary, index) => {
+          sortedAndFilteredMatrix?.map((goalSummary, index) => {
 
             return (
               <div key={'outerArray-' + index}>
