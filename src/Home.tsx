@@ -60,9 +60,11 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     let screenings = this.props.screenings?.filter(s => s.notifyPatient);
     // let tasks = this.props.tasks;
 
+    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'true';
+
     return (
       <div className="home-view">
-        <Modal isVisible={this.state.isModalVisible} closeModal={this.closeModal} />
+        {hhsBanner && (<Modal isVisible={this.state.isModalVisible} closeModal={this.closeModal} />)}
         <div className="welcome">
           {
             (this.props.errorType !== 'Terminating') &&
