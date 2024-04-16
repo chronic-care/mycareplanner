@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import { QuestionnaireItem, QuestionnaireResponseItem, QuestionnaireResponseItemAnswer } from '../../data-services/fhir-types/fhir-r4';
 import './QuestionnaireItemComponent.css';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Modal } from 'react-bootstrap';
 import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ChoiceDropDown from './ChoiceDropDown';
@@ -11,10 +11,11 @@ import YouTube from 'react-youtube';
 // import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
 // import { isNullOrUndefined } from 'util';
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 
 interface QuestionnaireItemState {
   showReview: boolean,
+  showCancelPopup: boolean,
   questionnaireResponse: QuestionnaireResponseItem
 }
 export default class QuestionnaireItemComponent extends React.Component<any, QuestionnaireItemState> {
@@ -22,6 +23,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
     super(props);
     this.state = {
       showReview: false,
+      showCancelPopup: false,
       questionnaireResponse: {
         linkId: props.QuestionnaireItem.linkId,
         text: (props.QuestionnaireItem.prefix !== undefined ? props.QuestionnaireItem.prefix + ": " : "") + props.QuestionnaireItem.text,
@@ -31,6 +33,18 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
   }
   questionnaireItemRef: any = createRef();
   vidRef: any = createRef();
+
+  handleCancelClick = () => {
+    this.setState({ showCancelPopup: true });
+  };
+
+  handleCancelDeny = () => {
+    this.setState({ showCancelPopup: false });
+  };
+  
+  handleCancelConfirm = () => {
+    window.location.href = '/index.html';
+  };
 
   handleNextQuestionScroll(linkId: number) {
     if (this.questionnaireItemRef.current.id === linkId) {
@@ -216,6 +230,21 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           }
         </div>
         <Button className="btn btn-primary next-button" value={this.props.QuestionnaireItem.linkId} onClick={(event: any) => this.handleNextQuestionScroll(event.target.value)}>Next</Button>
+        <Button className="exit-button" onClick={this.handleCancelClick}>Cancel</Button>
+        <Modal show={this.state.showCancelPopup} onHide={this.handleCancelDeny} className="custom-modal">
+            <Modal.Header>
+              <Modal.Title>Leave questionnaire?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>You will lose all the information entered for this questionnaire.</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleCancelDeny}>
+              Stay
+              </Button>
+              <Button variant="primary" onClick={this.handleCancelConfirm}>
+              Leave
+              </Button>
+            </Modal.Footer>
+        </Modal>
       </Card>
     );
   }

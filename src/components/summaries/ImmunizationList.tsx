@@ -1,16 +1,99 @@
 import '../../Home.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { Immunization } from '../../data-services/fhir-types/fhir-r4';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
-
+import { SortModal } from '../sort-modal/sortModal';
 interface ImmunizationListProps {
   fhirDataCollection?: FHIRData[],
 }
 
 export const ImmunizationList: React.FC<ImmunizationListProps> = (props: ImmunizationListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ImmunizationList component RENDERED!")
+  const [sortedImmunizations, setSortedImmunizations] = useState<Immunization[][] | undefined>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [sortOption, setSortOption] = useState<string>('');
+  const [filterOption, setFilterOption] = useState<string>('');
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
+
+  console.log("ImmunizationList", props.fhirDataCollection);
+
+  useEffect(() => {
+    applySorting();
+  }, [props.fhirDataCollection, sortOption, filterOption]);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+    setSortOption(sortOption);
+    setFilterOption(filterOption);
+    setShowModal(false);
+  };
+
+  const applySorting = () => {
+    const sorted = props.fhirDataCollection?.map(data => {
+      let immunizations = data?.immunizations;
+      if (sortOption === 'newest') {
+        immunizations = immunizations?.sort((a, b) => {
+          const dateA = a.occurrenceDateTime ?? a.recorded;
+          const dateB = b.occurrenceDateTime ?? b.recorded;
+          return dateB.localeCompare(dateA);
+        });
+      } else if (sortOption === 'oldest') {
+        immunizations = immunizations?.sort((a, b) => {
+          const dateA = a.occurrenceDateTime ?? a.recorded;
+          const dateB = b.occurrenceDateTime ?? b.recorded;
+          return dateA.localeCompare(dateB);
+        });
+      } else if (sortOption === 'alphabetical-az') {
+        immunizations = immunizations?.sort((a, b) => {
+          const nameA = a.vaccineCode?.text?.toUpperCase() ?? '';
+          const nameB = b.vaccineCode?.text?.toUpperCase() ?? '';
+          return nameA.localeCompare(nameB);
+        });
+      } else if(sortOption === 'alphabetical-za'){
+        immunizations = immunizations?.sort((a, b) => {
+          const nameA = a.vaccineCode?.text?.toUpperCase() ?? '';
+          const nameB = b.vaccineCode?.text?.toUpperCase() ?? '';
+          return nameB.localeCompare(nameA);
+        });
+      }
+      
+      if (filterOption) {
+        immunizations = immunizations?.filter((immunization) => immunization.location?.display === filterOption);
+      }
+
+      return immunizations || [];
+    });
+
+    setSortedImmunizations(sorted);
+  };
+
+  const generateFilteringOptions = () => {
+    if (!props.fhirDataCollection) return;
+
+    const sourceValues: string[] = [];
+
+    props.fhirDataCollection.forEach(data => {
+      data?.immunizations?.forEach(immunization => {
+        if (immunization.location?.display) {
+          sourceValues.push(immunization.location.display);
+        }
+      });
+    });
+
+    const uniqueSourceValues = Array.from(new Set(sourceValues));
+
+    const options = uniqueSourceValues.map(value => ({
+      value: value,
+      label: value
+    }));
+
+    setFilteringOptions(options);
+  };
 
   return (
     <div className="home-view">
@@ -23,47 +106,35 @@ export const ImmunizationList: React.FC<ImmunizationListProps> = (props: Immuniz
           </>
         }
 
-        {props.fhirDataCollection?.map((data, idx) => {
-          let immunizations = data?.immunizations;
-
-          // Sort by descending occurrence date
-          immunizations?.sort((r1, r2) => {
-            let r1DateString = r1.occurrenceDateTime ?? r1.recorded
-            let r2DateString = r2.occurrenceDateTime ?? r2.recorded
-            let r1Date = r1DateString !== undefined ? new Date(r1DateString!) : undefined
-            let r2Date = r2DateString !== undefined ? new Date(r2DateString!) : undefined
-
-            if (r1Date === undefined && r2Date !== undefined) {
-              return 1
-            }
-            if (r1Date !== undefined && r2Date === undefined) {
-              return -1
-            }
-            if (r1Date! < r2Date!) {
-              return 1;
-            }
-            if (r1Date! > r2Date!) {
-              return -1;
-            }
-            return 0;
-          });
-
-          return (
-            <div key={idx}>
-              
-
-              {immunizations && immunizations.length > 0
-                ? immunizations.map((med, mIdx) => (
-                  <Summary key={mIdx} id={mIdx} rows={buildRows(med,props.fhirDataCollection![idx].serverName)} />
-                ))
-                : <p>No immunization records for this provider.</p>
-              }
-            </div>
-          )
-        })}
-
+        <a className="text-right" onClick={() => setShowModal(true)}>
+          SORT/FILTER
+        </a>
+        <SortModal
+          showModal={showModal}
+          closeModal={closeModal}
+          onSubmit={handleSortFilterSubmit}
+          sortingOptions={[
+            { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+            { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+            { value: 'newest', label: 'Date: Newest' },
+            { value: 'oldest', label: 'Date: Oldest' }
+          ]}
+          filteringOptions={filteringOptions}
+        />
+        {sortedImmunizations?.map((immunizations, idx) => (
+          <div key={idx}>
+            {immunizations && immunizations.length > 0 ? (
+              immunizations.map((med, mIdx) => (
+                <Summary key={mIdx} id={mIdx} rows={buildRows(med, props.fhirDataCollection![idx].serverName)} />
+              ))
+            ) : (
+              <p>No immunization records for this provider.</p>
+            )}
+          </div>
+        ))}
       </div>
     </div>
+
   )
 }
 
@@ -115,6 +186,6 @@ const buildRows = (med: Immunization, theSource?:string): SummaryRowItems => {
     }
     rows.push(source)
   }
-
+console.log("rows", rows);
   return rows
 }

@@ -1,10 +1,11 @@
 import '../../Home.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { MedicationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
+import { SortModal } from '../sort-modal/sortModal';
 
 interface MedicationListProps {
   fhirDataCollection?: FHIRData[],
@@ -16,8 +17,94 @@ interface MedicationListState {
 
 export const MedicationList: React.FC<MedicationListProps> = (props: MedicationListProps) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("MedicationList component RENDERED!")
+  const [showModal, setShowModal] = useState(false);
+  const [sortingOption, setSortingOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string>('');
+  const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<MedicationSummary[][] | undefined>();
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   const medSumMatrix: MedicationSummary[][] | undefined = props.medicationSummaryMatrix
+
+ console.log("MedicationListSum",medSumMatrix);
+
+ useEffect(() => {
+  applySortingAndFiltering();
+}, [props.medicationSummaryMatrix, sortingOption, filteringOption]);
+
+useEffect(() => {
+  if (props.medicationSummaryMatrix) {
+    generateFilteringOptions();
+  }
+}, [props.medicationSummaryMatrix]);
+
+const closeModal = () => {
+  setShowModal(false);
+};
+
+const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+  setSortingOption(sortOption);
+  setFilteringOption(filterOption);
+  setShowModal(false);
+};
+
+const generateFilteringOptions = () => {
+  if (!props.medicationSummaryMatrix) return;
+
+  const provenanceValues: string[] = [];
+
+  props.medicationSummaryMatrix.forEach(providerMedications => {
+    providerMedications.forEach(medication => {
+      medication.Provenance?.forEach(provenance => {
+        if (provenance.Transmitter) {
+          provenanceValues.push(provenance.Transmitter);
+        }
+      });
+    });
+  });
+
+  const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
+
+  const options = uniqueProvenanceValues.map(value => ({
+    value: value,
+    label: value,
+  }));
+
+  setFilteringOptions(options);
+};
+
+const applySortingAndFiltering = () => {
+  if (!props.medicationSummaryMatrix) return;
+
+  let sortedMatrix = props.medicationSummaryMatrix;
+  if (sortingOption === 'alphabetical-az') {
+    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
+      [...providerMedications].sort((a, b) => (a.ConceptName ?? '').localeCompare(b.ConceptName ?? ''))
+    );
+  } else if (sortingOption === 'alphabetical-za') {
+    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
+      [...providerMedications].sort((a, b) => (b.ConceptName ?? '').localeCompare(a.ConceptName ?? ''))
+    );
+  } else if (sortingOption === 'newest') {
+    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
+      [...providerMedications].sort((a, b) => (b.AuthoredOn ?? '').localeCompare(a.AuthoredOn ?? ''))
+    );
+  } else if (sortingOption === 'oldest') {
+    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
+      [...providerMedications].sort((a, b) => (a.AuthoredOn ?? '').localeCompare(b.AuthoredOn ?? ''))
+    );
+  }
+
+  let filteredMatrix = sortedMatrix;
+  if (filteringOption) {
+    filteredMatrix = sortedMatrix.map(providerMedications =>
+      providerMedications.filter(medication =>
+        medication.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
+      )
+    );
+  }
+
+  setSortedAndFilteredMatrix(filteredMatrix);
+};
 
   return (
     <div className="home-view">
@@ -30,9 +117,26 @@ export const MedicationList: React.FC<MedicationListProps> = (props: MedicationL
             <BusySpinner busy={props.fhirDataCollection === undefined} />
           </>
         }
+        <a className="text-right" onClick={() => setShowModal(true)}>
+          SORT/FILTER
+        </a>
+        {showModal ? (
+          <SortModal
+            showModal={showModal}
+            closeModal={closeModal}
+            onSubmit={handleSortFilterSubmit}
+            sortingOptions={[
+              { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+              { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+              { value: 'newest', label: 'Date Authored: Newest' },
+              { value: 'oldest', label: 'Date Authored: Oldest' },
+            ]}
+            filteringOptions={filteringOptions}
+          />
+        ) : null}
 
         {
-          medSumMatrix?.map((medicationSummary, index) => {
+          sortedAndFilteredMatrix?.map((medicationSummary, index) => {
 
             return (
               <div key={'outerArray-' + index}>
