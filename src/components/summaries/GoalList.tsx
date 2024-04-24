@@ -1,5 +1,5 @@
 import '../../Home.css';
-import React , { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
@@ -31,15 +31,15 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
 
   useEffect(() => {
     if (goalSumMatrix) {
-        generateFilteringOptions();
+      generateFilteringOptions();
     }
-}, [goalSumMatrix]);
+  }, [goalSumMatrix]);
 
-  const closeModal = ()=>{
+  const closeModal = () => {
     setShowModal(false)
   }
 
-  const handleSortFilterSubmit = (sortOption: string,  filterOption: string) => {
+  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
     setSortingOption(sortOption);
     setFilteringOption(filterOption);
     setShowModal(false);
@@ -51,96 +51,96 @@ export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
     const provenanceValues: string[] = [];
 
     goalSumMatrix.forEach(providerGoals => {
-        providerGoals.forEach(goal => {
-            goal.Provenance?.forEach(provenance => {
-                if (provenance.Transmitter) {
-                    provenanceValues.push(provenance.Transmitter);
-                }
-            });
+      providerGoals.forEach(goal => {
+        goal.Provenance?.forEach(provenance => {
+          if (provenance.Transmitter) {
+            provenanceValues.push(provenance.Transmitter);
+          }
         });
+      });
     });
 
     const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
 
     const options = uniqueProvenanceValues.map(value => ({
-        value: value,
-        label: value,
+      value: value,
+      label: value,
     }));
 
     setFilteringOptions(options);
-};
+  };
 
   const sortingOptions = [
     { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
     { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
     { value: 'newest', label: 'Date Created: Newest' },
     { value: 'oldest', label: 'Date Created: Oldest' }
-];
+  ];
 
 
 
-const applySortingAndFiltering = () => {
-  if (!goalSumMatrix) return;
+  const applySortingAndFiltering = () => {
+    if (!goalSumMatrix) return;
 
-  let sortedMatrix = goalSumMatrix;
-  if (sortingOption === 'alphabetical-az') {
+    let sortedMatrix = goalSumMatrix;
+    if (sortingOption === 'alphabetical-az') {
       sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
+        [...providerGoals].sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
       );
-  } else if (sortingOption === 'alphabetical-za') {
+    } else if (sortingOption === 'alphabetical-za') {
       sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
+        [...providerGoals].sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
       );
-  } else if (sortingOption === 'newest') {
+    } else if (sortingOption === 'newest') {
       sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => {
-              if (a.StartDate && b.StartDate) {
-                  return b.StartDate.localeCompare(a.StartDate);
-              } else if (!a.StartDate) {
-                  return 1;
-              } else {
-                  return -1;
-              }
-          })
+        [...providerGoals].sort((a, b) => {
+          if (a.StartDate && b.StartDate) {
+            return b.StartDate.localeCompare(a.StartDate);
+          } else if (!a.StartDate) {
+            return 1;
+          } else {
+            return -1;
+          }
+        })
       );
-  } else if (sortingOption === 'oldest') {
+    } else if (sortingOption === 'oldest') {
       sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => {
-              if (a.StartDate && b.StartDate) {
-                  return a.StartDate.localeCompare(b.StartDate);
-              } else if (!a.StartDate) {
-                  return -1;
-              } else {
-                  return 1;
-              }
-          })
+        [...providerGoals].sort((a, b) => {
+          if (a.StartDate && b.StartDate) {
+            return a.StartDate.localeCompare(b.StartDate);
+          } else if (!a.StartDate) {
+            return -1;
+          } else {
+            return 1;
+          }
+        })
       );
-  }
+    }
 
-  let filteredMatrix = sortedMatrix;
-  if (filteringOption) {
-    filteredMatrix = sortedMatrix.map(providerGoals =>
+    let filteredMatrix = sortedMatrix;
+    if (filteringOption) {
+      filteredMatrix = sortedMatrix.map(providerGoals =>
         providerGoals.filter(goal =>
-            goal.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
+          goal.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
         )
-    );
-}
+      );
+    }
 
-  setSortedAndFilteredMatrix(filteredMatrix);
-};
+    setSortedAndFilteredMatrix(filteredMatrix);
+  };
 
-    // // Function to sort the goalSumMatrix based on the selected option
-    // const sortGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
-    //   // Implement sorting logic based on the selected option
-    //   // For example, you can use array.sort() method
-    //   // and update goalSumMatrix state with the sorted array
-    // };
-  
-    // // Function to filter the goalSumMatrix based on the selected option
-    // const filterGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
-    //   // Implement filtering logic based on the selected option
-    //   // and update goalSumMatrix state with the filtered array
-    // };
+  // // Function to sort the goalSumMatrix based on the selected option
+  // const sortGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
+  //   // Implement sorting logic based on the selected option
+  //   // For example, you can use array.sort() method
+  //   // and update goalSumMatrix state with the sorted array
+  // };
+
+  // // Function to filter the goalSumMatrix based on the selected option
+  // const filterGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
+  //   // Implement filtering logic based on the selected option
+  //   // and update goalSumMatrix state with the filtered array
+  // };
 
   return (
     <div className="home-view">
@@ -158,12 +158,11 @@ const applySortingAndFiltering = () => {
           ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
           : <p />}
 
-        <a className='text-right' onClick={()=>setShowModal(true)}>SORT/FILTER</a>
-        {showModal ? <SortModal showModal={showModal} closeModal={closeModal} onSubmit={handleSortFilterSubmit} sortingOptions={sortingOptions} filteringOptions={filteringOptions}/>:null}
+        <a className='text-right' onClick={() => setShowModal(true)}>SORT/FILTER</a>
+        {showModal ? <SortModal showModal={showModal} closeModal={closeModal} onSubmit={handleSortFilterSubmit} sortingOptions={sortingOptions} filteringOptions={filteringOptions} /> : null}
 
         {
           sortedAndFilteredMatrix?.map((goalSummary, index) => {
-
             return (
               <div key={'outerArray-' + index}>
                 {
@@ -172,25 +171,20 @@ const applySortingAndFiltering = () => {
                     : (!goalSummary || goalSummary.length < 1) && props.fhirDataCollection !== undefined
                       ? <p>No records found.</p>
                       :
-                      <div>
-                        {goalSummary?.map((goal, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(goal,props.fhirDataCollection![index].serverName)} />
-                        ))}
-                      </div>
+                    <div>
+                      {goalSummary?.map((goal, idx) => (
+                        <Summary key={idx} id={idx} rows={buildRows(goal, props.fhirDataCollection![index].serverName)} />
+                      ))}
+                    </div>
                 }
               </div>
-            )
-
-          })
-        }
-
+            )})}
       </div>
     </div>
   )
-
 }
 
-const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
+const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
   let rows: SummaryRowItems =
     [
       {
@@ -207,31 +201,33 @@ const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
           : 'Start: ' + displayDate(goal.StartDate),
       },
     ]
-  
-    if (theSource === 'Launch Data') {
-      rows.unshift({
-        isHeader: false,
-        twoColumns: false,
-        data1: (
-          <>
-            <Link
-              to={{
-                pathname: '/goal-edit',
-                state: { goalData: goal, 
-                  prepopulatedDescription: goal.Description, 
-                  prepopulatedDate: goal.StartDate || null,
-                  prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
-                 }
-              }}
-              style={{ color: '#355CA8', textAlign: 'right', marginLeft: 'auto' }}
-            >
-              <EditIcon />
-            </Link>
-          </>
-        ),
-        data2: '', 
-      });
-    }
+
+  if (theSource === 'Launch Data') {
+    rows.unshift({
+      isHeader: false,
+      twoColumns: false,
+      data1: (
+        <>
+          <Link
+            to={{
+              pathname: '/goal-edit',
+              state: {
+                goalData: goal,
+                prepopulatedDescription: goal.Description,
+                prepopulatedDate: goal.StartDate || null,
+                prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
+              }
+            }}
+          >
+            <div style={{ color: '#355CA8', textAlign: 'right', marginLeft: 'auto' }}>
+            <EditIcon/>
+            </div>
+          </Link>
+        </>
+      ),
+      data2: '',
+    });
+  }
 
   const targets: SummaryRowItems = buildTargets(goal)
   if (targets?.length) {
