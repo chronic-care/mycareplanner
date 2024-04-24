@@ -6,7 +6,9 @@ import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
+import EditIcon from '@mui/icons-material/Edit';
 import { Button } from '@mui/material';
+
 interface GoalListProps {
   fhirDataCollection?: FHIRData[],
   goalSummaryMatrix?: GoalSummary[][],
@@ -205,6 +207,31 @@ const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
           : 'Start: ' + displayDate(goal.StartDate),
       },
     ]
+  
+    if (theSource === 'Launch Data') {
+      rows.unshift({
+        isHeader: false,
+        twoColumns: false,
+        data1: (
+          <>
+            <Link
+              to={{
+                pathname: '/goal-edit',
+                state: { goalData: goal, 
+                  prepopulatedDescription: goal.Description, 
+                  prepopulatedDate: goal.StartDate || null,
+                  prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
+                 }
+              }}
+              style={{ color: '#355CA8', textAlign: 'right', marginLeft: 'auto' }}
+            >
+              <EditIcon />
+            </Link>
+          </>
+        ),
+        data2: '', 
+      });
+    }
 
   const targets: SummaryRowItems = buildTargets(goal)
   if (targets?.length) {
