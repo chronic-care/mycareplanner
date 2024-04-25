@@ -210,12 +210,19 @@ const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
   if (targets?.length) {
     rows = rows.concat(targets)
   }
+  const status: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Status: ' + (goal.LifecycleStatus ?? 'Unknown') + (goal.AchievementStatus === null ? '' : ' -- ' + goal.AchievementStatus),
+      data2:'',
+    }
+  rows = rows.concat(status)
 
-  const addresses: SummaryRowItems | undefined = goal.Addresses?.map((concern) => (
+  const addresses: SummaryRowItems | undefined = goal.Addresses?.map((focus) => (
     {
       isHeader: false,
       twoColumns: false,
-      data1: 'Addresses: ' + (concern.DisplayName ?? 'Unknown'),
+      data1: 'Focus: ' + (focus.DisplayName ?? 'Unknown'),
       data2: '',
     }
   ))
@@ -223,18 +230,20 @@ const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
     rows = rows.concat(addresses)
   }
 
-  const learnMore: SummaryRowItem = {
-    isHeader: false,
-    twoColumns: false,
-    data1: goal.LearnMore === undefined || goal.LearnMore === null ? '' :
-      <Link to="route" target="_blank"
-        onClick={
-          (event) => { event.preventDefault(); window.open(goal.LearnMore); }
-        }><i>Learn&nbsp;More</i>
-      </Link>,
-    data2: '',
+  if (goal.LearnMore !== undefined && goal.LearnMore !== null) {
+    const learnMore: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1:
+        <Link to="route" target="_blank"
+          onClick={
+            (event) => { event.preventDefault(); window.open(goal.LearnMore); }
+          }><i>Learn&nbsp;More</i>
+        </Link>,
+      data2: '',
+    }
+    rows.push(learnMore)
   }
-  rows.push(learnMore)
 
   const notes: SummaryRowItems | undefined = goal.Notes?.map((note) => (
     {
@@ -248,26 +257,27 @@ const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
     rows = rows.concat(notes)
   }
 
-  if (theSource) {
-    const source: SummaryRowItem = {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'From ' + theSource,
-      data2: '',
-    }
-    rows.push(source)
-  }
-
   const provenance: SummaryRowItems | undefined = goal.Provenance?.map((provenance) => (
     {
       isHeader: false,
-      twoColumns: true,
+      twoColumns: false,
       data1: 'Source: ' + provenance.Transmitter ?? '',
       data2: provenance.Author ?? '',
     }
   ))
   if (provenance?.length) {
     rows = rows.concat(provenance)
+  }
+
+  const hasProvenance = goal.Provenance?.length ?? 0 > 0
+  if (theSource && !hasProvenance) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Source ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   return rows

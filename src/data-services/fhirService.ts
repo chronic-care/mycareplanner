@@ -43,7 +43,7 @@ const carePlanPath = 'CarePlan?status=active&category=assess-plan' + provenanceS
 const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
 const careTeamPath_include = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
 
-const goalsPath = 'Goal?lifecycle-status=active,completed' + provenanceSearch
+const goalsPath = 'Goal?lifecycle-status=active,completed,cancelled' + provenanceSearch
 
 /// Epic allows multiple category codes only >= Aug 2021 release
 // const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
@@ -658,10 +658,10 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   // Thus, it has been converted and added back for testing purposes.
 
   // Commented out on 28 March, 2024 because survey is not supported by any EHRs at this time.
-  // const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
-  //   surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
-  // surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-  const surveyResults = undefined // required if we decide not to use the above code as was the case prior
+  const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
+    surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
+  surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
+  // const surveyResults = undefined // required if we decide not to use the above code as was the case prior
 
   curResourceName = 'Vitals'
   let vitalSigns: Observation[] | undefined

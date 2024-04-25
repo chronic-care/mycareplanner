@@ -74,6 +74,8 @@ export interface GoalSummary {
   ExpressedBy?: string,
   StartDate?: string,
   Target?: GoalTarget[],
+  LifecycleStatus?: string,
+  AchievementStatus?: string,
   Addresses?: DataElementSummary[],
   Notes?: string[],
   Provenance?: ProvenanceSummary[],
