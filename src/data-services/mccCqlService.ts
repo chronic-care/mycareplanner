@@ -23,6 +23,7 @@ function getPatientSource(data: FHIRData): unknown {
     ...getBundleEntries(data.serviceRequests),
     ...getBundleEntries(data.labResults),
     ...getBundleEntries(data.vitalSigns),
+    ...getBundleEntries(data.surveyResults),
     ...getBundleEntries(data.goals),
     ...getBundleEntries(data.provenance),
     ]
