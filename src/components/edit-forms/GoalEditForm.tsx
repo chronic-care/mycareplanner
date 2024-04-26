@@ -142,13 +142,13 @@ export default function GoalEditForm(formData?: EditFormData) {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
-              Save
+            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
+              Cancel
             </Button>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
-              Cancel
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
+              Save
             </Button>
           </Grid>
 
