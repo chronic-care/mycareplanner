@@ -1,6 +1,7 @@
 import * as React from 'react';
 // import { useParams } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom'
+import moment from 'moment';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Box from '@mui/material/Box';
@@ -22,8 +23,15 @@ export default function GoalEditForm(formData?: EditFormData) {
   const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null; 
   const prepopulatedDueDate = (location.state as {prepopulatedDueDate?: Date})?.prepopulatedDueDate ?? null;
   const [description, setDescription] = React.useState<string>(prepopulatedDescription);
-  const [startDate, setStartDate] = React.useState<Date | null>(prepopulatedDate ?? null);
-  const [dueDate, setDueDate] = React.useState<Date | null>(prepopulatedDueDate ?? null);
+  // const [startDate, setStartDate] = React.useState<Date | null>(prepopulatedDate ?? null);
+  // const [dueDate, setDueDate] = React.useState<Date | null>(prepopulatedDueDate ?? null);
+  const [startDate, setStartDate] = React.useState<Date | null>(
+    prepopulatedDate ? moment(prepopulatedDate).add(0, 'day').toDate() : null
+  );
+  
+  const [dueDate, setDueDate] = React.useState<Date | null>(
+    prepopulatedDueDate ? moment(prepopulatedDueDate).add(0, 'day').toDate() : null
+  );
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
