@@ -202,7 +202,7 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
       },
     ]
 
-  if (theSource === 'Launch Data') {
+  if (theSource === 'SDS Data') {
     rows.unshift({
       isHeader: false,
       twoColumns: false,

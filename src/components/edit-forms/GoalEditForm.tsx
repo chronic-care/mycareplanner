@@ -22,7 +22,7 @@ export default function GoalEditForm(formData?: EditFormData) {
   const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null; 
   const prepopulatedDueDate = (location.state as {prepopulatedDueDate?: Date})?.prepopulatedDueDate ?? null;
   const [description, setDescription] = React.useState<string>(prepopulatedDescription);
-  const [startDate, setStartDate] = React.useState<Date | null>(prepopulatedDate);
+  const [startDate, setStartDate] = React.useState<Date | null>(prepopulatedDate ?? null);
   const [dueDate, setDueDate] = React.useState<Date | null>(prepopulatedDueDate ?? null);
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
