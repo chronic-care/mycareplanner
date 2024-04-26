@@ -78,6 +78,7 @@ export default function ShareData(props: ShareDataProps) {
   }
 
   return (
+    
     <React.Fragment>
       <Box component="form" noValidate onSubmit={handleSubmit} onReset={handleReset} sx={{ mt: 3 }}>
         <Typography variant="h5" gutterBottom>
@@ -87,10 +88,10 @@ export default function ShareData(props: ShareDataProps) {
 
           <Grid item xs={12}>
             <Typography variant="body1" gutterBottom>
-              Add a consent statement and buttons to 'Agree' or 'Disagree' before sharing data.
+            We are collecting this data as part of a research project to evaluate the effectiveness of the MyCarePlanner application.
           </Typography>
             <Typography variant="body1" gutterBottom>
-              Sharing required authentication into the shared data store repository, e.g. a Personal Health Repository(PHR).
+            Your data will be stored in a secure database and will only be shared with the research team, as described in the consent form.
           </Typography>
           </Grid>
 
