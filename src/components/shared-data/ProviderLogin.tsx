@@ -28,6 +28,7 @@ import Chip from '@mui/material/Chip'
 
 import { getSupplementalDataClient } from '../../data-services/fhirService'
 import Client from 'fhirclient/lib/Client'
+import { Patient } from '../../data-services/fhir-types/fhir-r4'
 
 interface Props extends RouteComponentProps {
   setFhirDataStates: (data: FHIRData[] | undefined) => void,
@@ -49,7 +50,7 @@ export default function ProviderLogin(props: Props) {
 
   const [launcherEndpointFromForage, setLauncherEndpointFromForage] =
     useState<ProviderEndpoint | null | undefined>()
-  const [sdsClient, setSdsClient] = useState<Client | null>(null)
+  const [sdsClient, setSdsClient] = useState<Client | null | undefined>(null)
 
   useEffect(() => {
     const fetchLauncherData = async () => {
@@ -62,11 +63,43 @@ export default function ProviderLogin(props: Props) {
     fetchLauncherData()
   }, []) // Empty for now as should only need to set on component mount because a new launcher is a re-mount
 
+  // TODO: There is a MUCH better way to do this, such as use the version in App.tsx
+  // WITH setSupplementalDataClient logic and not repeat code, or use a service,
+  // or put code at a lower level in getSupplementalDataClient), etc.
   useEffect(() => {
     const fetchSdsClient = async () => {
       try {
-        const sdsClient: Client | undefined = await getSupplementalDataClient(null)
+        let sdsClient: Client | undefined = await getSupplementalDataClient(null)
         if (sdsClient) {
+          const sdsMessageSuffix = "The SDS client will not be used."
+          let isSDSReadError = false
+          let sdsPatient: Patient | undefined
+          if (sdsClient.patient.id !== null) {
+            console.log("client.patient.id !== null, using client.patient.read()")
+            try {
+              sdsPatient = await sdsClient.patient.read() as Patient
+              console.log("Valid ")
+            } catch (err) {
+              console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
+              isSDSReadError = true
+            }
+          } else {
+            console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
+            try {
+              sdsPatient = await sdsClient.user.read() as Patient
+            } catch (err) {
+              console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
+              isSDSReadError = true
+            }
+          }
+
+          if (!isSDSReadError) {
+            console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
+          } else {
+            console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
+                and not setting state for supplementalDataClient or canShareData`)
+            sdsClient = undefined
+          }
           setSdsClient(sdsClient)
         } else {
           console.error("SDS client is untruthy")
@@ -95,13 +128,22 @@ export default function ProviderLogin(props: Props) {
         console.log("curEndpoint", curEndpoint)
         const issServerUrl = curEndpoint.config!.iss
         console.log("issServerUrl", issServerUrl)
+        console.log("SDS URL (process.env.REACT_APP_SHARED_DATA_ENDPOINT)", process.env.REACT_APP_SHARED_DATA_ENDPOINT)
         const isLastIndex = i === endpointsLength - 1
         console.log("isLastIndex: " + isLastIndex)
 
+        // Note: If it's the SDS we don't check for authorization of that endpoint, as it's shared,
+        // and because we can't authorize w/o a client id, which the SDS itself might not have
+        // We shouldn't need this logic as there is a gatekeeper on bad SDSs (we don't add them in the first place)
+        // to be checked against authorizeSelectedEndpoints, but, just in case it slips through...
+        const isSDSUrl: boolean = issServerUrl === process.env.REACT_APP_SHARED_DATA_ENDPOINT
+        console.log('isSDSUrl: ', isSDSUrl)
+
         // Check for prior auths from another load or session just in case so we can save some time
-        if (await isEndpointStillAuthorized(issServerUrl!, false)) { // false so checking ALL endpoints in local storage vs just last one
+        if (isSDSUrl || await isEndpointStillAuthorized(issServerUrl!, false)) { // false param so checking ALL endpoints in local storage vs just last one
           console.log("This endpoint IS authorized")
-          console.log("curEndpoint issServerUrl " + issServerUrl + " at index " + i + " and count " + (i + 1) + "/" + endpointsLength +
+          console.log("curEndpoint issServerUrl " + issServerUrl + " at index " + i + " and count "
+            + (i + 1) + "/" + endpointsLength +
             " is still authorized. Will not waste time reauthorizing: ", curEndpoint)
 
           if (isLastIndex) {
@@ -145,19 +187,10 @@ export default function ProviderLogin(props: Props) {
           } else {
             console.log("Not last index, Authorizing index " + i)
           }
-          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
 
+          console.warn("Before authorize: curEndpoint.config! " + JSON.stringify(curEndpoint.config!))
           FHIR.oauth2.authorize(curEndpoint.config!)
-
-          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-          console.error("b curEndpoint.config! "+ JSON.stringify(curEndpoint.config!))
-
+          console.warn("After authorize: curEndpoint.config! " + JSON.stringify(curEndpoint.config!))
 
           break
         }
@@ -226,7 +259,7 @@ export default function ProviderLogin(props: Props) {
         const curFhirDataLoaded: FHIRData | undefined =
           await loadAuthorizedSelectedEndpointMulti(curSelectedEndpoint, true, index)
         if (curFhirDataLoaded) {
-          curFhirDataLoaded.serverName =   curSelectedEndpoint.name;
+          curFhirDataLoaded.serverName = curSelectedEndpoint.name
 
           console.log("curFhirDataLoaded.serverName:", curFhirDataLoaded.serverName)
           console.log("curFhirDataLoaded:", curFhirDataLoaded)
@@ -241,8 +274,11 @@ export default function ProviderLogin(props: Props) {
         index++;
       }
     } catch (err) {
+      // NOTE: If we reach here and we aren't on the last index of the endpoints
+      // then we won't be able to load all of them and see them all.
+      // It would be better to find a way to handle the error and skip the specific issue
+      // so we only miss loading the resources with issues.
       console.log(`Failure in loadSelectedEndpoints: ${err}`)
-      // TODO: MULTI-PROVIDER: Make this a terminating error
     } finally {
       props.setFhirDataStates(fhirDataCollection!)
       console.log("fhirDataCollection complete in loadSelectedEndpoints:", fhirDataCollection)
@@ -285,7 +321,8 @@ export default function ProviderLogin(props: Props) {
               ${launcherEndpointFromForage === null ? null : undefined}! Cannot add it to other providers...`)
             }
 
-            // Always add SDS, if not null, and add it as the 2nd item in the array so that the order is:
+            // Add SDS, if not null, and is valid (not missing patient, etc. which would make it undefined as per logic)
+            // Add it as the 2nd item in the array so that the order is:
             // 1: Launcher, 2: SDS 1..*, 3: Additional Providers
             if (sdsClient) { // TODO: Either here or in getSupplementalDataClient or in the useEffect, check URL is valid
               console.log("SDS is truthy, adding to selected endpoints")
