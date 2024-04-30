@@ -1,11 +1,6 @@
 import { fhirclient } from 'fhirclient/lib/types'
+import Providers from './endpoints/providers.json'
 
-import Providers from './endpoints/providers.json';
-
-
- 
-
-const fs = require('fs');
 export class ProviderEndpoint {
   name: string
   config?: fhirclient.AuthorizeParams
@@ -17,22 +12,26 @@ export class ProviderEndpoint {
 }
 
 export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): ProviderEndpoint[] => {
-
-  let availableEndpoints: ProviderEndpoint[] = [];
-  let jsonArray = JSON.parse(JSON.stringify(Providers).toString());
+  console.log("buildAvailableEndpoints()")
+  let availableEndpoints: ProviderEndpoint[] = []
+  let jsonArray = JSON.parse(JSON.stringify(Providers).toString())
   const providers: ProviderEndpoint[] = jsonArray.map((item: any) => {
     return {
         name: item.name,
         config: item.config
-    };
-});
+    }
+  })
   availableEndpoints = availableEndpoints.concat(providers);
 
+  console.log("buildAvailableEndpoints: process.env.REACT_APP_SHARED_DATA_CLIENT_ID: ", process.env.REACT_APP_SHARED_DATA_CLIENT_ID)
+  console.log("buildAvailableEndpoints: process.env.REACT_APP_SHARED_DATA_ENDPOINT: ", process.env.REACT_APP_SHARED_DATA_ENDPOINT)
+  console.log("buildAvailableEndpoints: process.env.REACT_APP_SHARED_DATA_SCOPE: ", process.env.REACT_APP_SHARED_DATA_SCOPE)
   if (process.env.REACT_APP_SHARED_DATA_CLIENT_ID
     && process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE) {
+    console.log("Adding SDS with clientId to availableEndpoints")
      availableEndpoints = availableEndpoints.concat(
       {
-        "name": "eCare Shared Data",
+         "name": "SDS: eCare Shared Data",
         "config": {
           "iss": process.env.REACT_APP_SHARED_DATA_ENDPOINT,
           "redirectUri": "./index.html",
@@ -41,48 +40,36 @@ export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): Pr
         }
       }
     )
-  } 
+    console.log("availableEndpoints after concat: ", availableEndpoints)
+  } else {
+    console.log(`Not adding SDS to the availableEndpoints with clientId as at least one of the following env vars are not truthy:
+    process.env.REACT_APP_SHARED_DATA_CLIENT_ID, process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+    or process.env.REACT_APP_SHARED_DATA_SCOPE).
+    Note: We may still add the SDS without a clientId, though.`)
+  }
 
+  if (process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE
+    && !process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
+    console.log("Adding SDS without clientId to availableEndpoints")
+    availableEndpoints = availableEndpoints.concat(
+      {
+        "name": "SDS: eCare Shared Data",
+        "config": {
+          "iss": process.env.REACT_APP_SHARED_DATA_ENDPOINT,
+          "redirectUri": "./index.html",
+          "clientId": "",
+          "scope": process.env.REACT_APP_SHARED_DATA_SCOPE
+        }
+      }
+    )
+    console.log("availableEndpoints after concat: ", availableEndpoints)
+  }
 
-  // TODO: Remove this from the drop down list, but, leave it in availableEndpoints build.
-  // Maybe these should be two dif things, what is seen/can be selected, and what exists.
-  // Maybe don't need this at all... maybe can find a better way to track... (local forage,
-  // or buiding from SDS client data, or just building from SDS env vars
-  // Maybe we need this though so that when the application leaves, and returns, for a new auth,
-  // And it tries to access the localFOrage version of selectedEndpoints, it has something to reference?
-  // SO probably need to add this, and remove from dropdown, but keep in build?
-  // if (process.env.REACT_APP_ADD_SDS_SANDBOX_TO_PROVIDER_LOGIN_DROPDOWN === 'true') {
-  // ...Summary:
+  // TODO: Visually remove SDS from dropdown list (but leave it in programmatically)
   // The SDS cannot be a launcher, however, the endpoint NEEDS to be added for the application logic to work.
   // Because, when one leaves the application to authorize, these endpoints are saved to local storage (temporarilly),
   // and referenced in the logic in that scenario to know what to load on a fresh application launch.
-  // Thus, we should probably separate this list and the dropdown list, or, at a minimum, remove this from the dropdown
-  // list visually, or just not add it, within that logic
-  // Original Meld Test Data SDS
-  // availableEndpoints.push(
-  //   {
-  //     name: 'SDS Test Data: eCareSharedData Meld Sandbox',
-  //     config: {
-  //       iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
-  //       redirectUri: "./index.html",
-  //       clientId: 'xxx', // only used when Shared Data is a separate FHIR server with its own SMART launch flow (which it isn't now)
-  //       scope: process.env.REACT_APP_SHARED_DATA_SCOPE
-  //     }
-  //   }
-  // )
-  // Petient-specific SDS
-  // availableEndpoints.push(
-  // {
-  //   name: 'SDS Test Data: eCarePatientData Meld Sandbox',
-  //   config: {
-  //      iss: process.env.REACT_APP_SHARED_DATA_ENDPOINT,
-  //      redirectUri: "./index.html",
-  //      clientId: 'xxx',
-  //      scope: process.env.REACT_APP_SHARED_DATA_SCOPE
-  //   }
-  // }
-  // )
- 
+
   return availableEndpoints
 }
 
@@ -93,7 +80,7 @@ export const getMatchingProviderEndpointsFromName = async (availableEndpoints: P
   selectedEndpointNames: string[]): Promise<ProviderEndpoint[]> => {
   return availableEndpoints.filter(availableEndpoint => {
     console.log('availableEndpoint.name: ', availableEndpoint?.name)
-    return selectedEndpointNames.includes(availableEndpoint?.name);
+    return selectedEndpointNames.includes(availableEndpoint?.name)
   })
 }
 
