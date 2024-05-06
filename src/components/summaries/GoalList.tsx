@@ -1,331 +1,316 @@
 import '../../Home.css';
-import React , { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { FHIRData } from '../../data-services/models/fhirResources';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
-import { Button } from '@mui/material';
+import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
+
 interface GoalListProps {
-  fhirDataCollection?: FHIRData[],
-  goalSummaryMatrix?: GoalSummary[][],
-  canShareData?: boolean,
+  fhirDataCollection?: FHIRData[];
+  goalSummaryMatrix?: GoalSummary[][];
+  canShareData?: boolean;
 }
 
-export const GoalList: React.FC<GoalListProps> = (props: GoalListProps) => {
+export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMatrix, canShareData }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
   const [showModal, setShowModal] = useState(false);
-  const [sortingOption, setSortingOption] = useState<string>(''); // State for sorting option
-  const [filteringOption, setFilteringOption] = useState<string>(''); // State for filtering option
+  const [sortingOption, setSortingOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string[]>([]);
   const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<GoalSummary[][] | undefined>();
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const goalSumMatrix: GoalSummary[][] | undefined = props.goalSummaryMatrix
-
   useEffect(() => {
     applySortingAndFiltering();
-  }, [goalSumMatrix, sortingOption, filteringOption]);
+  }, [goalSummaryMatrix, sortingOption, filteringOption]);
 
   useEffect(() => {
-    if (goalSumMatrix) {
-        generateFilteringOptions();
+    if (goalSummaryMatrix) {
+      generateFilteringOptions();
     }
-}, [goalSumMatrix]);
+  }, [goalSummaryMatrix]);
 
-  const closeModal = ()=>{
-    setShowModal(false)
-  }
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
-  const handleSortFilterSubmit = (sortOption: string,  filterOption: string) => {
+  const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
+    if(filterOption){
     setFilteringOption(filterOption);
+    }
     setShowModal(false);
   };
 
   const generateFilteringOptions = () => {
-    if (!goalSumMatrix) return;
+    if (!fhirDataCollection || fhirDataCollection.length === 0) {
+      setFilteringOptions([]);
+      return;
+    }
 
-    const provenanceValues: string[] = [];
-
-    goalSumMatrix.forEach(providerGoals => {
-        providerGoals.forEach(goal => {
-            goal.Provenance?.forEach(provenance => {
-                if (provenance.Transmitter) {
-                    provenanceValues.push(provenance.Transmitter);
-                }
-            });
-        });
-    });
-
-    const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
-
-    const options = uniqueProvenanceValues.map(value => ({
-        value: value,
-        label: value,
+    const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName)));
+    const options = uniqueServerNames.map(value => ({
+      value: value || '',
+      label: value || '',
     }));
 
     setFilteringOptions(options);
-};
+  };
 
   const sortingOptions = [
     { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
     { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
     { value: 'newest', label: 'Date Created: Newest' },
-    { value: 'oldest', label: 'Date Created: Oldest' }
-];
+    { value: 'oldest', label: 'Date Created: Oldest' },
+  ];
 
+  const applySortingAndFiltering = () => {
+    if (!goalSummaryMatrix) return;
 
+    let filteredAndSortedMatrix = [...goalSummaryMatrix];
 
-const applySortingAndFiltering = () => {
-  if (!goalSumMatrix) return;
+    if (filteringOption.length > 0 && fhirDataCollection) {
+      const filteredMatrix: GoalSummary[][] = [];
+    
+      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
+      for (let i = 0; i < goalSummaryMatrix!.length; i++) {
+        filteredMatrix.push([]);
+      }
+    
+      filteringOption.forEach(option => {
+        // Find the index of the selected option in the filteringOptions array
+        const index = filteringOptions.findIndex(item => item.value === option);
+        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
+        if (index !== -1) {
+          filteredMatrix[index] = filteredAndSortedMatrix[index];
+        }
+      });
+    
+      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
+    }
+    
 
-  let sortedMatrix = goalSumMatrix;
-  if (sortingOption === 'alphabetical-az') {
-      sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
-      );
-  } else if (sortingOption === 'alphabetical-za') {
-      sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
-      );
-  } else if (sortingOption === 'newest') {
-      sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => {
-              if (a.StartDate && b.StartDate) {
-                  return b.StartDate.localeCompare(a.StartDate);
-              } else if (!a.StartDate) {
-                  return 1;
-              } else {
-                  return -1;
-              }
-          })
-      );
-  } else if (sortingOption === 'oldest') {
-      sortedMatrix = goalSumMatrix.map(providerGoals =>
-          [...providerGoals].sort((a, b) => {
-              if (a.StartDate && b.StartDate) {
-                  return a.StartDate.localeCompare(b.StartDate);
-              } else if (!a.StartDate) {
-                  return -1;
-              } else {
-                  return 1;
-              }
-          })
-      );
-  }
+    switch (sortingOption) {
+      case 'alphabetical-az':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
+        );
+        break;
+      case 'alphabetical-za':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
+        );
+        break;
+      case 'newest':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (b.StartDate || '').localeCompare(a.StartDate || ''))
+        );
+        break;
+      case 'oldest':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (a.StartDate || '').localeCompare(b.StartDate || ''))
+        );
+        break;
+      default:
+        break;
+    }
 
-  let filteredMatrix = sortedMatrix;
-  if (filteringOption) {
-    filteredMatrix = sortedMatrix.map(providerGoals =>
-        providerGoals.filter(goal =>
-            goal.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
-        )
-    );
-}
-
-  setSortedAndFilteredMatrix(filteredMatrix);
-};
-
-    // // Function to sort the goalSumMatrix based on the selected option
-    // const sortGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
-    //   // Implement sorting logic based on the selected option
-    //   // For example, you can use array.sort() method
-    //   // and update goalSumMatrix state with the sorted array
-    // };
-  
-    // // Function to filter the goalSumMatrix based on the selected option
-    // const filterGoalSumMatrix = (matrix: GoalSummary[][] | undefined, option: string) => {
-    //   // Implement filtering logic based on the selected option
-    //   // and update goalSumMatrix state with the filtered array
-    // };
+    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
+  };
 
   return (
     <div className="home-view">
       <div className="welcome">
-
         <h4 className="title">Health Goals</h4>
 
-        {props.fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirDataCollection === undefined} />
+        {fhirDataCollection === undefined && (
+          <>
+            <p>Reading your clinical records...</p>
+            <BusySpinner busy={fhirDataCollection === undefined} />
           </>
-        }
+        )}
 
-        {props.canShareData
-          ? <p><Link to={{ pathname: '/goal-edit', state: { fhirDataCollection: props.fhirDataCollection } }}>Add a New Goal</Link></p>
-          : <p />}
+        {canShareData && (
+          <p>
+            <Link to={{ pathname: '/goal-edit', state: { fhirDataCollection } }}>
+              Add a New Goal
+            </Link>
+          </p>
+        )}
 
-        <a className='text-right' onClick={()=>setShowModal(true)}>SORT/FILTER</a>
-        {showModal ? <SortModal showModal={showModal} closeModal={closeModal} onSubmit={handleSortFilterSubmit} sortingOptions={sortingOptions} filteringOptions={filteringOptions}/>:null}
+          {fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT
+          </a>
+        ) : (
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT/FILTER
+          </a>
+        )}
+          {showModal && ( // Conditional rendering of modal based on the number of providers
+          fhirDataCollection && fhirDataCollection.length === 1 ? (
+            <SortOnlyModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+            />
+          ) : (
+            <SortModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+              filteringOptions={filteringOptions}
+            />
+          )
+        )}
 
-        {
-          sortedAndFilteredMatrix?.map((goalSummary, index) => {
-
-            return (
-              <div key={'outerArray-' + index}>
-                {
-                  goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init'
-                    ? <p>Loading...</p>
-                    : (!goalSummary || goalSummary.length < 1) && props.fhirDataCollection !== undefined
-                      ? <p>No records found.</p>
-                      :
-                      <div>
-                        {goalSummary?.map((goal, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(goal,props.fhirDataCollection![index].serverName)} />
-                        ))}
-                      </div>
-                }
+        {sortedAndFilteredMatrix?.map((goalSummary, index) => (
+          <div key={'outerArray-' + index}>
+            {goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init' ? (
+              <p>Loading...</p>
+            ) : !goalSummary || goalSummary.length < 1 ? (
+              <p>No records found.</p>
+            ) : (
+              <div>
+                {goalSummary?.map((goal, idx) => (
+                  <Summary key={idx} id={idx} rows={buildRows(goal, fhirDataCollection![index].serverName)} />
+                ))}
               </div>
-            )
-
-          })
-        }
-
+            )}
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
+};
 
-}
+const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
+  let rows: SummaryRowItems = [
+    {
+      isHeader: true,
+      twoColumns: false,
+      data1: goal.Description,
+      data2: '',
+    },
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: goal.ExpressedBy,
+      data2: goal.StartDate === null ? '' : 'Start: ' + goal.StartDate,
+    },
+  ];
 
-const buildRows = (goal: GoalSummary, theSource?:string): SummaryRowItems => {
-  let rows: SummaryRowItems =
-    [
-      {
-        isHeader: true,
-        twoColumns: false,
-        data1: goal.Description,
-        data2: '',
-      },
-      {
-        isHeader: false,
-        twoColumns: true,
-        data1: goal.ExpressedBy,
-        data2: goal.StartDate === null ? ''
-          : 'Start: ' + displayDate(goal.StartDate),
-      },
-    ]
-
-  const targets: SummaryRowItems = buildTargets(goal)
+  const targets: SummaryRowItems = buildTargets(goal);
   if (targets?.length) {
-    rows = rows.concat(targets)
+    rows = rows.concat(targets);
   }
-  const status: SummaryRowItem = {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'Status: ' + (goal.LifecycleStatus ?? 'Unknown') + (goal.AchievementStatus === null ? '' : ' -- ' + goal.AchievementStatus),
-      data2:'',
-    }
-  rows = rows.concat(status)
 
-  const addresses: SummaryRowItems | undefined = goal.Addresses?.map((focus) => (
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'Focus: ' + (focus.DisplayName ?? 'Unknown'),
-      data2: '',
-    }
-  ))
+  const addresses: SummaryRowItems | undefined = goal.Addresses?.map(concern => ({
+    isHeader: false,
+    twoColumns: false,
+    data1: 'Addresses: ' + (concern.DisplayName ?? 'Unknown'),
+    data2: '',
+  }));
   if (addresses?.length) {
-    rows = rows.concat(addresses)
+    rows = rows.concat(addresses);
   }
 
-  if (goal.LearnMore !== undefined && goal.LearnMore !== null) {
-    const learnMore: SummaryRowItem = {
-      isHeader: false,
-      twoColumns: false,
-      data1:
-        <Link to="route" target="_blank"
-          onClick={
-            (event) => { event.preventDefault(); window.open(goal.LearnMore); }
-          }><i>Learn&nbsp;More</i>
-        </Link>,
-      data2: '',
-    }
-    rows.push(learnMore)
-  }
+  const learnMore: SummaryRowItem = {
+    isHeader: false,
+    twoColumns: false,
+    data1:
+      goal.LearnMore === undefined || goal.LearnMore === null ? '' : (
+        <Link
+          to="route"
+          target="_blank"
+          onClick={event => {
+            event.preventDefault();
+            window.open(goal.LearnMore);
+          }}
+        >
+          <i>Learn More</i>
+        </Link>
+      ),
+    data2: '',
+  };
+  rows.push(learnMore);
 
-  const notes: SummaryRowItems | undefined = goal.Notes?.map((note) => (
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'Note: ' + note,
-      data2: '',
-    }
-  ))
+  const notes: SummaryRowItems | undefined = goal.Notes?.map(note => ({
+    isHeader: false,
+    twoColumns: false,
+    data1: 'Note: ' + note,
+    data2: '',
+  }));
   if (notes?.length) {
-    rows = rows.concat(notes)
+    rows = rows.concat(notes);
   }
 
-  const provenance: SummaryRowItems | undefined = goal.Provenance?.map((provenance) => (
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'Source: ' + provenance.Transmitter ?? '',
-      data2: provenance.Author ?? '',
-    }
-  ))
-  if (provenance?.length) {
-    rows = rows.concat(provenance)
-  }
-
-  const hasProvenance = goal.Provenance?.length ?? 0 > 0
-  if (theSource && !hasProvenance) {
+  if (theSource) {
     const source: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
-      data1: 'Source ' + theSource,
+      data1: 'From ' + theSource,
       data2: '',
-    }
-    rows.push(source)
+    };
+    rows.push(source);
   }
 
-  return rows
-}
+  const provenance: SummaryRowItems | undefined = goal.Provenance?.map(provenance => ({
+    isHeader: false,
+    twoColumns: true,
+    data1: 'Source: ' + (provenance.Transmitter ?? ''),
+    data2: provenance.Author ?? '',
+  }));
+  if (provenance?.length) {
+    rows = rows.concat(provenance);
+  }
+
+  return rows;
+};
 
 const buildTargets = (goal: GoalSummary): SummaryRowItems => {
-  let targets: SummaryRowItems = []
+  let targets: SummaryRowItems = [];
 
-  goal.Target?.forEach((curTarget) => {
+  goal.Target?.forEach(curTarget => {
+    let isPushLastResultTextAndDateOnly: boolean =
+      (curTarget.DueDate === null || curTarget.DueDate === undefined) &&
+      (curTarget.TargetValue === null || curTarget.TargetValue === undefined);
 
-    let isPushLastResultTextAndDateOnly: boolean = (curTarget.DueDate === null || curTarget.DueDate === undefined)
-      && (curTarget.TargetValue === null || curTarget.TargetValue === undefined)
+    let isPushTargetValueAndDueDateOnly: boolean = !curTarget.LastResult || !curTarget.LastResult.Date;
 
-    let isPushTargetValueAndDueDateOnly: boolean = !curTarget.LastResult || !curTarget.LastResult.Date
-
-    let isPushBoth = !isPushLastResultTextAndDateOnly && !isPushTargetValueAndDueDateOnly
+    let isPushBoth = !isPushLastResultTextAndDateOnly && !isPushTargetValueAndDueDateOnly;
 
     if (isPushLastResultTextAndDateOnly && !isPushTargetValueAndDueDateOnly) {
-      // Skip targetValueAndDueDate, add lastResultTextAndDate only
-      targets.push(buildLastResultTextAndDate(curTarget))
+      targets.push(buildLastResultTextAndDate(curTarget));
     } else if (isPushTargetValueAndDueDateOnly && !isPushLastResultTextAndDateOnly) {
-      // Skip lastResultTextAndDate, add targetValueAndDueDate only
-      targets.push(buildTargetValueAndDueDate(curTarget))
+      targets.push(buildTargetValueAndDueDate(curTarget));
     } else if (isPushBoth) {
-      // Push both targetValueAndDueDate and lastResultTextAndDate as enough data is valid
-      targets.push(buildTargetValueAndDueDate(curTarget))
-      targets.push(buildLastResultTextAndDate(curTarget))
+      targets.push(buildTargetValueAndDueDate(curTarget));
+      targets.push(buildLastResultTextAndDate(curTarget));
     }
+  });
 
-  })
-
-  return targets
-}
+  return targets;
+};
 
 const buildLastResultTextAndDate = (curTarget: GoalTarget): SummaryRowItem => {
   return {
     isHeader: false,
     twoColumns: false,
-    data1: 'Last Value: ' + (curTarget.LastResult?.ResultText ?? '?') + ' on ' + displayDate(curTarget.LastResult?.Date),
+    data1: 'Last Value: ' + (curTarget.LastResult?.ResultText ?? '?') + ' on ' + (curTarget.LastResult?.Date || ''),
     data2: '',
-  }
-}
+  };
+};
 
 const buildTargetValueAndDueDate = (curTarget: GoalTarget): SummaryRowItem => {
   return {
     isHeader: false,
     twoColumns: true,
-    data1: curTarget.TargetValue === null ? '' : 'Target: ' + curTarget?.TargetValue,
-    data2: curTarget.DueDate === null ? '' : 'Due: ' + displayDate(curTarget?.DueDate),
-  }
-}
+    data1: curTarget.TargetValue === null ? '' : 'Target: ' + curTarget.TargetValue,
+    data2: curTarget.DueDate === null ? '' : 'Due: ' + curTarget.DueDate,
+  };
+};
