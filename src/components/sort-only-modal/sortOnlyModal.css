@@ -1,0 +1,13 @@
+.close-button svg path, .submit-button svg path {
+    fill: rgb(var(--color-light-text)) !important;
+}
+/* .radio-color {
+    background-color: #0d6efd;
+    border-color: #0d6efd; */
+/* } */
+input[type="radio"] {
+    background-color: red;
+}
+#default-radio{
+    background-color: red;
+}
