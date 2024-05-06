@@ -52,15 +52,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
 
-    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT;
-  
+    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+
 
     let fhirDataCollection = this.props.fhirDataCollection
-    let patients = this.props.patientSummaries;
-    let screenings = this.props.screenings?.filter(s => s.notifyPatient);
+    let patients = this.props.patientSummaries
+    let screenings = this.props.screenings?.filter(s => s.notifyPatient)
     // let tasks = this.props.tasks;
 
-    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false';
+    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false'
 
     return (
       <div className="home-view">
@@ -76,7 +76,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' :
             <p className="subheadline">Caregiver <b>{fhirDataCollection && fhirDataCollection[0]?.caregiverName}</b></p>
           }
-          {(patients === undefined) ? '' :
+          {(!patients) ? '' :
             <div className="subheadline">
               {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' : 'for '}
               {/* <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age} */}
@@ -94,9 +94,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                       return (
                         <li key={index}>
                           {
-                            fhirDataCollection && fhirDataCollection[index].isSDS ?
+                            fhirDataCollection && fhirDataCollection[index] && fhirDataCollection[index]?.isSDS ?
                               <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </> :
-                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection![index].serverName} </>
+                              (fhirDataCollection && fhirDataCollection[index]) &&
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </>
                             // TODO: Consider adding an isLauncher option (need to add to datatype first)
                           }
                         </li>
@@ -177,17 +178,17 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               </ul>
             }
 
- 
+
 
             <div>
-             
+
                 <p>
                   <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
                   <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Retrieve records from additional healthcare providers</Link>
                 </p>
-             
+
             </div>
- 
+
 
             <div>
               {typeof sdsurl !== 'undefined' ? (
