@@ -1,109 +1,122 @@
 import '../../Home.css';
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { MedicationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
+import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface MedicationListProps {
   fhirDataCollection?: FHIRData[],
   medicationSummaryMatrix?: MedicationSummary[][],
 }
 
-interface MedicationListState {
-}
-
-export const MedicationList: React.FC<MedicationListProps> = (props: MedicationListProps) => {
+export const MedicationList: FC<MedicationListProps> = ({ fhirDataCollection, medicationSummaryMatrix }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("MedicationList component RENDERED!")
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
-  const [filteringOption, setFilteringOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string[]>([]);
   const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<MedicationSummary[][] | undefined>();
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const medSumMatrix: MedicationSummary[][] | undefined = props.medicationSummaryMatrix
-
- console.log("MedicationListSum",medSumMatrix);
-
  useEffect(() => {
   applySortingAndFiltering();
-}, [props.medicationSummaryMatrix, sortingOption, filteringOption]);
+}, [medicationSummaryMatrix, sortingOption, filteringOption]);
 
 useEffect(() => {
-  if (props.medicationSummaryMatrix) {
+  if (medicationSummaryMatrix) {
     generateFilteringOptions();
   }
-}, [props.medicationSummaryMatrix]);
+}, [medicationSummaryMatrix]);
 
 const closeModal = () => {
   setShowModal(false);
 };
 
-const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
   setSortingOption(sortOption);
-  setFilteringOption(filterOption);
+  if(filterOption){
+    setFilteringOption(filterOption);
+    }
   setShowModal(false);
 };
 
 const generateFilteringOptions = () => {
-  if (!props.medicationSummaryMatrix) return;
+  if (!fhirDataCollection || fhirDataCollection.length === 0) {
+    setFilteringOptions([]);
+    return;
+  }
 
-  const provenanceValues: string[] = [];
-
-  props.medicationSummaryMatrix.forEach(providerMedications => {
-    providerMedications.forEach(medication => {
-      medication.Provenance?.forEach(provenance => {
-        if (provenance.Transmitter) {
-          provenanceValues.push(provenance.Transmitter);
-        }
-      });
-    });
-  });
-
-  const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
-
-  const options = uniqueProvenanceValues.map(value => ({
-    value: value,
-    label: value,
+  const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName)));
+  const options = uniqueServerNames.map(value => ({
+    value: value || '',
+    label: value || '',
   }));
 
   setFilteringOptions(options);
 };
 
+const sortingOptions = [
+  { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+  { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+  { value: 'newest', label: 'Date Created: Newest' },
+  { value: 'oldest', label: 'Date Created: Oldest' },
+];
+
 const applySortingAndFiltering = () => {
-  if (!props.medicationSummaryMatrix) return;
+  if (!medicationSummaryMatrix) return;
 
-  let sortedMatrix = props.medicationSummaryMatrix;
-  if (sortingOption === 'alphabetical-az') {
-    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
-      [...providerMedications].sort((a, b) => (a.ConceptName ?? '').localeCompare(b.ConceptName ?? ''))
-    );
-  } else if (sortingOption === 'alphabetical-za') {
-    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
-      [...providerMedications].sort((a, b) => (b.ConceptName ?? '').localeCompare(a.ConceptName ?? ''))
-    );
-  } else if (sortingOption === 'newest') {
-    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
-      [...providerMedications].sort((a, b) => (b.AuthoredOn ?? '').localeCompare(a.AuthoredOn ?? ''))
-    );
-  } else if (sortingOption === 'oldest') {
-    sortedMatrix = props.medicationSummaryMatrix.map(providerMedications =>
-      [...providerMedications].sort((a, b) => (a.AuthoredOn ?? '').localeCompare(b.AuthoredOn ?? ''))
-    );
+  let filteredAndSortedMatrix = [...medicationSummaryMatrix];
+
+  if (filteringOption.length > 0 && fhirDataCollection) {
+    const filteredMatrix: MedicationSummary[][] = [];
+  
+    // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
+    for (let i = 0; i < medicationSummaryMatrix!.length; i++) {
+      filteredMatrix.push([]);
+    }
+  
+    filteringOption.forEach(option => {
+      // Find the index of the selected option in the filteringOptions array
+      const index = filteringOptions.findIndex(item => item.value === option);
+      // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
+      if (index !== -1) {
+        filteredMatrix[index] = filteredAndSortedMatrix[index];
+      }
+    });
+  
+    filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
+  }
+  
+
+  switch (sortingOption) {
+    case 'alphabetical-az':
+      filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+        providerGoals.sort((a, b) => (a.ConceptName || '').localeCompare(b.ConceptName || ''))
+      );
+      break;
+    case 'alphabetical-za':
+      filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+        providerGoals.sort((a, b) => (b.ConceptName || '').localeCompare(a.ConceptName || ''))
+      );
+      break;
+    case 'newest':
+      filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+        providerGoals.sort((a, b) => (b.AuthoredOn || '').localeCompare(a.AuthoredOn || ''))
+      );
+      break;
+    case 'oldest':
+      filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+        providerGoals.sort((a, b) => (a.AuthoredOn || '').localeCompare(b.AuthoredOn || ''))
+      );
+      break;
+    default:
+      break;
   }
 
-  let filteredMatrix = sortedMatrix;
-  if (filteringOption) {
-    filteredMatrix = sortedMatrix.map(providerMedications =>
-      providerMedications.filter(medication =>
-        medication.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
-      )
-    );
-  }
-
-  setSortedAndFilteredMatrix(filteredMatrix);
+  setSortedAndFilteredMatrix(filteredAndSortedMatrix);
 };
 
   return (
@@ -112,28 +125,38 @@ const applySortingAndFiltering = () => {
 
         <h4 className="title">Medications</h4>
 
-        {props.fhirDataCollection === undefined
+        {fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirDataCollection === undefined} />
+            <BusySpinner busy={fhirDataCollection === undefined} />
           </>
         }
-        <a className="text-right" onClick={() => setShowModal(true)}>
-          SORT/FILTER
-        </a>
-        {showModal ? (
-          <SortModal
-            showModal={showModal}
-            closeModal={closeModal}
-            onSubmit={handleSortFilterSubmit}
-            sortingOptions={[
-              { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
-              { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
-              { value: 'newest', label: 'Date Authored: Newest' },
-              { value: 'oldest', label: 'Date Authored: Oldest' },
-            ]}
-            filteringOptions={filteringOptions}
-          />
-        ) : null}
+          {fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT
+          </a>
+        ) : (
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT/FILTER
+          </a>
+        )}
+          {showModal && ( // Conditional rendering of modal based on the number of providers
+          fhirDataCollection && fhirDataCollection.length === 1 ? (
+            <SortOnlyModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+            />
+          ) : (
+            <SortModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+              filteringOptions={filteringOptions}
+            />
+          )
+        )}
 
         {
           sortedAndFilteredMatrix?.map((medicationSummary, index) => {
@@ -148,12 +171,12 @@ const applySortingAndFiltering = () => {
                 {
                   medicationSummary && medicationSummary.length > 0 && medicationSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>
-                    : (!medicationSummary || medicationSummary.length < 1) && props.fhirDataCollection !== undefined
+                    : (!medicationSummary || medicationSummary.length < 1) && fhirDataCollection !== undefined
                       ? <p>No records found.</p>
                       :
                       <div>
                         {medicationSummary?.map((med, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(med,props.fhirDataCollection![index].serverName)} />
+                          <Summary key={idx} id={idx} rows={buildRows(med,fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }

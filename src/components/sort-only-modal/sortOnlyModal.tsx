@@ -1,44 +1,32 @@
 import React from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-interface SortModalProps {
+interface SortOnlyModalProps {
     showModal: boolean;
     closeModal: () => void;
-    onSubmit: (sortOption: string, filterOption: string[]) => void;
+    onSubmit: (sortOption: string) => void;
     sortingOptions: { value: string; label: string }[]; // Array of sorting options
-    filteringOptions: { value: string; label: string }[];
 }
 
-export const SortModal: React.FC<SortModalProps> = ({ showModal, closeModal, onSubmit, sortingOptions, filteringOptions }) => {
+export const SortOnlyModal: React.FC<SortOnlyModalProps> = ({ showModal, closeModal, onSubmit, sortingOptions }) => {
     const [sortOption, setSortOption] = React.useState<string>('');
-    const [filterOption, setFilterOption] = React.useState<string[]>([]);
 
     const handleSortOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSortOption(event.target.value);
     };
 
-    const handleFilterOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-        if (event.target.checked) {
-            setFilterOption(prevOptions => [...prevOptions, value]); // Add value to the array
-        } else {
-            setFilterOption(prevOptions => prevOptions.filter(option => option !== value)); // Remove value from the array
-        }
-    };
-
     const handleSubmit = () => {
-        onSubmit(sortOption, filterOption);
+        onSubmit(sortOption);
     };
 
     return (
         <>
             <Modal show={showModal} onHide={closeModal} animation={false} size='sm'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Sort/Filter</Modal.Title>
+                    <Modal.Title>Sort Options</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                    <h5>Sort Options:</h5>
                         {sortingOptions.map(option => (
                             <Form.Check
                                 key={option.value}
@@ -48,18 +36,6 @@ export const SortModal: React.FC<SortModalProps> = ({ showModal, closeModal, onS
                                 value={option.value}
                                 label={option.label}
                                 onChange={handleSortOptionChange}
-                            />
-                        ))}
-                        <h5>Filter Options:</h5>
-                        {filteringOptions.map(option => (
-                            <Form.Check
-                                key={option.value}
-                                type='switch'
-                                id={`filter-${option.value}`}
-                                name='filteringOptions'
-                                value={option.value}
-                                label={option.label}
-                                onChange={handleFilterOptionChange}
                             />
                         ))}
                     </Form>

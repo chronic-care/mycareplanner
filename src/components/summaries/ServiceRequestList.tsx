@@ -1,50 +1,75 @@
 import '../../Home.css';
-import React, { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
 import { ServiceRequest } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
+import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface ServiceRequestListProps {
   fhirDataCollection?: FHIRData[];
 }
 
-export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: ServiceRequestListProps) => {
+export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollection}) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!");
 
   const [sortedServiceRequests, setSortedServiceRequests] = useState<ServiceRequest[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
-  const [filterOption, setFilterOption] = useState<string>('');
+  const [filterOption, setFilterOption] = useState<string[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
   const [hashMap, setHashMap] = useState<Map<ServiceRequest, string>>(new Map());
 
-  useEffect(() => {
-    applySorting();
-  }, [props.fhirDataCollection, sortOption, filterOption]);
+  console.log("fhirDataCollection", fhirDataCollection);
 
   useEffect(() => {
-    if (props.fhirDataCollection) {
-      generateHashMap(props.fhirDataCollection);
-    }
-  }, [props.fhirDataCollection]);
+    applySorting();
+  }, [fhirDataCollection, sortOption, filterOption]);
+
+  useEffect(() => {
+    generateFilteringOptions();
+  }, [fhirDataCollection]);
 
   const closeModal = () => {
     setShowModal(false);
   };
 
-  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+  const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortOption(sortOption);
-    setFilterOption(filterOption);
+    if(filterOption){
+      setFilterOption(filterOption)
+    }
     setShowModal(false);
   };
+
+  const generateFilteringOptions = () => {
+    if (!fhirDataCollection || fhirDataCollection.length === 0) {
+      setFilteringOptions([]);
+      return;
+    }
+
+    const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName)));
+    const options = uniqueServerNames.map(value => ({
+      value: value || '',
+      label: value || '',
+    }));
+
+    setFilteringOptions(options);
+  };
+
+  const sortingOptions = [
+    { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+    { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+    { value: 'newest', label: 'Date Created: Newest' },
+    { value: 'oldest', label: 'Date Created: Oldest' },
+  ];
 
   const applySorting = () => {
     let serviceRequests: ServiceRequest[] = [];
   
-    if (props.fhirDataCollection) {
-      props.fhirDataCollection.forEach(data => {
+    if (fhirDataCollection) {
+      fhirDataCollection.forEach(data => {
         if (data.serviceRequests) {
           serviceRequests = serviceRequests.concat(data.serviceRequests);
         }
@@ -81,64 +106,51 @@ export const ServiceRequestList: React.FC<ServiceRequestListProps> = (props: Ser
     }
   
     if (filterOption) {
-      sortedServiceRequests = sortedServiceRequests.filter((service) => displayConcept(service.code) === filterOption);
-    }
+      }
   
     setSortedServiceRequests(sortedServiceRequests);
   };
   
 
-  const generateHashMap = (dataCollection: FHIRData[]) => {
-    const newHashMap = new Map<ServiceRequest, string>();
-
-    dataCollection.forEach(data => {
-      if (data.serviceRequests) {
-        data.serviceRequests.forEach(sr => {
-          newHashMap.set(sr, data.serverName || '');
-        });
-      }
-    });
-
-    setHashMap(newHashMap);
-    generateFilteringOptions(newHashMap);
-  };
-
-  const generateFilteringOptions = (hashMap: Map<ServiceRequest, string>) => {
-    const sourceValues: string[] = Array.from(hashMap.values());
-    const uniqueSourceValues = Array.from(new Set(sourceValues));
-    const options = uniqueSourceValues.map(value => ({
-      value: value,
-      label: value
-    }));
-    setFilteringOptions(options);
-  };
 
   return (
     <div className="home-view">
       <div className="welcome">
         <h4 className="title">Planned Activities</h4>
 
-        {props.fhirDataCollection === undefined
+        {fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirDataCollection === undefined} />
+            <BusySpinner busy={fhirDataCollection === undefined} />
           </>
         }
 
-        <a className="text-right" onClick={() => setShowModal(true)}>
-          SORT/FILTER
-        </a>
-        <SortModal
-          showModal={showModal}
-          closeModal={closeModal}
-          onSubmit={handleSortFilterSubmit}
-          sortingOptions={[
-            { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
-            { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
-            { value: 'newest', label: 'Date: Newest' },
-            { value: 'oldest', label: 'Date: Oldest' }
-          ]}
-          filteringOptions={filteringOptions}
-        />
+{fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT
+          </a>
+        ) : (
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT/FILTER
+          </a>
+        )}
+ {showModal && ( // Conditional rendering of modal based on the number of providers
+          fhirDataCollection && fhirDataCollection.length === 1 ? (
+            <SortOnlyModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+            />
+          ) : (
+            <SortModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+              filteringOptions={filteringOptions}
+            />
+          )
+        )}
 
         {sortedServiceRequests.length > 0 ? (
           sortedServiceRequests.map((service, idx) => (
