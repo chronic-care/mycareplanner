@@ -87,20 +87,19 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
           filteredMatrix[index] = filteredAndSortedMatrix[index];
         }
       });
-    
+
       filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
     }
-    
 
     switch (sortingOption) {
       case 'alphabetical-az':
         filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.CommonName || '').localeCompare(b.CommonName || ''))
+          providerGoals.sort((a, b) => (a.ConceptName || '').localeCompare(b.ConceptName || ''))
         );
         break;
       case 'alphabetical-za':
         filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.CommonName || '').localeCompare(a.CommonName || ''))
+          providerGoals.sort((a, b) => (b.ConceptName || '').localeCompare(a.ConceptName || ''))
         );
         break;
       case 'newest':
