@@ -184,8 +184,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
             <div>
 
                 <p>
-                  <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
-                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Retrieve records from additional healthcare providers</Link>
+                  <h5 style={{ paddingTop: '20px' }}>Add a health record account</h5>
+                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Login to additional healthcare provider accounts</Link>
                 </p>
 
             </div>
