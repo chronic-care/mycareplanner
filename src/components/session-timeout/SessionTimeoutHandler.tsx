@@ -105,6 +105,7 @@ const SessionTimeOutHandler = (props: SessionTimeOutHandlerProps) => {
                 showModal={showModal}
                 handleContinue={handleContinueSession}
                 handleLogout={handleLogout}
+                isLoggedOut={isLogout}
             />
         </div>
     )
