@@ -189,6 +189,11 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
   const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
   const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
+  console.log('getSupplementalDataClient authURL: ', authURL)
+  console.log('getSupplementalDataClient sdsURL: ', sdsURL)
+  console.log('getSupplementalDataClient sdsScope: ', sdsScope)
+  console.log('getSupplementalDataClient sdsClientId: ', sdsClientId)
+
   if (sdsClientId && sdsURL) {
     console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
     const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
@@ -217,7 +222,7 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
       if (sdsFhirAccessDataObject.tokenResponse) {
         sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
       }
-      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
+      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ",  JSON.stringify( sdsFhirAccessDataObject))
       // Connect to the client
       sdsClient = FHIR.client(sdsFhirAccessDataObject)
       console.log("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)

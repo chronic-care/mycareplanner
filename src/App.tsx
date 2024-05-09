@@ -51,6 +51,8 @@ import ConditionEditForm from './components/edit-forms/ConditionEditForm';
 import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
+import UnShareData from "./components/unshared-data/UnShareData";
+
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
@@ -841,6 +843,11 @@ class App extends React.Component<AppProps, AppState> {
                             <ShareData fhirDataCollection={this.state.fhirDataCollection}  />
                         </SessionProtected>
                     </Route>
+                    <Route path="/unshare-data">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <UnShareData fhirDataCollection={this.state.fhirDataCollection}  />
+                        </SessionProtected>
+                    </Route>
                     <Route path="/shared-data-summary">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <SharedDataSummary />
@@ -885,7 +892,9 @@ class App extends React.Component<AppProps, AppState> {
                                     <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
                                         <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
                                             progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
+                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} 
+                                            canShareData={this.state.canShareData}
+                                            />
                                     </TabPanel>
                                     <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
                                         <TabContext value={this.state.planTabIndex}>
