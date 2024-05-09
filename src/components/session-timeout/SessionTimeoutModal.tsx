@@ -6,6 +6,7 @@ interface SessionTimeOutModalProps {
     showModal: boolean;
     handleContinue: () => void;
     handleLogout: () => void;
+    isLoggedOut: boolean;
 }
 
 const millisToMinutesAndSeconds = (millis: number) => {
@@ -14,7 +15,7 @@ const millisToMinutesAndSeconds = (millis: number) => {
     return minutes + " minutes " + (seconds < 10 ? '0' : '') + seconds + " seconds";
 }
 
-const SessionTimeOutModal = ({ showModal, handleContinue, handleLogout }: SessionTimeOutModalProps) => {
+const SessionTimeOutModal = ({ showModal, handleContinue, handleLogout, isLoggedOut }: SessionTimeOutModalProps) => {
     const countDown = React.useMemo(() => {
         return +(process.env.REACT_APP_CLIENT_IDLE_TIMEOUT_COUNTDOWN ?? 5000)
     }, []);
@@ -55,6 +56,16 @@ const SessionTimeOutModal = ({ showModal, handleContinue, handleLogout }: Sessio
         handleContinue();
     }
 
+    useEffect(() => {
+        if (isLoggedOut) {
+            handleLogout(); 
+        }
+    }, [isLoggedOut, handleLogout]);
+
+    if (isLoggedOut) {
+        return null; 
+    }
+    
     return (
         <Modal show={showModal}>
             <Modal.Header closeButton={false}>

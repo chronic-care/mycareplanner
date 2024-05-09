@@ -25,6 +25,7 @@ interface HomeProps {
   userErrorMessage: string | undefined,
   developerErrorMessage: string | undefined,
   errorCaught: Error | string | unknown,
+  canShareData?: boolean
 }
 
 interface HomeState {
@@ -52,15 +53,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
 
-    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT;
-  
+    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+
 
     let fhirDataCollection = this.props.fhirDataCollection
-    let patients = this.props.patientSummaries;
-    let screenings = this.props.screenings?.filter(s => s.notifyPatient);
+    let patients = this.props.patientSummaries
+    let screenings = this.props.screenings?.filter(s => s.notifyPatient)
     // let tasks = this.props.tasks;
 
-    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false';
+    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false'
 
     return (
       <div className="home-view">
@@ -76,7 +77,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' :
             <p className="subheadline">Caregiver <b>{fhirDataCollection && fhirDataCollection[0]?.caregiverName}</b></p>
           }
-          {(patients === undefined) ? '' :
+          {(!patients) ? '' :
             <div className="subheadline">
               {!fhirDataCollection || (fhirDataCollection && (fhirDataCollection[0]?.caregiverName === undefined)) ? '' : 'for '}
               {/* <b>{patient?.fullName}</b> ({patient?.gender}) Age {patient?.age} */}
@@ -94,9 +95,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                       return (
                         <li key={index}>
                           {
-                            fhirDataCollection && fhirDataCollection[index].isSDS ?
+                            fhirDataCollection && fhirDataCollection[index] && fhirDataCollection[index]?.isSDS ?
                               <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </> :
-                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection![index].serverName} </>
+                              (fhirDataCollection && fhirDataCollection[index]) &&
+                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </>
                             // TODO: Consider adding an isLauncher option (need to add to datatype first)
                           }
                         </li>
@@ -177,25 +179,35 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               </ul>
             }
 
- 
+
 
             <div>
-             
+
                 <p>
-                  <h5 style={{ paddingTop: '20px' }}>Shared Health Records</h5>
-                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Retrieve records from additional healthcare providers</Link>
+                  <h5 style={{ paddingTop: '20px' }}>Add a health record account</h5>
+                  <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Login to additional healthcare provider accounts</Link>
                 </p>
-             
+
             </div>
- 
+
 
             <div>
-              {typeof sdsurl !== 'undefined' ? (
+              { this.props.canShareData  ? (
                 <p>
                   <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
                   <Link to={{ pathname: '/share-data' }}>Share your health data</Link></p>
               ) : (<p></p>)}
             </div>
+
+
+            <div>
+              { this.props.canShareData  ? (
+                <p>
+                  <h5 style={{ paddingTop: '20px' }}>Withdraw your health data</h5>
+                  <Link to={{ pathname: '/unshare-data' }}>Opt out of sharing your health data</Link></p>
+              ) : (<p></p>)}
+            </div>
+
 
             <h5 style={{ paddingTop: '20px' }}>Disclaimer</h5>
             <p>This application is provided for informational purposes only and does not constitute medical advice or professional services. The information provided should not be used for diagnosing or treating a health problem or disease, and those seeking personal medical advice should consult with a licensed physician. Always seek the advice of your doctor or other qualified health provider regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read in this application. If you think you may have a medical emergency, call 911 or go to the nearest emergency room immediately. No physician-patient relationship is created by this application or its use. Neither OHSU, nor its employees, nor any contributor to this application, makes any representations, express or implied, with respect to the information herein or to its use.</p>

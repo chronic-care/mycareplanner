@@ -4,7 +4,7 @@ import React from 'react';
 import { Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
-import { Task } from './data-services/fhir-types/fhir-r4';
+import { Patient, Task } from './data-services/fhir-types/fhir-r4';
 
 import HomeIcon from '@mui/icons-material/Home';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
@@ -51,6 +51,8 @@ import ConditionEditForm from './components/edit-forms/ConditionEditForm';
 import GoalEditForm from './components/edit-forms/GoalEditForm';
 import ProviderLogin from "./components/shared-data/ProviderLogin";
 import ShareData from "./components/shared-data/ShareData";
+import UnShareData from "./components/unshared-data/UnShareData";
+
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
@@ -327,37 +329,78 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
+
         if (launcherPatientId) {
             console.log('connect to SDS so we can verify it can exist')
             const tempSDSClient = await this.setSupplementalDataClient(launcherPatientId)
+            const launcherOnlyMessage = "Loading the launcher only, the SDS will not be loaded."
+
             if (this.state.supplementalDataClient && this.state.canShareData) {
-                // TODO: convert this to use multi login code to see if that resolves issue with duplicate meld original data?
+                // TODO: convert this to use multi login code?
+
+                // Configure the SDS client to get FHIR Data
                 console.log('We can connect to the SDS, so, add it to loader (read) SDS data')
                 const serverUrl = this.state.supplementalDataClient.state.serverUrl
                 const serverUrlFromEnvVar = process.env.REACT_APP_SHARED_DATA_ENDPOINT
                 console.log(`Dynamic SDS serverUrl (using this for now...): ${serverUrl}`)
                 console.log(`Static SDS serverUrl (verify it's the same...): ${serverUrlFromEnvVar}`)
                 console.log('tempSDSClient', tempSDSClient)
-                console.log('this.state.supplementalDataClient: Is this the same as tempSDS? It should be! If not, then we are sending the wrong data to getFhirData',
+                console.log(`this.state.supplementalDataClient: Is this the same as tempSDS? It should be!
+                If not, then we are sending the wrong data to getFhirData`,
                     this.state.supplementalDataClient)
-
                 this.setFhirDataStates(undefined)
                 this.resetErrorMessageState()
-                const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
-                    this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
-                console.log('SDS data: ', sdsData)
-                sdsData.serverName = 'SDS Data'
-                const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
-                console.log('Merged (launcher and SDS) data', mergedFhirDataCollection)
-                this.setFhirDataStates(mergedFhirDataCollection)
+
+                try {
+                // Use the SDS client to get FHIR Data
+                    const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
+                        this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
+                    console.log('SDS data: ', sdsData)
+                    sdsData.serverName = 'SDS Data'
+
+                    // Merge launcher and SDS Data and set states
+                    const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
+                    console.log('Merged (launcher and SDS) data', mergedFhirDataCollection)
+                    this.setFhirDataStates(mergedFhirDataCollection)
+                } catch (err) {
+                    // Note: This should be a very rare event
+                    // TODO: Exnternalize this and other exceptions into one function to reduce duplicate code...
+                    const userMessage: string = `There is an issue loading a seemingly valid SDS.
+                    Loading the launcher only.`
+                    const devMessage: string = `The SDS cannot be used due to an error while running
+                    getFHIRData with the SDS client: ` + launcherOnlyMessage
+                    this.setAndLogErrorMessageState('Non-terminating', userMessage, devMessage, err)
+
+                    // Ensure the app doesn't try to use this invalid client
+                    this.setState({ supplementalDataClient: undefined })
+                    this.setState({ canShareData: false })
+                    // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
+                }
+
             } else {
-                console.log('No SDS due to !this.state.supplementalDataClient || !this.state.canShareData, so just loading the launcher')
+                // TODO: Exnternalize this and other exceptions (like the one above)
+                // into one function to reduce duplicate code...
+                // TODO: Consider throwing an exception and handling there when else condition met vs using else itself
+                const userMessage: string = "The SDS is invalid. Loading the launcher only."
+                const devMessage: string = `The SDS cannot be used due to an invalid SDS configuration,
+                a missing patient, or otherwise: ` + launcherOnlyMessage
+                this.setAndLogErrorMessageState('Non-terminating', userMessage, devMessage,
+                    "!this.state.supplementalDataClient || !this.state.canShareData")
+
+                // Ensure the app doesn't try to use this invalid client
+                this.setState({ supplementalDataClient: undefined })
+                this.setState({ canShareData: false })
+                // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
+
                 this.setFhirDataStates([launcherData])
             }
+
         } else {
+            // TODO: Set this to non-terminating as well and include all code from other 'exceptions'?
             console.log('No SDS due to !launcherPatientId, so just loading the launcher')
             this.setFhirDataStates([launcherData])
         }
+
     }
 
     // TODO: MULTI-PROVIDER: This code is copioed into this class for now from the function in ProviderLOgin
@@ -425,7 +468,8 @@ class App extends React.Component<AppProps, AppState> {
             let fhirDataFromStoredEndpoint: FHIRData | undefined = undefined
 
             console.log("fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!)")
-            // !FUNCTION DIFF!: Props changed to this for setAndLogProgressState, setResourcesLoadedCountState, and setAndLogErrorMessageState,
+            // !FUNCTION DIFF!: Props changed to this for setAndLogProgressState, setResourcesLoadedCountState,
+            // and setAndLogErrorMessageState
             // TODO SDS: Maybe check if this is the sds, if it is, do the correct getFHIRData call
             if (selectedEndpoint.name.includes('SDS') && this.state.supplementalDataClient) {
                 console.log('loading sds data in App.tsx but not on first load/with a launcher')
@@ -560,16 +604,57 @@ class App extends React.Component<AppProps, AppState> {
 
     setSupplementalDataClient = async (patientId: string): Promise<Client | undefined> => {
         console.log('setSupplementalDataClient()')
-        const client = await getSupplementalDataClient(patientId)
-        // const client = await getSupplementalDataClient()
-        if (client) {
-            const stillValid = await isSavedTokenStillValid(client.state)
-            this.setState({ supplementalDataClient: client })
-            this.setState({ canShareData: stillValid })
+        let client = await getSupplementalDataClient(patientId)
 
-            console.log("***** PatientID = " + client.getPatientId() ?? "")
-            console.log("***** User ID = " + client.getUserId() ?? "")
-            console.log("***** Can share data = " + stillValid ?? "?")
+        if (client) {
+            // We have a valid client for the SDS, but, we don't know if it has any data yet
+            // (or a valid patient / patient with data)
+            // Ensure we have data by running a query such as the following before proceeding
+            // Query to run: https://gw.interop.community/MCCSDSEmpty/open/Patient/petient-id
+            // If we don't get: "resourceType": "Patient", (and instead get something like: "resourceType": "OperationOutcome")
+            // Return undefined.
+            // Note: We are only checking for a patient (below) at this time, can consider adding data check/above query later.
+            // If we want to go further, and we get back a Patient, we can check that: "id": "patient-name",
+            // If either of those fail, we don't load the SDS...
+
+            const sdsMessageSuffix = "The SDS client will not be used."
+            let isSDSReadError = false
+            let sdsPatient: Patient | undefined
+            if (client.patient.id !== null) {
+                console.log("client.patient.id !== null, using client.patient.read()")
+                try {
+                    sdsPatient = await client.patient.read() as Patient
+                    console.log("Valid ")
+                } catch (err) {
+                    console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
+                    isSDSReadError = true
+                }
+            } else {
+                console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
+                try {
+                    sdsPatient = await client.user.read() as Patient
+                } catch (err) {
+                    console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
+                    isSDSReadError = true
+                }
+            }
+
+            if (!isSDSReadError) {
+                console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
+
+                const stillValid = await isSavedTokenStillValid(client.state)
+                this.setState({ supplementalDataClient: client })
+                this.setState({ canShareData: stillValid })
+
+                console.log("***** PatientID = " + client.getPatientId() ?? "")
+                console.log("***** User ID = " + client.getUserId() ?? "")
+                console.log("***** Can share data = " + stillValid ?? "?")
+            } else {
+                console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
+                and not setting state for supplementalDataClient or canShareData`)
+                client = undefined
+            }
+
         }
         return client
     }
@@ -698,7 +783,7 @@ class App extends React.Component<AppProps, AppState> {
     public render(): JSX.Element {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("APP component RENDERED!")
 
-        let patient = this.state.patientSummaries;
+        // let patient = this.state.patientSummaries;
         let editFormData: EditFormData = {
             fhirDataCollection: this.state.fhirDataCollection,
             patientSummaries: this.state.patientSummaries,
@@ -758,6 +843,11 @@ class App extends React.Component<AppProps, AppState> {
                             <ShareData fhirDataCollection={this.state.fhirDataCollection}  />
                         </SessionProtected>
                     </Route>
+                    <Route path="/unshare-data">
+                        <SessionProtected isLoggedIn={!this.state.isLogout}>
+                            <UnShareData fhirDataCollection={this.state.fhirDataCollection}  />
+                        </SessionProtected>
+                    </Route>
                     <Route path="/shared-data-summary">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <SharedDataSummary />
@@ -802,7 +892,9 @@ class App extends React.Component<AppProps, AppState> {
                                     <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
                                         <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
                                             progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} />
+                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} 
+                                            canShareData={this.state.canShareData}
+                                            />
                                     </TabPanel>
                                     <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>
                                         <TabContext value={this.state.planTabIndex}>

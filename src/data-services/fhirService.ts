@@ -43,7 +43,7 @@ const carePlanPath = 'CarePlan?status=active&category=assess-plan' + provenanceS
 const careTeamPath = 'CareTeam?category=longitudinal' + provenanceSearch
 const careTeamPath_include = 'CareTeam?_include=CareTeam:participant' + provenanceSearch
 
-const goalsPath = 'Goal?lifecycle-status=active,completed' + provenanceSearch
+const goalsPath = 'Goal?lifecycle-status=active,completed,cancelled' + provenanceSearch
 
 /// Epic allows multiple category codes only >= Aug 2021 release
 // const conditionsPath = 'Condition?category=problem-list-item,health-concern,LG41762-2&clinical-status=active';
@@ -181,8 +181,6 @@ export const supplementalDataIsAvailable = (): Boolean => {
     && sdsScope !== undefined && sdsScope?.length > 0
 }
 
-// Original
-// export const getSupplementalDataClient = async (): Promise<Client | undefined> => {
 export const getSupplementalDataClient = async (patientId: string | null): Promise<Client | undefined> => {
   console.log('getSupplementalDataClient Start');
   let sdsClient: Client | undefined
@@ -191,8 +189,13 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
   const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
   const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
+  console.log('getSupplementalDataClient authURL: ', authURL)
+  console.log('getSupplementalDataClient sdsURL: ', sdsURL)
+  console.log('getSupplementalDataClient sdsScope: ', sdsScope)
+  console.log('getSupplementalDataClient sdsClientId: ', sdsClientId)
+
   if (sdsClientId && sdsURL) {
-    console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')     
+    console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
     const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
       await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
     if (sdsFhirAccessDataObject) {
@@ -202,25 +205,24 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
 
   else if (authURL && sdsURL && sdsScope) {
     console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
-
-  console.log('getSupplementalDataClient authURL: ', authURL)
-  console.log('getSupplementalDataClient sdsURL: ', sdsURL)
-  console.log('getSupplementalDataClient sdsScope: ', sdsScope)
+    console.log('getSupplementalDataClient authURL: ', authURL)
+    console.log('getSupplementalDataClient sdsURL: ', sdsURL)
+    console.log('getSupplementalDataClient sdsScope: ', sdsScope)
 
     const authFhirAccessDataObject: fhirclient.ClientState | undefined =
       await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
+    console.log('getSupplementalDataClient found extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint using ' + authURL);
 
-      console.log('getSupplementalDataClient found extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint using '  + authURL); 
     if (authFhirAccessDataObject) {
       console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
       // Replace the serverURL and client scope with Shared Data endpoint and scope
-      var sdsFhirAccessDataObject = authFhirAccessDataObject
+      let sdsFhirAccessDataObject = authFhirAccessDataObject
       sdsFhirAccessDataObject.serverUrl = sdsURL
       sdsFhirAccessDataObject.scope = sdsScope
       if (sdsFhirAccessDataObject.tokenResponse) {
         sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
       }
-      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ", sdsFhirAccessDataObject)
+      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ",  JSON.stringify( sdsFhirAccessDataObject))
       // Connect to the client
       sdsClient = FHIR.client(sdsFhirAccessDataObject)
       console.log("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
@@ -229,6 +231,11 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
       console.warn("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
     }
   }
+
+  // TODO: Consider check here if SDS is empty and return undefined if so.
+  // Unfortunately, we wouldn't have the specificity of the error (which is why it wasn't done here), but,
+  // The program will always know at the most root level that this SDS is not useful, which may be better.
+  // This includes that knowledge in ProviderLogin w/o the additional logic it has now to determine that.
 
   console.log('getSupplementalDataClient End');
   return sdsClient
@@ -428,7 +435,7 @@ export const getFHIRData = async (authorized: boolean, serverUrl: string | null,
     //   setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
     const getFHIRDataResult: FHIRData = await getFHIRResources(client, clientScope, supportsInclude,
       setAndLogProgressState, setResourcesLoadedCountState, setAndLogErrorMessageState)
-    if (clientOverride) { 
+    if (clientOverride) {
       getFHIRDataResult.isSDS = true
       getFHIRDataResult.serverName = "SDS"
     }
@@ -460,7 +467,6 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   // We could consider that if something is null, to grab from one of these locations (needs reauth required if local),
   // so it's not null, and can be populated in most cases
   setAndLogProgressState("Reading patient data", 20)
-  
 
   const patient: Patient = client.patient.id !== null
     ? await client.patient.read() as Patient
@@ -658,10 +664,10 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   // Thus, it has been converted and added back for testing purposes.
 
   // Commented out on 28 March, 2024 because survey is not supported by any EHRs at this time.
-  // const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
-  //   surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
-  // surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-  const surveyResults = undefined // required if we decide not to use the above code as was the case prior
+  const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
+    surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
+  surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
+  // const surveyResults = undefined // required if we decide not to use the above code as was the case prior
 
   curResourceName = 'Vitals'
   let vitalSigns: Observation[] | undefined
@@ -820,14 +826,14 @@ export function createSharedDataResource(resource: Resource) {
 export function updateSharedDataResource(resource: Resource,serverUrl?: string ) {
   return getSupplementalDataClient(null)
     .then((client: Client | undefined) => {
-      try {   
+      try {
         if (serverUrl) {
           const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
           const fhirHeaders = new Headers(); //
           fhirHeaders.append('X-Partition-Name',serverUrl);
           fhirHeaderRequestOption.headers = fhirHeaders;
           return client?.update(resource as fhirclient.FHIR.Resource,fhirHeaderRequestOption)
-        }  else {         
+        } else {
           return client?.update(resource as fhirclient.FHIR.Resource)
         }
       }

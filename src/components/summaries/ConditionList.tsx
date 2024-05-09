@@ -1,11 +1,12 @@
 import '../../Home.css';
-import React, { useEffect, useState }  from 'react';
+import React, { FC, useEffect, useState }  from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
+import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface ConditionListProps {
   fhirDataCollection?: FHIRData[],
@@ -13,119 +14,109 @@ interface ConditionListProps {
   canShareData?: boolean,
 }
 
-interface ConditionListState {
-}
-
-export const ConditionList: React.FC<ConditionListProps> = (props: ConditionListProps) => {
+export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, conditionSummaryMatrix, canShareData }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ConditionList component RENDERED!")
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
-  const [filteringOption, setFilteringOption] = useState<string>('');
+  const [filteringOption, setFilteringOption] = useState<string[]>([]);
   const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<ConditionSummary[][] | undefined>();
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
-  const conSumMatrix: ConditionSummary[][] | undefined = props.conditionSummaryMatrix
 
   useEffect(() => {
     applySortingAndFiltering();
-  }, [props.conditionSummaryMatrix, sortingOption, filteringOption]);
+  }, [conditionSummaryMatrix, sortingOption, filteringOption]);
 
   useEffect(() => {
-    if (props.conditionSummaryMatrix) {
+    if (conditionSummaryMatrix) {
       generateFilteringOptions();
     }
-  }, [props.conditionSummaryMatrix]);
+  }, [conditionSummaryMatrix]);
 
   const closeModal = () => {
     setShowModal(false);
   };
 
-  const handleSortFilterSubmit = (sortOption: string, filterOption: string) => {
+  const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
-    setFilteringOption(filterOption);
+    if(filterOption){
+      setFilteringOption(filterOption);
+      }
     setShowModal(false);
   };
 
   const generateFilteringOptions = () => {
-    if (!props.conditionSummaryMatrix) return;
+    if (!fhirDataCollection || fhirDataCollection.length === 0) {
+      setFilteringOptions([]);
+      return;
+    }
 
-    const provenanceValues: string[] = [];
-
-    props.conditionSummaryMatrix.forEach(conditionSummaries => {
-      conditionSummaries.forEach(condition => {
-        condition.Provenance?.forEach(provenance => {
-          if (provenance.Transmitter) {
-            provenanceValues.push(provenance.Transmitter);
-          }
-        });
-      });
-    });
-
-    const uniqueProvenanceValues = Array.from(new Set(provenanceValues));
-
-    const options = uniqueProvenanceValues.map(value => ({
-      value: value,
-      label: value,
+    const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName)));
+    const options = uniqueServerNames.map(value => ({
+      value: value || '',
+      label: value || '',
     }));
 
     setFilteringOptions(options);
   };
+  
+  const sortingOptions = [
+    { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
+    { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
+    { value: 'newest', label: 'Date Created: Newest' },
+    { value: 'oldest', label: 'Date Created: Oldest' },
+  ];
 
   const applySortingAndFiltering = () => {
-    if (!props.conditionSummaryMatrix) return;
+    if (!conditionSummaryMatrix) return;
 
-    let sortedMatrix = props.conditionSummaryMatrix;
-    if (sortingOption === 'alphabetical-az') {
-      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
-        [...conditionSummaries].sort((a, b) => {
-          const nameA = a.CommonName ?? a.ConceptName ?? 'Missing Condition Name';
-          const nameB = b.CommonName ?? b.ConceptName ?? 'Missing Condition Name';
-          return nameA.localeCompare(nameB);
-        })
-      );
-    } else if (sortingOption === 'alphabetical-za') {
-      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
-        [...conditionSummaries].sort((a, b) => {
-          const nameA = a.CommonName ?? a.ConceptName ?? 'Missing Condition Name';
-          const nameB = b.CommonName ?? b.ConceptName ?? 'Missing Condition Name';
-          return nameB.localeCompare(nameA);
-        })
-      );
-    } else if (sortingOption === 'newest') {
-      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
-        [...conditionSummaries].sort((a, b) => {
-          if (a.OnsetDate && b.OnsetDate) {
-            return b.OnsetDate.localeCompare(a.OnsetDate);
-          } else if (!a.OnsetDate) {
-            return 1;
-          } else {
-            return -1;
-          }
-        })
-      );
-    } else if (sortingOption === 'oldest') {
-      sortedMatrix = props.conditionSummaryMatrix.map(conditionSummaries =>
-        [...conditionSummaries].sort((a, b) => {
-          if (a.OnsetDate && b.OnsetDate) {
-            return a.OnsetDate.localeCompare(b.OnsetDate);
-          } else if (!a.OnsetDate) {
-            return -1;
-          } else {
-            return 1;
-          }
-        })
-      );
+    let filteredAndSortedMatrix = [...conditionSummaryMatrix];
+
+    if (filteringOption.length > 0 && fhirDataCollection) {
+      const filteredMatrix: ConditionSummary[][] = [];
+    
+      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
+      for (let i = 0; i < conditionSummaryMatrix!.length; i++) {
+        filteredMatrix.push([]);
+      }
+    
+      filteringOption.forEach(option => {
+        // Find the index of the selected option in the filteringOptions array
+        const index = filteringOptions.findIndex(item => item.value === option);
+        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
+        if (index !== -1) {
+          filteredMatrix[index] = filteredAndSortedMatrix[index];
+        }
+      });
+
+      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
     }
 
-    let filteredMatrix = sortedMatrix;
-    if (filteringOption) {
-      filteredMatrix = sortedMatrix.map(conditionSummaries =>
-        conditionSummaries.filter(condition =>
-          condition.Provenance?.some(provenance => provenance.Transmitter === filteringOption)
-        )
-      );
+    switch (sortingOption) {
+      case 'alphabetical-az':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (a.ConceptName || '').localeCompare(b.ConceptName || ''))
+        );
+        break;
+      case 'alphabetical-za':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (b.ConceptName || '').localeCompare(a.ConceptName || ''))
+        );
+        break;
+      case 'newest':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (b.OnsetDate || '').localeCompare(a.OnsetDate || ''))
+        );
+        break;
+      case 'oldest':
+        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
+          providerGoals.sort((a, b) => (a.OnsetDate || '').localeCompare(b.OnsetDate || ''))
+        );
+        break;
+      default:
+        break;
     }
 
-    setSortedAndFilteredMatrix(filteredMatrix);
+    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
   };
 
   return (
@@ -134,32 +125,45 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
 
         <h4 className="title">Current Health Issues</h4>
 
-        {props.fhirDataCollection === undefined
+        {fhirDataCollection === undefined
           && <> <p>Reading your clinical records...</p>
-            <BusySpinner busy={props.fhirDataCollection === undefined} />
+            <BusySpinner busy={fhirDataCollection === undefined} />
           </>
         }
 
-        {props.canShareData
-          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: props.fhirDataCollection } }}>Add a Health Concern</Link></p>
+        {canShareData
+          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: fhirDataCollection } }}>
+            Add a Health Concern
+            </Link>
+            </p>
           : <p />}
-        <a className="text-right" onClick={() => setShowModal(true)}>
-          SORT/FILTER
-        </a>
-        {showModal ? (
-          <SortModal
-            showModal={showModal}
-            closeModal={closeModal}
-            onSubmit={handleSortFilterSubmit}
-            sortingOptions={[
-              { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
-              { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
-              { value: 'newest', label: 'Date Asserted: Newest' },
-              { value: 'oldest', label: 'Date Asserted: Oldest' },
-            ]}
-            filteringOptions={filteringOptions}
-          />
-        ) : null}
+          {fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT
+          </a>
+        ) : (
+          <a className="text-right" onClick={() => setShowModal(true)}>
+            SORT/FILTER
+          </a>
+        )}
+          {showModal && ( // Conditional rendering of modal based on the number of providers
+          fhirDataCollection && fhirDataCollection.length === 1 ? (
+            <SortOnlyModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+            />
+          ) : (
+            <SortModal
+              showModal={showModal}
+              closeModal={closeModal}
+              onSubmit={handleSortFilterSubmit}
+              sortingOptions={sortingOptions}
+              filteringOptions={filteringOptions}
+            />
+          )
+        )}
         {
           sortedAndFilteredMatrix?.map((conditionSummary, index) => {
 
@@ -169,12 +173,12 @@ export const ConditionList: React.FC<ConditionListProps> = (props: ConditionList
                 {
                   conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
                     ? <p>Loading...</p>
-                    : (!conditionSummary || conditionSummary.length < 1) && props.fhirDataCollection !== undefined
+                    : (!conditionSummary || conditionSummary.length < 1) && fhirDataCollection !== undefined
                       ? <p>No records found.</p>
                       :
                       <div>
                         {conditionSummary?.map((cond, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(cond,props.fhirDataCollection![index].serverName)} />
+                          <Summary key={idx} id={idx} rows={buildRows(cond,fhirDataCollection![index].serverName)} />
                         ))}
                       </div>
                 }

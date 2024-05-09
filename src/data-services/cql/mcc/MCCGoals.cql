@@ -15,6 +15,8 @@ export interface GoalSummary {
   ExpressedBy?: string,
   StartDate?: string,
   Target?: GoalTarget[],
+  LifecycleStatus?: string,
+  AchievementStatus?: string,
   Notes?: string[],
   Addresses?: ConditionSummary[],
   LearnMore?: string
@@ -35,7 +37,7 @@ define GoalSummary:
 
 define "Active Goals":
   [Goal] G 
-    where G.lifecycleStatus in {'active', 'accepted', 'planned', 'on-hold'}
+    where G.lifecycleStatus in {'active', 'completed', 'cancelled', 'on-hold'}
 
 define function ReportGoals(goals List<Goal>):
   goals G
@@ -49,6 +51,8 @@ define function ReportGoal(goal Goal):
     StartDate: ToString(goal.start),
     Target: if goal.target is not null then ReportGoalTargets(goal) else null,
     Addresses: if goal.addresses is not null then DE.DataElements(AddressesResources(goal)) else null,
+    LifecycleStatus: LifecycleStatusText(goal),
+    AchievementStatus: DE.ConceptText(goal.achievementStatus),
     Notes: DE.ToString(goal.note),
     Provenance: DE.ReportProvenance(goal),
     LearnMore: DE.LearnMoreURL(goal.target[0].measure),
@@ -142,3 +146,17 @@ define function DueDate(goal Goal):
     where due is not null
       return due
   )
+
+define function LifecycleStatusText(g Goal):
+  case
+    when g.lifecycleStatus.value = 'active' then
+      'Active'
+    when g.lifecycleStatus.value = 'completed' then
+      'Completed'
+    when g.lifecycleStatus.value = 'cancelled' then
+      'Cancelled'
+    when g.lifecycleStatus.value = 'on-hold' then
+      'On Hold'
+    else
+      'Unknown'
+  end
