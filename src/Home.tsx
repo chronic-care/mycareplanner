@@ -147,11 +147,10 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               pathname: '/questionnaire',
               state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'caregiver-strain-questionnaire' }
             }} ><strong>Caregiver Strain Assessment</strong></Link><br />
-            {/* <Link to={{pathname: '/questionnaire',
-                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'mypain-questionnaire' }
-                    }} ><strong>My Pain Assessment</strong></Link><br/> */}
-
-            <p />
+            <Link to={{
+              pathname: '/questionnaire',
+              state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'patient-priorities-care-questionnaire' }
+            }} ><strong>My Health Priorities</strong></Link><br />
 
             {/* {(tasks === undefined)
                 ? <p>You have no tasks today!</p>
