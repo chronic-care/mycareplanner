@@ -1,0 +1,171 @@
+{
+    "resourceType": "Questionnaire",
+    "id": "questionnaire-patient-priorities-care",
+    "url": "http://patientprioritiescare.org/Questionnaire/patient-priorities-care",
+    "name": "Patient_Priorities_Care",
+    "title": "Patient Priorities Care",
+    "status": "draft",
+    "publisher": "Mountain Lotus WellBeing LLC",
+    "copyright": "Copyright (c) 2024 Patient Priorities Care",
+    "code": [
+        {
+            "system": "http://patientprioritiescare.org",
+            "code": "patient-priorities-care",
+            "display": "Patient Priorities Care"
+        }
+    ],
+    "item": [
+        {
+            "linkId": "connecting-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Connecting",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "connecting-q1",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "connecting",
+                            "display": "Connecting"
+                        }
+                    ],
+                    "text": "Do you connect with the people, places, and spiritual practices that provide meaning, happiness, and contentment in your life?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "connecting-q2",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "connecting",
+                            "display": "Connecting"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "linkId": "functioning-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Functioning",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "functioning-q1",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "functioning",
+                            "display": "Functioning"
+                        }
+                    ],
+                    "text": "Do you have the capacity to perform self-care needs (independence) or maintaining self-respect (dignity) when needing assistance to perform self-care tasks?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "functioning-q2",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "functioning",
+                            "display": "Functioning"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "linkId": "managing-health-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Managing Health",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "managing-health-q1",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "managing-health",
+                            "display": "Managing Healthe"
+                        }
+                    ],
+                    "text": "How well do you balance the desire to maintain how you feel today (quality of life) with the desire to live as long as possible (longevity)?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "managing-health-q2",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "managing-health",
+                            "display": "Managing Health"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "linkId": "enjoying-life-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Enjoying Life",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "enjoying-life-q1",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "enjoying-life",
+                            "display": "Enjoying Life"
+                        }
+                    ],
+                    "text": "How well do you balance the desire to be actively engaged in all aspects of decisions regarding your health and health care with the desire to allow family, care partners, and clinicians to help make decisions on your behalf?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "enjoying-life-q2",
+                    "code": [
+                        {
+                            "system": "http://patientprioritiescare.org/fhir/goal-domains",
+                            "code": "enjoying-life",
+                            "display": "Enjoying Life"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}
