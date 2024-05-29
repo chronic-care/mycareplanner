@@ -527,7 +527,7 @@ export default function ProviderLogin(props: Props) {
           Health Provider Login
         </Typography>
         <Typography variant="subtitle1" align="left" gutterBottom>
-          <span style={{ fontStyle: 'italic' }}>Original Provider:</span> {launcherEndpointFromForage ?
+          <span style={{ fontStyle: 'italic' }}>Currently includes:</span> {launcherEndpointFromForage ?
             launcherEndpointFromForage?.name :
             'Unknown: Please select the original provider manually from the list in addtion to other providers.'}
         </Typography>

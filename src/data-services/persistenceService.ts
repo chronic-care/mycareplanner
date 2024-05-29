@@ -386,8 +386,10 @@ export const persistLauncherData = async (clientState: fhirclient.ClientState) =
   // Otherwise, it's not defined, and we need to create it
   // Later, in that case, we persist it so that we can add it if missing on load
   // such as would be the case with a launcher that has not been pre-configured
+  // (as is typical in the real world).
+  // TODO: Set name dynamically using get org name from capability resource, Dave knows the logic
   const providerEndpointToSave: ProviderEndpoint = convertedProviderEndpoint ?? {
-    name: 'Launcher (Dynamic)',
+    name: 'Original provider',
     config: {
       iss: clientState.serverUrl,
       redirectUri: "./index.html",
@@ -398,7 +400,8 @@ export const persistLauncherData = async (clientState: fhirclient.ClientState) =
   console.log("providerEndpointToSave: ", providerEndpointToSave)
 
   if (convertedProviderEndpoint === undefined) {
-    console.log("convertedProviderEndpoint === undefined, will save a dynamic launcher")
+    console.log(`convertedProviderEndpoint === undefined, will save a dynamic launcher
+    (as "Original provider") as is typical in real-world use cases`)
   }
 
   // Persist converted data
