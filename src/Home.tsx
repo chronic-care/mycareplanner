@@ -61,7 +61,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     let screenings = this.props.screenings?.filter(s => s.notifyPatient)
     // let tasks = this.props.tasks;
 
-    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false'
+    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'true'
 
     return (
       <div className="home-view">
