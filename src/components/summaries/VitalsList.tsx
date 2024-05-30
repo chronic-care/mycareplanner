@@ -1,5 +1,5 @@
 import '../../Home.css';
-import React,  { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
@@ -8,8 +8,8 @@ import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface VitalsListProps {
-  fhirDataCollection?: FHIRData[],
-  vitalSignSummaryMatrix?: ObservationSummary[][],
+  fhirDataCollection?: FHIRData[];
+  vitalSignSummaryMatrix?: ObservationSummary[][];
 }
 
 export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignSummaryMatrix }) => {
@@ -17,8 +17,8 @@ export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignS
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
   const [filteringOption, setFilteringOption] = useState<string[]>([]);
-  const [sortedAndFilteredMatrix,setSortedAndFilteredMatrix] = useState<ObservationSummary[][] | undefined>();
-  const [filteringOptions, setFilteringOptions] = useState<{value: string;label: string}[]>([]);
+  const [sortedAndFilteredVitals, setSortedAndFilteredVitals] = useState<{ vital: ObservationSummary, provider: string }[]>([]);
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
     applySortingAndFiltering();
@@ -36,9 +36,9 @@ export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignS
 
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
-    if(filterOption){
+    if (filterOption) {
       setFilteringOption(filterOption);
-      }
+    }
     setShowModal(false);
   };
 
@@ -65,72 +65,57 @@ export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignS
   ];
 
   const applySortingAndFiltering = () => {
-    if (!vitalSignSummaryMatrix) return;
+    if (!vitalSignSummaryMatrix || !fhirDataCollection) return;
 
-    let filteredAndSortedMatrix = [...vitalSignSummaryMatrix];
-
-    if (filteringOption.length > 0 && fhirDataCollection) {
-      const filteredMatrix: ObservationSummary[][] = [];
-    
-      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
-      for (let i = 0; i < vitalSignSummaryMatrix!.length; i++) {
-        filteredMatrix.push([]);
-      }
-    
-      filteringOption.forEach(option => {
-        // Find the index of the selected option in the filteringOptions array
-        const index = filteringOptions.findIndex(item => item.value === option);
-        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
-        if (index !== -1) {
-          filteredMatrix[index] = filteredAndSortedMatrix[index];
-        }
+    // Flatten the vitalSignSummaryMatrix to a single array with provider information
+    let combinedVitals: { vital: ObservationSummary, provider: string }[] = [];
+    vitalSignSummaryMatrix.forEach((providerVitals, providerIndex) => {
+      const providerName = fhirDataCollection[providerIndex].serverName || 'Unknown';
+      providerVitals.forEach(vital => {
+        combinedVitals.push({ vital, provider: providerName });
       });
-    
-      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
-    }
-    
+    });
 
+    // Apply filtering
+    if (filteringOption.length > 0) {
+      combinedVitals = combinedVitals.filter(({ provider }) => filteringOption.includes(provider));
+    }
+
+    // Apply sorting
     switch (sortingOption) {
       case 'alphabetical-az':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.DisplayName || '').localeCompare(b.DisplayName || ''))
-        );
+        combinedVitals.sort((a, b) => (a.vital.DisplayName || '').localeCompare(b.vital.DisplayName || ''));
         break;
       case 'alphabetical-za':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.DisplayName || '').localeCompare(a.DisplayName || ''))
-        );
+        combinedVitals.sort((a, b) => (b.vital.DisplayName || '').localeCompare(a.vital.DisplayName || ''));
         break;
       case 'newest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.Date || '').localeCompare(a.Date || ''))
-        );
+        combinedVitals.sort((a, b) => (b.vital.Date || '').localeCompare(a.vital.Date || ''));
         break;
       case 'oldest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.Date || '').localeCompare(b.Date || ''))
-        );
+        combinedVitals.sort((a, b) => (a.vital.Date || '').localeCompare(b.vital.Date || ''));
         break;
       default:
         break;
     }
 
-    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
+    setSortedAndFilteredVitals(combinedVitals);
   };
-  
+
   return (
     <div className="home-view">
       <div className="welcome">
 
         <h4 className="title">Vitals</h4>
 
-        {fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
+        {fhirDataCollection === undefined && (
+          <>
+            <p>Reading your clinical records...</p>
             <BusySpinner busy={fhirDataCollection === undefined} />
           </>
-        }
+        )}
 
-{fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -139,7 +124,8 @@ export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignS
             SORT/FILTER
           </a>
         )}
-          {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -158,59 +144,40 @@ export const VitalsList: FC<VitalsListProps> = ({ fhirDataCollection, vitalSignS
           )
         )}
 
-        {
-          sortedAndFilteredMatrix?.map((vitalSignSummary, index) => {
-
-            return (
-              <div key={'outerArray-' + index}>
-                
-                {
-                  vitalSignSummary && vitalSignSummary.length > 0 && vitalSignSummary[0]?.ConceptName === 'init'
-                    ? <p>Loading...</p>
-                    : (!vitalSignSummary || vitalSignSummary.length < 1) && fhirDataCollection !== undefined
-                      ? <p>No records found.</p>
-                      :
-                      <div>
-                        {vitalSignSummary?.map((obs, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(obs,fhirDataCollection![index].serverName)} />
-                        ))}
-                      </div>
-                }
-              </div>
-            )
-
-          })
-        }
-
+        {sortedAndFilteredVitals.length === 0 ? (
+          <p>No records found.</p>
+        ) : (
+          sortedAndFilteredVitals.map(({ vital, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(vital, provider)} />
+          ))
+        )}
       </div>
     </div>
-  )
+  );
 
 }
 
-const buildRows = (obs: ObservationSummary, theSource?:string): SummaryRowItems => {
-  let rows: SummaryRowItems =
-    [
-      {
-        isHeader: true,
-        twoColumns: false,
-        data1: obs.DisplayName,
-        data2: '',
-      },
-      {
-        isHeader: false,
-        twoColumns: true,
-        data1: obs.ResultText,
-        data2: displayDate(obs.Date),
-      },
-      {
-        isHeader: false,
-        twoColumns: false,
-        data1: "Performed by: " + (obs.Performer ?? 'Unknown'),
-        data2: '',
-      },
-    ]
-
+const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems => {
+  let rows: SummaryRowItems = [
+    {
+      isHeader: true,
+      twoColumns: false,
+      data1: obs.DisplayName,
+      data2: '',
+    },
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: obs.ResultText,
+      data2: displayDate(obs.Date),
+    },
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: "Performed by: " + (obs.Performer ?? 'Unknown'),
+      data2: '',
+    },
+  ];
 
   if (theSource) {
     const rowItem: SummaryRowItem = {
@@ -221,21 +188,18 @@ const buildRows = (obs: ObservationSummary, theSource?:string): SummaryRowItems 
     };
     rows.push(rowItem);
   }
- 
-    
-    
 
   const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
     {
       isHeader: false,
       twoColumns: true,
-      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data1: 'Source: ' + (provenance.Transmitter ?? ''),
       data2: provenance.Author ?? '',
     }
-  ))
+  ));
   if (provenance?.length) {
-    rows = rows.concat(provenance)
+    rows = rows.concat(provenance);
   }
 
-  return rows
+  return rows;
 }

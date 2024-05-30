@@ -14,17 +14,14 @@ interface ServiceRequestListProps {
 export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollection }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!");
 
-  const [sortedServiceRequests, setSortedServiceRequests] = useState<ServiceRequest[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
   const [filterOption, setFilterOption] = useState<string[]>([]);
+  const [sortedAndFilteredServiceRequests, setSortedAndFilteredServiceRequests] = useState<{ serviceRequest: ServiceRequest, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
-  const [hashMap, setHashMap] = useState<Map<ServiceRequest, string>>(new Map());
-
-  console.log("fhirDataCollection for service Request", fhirDataCollection);
 
   useEffect(() => {
-    applySorting();
+    applySortingAndFiltering();
   }, [fhirDataCollection, sortOption, filterOption]);
 
   useEffect(() => {
@@ -49,10 +46,10 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
       return;
     }
 
-    const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName).filter((name): name is string => !!name)));
+    const uniqueServerNames = Array.from(new Set(fhirDataCollection.map(data => data.serverName)));
     const options = uniqueServerNames.map(value => ({
-      value: value,
-      label: value,
+      value: value || '',
+      label: value || '',
     }));
 
     setFilteringOptions(options);
@@ -65,57 +62,49 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
     { value: 'oldest', label: 'Date Created: Oldest' },
   ];
 
-  function convertDateFormat(dateString: string): string | null {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-  }
+  const applySortingAndFiltering = () => {
+    if (!fhirDataCollection) return;
 
-  const applySorting = () => {
-    let serviceRequests: ServiceRequest[] = [];
-    const newHashMap = new Map<ServiceRequest, string>();
+    let combinedServiceRequests: { serviceRequest: ServiceRequest, provider: string }[] = [];
 
-    if (fhirDataCollection) {
-      fhirDataCollection
-        .filter(data => filterOption.length === 0 || (data.serverName && filterOption.includes(data.serverName)))
-        .forEach(data => {
-          if (data.serviceRequests) {
-            serviceRequests = serviceRequests.concat(data.serviceRequests);
-            data.serviceRequests.forEach(service => {
-              if (data.serverName) {
-                newHashMap.set(service, data.serverName);
-              }
-            });
-          }
-        });
+    fhirDataCollection.forEach((data, providerIndex) => {
+      const providerName = data.serverName || 'Unknown';
+      (data.serviceRequests || []).forEach(serviceRequest => {
+        combinedServiceRequests.push({ serviceRequest, provider: providerName });
+      });
+    });
+
+    // Apply filtering
+    if (filterOption.length > 0) {
+      combinedServiceRequests = combinedServiceRequests.filter(({ provider }) => filterOption.includes(provider));
     }
 
-    let sortedServiceRequests = [...serviceRequests];
+    function convertDateFormat(dateString: string): string | null {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      const year = date.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
 
-    if (sortOption === 'alphabetical-az') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        const nameA = a.code?.text ?? "";
-        const nameB = b.code?.text ?? "";
-        return nameA.localeCompare(nameB);
-      });
-    } else if (sortOption === 'alphabetical-za') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        const nameA = a.code?.text ?? "";
-        const nameB = b.code?.text ?? "";
-        return nameB.localeCompare(nameA);
-      });
-    } else if (sortOption === 'newest') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        let trimmedFinalDateA: string | null = null;
+    // Apply sorting
+    switch (sortOption) {
+      case 'alphabetical-az':
+        combinedServiceRequests.sort((a, b) => (a.serviceRequest.code?.text || '').localeCompare(b.serviceRequest.code?.text || ''));
+        break;
+      case 'alphabetical-za':
+        combinedServiceRequests.sort((a, b) => (b.serviceRequest.code?.text || '').localeCompare(a.serviceRequest.code?.text || ''));
+        break;
+      case 'newest':
+        combinedServiceRequests.sort((a, b) => {
+          let trimmedFinalDateA: string | null = null;
         let trimmedFinalDateB: string | null = null;
 
-        const dateA = a.occurrenceTiming ?? "";
-        const dateB = b.occurrenceTiming ?? "";
+        const dateA = a.serviceRequest.occurrenceTiming ?? "";
+        const dateB = b.serviceRequest.occurrenceTiming ?? "";
 
         if (dateA) {
           const parsedDateA = displayTiming(dateA);
@@ -144,47 +133,50 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
         } else {
           return 0;
         }
-      });
-    } else if (sortOption === 'oldest') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        let trimmedFinalDateA: string | null = null;
-        let trimmedFinalDateB: string | null = null;
-
-        const dateA = a.occurrenceTiming ?? "";
-        const dateB = b.occurrenceTiming ?? "";
-
-        if (dateA) {
-          const parsedDateA = displayTiming(dateA);
-          const indexA = parsedDateA?.search('until');
-          if (indexA !== -1 && parsedDateA) {
-            trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
-            console.log("trimmedFinalDateA", trimmedFinalDateA);
+        });
+        break;
+      case 'oldest':
+        combinedServiceRequests.sort((a, b) => {
+          let trimmedFinalDateA: string | null = null;
+          let trimmedFinalDateB: string | null = null;
+  
+          const dateA = a.serviceRequest.occurrenceTiming ?? "";
+          const dateB = b.serviceRequest.occurrenceTiming ?? "";
+  
+          if (dateA) {
+            const parsedDateA = displayTiming(dateA);
+            const indexA = parsedDateA?.search('until');
+            if (indexA !== -1 && parsedDateA) {
+              trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
+              console.log("trimmedFinalDateA", trimmedFinalDateA);
+            }
           }
-        }
-
-        if (dateB) {
-          const parsedDateB = displayTiming(dateB);
-          const indexB = parsedDateB?.search('until');
-          if (indexB !== -1 && parsedDateB) {
-            trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
-            console.log("trimmedFinalDateB", trimmedFinalDateB);
+  
+          if (dateB) {
+            const parsedDateB = displayTiming(dateB);
+            const indexB = parsedDateB?.search('until');
+            if (indexB !== -1 && parsedDateB) {
+              trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
+              console.log("trimmedFinalDateB", trimmedFinalDateB);
+            }
           }
-        }
-
-        if (trimmedFinalDateA && trimmedFinalDateB) {
-          return trimmedFinalDateB.localeCompare(trimmedFinalDateA);
-        } else if (trimmedFinalDateA) {
-          return -1;
-        } else if (trimmedFinalDateB) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+  
+          if (trimmedFinalDateA && trimmedFinalDateB) {
+            return trimmedFinalDateB.localeCompare(trimmedFinalDateA);
+          } else if (trimmedFinalDateA) {
+            return -1;
+          } else if (trimmedFinalDateB) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        break;
+      default:
+        break;
     }
 
-    setSortedServiceRequests(sortedServiceRequests);
-    setHashMap(newHashMap);
+    setSortedAndFilteredServiceRequests(combinedServiceRequests);
   };
 
   return (
@@ -228,12 +220,12 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
           )
         )}
 
-        {sortedServiceRequests.length > 0 ? (
-          sortedServiceRequests.map((service, idx) => (
-            <Summary key={idx} id={idx} rows={buildRows(service, hashMap.get(service))} />
-          ))
-        ) : (
+        {sortedAndFilteredServiceRequests.length === 0 ? (
           <p>No records found.</p>
+        ) : (
+          sortedAndFilteredServiceRequests.map(({ serviceRequest, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(serviceRequest, provider)} />
+          ))
         )}
       </div>
     </div>
