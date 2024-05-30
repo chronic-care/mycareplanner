@@ -10,12 +10,12 @@ interface ImmunizationListProps {
   fhirDataCollection?: FHIRData[];
 }
 
-export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}) => {
+export const ImmunizationList: FC<ImmunizationListProps> = ({ fhirDataCollection }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ImmunizationList component RENDERED!");
-  const [sortedImmunizations, setSortedImmunizations] = useState<Immunization[][] | undefined>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
   const [filterOption, setFilterOption] = useState<string[]>([]);
+  const [sortedAndFilteredImmunizations, setSortedAndFilteredImmunizations] = useState<{ immunization: Immunization, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
@@ -32,8 +32,8 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}
 
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortOption(sortOption);
-    if(filterOption){
-    setFilterOption(filterOption);
+    if (filterOption) {
+      setFilterOption(filterOption);
     }
     setShowModal(false);
   };
@@ -62,55 +62,48 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}
 
   const applySortingAndFiltering = () => {
     if (!fhirDataCollection) return;
-  
-    const filtered = fhirDataCollection.map(data => {
-      let immunizations = data?.immunizations;
-  
-      // Filtering logic modified to filter based on serverName
-      if (filterOption.length > 0) {
-        immunizations = immunizations?.filter(immunization =>
-          data.serverName && filterOption.includes(data.serverName)
-        );
-      }
-  
-      return immunizations || [];
+
+    let combinedImmunizations: { immunization: Immunization, provider: string }[] = [];
+
+    fhirDataCollection.forEach((data, providerIndex) => {
+      const providerName = data.serverName || 'Unknown';
+      (data.immunizations || []).forEach(immunization => {
+        combinedImmunizations.push({ immunization, provider: providerName });
+      });
     });
-  
-    // Apply sorting to the filtered immunizations
-    const sorted = filtered.map(immunizations => {
-      if (!immunizations) return [];
-  
-      // Sorting logic remains the same as before
-      switch (sortOption) {
-        case 'newest':
-          return immunizations.sort((a, b) => {
-            const dateA = a.occurrenceDateTime ?? a.recorded;
-            const dateB = b.occurrenceDateTime ?? b.recorded;
-            return dateB.localeCompare(dateA);
-          });
-        case 'oldest':
-          return immunizations.sort((a, b) => {
-            const dateA = a.occurrenceDateTime ?? a.recorded;
-            const dateB = b.occurrenceDateTime ?? b.recorded;
-            return dateA.localeCompare(dateB);
-          });
-        case 'alphabetical-az':
-          return immunizations.sort((a, b) => {
-            const nameA = a.vaccineCode?.text?.toUpperCase() ?? '';
-            const nameB = b.vaccineCode?.text?.toUpperCase() ?? '';
-            return nameA.localeCompare(nameB);
-          });
-        case 'alphabetical-za':
-          return immunizations.sort((a, b) => {
-            const nameA = a.vaccineCode?.text?.toUpperCase() ?? '';
-            const nameB = b.vaccineCode?.text?.toUpperCase() ?? '';
-            return nameB.localeCompare(nameA);
-          });
-        default:
-          return immunizations;
-      }
-    });
-    setSortedImmunizations(sorted);
+
+    // Apply filtering
+    if (filterOption.length > 0) {
+      combinedImmunizations = combinedImmunizations.filter(({ provider }) => filterOption.includes(provider));
+    }
+
+    // Apply sorting
+    switch (sortOption) {
+      case 'alphabetical-az':
+        combinedImmunizations.sort((a, b) => (a.immunization.vaccineCode?.text || '').localeCompare(b.immunization.vaccineCode?.text || ''));
+        break;
+      case 'alphabetical-za':
+        combinedImmunizations.sort((a, b) => (b.immunization.vaccineCode?.text || '').localeCompare(a.immunization.vaccineCode?.text || ''));
+        break;
+      case 'newest':
+        combinedImmunizations.sort((a, b) => {
+          const dateA = a.immunization.occurrenceDateTime || a.immunization.recorded || '';
+          const dateB = b.immunization.occurrenceDateTime || b.immunization.recorded || '';
+          return dateB.localeCompare(dateA);
+        });
+        break;
+      case 'oldest':
+        combinedImmunizations.sort((a, b) => {
+          const dateA = a.immunization.occurrenceDateTime || a.immunization.recorded || '';
+          const dateB = b.immunization.occurrenceDateTime || b.immunization.recorded || '';
+          return dateA.localeCompare(dateB);
+        });
+        break;
+      default:
+        break;
+    }
+
+    setSortedAndFilteredImmunizations(combinedImmunizations);
   };
 
   return (
@@ -125,7 +118,7 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}
           </>
         )}
 
-{fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -134,7 +127,8 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}
             SORT/FILTER
           </a>
         )}
- {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -152,17 +146,14 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({fhirDataCollection}
             />
           )
         )}
-        {sortedImmunizations?.map((immunizations, idx) => (
-          <div key={idx}>
-            {immunizations && immunizations.length > 0 ? (
-              immunizations.map((imm, mIdx) => (
-                <Summary key={mIdx} id={mIdx} rows={buildRows(imm, fhirDataCollection![idx].serverName)} />
-              ))
-            ) : (
-              <p>No immunization records for this provider.</p>
-            )}
-          </div>
-        ))}
+
+        {sortedAndFilteredImmunizations.length === 0 ? (
+          <p>No records found.</p>
+        ) : (
+          sortedAndFilteredImmunizations.map(({ immunization, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(immunization, provider)} />
+          ))
+        )}
       </div>
     </div>
   );

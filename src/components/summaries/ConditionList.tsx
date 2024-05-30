@@ -1,5 +1,5 @@
 import '../../Home.css';
-import React, { FC, useEffect, useState }  from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
@@ -9,9 +9,9 @@ import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface ConditionListProps {
-  fhirDataCollection?: FHIRData[],
-  conditionSummaryMatrix?: ConditionSummary[][],
-  canShareData?: boolean,
+  fhirDataCollection?: FHIRData[];
+  conditionSummaryMatrix?: ConditionSummary[][];
+  canShareData?: boolean;
 }
 
 export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, conditionSummaryMatrix, canShareData }) => {
@@ -19,7 +19,7 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
   const [filteringOption, setFilteringOption] = useState<string[]>([]);
-  const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<ConditionSummary[][] | undefined>();
+  const [sortedAndFilteredConditions, setSortedAndFilteredConditions] = useState<{ condition: ConditionSummary, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
@@ -38,9 +38,9 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
 
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
-    if(filterOption){
+    if (filterOption) {
       setFilteringOption(filterOption);
-      }
+    }
     setShowModal(false);
   };
 
@@ -58,7 +58,7 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
 
     setFilteringOptions(options);
   };
-  
+
   const sortingOptions = [
     { value: 'alphabetical-az', label: 'Alphabetical: A-Z' },
     { value: 'alphabetical-za', label: 'Alphabetical: Z-A' },
@@ -67,77 +67,64 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
   ];
 
   const applySortingAndFiltering = () => {
-    if (!conditionSummaryMatrix) return;
+    if (!conditionSummaryMatrix || !fhirDataCollection) return;
 
-    let filteredAndSortedMatrix = [...conditionSummaryMatrix];
-
-    if (filteringOption.length > 0 && fhirDataCollection) {
-      const filteredMatrix: ConditionSummary[][] = [];
-    
-      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
-      for (let i = 0; i < conditionSummaryMatrix!.length; i++) {
-        filteredMatrix.push([]);
-      }
-    
-      filteringOption.forEach(option => {
-        // Find the index of the selected option in the filteringOptions array
-        const index = filteringOptions.findIndex(item => item.value === option);
-        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
-        if (index !== -1) {
-          filteredMatrix[index] = filteredAndSortedMatrix[index];
-        }
+    // Flatten the conditionSummaryMatrix to a single array with provider information
+    let combinedConditions: { condition: ConditionSummary, provider: string }[] = [];
+    conditionSummaryMatrix.forEach((providerConditions, providerIndex) => {
+      const providerName = fhirDataCollection[providerIndex].serverName || 'Unknown';
+      providerConditions.forEach(condition => {
+        combinedConditions.push({ condition, provider: providerName });
       });
+    });
 
-      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
+    // Apply filtering
+    if (filteringOption.length > 0) {
+      combinedConditions = combinedConditions.filter(({ provider }) => filteringOption.includes(provider));
     }
 
+    // Apply sorting
     switch (sortingOption) {
       case 'alphabetical-az':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.ConceptName || '').localeCompare(b.ConceptName || ''))
-        );
+        combinedConditions.sort((a, b) => (a.condition.ConceptName || '').localeCompare(b.condition.ConceptName || ''));
         break;
       case 'alphabetical-za':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.ConceptName || '').localeCompare(a.ConceptName || ''))
-        );
+        combinedConditions.sort((a, b) => (b.condition.ConceptName || '').localeCompare(a.condition.ConceptName || ''));
         break;
       case 'newest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.OnsetDate || '').localeCompare(a.OnsetDate || ''))
-        );
+        combinedConditions.sort((a, b) => (b.condition.OnsetDate || '').localeCompare(a.condition.OnsetDate || ''));
         break;
       case 'oldest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.OnsetDate || '').localeCompare(b.OnsetDate || ''))
-        );
+        combinedConditions.sort((a, b) => (a.condition.OnsetDate || '').localeCompare(b.condition.OnsetDate || ''));
         break;
       default:
         break;
     }
 
-    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
+    setSortedAndFilteredConditions(combinedConditions);
   };
 
   return (
     <div className="home-view">
       <div className="welcome">
-
         <h4 className="title">Current Health Issues</h4>
 
-        {fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
+        {fhirDataCollection === undefined && (
+          <>
+            <p>Reading your clinical records...</p>
             <BusySpinner busy={fhirDataCollection === undefined} />
           </>
-        }
+        )}
 
-        {canShareData
-          ? <p><Link to={{ pathname: '/condition-edit', state: { fhirData: fhirDataCollection } }}>
-            Add a Health Concern
+        {canShareData && (
+          <p>
+            <Link to={{ pathname: '/condition-edit', state: { fhirDataCollection } }}>
+              Add a Health Concern
             </Link>
-            </p>
-          : <p />}
-          {fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+          </p>
+        )}
+
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -146,7 +133,8 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
             SORT/FILTER
           </a>
         )}
-          {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -164,37 +152,20 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
             />
           )
         )}
-        {
-          sortedAndFilteredMatrix?.map((conditionSummary, index) => {
 
-            return (
-              <div key={'outerArray-' + index}>
-             
-                {
-                  conditionSummary && conditionSummary.length > 0 && conditionSummary[0]?.ConceptName === 'init'
-                    ? <p>Loading...</p>
-                    : (!conditionSummary || conditionSummary.length < 1) && fhirDataCollection !== undefined
-                      ? <p>No records found.</p>
-                      :
-                      <div>
-                        {conditionSummary?.map((cond, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(cond,fhirDataCollection![index].serverName)} />
-                        ))}
-                      </div>
-                }
-              </div>
-            )
-
-          })
-        }
-
+        {sortedAndFilteredConditions.length === 0 ? (
+          <p>No records found.</p>
+        ) : (
+          sortedAndFilteredConditions.map(({ condition, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(condition, provider)} />
+          ))
+        )}
       </div>
     </div>
-  )
+  );
+};
 
-}
-
-const buildRows = (cond: ConditionSummary, theSource?:string): SummaryRowItems => {
+const buildRows = (cond: ConditionSummary, theSource?: string): SummaryRowItems => {
   let rows: SummaryRowItems = []
 
   const conditionName: SummaryRowItem = {
@@ -266,7 +237,6 @@ const buildRows = (cond: ConditionSummary, theSource?:string): SummaryRowItems =
     }
     rows.push(source)
   }
- 
 
   const provenance: SummaryRowItems | undefined = cond.Provenance?.map((provenance) => (
     {
