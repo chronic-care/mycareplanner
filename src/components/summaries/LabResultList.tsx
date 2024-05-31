@@ -1,5 +1,5 @@
 import '../../Home.css';
-import React, { FC, useState, useEffect }  from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
@@ -9,8 +9,8 @@ import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 
 interface LabResultListProps {
-  fhirDataCollection?: FHIRData[],
-  labResultSummaryMatrix?: ObservationSummary[][],
+  fhirDataCollection?: FHIRData[];
+  labResultSummaryMatrix?: ObservationSummary[][];
 }
 
 export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labResultSummaryMatrix }) => {
@@ -18,9 +18,9 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
   const [filteringOption, setFilteringOption] = useState<string[]>([]);
-  const [sortedAndFilteredMatrix,setSortedAndFilteredMatrix] = useState<ObservationSummary[][] | undefined>();
-  const [filteringOptions, setFilteringOptions] = useState<{value: string; label: string}[]>([]);
-  
+  const [sortedAndFilteredLabResults, setSortedAndFilteredLabResults] = useState<{ labResult: ObservationSummary, provider: string }[]>([]);
+  const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
+
   useEffect(() => {
     applySortingAndFiltering();
   }, [labResultSummaryMatrix, sortingOption, filteringOption]);
@@ -37,9 +37,9 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
 
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
-    if(filterOption){
+    if (filterOption) {
       setFilteringOption(filterOption);
-      }
+    }
     setShowModal(false);
   };
 
@@ -66,57 +66,41 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
   ];
 
   const applySortingAndFiltering = () => {
-    if (!labResultSummaryMatrix) return;
+    if (!labResultSummaryMatrix || !fhirDataCollection) return;
 
-    let filteredAndSortedMatrix = [...labResultSummaryMatrix];
-
-    if (filteringOption.length > 0 && fhirDataCollection) {
-      const filteredMatrix: ObservationSummary[][] = [];
-    
-      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
-      for (let i = 0; i < labResultSummaryMatrix!.length; i++) {
-        filteredMatrix.push([]);
-      }
-    
-      filteringOption.forEach(option => {
-        // Find the index of the selected option in the filteringOptions array
-        const index = filteringOptions.findIndex(item => item.value === option);
-        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
-        if (index !== -1) {
-          filteredMatrix[index] = filteredAndSortedMatrix[index];
-        }
+    // Flatten the labResultSummaryMatrix to a single array with provider information
+    let combinedLabResults: { labResult: ObservationSummary, provider: string }[] = [];
+    labResultSummaryMatrix.forEach((providerLabResults, providerIndex) => {
+      const providerName = fhirDataCollection[providerIndex].serverName || 'Unknown';
+      providerLabResults.forEach(labResult => {
+        combinedLabResults.push({ labResult, provider: providerName });
       });
-    
-      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
-    }
-    
+    });
 
+    // Apply filtering
+    if (filteringOption.length > 0) {
+      combinedLabResults = combinedLabResults.filter(({ provider }) => filteringOption.includes(provider));
+    }
+
+    // Apply sorting
     switch (sortingOption) {
       case 'alphabetical-az':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.DisplayName || '').localeCompare(b.DisplayName || ''))
-        );
+        combinedLabResults.sort((a, b) => (a.labResult.DisplayName || '').localeCompare(b.labResult.DisplayName || ''));
         break;
       case 'alphabetical-za':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.DisplayName || '').localeCompare(a.DisplayName || ''))
-        );
+        combinedLabResults.sort((a, b) => (b.labResult.DisplayName || '').localeCompare(a.labResult.DisplayName || ''));
         break;
       case 'newest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.Date || '').localeCompare(a.Date || ''))
-        );
+        combinedLabResults.sort((a, b) => (b.labResult.Date || '').localeCompare(a.labResult.Date || ''));
         break;
       case 'oldest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.Date || '').localeCompare(b.Date || ''))
-        );
+        combinedLabResults.sort((a, b) => (a.labResult.Date || '').localeCompare(b.labResult.Date || ''));
         break;
       default:
         break;
     }
 
-    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
+    setSortedAndFilteredLabResults(combinedLabResults);
   };
 
   return (
@@ -125,13 +109,14 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
 
         <h4 className="title">Lab Results</h4>
 
-        {fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
+        {fhirDataCollection === undefined && (
+          <>
+            <p>Reading your clinical records...</p>
             <BusySpinner busy={fhirDataCollection === undefined} />
           </>
-        }
+        )}
 
-{fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -140,7 +125,8 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
             SORT/FILTER
           </a>
         )}
-          {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -159,88 +145,67 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
           )
         )}
 
-        {
-          sortedAndFilteredMatrix?.map((labResultSummary, index) => {
-
-            return (
-              <div key={'outerArray-' + index}>
-             
-                {
-                  labResultSummary && labResultSummary.length > 0 && labResultSummary[0]?.ConceptName === 'init'
-                    ? <p>Loading...</p>
-                    : (!labResultSummary || labResultSummary.length < 1) && fhirDataCollection !== undefined
-                      ? <p>No records found.</p>
-                      :
-                      <div>
-                        {labResultSummary?.map((obs, idx) => (
-                          <Summary key={idx} id={idx} rows={buildRows(obs,fhirDataCollection![index].serverName)} />
-                        ))}
-                      </div>
-                }
-              </div>
-            )
-
-          })
-        }
-
+        {sortedAndFilteredLabResults.length === 0 ? (
+          <p>No records found.</p>
+        ) : (
+          sortedAndFilteredLabResults.map(({ labResult, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(labResult, provider)} />
+          ))
+        )}
       </div>
     </div>
-  )
+  );
 
 }
 
-const buildRows = (obs: ObservationSummary, theSource?:string): SummaryRowItems => {
-  let rows: SummaryRowItems =
-    [
-      {
-        isHeader: true,
-        twoColumns: true,
-        data1: obs.DisplayName,
-        data2: obs.LearnMore === undefined || obs.LearnMore === null ? '' :
-          <Link to="route" target="_blank"
-            onClick={
-              (event) => { event.preventDefault(); window.open(obs.LearnMore); }
-            }><i>Learn&nbsp;More</i>
-          </Link>,
-      },
-      {
-        isHeader: false,
-        twoColumns: true,
-        data1: obs.ResultText,
-        data2: displayDate(obs.Date),
-      },
-      {
-        isHeader: false,
-        twoColumns: true,
-        data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
-        data2: obs.Interpretation,
-      },
-      /* May need to be implemented one day...
-      {obs.Notes?.map((note, idx) => (
-      <tr key={idx}><td colSpan={4}>Note: {note}</td></tr>
-      ))} */
-    ]
+const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems => {
+  let rows: SummaryRowItems = [
+    {
+      isHeader: true,
+      twoColumns: true,
+      data1: obs.DisplayName,
+      data2: obs.LearnMore === undefined || obs.LearnMore === null ? '' :
+        <Link to="route" target="_blank"
+          onClick={
+            (event) => { event.preventDefault(); window.open(obs.LearnMore); }
+          }><i>Learn&nbsp;More</i>
+        </Link>,
+    },
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: obs.ResultText,
+      data2: displayDate(obs.Date),
+    },
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
+      data2: obs.Interpretation,
+    },
+  ];
 
-    if (theSource) {
-      const source: SummaryRowItem = {
-        isHeader: false,
-        twoColumns: false,
-        data1: 'From ' + theSource,
-        data2: '',
-      }
-      rows.push(source)
-    }
+  if (theSource) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'From ' + theSource,
+      data2: '',
+    };
+    rows.push(source);
+  }
+
   const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
     {
       isHeader: false,
       twoColumns: true,
-      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data1: 'Source: ' + (provenance.Transmitter ?? ''),
       data2: provenance.Author ?? '',
     }
-  ))
+  ));
   if (provenance?.length) {
-    rows = rows.concat(provenance)
+    rows = rows.concat(provenance);
   }
 
-  return rows
+  return rows;
 }

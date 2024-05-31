@@ -19,7 +19,7 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
   const [filteringOption, setFilteringOption] = useState<string[]>([]);
-  const [sortedAndFilteredMatrix, setSortedAndFilteredMatrix] = useState<GoalSummary[][] | undefined>();
+  const [sortedAndFilteredGoals, setSortedAndFilteredGoals] = useState<{ goal: GoalSummary, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortingOption(sortOption);
     if(filterOption){
-    setFilteringOption(filterOption);
+      setFilteringOption(filterOption);
     }
     setShowModal(false);
   };
@@ -67,57 +67,41 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
   ];
 
   const applySortingAndFiltering = () => {
-    if (!goalSummaryMatrix) return;
+    if (!goalSummaryMatrix || !fhirDataCollection) return;
 
-    let filteredAndSortedMatrix = [...goalSummaryMatrix];
-
-    if (filteringOption.length > 0 && fhirDataCollection) {
-      const filteredMatrix: GoalSummary[][] = [];
-    
-      // Iterate over the goalSummaryMatrix length and push empty arrays to filteredMatrix
-      for (let i = 0; i < goalSummaryMatrix!.length; i++) {
-        filteredMatrix.push([]);
-      }
-    
-      filteringOption.forEach(option => {
-        // Find the index of the selected option in the filteringOptions array
-        const index = filteringOptions.findIndex(item => item.value === option);
-        // If index is found, push the corresponding entry from goalSummaryMatrix to filteredMatrix
-        if (index !== -1) {
-          filteredMatrix[index] = filteredAndSortedMatrix[index];
-        }
+    // Flatten the goalSummaryMatrix to a single array with provider information
+    let combinedGoals: { goal: GoalSummary, provider: string }[] = [];
+    goalSummaryMatrix.forEach((providerGoals, providerIndex) => {
+      const providerName = fhirDataCollection[providerIndex].serverName || 'Unknown';
+      providerGoals.forEach(goal => {
+        combinedGoals.push({ goal, provider: providerName });
       });
-    
-      filteredAndSortedMatrix = filteredMatrix.filter(matrix => matrix !== undefined);
-    }
-    
+    });
 
+    // Apply filtering
+    if (filteringOption.length > 0) {
+      combinedGoals = combinedGoals.filter(({ provider }) => filteringOption.includes(provider));
+    }
+
+    // Apply sorting
     switch (sortingOption) {
       case 'alphabetical-az':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.Description || '').localeCompare(b.Description || ''))
-        );
+        combinedGoals.sort((a, b) => (a.goal.Description || '').localeCompare(b.goal.Description || ''));
         break;
       case 'alphabetical-za':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.Description || '').localeCompare(a.Description || ''))
-        );
+        combinedGoals.sort((a, b) => (b.goal.Description || '').localeCompare(a.goal.Description || ''));
         break;
       case 'newest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (b.StartDate || '').localeCompare(a.StartDate || ''))
-        );
+        combinedGoals.sort((a, b) => (b.goal.StartDate || '').localeCompare(a.goal.StartDate || ''));
         break;
       case 'oldest':
-        filteredAndSortedMatrix = filteredAndSortedMatrix.map(providerGoals =>
-          providerGoals.sort((a, b) => (a.StartDate || '').localeCompare(b.StartDate || ''))
-        );
+        combinedGoals.sort((a, b) => (a.goal.StartDate || '').localeCompare(b.goal.StartDate || ''));
         break;
       default:
         break;
     }
 
-    setSortedAndFilteredMatrix(filteredAndSortedMatrix);
+    setSortedAndFilteredGoals(combinedGoals);
   };
 
   return (
@@ -140,7 +124,7 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
           </p>
         )}
 
-          {fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -149,7 +133,8 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
             SORT/FILTER
           </a>
         )}
-          {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -168,21 +153,13 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
           )
         )}
 
-        {sortedAndFilteredMatrix?.map((goalSummary, index) => (
-          <div key={'outerArray-' + index}>
-            {goalSummary && goalSummary.length > 0 && goalSummary[0]?.Description === 'init' ? (
-              <p>Loading...</p>
-            ) : !goalSummary || goalSummary.length < 1 ? (
-              <p>No records found.</p>
-            ) : (
-              <div>
-                {goalSummary?.map((goal, idx) => (
-                  <Summary key={idx} id={idx} rows={buildRows(goal, fhirDataCollection![index].serverName)} />
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+        {sortedAndFilteredGoals.length === 0 ? (
+          <p>No records found.</p>
+        ) : (
+          sortedAndFilteredGoals.map(({ goal, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(goal, provider)} />
+          ))
+        )}
       </div>
     </div>
   );
@@ -209,35 +186,38 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
     rows = rows.concat(targets);
   }
 
-  const addresses: SummaryRowItems | undefined = goal.Addresses?.map(concern => ({
+  const status: SummaryRowItem = {
     isHeader: false,
     twoColumns: false,
-    data1: 'Addresses: ' + (concern.DisplayName ?? 'Unknown'),
+    data1: 'Status: ' + (goal.LifecycleStatus ?? 'Unknown') + (goal.AchievementStatus === null ? '' : ' -- ' + goal.AchievementStatus),
+    data2:'',
+  }
+  rows = rows.concat(status)
+
+  const addresses: SummaryRowItems | undefined = goal.Addresses?.map(focus => ({
+    isHeader: false,
+    twoColumns: false,
+    data1: 'Focus: ' + (focus.DisplayName ?? 'Unknown'),
     data2: '',
   }));
   if (addresses?.length) {
     rows = rows.concat(addresses);
   }
 
-  const learnMore: SummaryRowItem = {
-    isHeader: false,
-    twoColumns: false,
-    data1:
-      goal.LearnMore === undefined || goal.LearnMore === null ? '' : (
-        <Link
-          to="route"
-          target="_blank"
-          onClick={event => {
-            event.preventDefault();
-            window.open(goal.LearnMore);
-          }}
-        >
-          <i>Learn More</i>
-        </Link>
-      ),
-    data2: '',
-  };
-  rows.push(learnMore);
+  if (goal.LearnMore !== undefined && goal.LearnMore !== null) {
+    const learnMore: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1:
+        <Link to="route" target="_blank"
+          onClick={
+            (event) => { event.preventDefault(); window.open(goal.LearnMore); }
+          }><i>Learn&nbsp;More</i>
+        </Link>,
+      data2: '',
+    }
+    rows.push(learnMore)
+  }
 
   const notes: SummaryRowItems | undefined = goal.Notes?.map(note => ({
     isHeader: false,
@@ -249,24 +229,27 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
     rows = rows.concat(notes);
   }
 
-  if (theSource) {
+  const provenance: SummaryRowItems | undefined = goal.Provenance?.map((provenance) => (
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
+      data2: provenance.Author ?? '',
+    }
+  ))
+  if (provenance?.length) {
+    rows = rows.concat(provenance)
+  }
+
+  const hasProvenance = goal.Provenance?.length ?? 0 > 0
+  if (theSource && !hasProvenance) {
     const source: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
-      data1: 'From ' + theSource,
+      data1: 'Source ' + theSource,
       data2: '',
-    };
-    rows.push(source);
-  }
-
-  const provenance: SummaryRowItems | undefined = goal.Provenance?.map(provenance => ({
-    isHeader: false,
-    twoColumns: true,
-    data1: 'Source: ' + (provenance.Transmitter ?? ''),
-    data2: provenance.Author ?? '',
-  }));
-  if (provenance?.length) {
-    rows = rows.concat(provenance);
+    }
+    rows.push(source)
   }
 
   return rows;

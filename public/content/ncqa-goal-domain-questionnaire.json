@@ -1,0 +1,95 @@
+{
+    "resourceType": "Questionnaire",
+    "id": "questionnaire-ncqa-goal-domains",
+    "url": "http://hl7.org/Questionnaire/ncqa-goal-domains",
+    "name": "NCQA_Goal_Domains",
+    "title": "NCQA Health Outcomes",
+    "status": "draft",
+    "publisher": "NCQA",
+    "copyright": "Copyright (c) NCQA",
+    "code": [
+        {
+            "system": "http://hl7.org",
+            "code": "ncqa-goal-domains",
+            "display": "NCQA Health Outcomes"
+        }
+    ],
+    "item": [
+        {
+            "linkId": "housing-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Housing",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "housing-q1",
+                    "code": [
+                        {
+                            "system": "http://ncqa.org/fhir/goal-domains",
+                            "code": "housing",
+                            "display": "Housing"
+                        }
+                    ],
+                    "text": "Do you have acceptable housing that is appropriate for your needs?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "housing-q2",
+                    "code": [
+                        {
+                            "system": "http://ncqa.org/fhir/goal-domains",
+                            "code": "housing",
+                            "display": "Housing"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "linkId": "accessToServices-group",
+            "code": [
+                {
+                    "code": "no-code",
+                    "display": "No code"
+                }
+            ],
+            "text": "Access to Services & Supports",
+            "type": "group",
+            "required": true,
+            "item": [
+                {
+                    "linkId": "accessToServices-q1",
+                    "code": [
+                        {
+                            "system": "http://ncqa.org/fhir/goal-domains",
+                            "code": "accessToServices",
+                            "display": "accessToServices"
+                        }
+                    ],
+                    "text": "Do you have the ability to access, afford, and utilize appropriate health and community resources such as transportation, food, and assistance with financial concerns?",
+                    "type": "boolean"
+                },
+                {
+                    "linkId": "accessToServices-q2",
+                    "code": [
+                        {
+                            "system": "http://ncqa.org/fhir/goal-domains",
+                            "code": "accessToServices",
+                            "display": "accessToServices"
+                        }
+                    ],
+                    "text": "What would you like to do?",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

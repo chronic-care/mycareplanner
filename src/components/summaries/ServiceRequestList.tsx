@@ -11,20 +11,17 @@ interface ServiceRequestListProps {
   fhirDataCollection?: FHIRData[];
 }
 
-export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollection}) => {
+export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollection }) => {
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ServiceRequestList component RENDERED!");
 
-  const [sortedServiceRequests, setSortedServiceRequests] = useState<ServiceRequest[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
   const [filterOption, setFilterOption] = useState<string[]>([]);
+  const [sortedAndFilteredServiceRequests, setSortedAndFilteredServiceRequests] = useState<{ serviceRequest: ServiceRequest, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
-  const [hashMap, setHashMap] = useState<Map<ServiceRequest, string>>(new Map());
-
-  console.log("fhirDataCollection", fhirDataCollection);
 
   useEffect(() => {
-    applySorting();
+    applySortingAndFiltering();
   }, [fhirDataCollection, sortOption, filterOption]);
 
   useEffect(() => {
@@ -37,8 +34,8 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollect
 
   const handleSortFilterSubmit = (sortOption: string, filterOption?: string[]) => {
     setSortOption(sortOption);
-    if(filterOption){
-      setFilterOption(filterOption)
+    if (filterOption) {
+      setFilterOption(filterOption);
     }
     setShowModal(false);
   };
@@ -65,66 +62,136 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollect
     { value: 'oldest', label: 'Date Created: Oldest' },
   ];
 
-  const applySorting = () => {
-    let serviceRequests: ServiceRequest[] = [];
-  
-    if (fhirDataCollection) {
-      fhirDataCollection.forEach(data => {
-        if (data.serviceRequests) {
-          serviceRequests = serviceRequests.concat(data.serviceRequests);
-        }
-      });
-    }
-  
-    let sortedServiceRequests = [...serviceRequests];
-  
-    if (sortOption === 'alphabetical-az') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        const nameA = a.code?.text ?? "";
-        const nameB = b.code?.text ?? "";
-        return nameA.localeCompare(nameB);
-      });
-    } else if (sortOption === 'alphabetical-za') {
-      sortedServiceRequests = sortedServiceRequests.sort((a, b) => {
-        const nameA = a.code?.text ?? "";
-        const nameB = b.code?.text ?? "";
-        return nameB.localeCompare(nameA);
-      });
-    } else if (sortOption === 'newest') {
-      serviceRequests = serviceRequests.sort((a, b) => {
-        const dateA = a.occurrenceTiming?.repeat ?? "";
-        const dateB = b.occurrenceTiming?.repeat ?? "";
-        console.log("dateA", dateA);
-        return 1;
-      });
-    } else if (sortOption === 'oldest') {
-      serviceRequests = serviceRequests.sort((a, b) => {
-        const dateA = a.occurrenceTiming?.repeat ?? "";
-        const dateB = b.occurrenceTiming?.repeat ?? "";
-        return 1;
-      });
-    }
-  
-    if (filterOption) {
-      }
-  
-    setSortedServiceRequests(sortedServiceRequests);
-  };
-  
+  const applySortingAndFiltering = () => {
+    if (!fhirDataCollection) return;
 
+    let combinedServiceRequests: { serviceRequest: ServiceRequest, provider: string }[] = [];
+
+    fhirDataCollection.forEach((data, providerIndex) => {
+      const providerName = data.serverName || 'Unknown';
+      (data.serviceRequests || []).forEach(serviceRequest => {
+        combinedServiceRequests.push({ serviceRequest, provider: providerName });
+      });
+    });
+
+    // Apply filtering
+    if (filterOption.length > 0) {
+      combinedServiceRequests = combinedServiceRequests.filter(({ provider }) => filterOption.includes(provider));
+    }
+
+    function convertDateFormat(dateString: string): string | null {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      const year = date.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
+
+    // Apply sorting
+    switch (sortOption) {
+      case 'alphabetical-az':
+        combinedServiceRequests.sort((a, b) => (a.serviceRequest.code?.text || '').localeCompare(b.serviceRequest.code?.text || ''));
+        break;
+      case 'alphabetical-za':
+        combinedServiceRequests.sort((a, b) => (b.serviceRequest.code?.text || '').localeCompare(a.serviceRequest.code?.text || ''));
+        break;
+      case 'newest':
+        combinedServiceRequests.sort((a, b) => {
+          let trimmedFinalDateA: string | null = null;
+        let trimmedFinalDateB: string | null = null;
+
+        const dateA = a.serviceRequest.occurrenceTiming ?? "";
+        const dateB = b.serviceRequest.occurrenceTiming ?? "";
+
+        if (dateA) {
+          const parsedDateA = displayTiming(dateA);
+          const indexA = parsedDateA?.search('until');
+          if (indexA !== -1 && parsedDateA) {
+            trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
+            console.log("trimmedFinalDateA", trimmedFinalDateA);
+          }
+        }
+
+        if (dateB) {
+          const parsedDateB = displayTiming(dateB);
+          const indexB = parsedDateB?.search('until');
+          if (indexB !== -1 && parsedDateB) {
+            trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
+            console.log("trimmedFinalDateB", trimmedFinalDateB);
+          }
+        }
+
+        if (trimmedFinalDateA && trimmedFinalDateB) {
+          return trimmedFinalDateA.localeCompare(trimmedFinalDateB);
+        } else if (trimmedFinalDateA) {
+          return -1;
+        } else if (trimmedFinalDateB) {
+          return 1;
+        } else {
+          return 0;
+        }
+        });
+        break;
+      case 'oldest':
+        combinedServiceRequests.sort((a, b) => {
+          let trimmedFinalDateA: string | null = null;
+          let trimmedFinalDateB: string | null = null;
+  
+          const dateA = a.serviceRequest.occurrenceTiming ?? "";
+          const dateB = b.serviceRequest.occurrenceTiming ?? "";
+  
+          if (dateA) {
+            const parsedDateA = displayTiming(dateA);
+            const indexA = parsedDateA?.search('until');
+            if (indexA !== -1 && parsedDateA) {
+              trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
+              console.log("trimmedFinalDateA", trimmedFinalDateA);
+            }
+          }
+  
+          if (dateB) {
+            const parsedDateB = displayTiming(dateB);
+            const indexB = parsedDateB?.search('until');
+            if (indexB !== -1 && parsedDateB) {
+              trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
+              console.log("trimmedFinalDateB", trimmedFinalDateB);
+            }
+          }
+  
+          if (trimmedFinalDateA && trimmedFinalDateB) {
+            return trimmedFinalDateB.localeCompare(trimmedFinalDateA);
+          } else if (trimmedFinalDateA) {
+            return -1;
+          } else if (trimmedFinalDateB) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        break;
+      default:
+        break;
+    }
+
+    setSortedAndFilteredServiceRequests(combinedServiceRequests);
+  };
 
   return (
     <div className="home-view">
       <div className="welcome">
         <h4 className="title">Planned Activities</h4>
 
-        {fhirDataCollection === undefined
-          && <> <p>Reading your clinical records...</p>
+        {fhirDataCollection === undefined && (
+          <>
+            <p>Reading your clinical records...</p>
             <BusySpinner busy={fhirDataCollection === undefined} />
           </>
-        }
+        )}
 
-{fhirDataCollection && fhirDataCollection.length === 1 ? ( // Checking for single provider
+        {fhirDataCollection && fhirDataCollection.length === 1 ? (
           <a className="text-right" onClick={() => setShowModal(true)}>
             SORT
           </a>
@@ -133,7 +200,8 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollect
             SORT/FILTER
           </a>
         )}
- {showModal && ( // Conditional rendering of modal based on the number of providers
+
+        {showModal && (
           fhirDataCollection && fhirDataCollection.length === 1 ? (
             <SortOnlyModal
               showModal={showModal}
@@ -152,59 +220,53 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({fhirDataCollect
           )
         )}
 
-        {sortedServiceRequests.length > 0 ? (
-          sortedServiceRequests.map((service, idx) => (
-            <Summary key={idx} id={idx} rows={buildRows(service, hashMap.get(service))} />
-          ))
-        ) : (
+        {sortedAndFilteredServiceRequests.length === 0 ? (
           <p>No records found.</p>
+        ) : (
+          sortedAndFilteredServiceRequests.map(({ serviceRequest, provider }, index) => (
+            <Summary key={index} id={index} rows={buildRows(serviceRequest, provider)} />
+          ))
         )}
-
       </div>
     </div>
   );
 };
 
 const buildRows = (service: ServiceRequest, theSource?: string): SummaryRowItems => {
-  let rows: SummaryRowItems =
-    [
-      {
-        isHeader: true,
-        twoColumns: false,
-        data1: displayConcept(service.code) ?? "No description",
-        data2: '',
-      },
-      {
-        isHeader: false,
-        twoColumns: false,
-        data1: service.requester === undefined ? ''
-          : 'Requested by: ' + service.requester?.display,
-        data2: '',
-      },
-      {
-        isHeader: false,
-        twoColumns: false,
-        data1: service.occurrenceTiming === undefined ? ''
-          : 'Scheduled on ' + displayTiming(service.occurrenceTiming),
-        data2: '',
-      },
-      {
-        isHeader: false,
-        twoColumns: false,
-        data1: service.reasonCode === undefined ? ''
-          : 'Reason: ' + displayConcept(service.reasonCode?.[0]),
-        data2: '',
-      }
-    ];
-
-  const notes: SummaryRowItems | undefined = service.note?.map((note, idx) => (
+  let rows: SummaryRowItems = [
+    {
+      isHeader: true,
+      twoColumns: false,
+      data1: displayConcept(service.code) ?? "No description",
+      data2: '',
+    },
     {
       isHeader: false,
       twoColumns: false,
-      data1: note.text ? 'Note ' + (idx + 1) + ': ' + note.text : '',
+      data1: service.requester === undefined ? '' : 'Requested by: ' + service.requester?.display,
+      data2: '',
+    },
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: service.occurrenceTiming === undefined ? '' : 'Scheduled on ' + displayTiming(service.occurrenceTiming),
+      data2: '',
+    },
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: service.reasonCode === undefined ? '' : 'Reason: ' + displayConcept(service.reasonCode?.[0]),
       data2: '',
     }
-  ));
+  ];
+
+  const notes: SummaryRowItems | undefined = service.note?.map((note, idx) => ({
+    isHeader: false,
+    twoColumns: false,
+    data1: note.text ? 'Note ' + (idx + 1) + ': ' + note.text : '',
+    data2: '',
+  }));
+
   if (notes?.length) {
     rows = rows.concat(notes);
   }

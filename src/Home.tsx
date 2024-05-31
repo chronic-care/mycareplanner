@@ -61,7 +61,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     let screenings = this.props.screenings?.filter(s => s.notifyPatient)
     // let tasks = this.props.tasks;
 
-    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'false'
+    const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'true'
 
     return (
       <div className="home-view">
@@ -147,12 +147,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               pathname: '/questionnaire',
               state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'caregiver-strain-questionnaire' }
             }} ><strong>Caregiver Strain Assessment</strong></Link><br />
-            {/* <Link to={{pathname: '/questionnaire',
-                      state: { patientSummary: this.props.patientSummary, questionnaireId: 'mypain-questionnaire' }
-                    }} ><strong>My Pain Assessment</strong></Link><br/> */}
 
-            <p />
-
+         
             {/* {(tasks === undefined)
                 ? <p>You have no tasks today!</p>
                 : <ul>

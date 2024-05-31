@@ -300,7 +300,7 @@ class App extends React.Component<AppProps, AppState> {
                     console.log('launcherData: Check for patient name...is it in here to use vs using launcherClient.tokenResponse?.patient from client itself?', launcherData)
                     const launcherPatientId = launcherData.patient?.id
                     console.log('launcherPatientId: ', launcherPatientId)
-                    launcherData.serverName = 'Launch Data'
+                    launcherData.serverName = 'Original Provider'
 
                     // SDS
                     // Note that this else always happens at least once, as the launcher is always chosen first
@@ -356,7 +356,7 @@ class App extends React.Component<AppProps, AppState> {
                     const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
                         this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                     console.log('SDS data: ', sdsData)
-                    sdsData.serverName = 'SDS Data'
+                    sdsData.serverName = 'SDS'
 
                     // Merge launcher and SDS Data and set states
                     const mergedFhirDataCollection: FHIRData[] = [sdsData, launcherData]
@@ -892,7 +892,7 @@ class App extends React.Component<AppProps, AppState> {
                                     <TabPanel value="1" sx={{ padding: '0px 15px 100px' }}>
                                         <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
                                             progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
-                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught} 
+                                            errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught}
                                             canShareData={this.state.canShareData}
                                             />
                                     </TabPanel>
