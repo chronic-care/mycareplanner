@@ -230,7 +230,7 @@ export default class QuestionnaireItemComponent extends React.Component<any, Que
           }
         </div>
         <Button className="btn btn-primary next-button" value={this.props.QuestionnaireItem.linkId} onClick={(event: any) => this.handleNextQuestionScroll(event.target.value)}>Next</Button>
-        <Button className="exit-button" onClick={this.handleCancelClick}>Cancel</Button>
+     
         <Modal show={this.state.showCancelPopup} onHide={this.handleCancelDeny} className="custom-modal">
             <Modal.Header>
               <Modal.Title>Leave questionnaire?</Modal.Title>
