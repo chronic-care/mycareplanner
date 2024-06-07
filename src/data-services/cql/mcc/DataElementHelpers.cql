@@ -99,7 +99,7 @@ define function ReportCondition(condition Condition, category String, commonName
   {
     id: condition.id.value,
     Category: category,
-    CommonName: commonName,
+    CommonName: Coalesce(commonName, ConceptText(condition.code)),
     ConceptName: ConceptText(condition.code),
     CodeableConcept: condition.code,
     RecordedDate: ToString(condition.recordedDate),
