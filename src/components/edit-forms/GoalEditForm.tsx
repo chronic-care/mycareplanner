@@ -1,6 +1,7 @@
 import * as React from 'react';
 // import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
+import moment from 'moment';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import Box from '@mui/material/Box';
@@ -17,10 +18,18 @@ import { createSharedDataResource } from '../../data-services/fhirService';
 
 export default function GoalEditForm(formData?: EditFormData) {
   let history = useHistory()
-  // const id = useParams();
-  const [description, setDescription] = React.useState<string | null>('');
-  const [startDate, setStartDate] = React.useState<Date | null>(new Date());
-  const [dueDate, setDueDate] = React.useState<Date | null>(null);
+  const location = useLocation(); 
+  const prepopulatedDescription = (location.state as { prepopulatedDescription?: string })?.prepopulatedDescription ?? '';
+  const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null; 
+  const prepopulatedDueDate = (location.state as {prepopulatedDueDate?: Date})?.prepopulatedDueDate ?? null;
+  const [description, setDescription] = React.useState<string>(prepopulatedDescription);
+  const [startDate, setStartDate] = React.useState<Date | null>(
+    prepopulatedDate ? moment(prepopulatedDate).add(0, 'day').toDate() : null
+  );
+  
+  const [dueDate, setDueDate] = React.useState<Date | null>(
+    prepopulatedDueDate ? moment(prepopulatedDueDate).add(0, 'day').toDate() : null
+  );
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
@@ -131,13 +140,13 @@ export default function GoalEditForm(formData?: EditFormData) {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
-              Save
+            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
+              Cancel
             </Button>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Button type="reset" fullWidth variant="outlined" sx={{ mt: 3, color: '#355CA8', bgcolor: '#F7F7F7', bordercolor: '#355CA8' }}>
-              Cancel
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#355CA8' }}>
+              Save
             </Button>
           </Grid>
 
