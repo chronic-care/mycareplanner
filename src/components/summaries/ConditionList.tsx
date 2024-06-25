@@ -24,7 +24,6 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
 
   useEffect(() => {
     applySortingAndFiltering();
-    console.log("conditionSummaryMatrix", conditionSummaryMatrix);
   }, [conditionSummaryMatrix, sortingOption, filteringOption]);
 
   useEffect(() => {
