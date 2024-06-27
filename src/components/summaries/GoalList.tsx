@@ -7,6 +7,7 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface GoalListProps {
   fhirDataCollection?: FHIRData[];
@@ -180,6 +181,33 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
       data2: goal.StartDate === null ? '' : 'Start: ' + goal.StartDate,
     },
   ];
+//add "SDS Data" instead of "Data SDS"
+  if (theSource === 'Data SDS') {
+    rows.unshift({
+      isHeader: false,
+      twoColumns: false,
+      data1: (
+        <>
+          <Link
+            to={{
+              pathname: '/goal-edit',
+              state: {
+                goalData: goal,
+                prepopulatedDescription: goal.Description,
+                prepopulatedDate: goal.StartDate || null,
+                prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
+              }
+            }}
+          >
+            <div style={{ color: '#355CA8', textAlign: 'right', marginLeft: 'auto' }}>
+            <EditIcon/>
+            </div>
+          </Link>
+        </>
+      ),
+      data2: '',
+    });
+  }
 
   const targets: SummaryRowItems = buildTargets(goal);
   if (targets?.length) {
