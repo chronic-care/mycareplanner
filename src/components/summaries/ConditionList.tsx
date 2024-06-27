@@ -86,16 +86,16 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
     // Apply sorting
     switch (sortingOption) {
       case 'alphabetical-az':
-        combinedConditions.sort((a, b) => (a.condition.ConceptName || '').localeCompare(b.condition.ConceptName || ''));
+        combinedConditions.sort((a, b) => (a.condition.CommonName  || '').localeCompare(b.condition.CommonName || ''));
         break;
       case 'alphabetical-za':
-        combinedConditions.sort((a, b) => (b.condition.ConceptName || '').localeCompare(a.condition.ConceptName || ''));
+        combinedConditions.sort((a, b) => (b.condition.CommonName || '').localeCompare(a.condition.CommonName || ''));
         break;
       case 'newest':
-        combinedConditions.sort((a, b) => (b.condition.OnsetDate || '').localeCompare(a.condition.OnsetDate || ''));
+        combinedConditions.sort((a, b) => (b.condition.RecordedDate || '').localeCompare(a.condition.RecordedDate || ''));
         break;
       case 'oldest':
-        combinedConditions.sort((a, b) => (a.condition.OnsetDate || '').localeCompare(b.condition.OnsetDate || ''));
+        combinedConditions.sort((a, b) => (a.condition.RecordedDate || '').localeCompare(b.condition.RecordedDate || ''));
         break;
       default:
         break;
