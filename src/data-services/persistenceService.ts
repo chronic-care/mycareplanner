@@ -11,6 +11,8 @@ const fcCurrentStateKey = 'fhir-client-state' + LF_ID
 const fcAllStatesKey = 'fhir-client-states-array' + LF_ID
 const selectedEndpointsKey = 'selected-endpoints' + LF_ID
 const launcherDataKey = 'launcher-data' + LF_ID
+// TODO: Sravan to set this up/add function for saving it, testing it, and possibly delete (if clear is not enough)
+const sessionIdKey = 'session-id' + LF_ID
 
 // FHIR ACCESS DATA //
 
@@ -64,6 +66,37 @@ const getFHIRAccessData = async (key: string): Promise<any> => {
     }
   } catch (e) {
     console.log(`Failure calling isFHIRAccessData(key) from persistenceService.getFHIRAccessData: ${e}`)
+  }
+}
+
+// Written in case we need vs deleteAllDataFromLocalForage() on session timeout or logout but not yet tested
+export const deleteCurrentLocalFHIRAccessData = async (): Promise<void> => {
+  try {
+    const fhirAccessData = await getFHIRAccessData(fcCurrentStateKey) as fhirclient.ClientState
+    if (fhirAccessData) {
+      await localForage.removeItem(fcCurrentStateKey)
+      console.log("Deleted currentLocalFhirClientState")
+    } else {
+      console.log("currentLocalFhirClientState does not exist so there is no need to delete it")
+    }
+  } catch (e) {
+    console.error("Failure deleting currentLocalFhirClientState: " + e)
+  }
+}
+
+// Written in case we need vs deleteAllDataFromLocalForage() on session timeout or logout but not yet tested
+export const deleteArrayOfFhirAccessDataObjects = async (): Promise<void> => {
+  try {
+    const arrayOfFhirAccessDataObjects: Array<fhirclient.ClientState> =
+      await getFHIRAccessData(fcAllStatesKey) as Array<fhirclient.ClientState>
+    if (arrayOfFhirAccessDataObjects) {
+      await localForage.removeItem(fcAllStatesKey)
+      console.log("Deleted arrayOfFhirAccessDataObjects")
+    } else {
+      console.log("arrayOfFhirAccessDataObjects does not exist so there is no need to delete it")
+    }
+  } catch (e) {
+    console.error("Failure deleting arrayOfFhirAccessDataObjects: " + e)
   }
 }
 
@@ -301,10 +334,10 @@ export const deleteSelectedEndpoints = async (): Promise<void> => {
     if (isSelectedEndpointsResult) {
       await localForage.removeItem(selectedEndpointsKey)
     } else {
-      console.log("There is no matching key to delete...")
+      console.log("There is no matching key to delete for selectedEndpoints...")
     }
   } catch (e) {
-    console.error("Failure deletiing deleteSelectedEndpoints: " + e)
+    console.error("Failure deleting deleteSelectedEndpoints: " + e)
   }
 }
 
@@ -377,6 +410,21 @@ export const getLauncherData = async (): Promise<ProviderEndpoint | null | undef
   return undefined
 }
 
+// Written in case we need vs deleteAllDataFromLocalForage() on session timeout or logout but not yet tested
+export const deleteLauncherData = async (): Promise<void> => {
+  try {
+    const launcherData: ProviderEndpoint = await getLauncherData() as ProviderEndpoint
+    if (launcherData) {
+      await localForage.removeItem(launcherDataKey)
+      console.log("Deleted launcherData")
+    } else {
+      console.log("launcherData does not exist so there is no need to delete it")
+    }
+  } catch (e) {
+    console.error("Failure deleting launcherData: " + e)
+  }
+}
+
 export const persistLauncherData = async (clientState: fhirclient.ClientState) => {
   // Convert clientState to ProviderEndpoint
   const convertedProviderEndpoint: ProviderEndpoint | undefined =
@@ -410,5 +458,38 @@ export const persistLauncherData = async (clientState: fhirclient.ClientState) =
     console.log('launcherDataKey save attempted/promise returned')
   } catch (e) {
     console.error('Error saving launcher data:', e)
+  }
+}
+
+// GENERIC HELPER FUNCTIONS //
+
+/*
+Removes every key from the database, returning it to a blank slate.
+*/
+export const deleteAllDataFromLocalForage = async () => {
+  try {
+    console.log("Attempting to clear all data from local forage...")
+    await localForage.clear()
+  } catch (err) {
+    console.log("Error clearing data from local forage: " + err)
+  } finally {
+    console.log("Successfully cleared all data from local forage (operation success)")
+
+    console.log("Testing that specifically-sensitive data was removed")
+    console.log(`Testing fcCurrentStateKey key...`)
+    const fhirAccessData = await getFHIRAccessData(fcCurrentStateKey) as fhirclient.ClientState
+    console.log(!fhirAccessData ? "Success: fcCurrentStateKey removed." : "ERROR: fcCurrentStateKey still exists!")
+
+    console.log(`Testing fcAllStatesKey`)
+    const arrayOfFhirAccessDataObjects: Array<fhirclient.ClientState> =
+      await getFHIRAccessData(fcAllStatesKey) as Array<fhirclient.ClientState>
+    console.log(!arrayOfFhirAccessDataObjects ? "Success: fcAllStatesKey removed." : "ERROR: fcAllStatesKey still exists!")
+
+    console.log(`Testing launcherDataKey`)
+    const launcherData: ProviderEndpoint = await getLauncherData() as ProviderEndpoint
+    console.log(!launcherData ? "Success: launcherDataKey removed." : "ERROR: launcherDataKey still exists!")
+
+    console.log(`Testing sessionIdKey`)
+    console.log(`TODO: Sravan to write this test once implemented...`)
   }
 }

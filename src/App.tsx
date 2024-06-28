@@ -22,7 +22,10 @@ import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlSe
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid, getLauncherData } from './data-services/persistenceService'
+import {
+    isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints,
+    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage
+} from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
     getMedicationSummaries, getVitalSignSummaries
@@ -339,7 +342,7 @@ class App extends React.Component<AppProps, AppState> {
                 // TODO: convert this to use multi login code?
 
                 // Configure the SDS client to get FHIR Data
-                console.log('We can connect to the SDS, so, add it to loader (read) SDS data')
+                console.log('We can connect to the SDS, so, add it to launcher (read) SDS data')
                 const serverUrl = this.state.supplementalDataClient.state.serverUrl
                 const serverUrlFromEnvVar = process.env.REACT_APP_SHARED_DATA_ENDPOINT
                 console.log(`Dynamic SDS serverUrl (using this for now...): ${serverUrl}`)
@@ -352,7 +355,7 @@ class App extends React.Component<AppProps, AppState> {
                 this.resetErrorMessageState()
 
                 try {
-                // Use the SDS client to get FHIR Data
+                    // Use the SDS client to get FHIR Data
                     const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
                         this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                     console.log('SDS data: ', sdsData)
@@ -720,13 +723,13 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ userErrorMessage: undefined })
     }
 
-    private handleLogout = () => {
+    private handleLogout = async () => {
         if (!this.state.isLogout) {
             this.setState({ isLogout: true })
-            sessionStorage.clear();
-            this.props.history.push('/logout');
+            sessionStorage.clear()
+            await deleteAllDataFromLocalForage()
+            this.props.history.push('/logout')
         }
-
     }
 
     updateLogMainTab = async (event: any, value: any) => {
