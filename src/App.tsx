@@ -617,43 +617,43 @@ class App extends React.Component<AppProps, AppState> {
             // If we want to go further, and we get back a Patient, we can check that: "id": "patient-name",
             // If either of those fail, we don't load the SDS...
 
-            const sdsMessageSuffix = "The SDS client will not be used."
-            let isSDSReadError = false
-            let sdsPatient: Patient | undefined
-            if (client.patient.id !== null) {
-                console.log("client.patient.id !== null, using client.patient.read()")
-                try {
-                    sdsPatient = await client.patient.read() as Patient
-                    console.log("Valid ")
-                } catch (err) {
-                    console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
-                    isSDSReadError = true
-                }
-            } else {
-                console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
-                try {
-                    sdsPatient = await client.user.read() as Patient
-                } catch (err) {
-                    console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
-                    isSDSReadError = true
-                }
-            }
+            // const sdsMessageSuffix = "The SDS client will not be used."
+            // let isSDSReadError = false
+            // let sdsPatient: Patient | undefined
+            // if (client.patient.id !== null) {
+            //     console.error("setSupplementalDataClient client.patient.id !== null, using client.patient.read()")
+            //     try {
+            //         sdsPatient = await client.patient.read() as Patient
+            //         console.log("Valid ")
+            //     } catch (err) {
+            //         console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
+            //         isSDSReadError = true
+            //     }
+            // } else {
+            //     console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
+            //     try {
+            //         sdsPatient = await client.user.read() as Patient
+            //     } catch (err) {
+            //         console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
+            //         isSDSReadError = true
+            //     }
+            // }
 
-            if (!isSDSReadError) {
-                console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
+            // if (!isSDSReadError) {
+            //     console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
 
-                const stillValid = await isSavedTokenStillValid(client.state)
+            //     const stillValid = await isSavedTokenStillValid(client.state)
                 this.setState({ supplementalDataClient: client })
-                this.setState({ canShareData: stillValid })
+                this.setState({ canShareData: true })
 
-                console.log("***** PatientID = " + client.getPatientId() ?? "")
-                console.log("***** User ID = " + client.getUserId() ?? "")
-                console.log("***** Can share data = " + stillValid ?? "?")
-            } else {
-                console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
-                and not setting state for supplementalDataClient or canShareData`)
-                client = undefined
-            }
+            //     console.log("***** PatientID = " + client.getPatientId() ?? "")
+            //     console.log("***** User ID = " + client.getUserId() ?? "")
+            //     console.log("***** Can share data = " + stillValid ?? "?")
+            // } else {
+            //     console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
+            //     and not setting state for supplementalDataClient or canShareData`)
+            //     client = undefined
+            // }
 
         }
         return client
