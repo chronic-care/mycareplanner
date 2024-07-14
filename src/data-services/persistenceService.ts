@@ -461,6 +461,49 @@ export const persistLauncherData = async (clientState: fhirclient.ClientState) =
   }
 }
 
+// New Session ID Functions
+
+export const saveSessionId = async (sessionId: string): Promise<void> => {
+  try {
+    await localForage.setItem(sessionIdKey, sessionId)
+  } catch (e) {
+    console.error("Error saving session ID: " + e)
+  }
+}
+
+export const isSessionId = async (): Promise<boolean> => {
+  try {
+    const sessionId = await localForage.getItem(sessionIdKey) as string
+    return sessionId !== null
+  } catch (e) {
+    console.error("Error checking session ID: " + e)
+    return false
+  }
+}
+
+export const getSessionId = async (): Promise<string | null> => {
+  try {
+    const isData = await isSessionId()
+    if (isData) {
+      return await localForage.getItem(sessionIdKey) as string
+    }
+  } catch (e) {
+    console.error("Error retrieving session ID: " + e)
+  }
+  return null
+}
+
+export const deleteSessionId = async (): Promise<void> => {
+  try {
+    const isData = await isSessionId()
+    if (isData) {
+      await localForage.removeItem(sessionIdKey)
+    }
+  } catch (e) {
+    console.error("Error deleting session ID: " + e)
+  }
+}
+
 // GENERIC HELPER FUNCTIONS //
 
 /*
@@ -489,7 +532,8 @@ export const deleteAllDataFromLocalForage = async () => {
     const launcherData: ProviderEndpoint = await getLauncherData() as ProviderEndpoint
     console.log(!launcherData ? "Success: launcherDataKey removed." : "ERROR: launcherDataKey still exists!")
 
-    console.log(`Testing sessionIdKey`)
-    console.log(`TODO: Sravan to write this test once implemented...`)
+    console.log("Testing sessionIdKey");
+    const sessionId = await getSessionId();
+    console.log(!sessionId ? "Success: sessionIdKey removed." : "ERROR: sessionIdKey still exists!")
   }
 }

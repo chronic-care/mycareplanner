@@ -24,7 +24,7 @@ import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
 import {
     isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints,
-    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage
+    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId, deleteSessionId
 } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
@@ -35,7 +35,7 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
-import { doLog, LogRequest } from './log/log-service'
+import { clearSession, doLog, initializeSession, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";
@@ -93,6 +93,7 @@ interface AppState {
 
     isActiveSession: boolean,
     isLogout: boolean,
+    sessionId: string | undefined,
 }
 
 type SummaryFunctionType = (fhirData?: FHIRData[]) =>
@@ -142,6 +143,7 @@ class App extends React.Component<AppProps, AppState> {
 
             isActiveSession: true,
             isLogout: false,
+            sessionId: undefined,
         }
 
         this.initializeSummaries()
@@ -159,6 +161,19 @@ class App extends React.Component<AppProps, AppState> {
             // await this.setSupplementalDataClient('somePatientId')
 
             try {
+                if(await isSessionId()){
+                    const retrievedSessionId = await getSessionId();
+                    if(retrievedSessionId){
+                        this.setState({ sessionId : retrievedSessionId });
+                    }
+                    console.log("I am in Retrieving the sessionID block ----------->",retrievedSessionId);
+                }
+                else{
+                    const sessionId = await initializeSession(); // Initialize session when the application is launched
+                    this.setState({ sessionId });
+                    saveSessionId(sessionId);
+                    console.log("I am in Creating the sessionID block ----------------->", sessionId)
+                }
                 console.log("Checking if this is a multi-select, single, or a loader...")
                 const selectedEndpoints: string[] | undefined = await getSelectedEndpoints()
                 if (selectedEndpoints && selectedEndpoints.length > 0) {
@@ -543,6 +558,7 @@ class App extends React.Component<AppProps, AppState> {
                             event: 'Summaries Loading',
                             message: `Resource Count for ${key}: ${length}`,
                             resourceCount: length,
+                            sessionId: this.state.sessionId,
                         };
                         doLog(request)
                     }
@@ -671,6 +687,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Patient information loading',
             page: 'Home',
             message: logMessage,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
         this.setState({ progressMessage: message })
@@ -744,6 +761,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
     }
@@ -761,6 +779,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
 
         doLog(request)
@@ -778,6 +797,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
 
