@@ -14,11 +14,13 @@ import {
 import { doLog } from '../log';
 
 const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
-  const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
+ const entries = (response[0] as fhirclient.JsonObject)?.entry as [fhirclient.JsonObject];
   return entries?.map((entry: fhirclient.JsonObject) => entry.resource as any)
     .filter((resource: Resource) => resource.resourceType !== 'OperationOutcome');
 };
 
+
+ 
 // TODO full date argument does not work correctly in Logica?  Use only yyyy-MM for now.
 // export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM-dd')}`;
 export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM')}`;
@@ -181,12 +183,12 @@ export const supplementalDataIsAvailable = (): Boolean => {
     && sdsScope !== undefined && sdsScope?.length > 0
 }
 
-export const getSupplementalDataClient = async (patientId: string | null): Promise<Client | undefined> => {
+export const getSupplementalDataClient = async (patientId2: string | null): Promise < Client | undefined > => {
   console.log('getSupplementalDataClient Start');
   let sdsClient: Client | undefined
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
   const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
-  const sdsScope = process.env.REACT_APP_SHARED_DATA_SCOPE
+  const sdsScope = 'patient/*.cruds patient/* user/*.cruds user/* goal/*.read '
   const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
   console.log('getSupplementalDataClient authURL: ', authURL)
@@ -195,41 +197,71 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
   console.log('getSupplementalDataClient sdsClientId: ', sdsClientId)
 
   if (sdsClientId && sdsURL) {
-    console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
-    const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
-      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
-    if (sdsFhirAccessDataObject) {
-      sdsClient = FHIR.client(sdsFhirAccessDataObject)
-    }
-  }
-
-  else if (authURL && sdsURL && sdsScope) {
-    console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
-    console.log('getSupplementalDataClient authURL: ', authURL)
-    console.log('getSupplementalDataClient sdsURL: ', sdsURL)
-    console.log('getSupplementalDataClient sdsScope: ', sdsScope)
-
-    const authFhirAccessDataObject: fhirclient.ClientState | undefined =
-      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
-    console.log('getSupplementalDataClient found extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint using ' + authURL);
-
-    if (authFhirAccessDataObject) {
-      console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
-      // Replace the serverURL and client scope with Shared Data endpoint and scope
-      let sdsFhirAccessDataObject = authFhirAccessDataObject
-      sdsFhirAccessDataObject.serverUrl = sdsURL
-      sdsFhirAccessDataObject.scope = sdsScope
-      if (sdsFhirAccessDataObject.tokenResponse) {
-        sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
+      console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
+      const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
+      if (sdsFhirAccessDataObject) {
+          sdsClient = FHIR.client(sdsFhirAccessDataObject)
       }
-      console.log("getSupplementalDataClient  getSupplementalDataClient() sdsFhirAccessDataObject = ",  JSON.stringify( sdsFhirAccessDataObject))
-      // Connect to the client
-      sdsClient = FHIR.client(sdsFhirAccessDataObject)
-      console.log("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
-    }
-    else {
-      console.warn("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
-    }
+  } else if (authURL && sdsURL && sdsScope) {
+      console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
+
+      const authFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
+
+      if (authFhirAccessDataObject) {
+          console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
+          // Replace the serverURL and client scope with Shared Data endpoint and scope
+          let sdsFhirAccessDataObject = authFhirAccessDataObject
+          sdsFhirAccessDataObject.serverUrl = sdsURL
+          sdsFhirAccessDataObject.scope = sdsScope
+          if (sdsFhirAccessDataObject.tokenResponse) {
+              sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
+          }
+          // Connect to the client
+          let sdsClient: Client | undefined
+          sdsClient = FHIR.client(sdsFhirAccessDataObject)
+          const linkages = await sdsClient.request('Linkage');
+          if (sdsFhirAccessDataObject.tokenResponse) {
+              if (linkages.entry === undefined) {
+                  console.log('getSupplementalDataClient Create Patient:');
+                  const patientResource = {
+                      resourceType: 'Patient'
+                  };
+                  await sdsClient.create(patientResource).then(async (response) => {
+                          console.log('getSupplementalDataClient Patient resource created successfully:', response);
+                          console.log('getSupplementalDataClient start wait for patient create:');
+                          await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
+                          console.log('getSupplementalDataClient end wait for patient create:');
+                          const yy = await sdsClient?.request('Linkage');
+                          console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));                          
+                          var patientReference = yy.entry[0].resource?.item[0].resource.reference
+                          var identifier = patientReference.split("/")
+                          if (sdsFhirAccessDataObject) {
+                              if (sdsFhirAccessDataObject.tokenResponse) {
+                                  if (sdsFhirAccessDataObject.tokenResponse.patient) {
+                                      sdsFhirAccessDataObject.tokenResponse.patient = identifier[1]
+                                      sdsClient = FHIR.client(sdsFhirAccessDataObject)
+                                      return sdsClient
+                                  }
+                              }
+                          }
+                      })
+                      .catch((error) => {
+                          console.error('getSupplementalDataClient Error creating Patient resource:', error);
+                      });
+              } else {
+                  var patientReference = linkages.entry[0].resource?.item[0].resource.reference
+                  var identifier = patientReference.split("/")
+                  sdsFhirAccessDataObject.tokenResponse.patient = identifier[1]
+                  sdsClient = FHIR.client(sdsFhirAccessDataObject)
+                  return sdsClient
+              }
+          }
+          console.error("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
+      } else {
+          console.error("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
+      }
   }
 
   // TODO: Consider check here if SDS is empty and return undefined if so.
@@ -237,7 +269,7 @@ export const getSupplementalDataClient = async (patientId: string | null): Promi
   // The program will always know at the most root level that this SDS is not useful, which may be better.
   // This includes that knowledge in ProviderLogin w/o the additional logic it has now to determine that.
 
-  console.log('getSupplementalDataClient End');
+  console.error('getSupplementalDataClient End');
   return sdsClient
 }
 
@@ -484,8 +516,15 @@ const getFHIRResources = async (client: Client, clientScope: string | undefined,
   const fhirUserPath = client.getFhirUser();
   const serverUrl = client.state.serverUrl;
   console.log('client.getFhirUser(): ', client.getFhirUser())
-  const fhirUser: Practitioner | Patient | RelatedPerson | undefined =
-    fhirUserPath ? await client.request(fhirUserPath) : undefined
+
+  let fhirUser : Practitioner | Patient | RelatedPerson | undefined
+try {
+   fhirUser =    fhirUserPath ? await client.request(fhirUserPath) : undefined
+  } catch (error) {
+    // console.error(error)
+    // Assume this is SDS
+}
+
   console.log('fhirUser: ', fhirUser)
   const caregiverName: String | undefined =
     (patientPath === fhirUserPath) ? undefined : fhirUser?.name?.[0]?.text ?? fhirUser?.name?.[0]?.family
@@ -565,7 +604,8 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     goalsPath, true, client, clientScope, 50, setAndLogProgressState, setAndLogErrorMessageState)
   goals && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (goals?.length ?? 0) + ' Goals.', 50)
-
+  console.log('Found ' + (goals?.length ?? 0) + ' Goals.')
+  
   curResourceName = 'Condition'
   let conditions: Condition[] | undefined
   setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 55)
@@ -785,7 +825,6 @@ const loadFHIRQuery = async <T extends Resource>(
     resourceData = (hasScope(clientScope, `${resourceSrcCodeName}.read`)
       ? resourcesFrom(await client.patient.request(resourcePath, fhirOptions) as fhirclient.JsonObject)
       : undefined)
-    console.log("resourceData:", resourceData)
     resources = resourceData?.filter((item: any) => item.resourceType === resourceSrcCodeName) as T[]
     console.log("resources:", resources)
     isRecordProvenance && recordProvenance(resourceData)
@@ -871,3 +910,9 @@ export async function getSharedGoals(): Promise<Goal[]> {
 
   return goals
 }
+
+
+function delay(arg0: number) {
+  throw new Error('Function not implemented.')
+}
+
