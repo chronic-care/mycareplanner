@@ -183,12 +183,12 @@ export const supplementalDataIsAvailable = (): Boolean => {
     && sdsScope !== undefined && sdsScope?.length > 0
 }
 
-export const getSupplementalDataClient = async (patientId2: string | null): Promise<Client | undefined> => {
+export const getSupplementalDataClient = async (patientId2: string | null): Promise < Client | undefined > => {
   console.log('getSupplementalDataClient Start');
-  let sdsClienta: Client | undefined
+  let sdsClient: Client | undefined
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
   const sdsURL = process.env.REACT_APP_SHARED_DATA_ENDPOINT
-  const sdsScope = 'patient/*.cruds patient/* user/*.cruds user/* goal/*.read ' 
+  const sdsScope = 'patient/*.cruds patient/* user/*.cruds user/* goal/*.read '
   const sdsClientId = process.env.REACT_APP_SHARED_DATA_CLIENT_ID
 
   console.log('getSupplementalDataClient authURL: ', authURL)
@@ -197,122 +197,71 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
   console.log('getSupplementalDataClient sdsClientId: ', sdsClientId)
 
   if (sdsClientId && sdsURL) {
-    console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
-    const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
-      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
-    if (sdsFhirAccessDataObject) {
-      sdsClienta = FHIR.client(sdsFhirAccessDataObject)
-    }
-  }
-
-  else if (authURL && sdsURL && sdsScope) {
-    console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
-
-    const authFhirAccessDataObject: fhirclient.ClientState | undefined =
-      await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
-
-    if (authFhirAccessDataObject) {
-      console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
-      // Replace the serverURL and client scope with Shared Data endpoint and scope
-      let sdsFhirAccessDataObject = authFhirAccessDataObject
-      sdsFhirAccessDataObject.serverUrl = sdsURL
-      sdsFhirAccessDataObject.scope = sdsScope
-      if (sdsFhirAccessDataObject.tokenResponse) {
-        sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
-      }
-      // Connect to the client
-      let sdsClient: Client | undefined
-      sdsClient = FHIR.client(sdsFhirAccessDataObject)
-
-      const linkages  = await sdsClient.request('Linkage');
-
-
-      if (sdsFhirAccessDataObject.tokenResponse) {
-
-        if (linkages.entry === undefined) {
-          console.log('getSupplementalDataClient Create Patient:');
-
-          const patientResource = {
-            resourceType: 'Patient'
-          };
-
-          await sdsClient.create(patientResource).then(async (response) => {
-              console.log('getSupplementalDataClient Patient resource created successfully:', response);
-
-              console.log('getSupplementalDataClient start wait:'); 
-              await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
-              console.log('getSupplementalDataClient end wait:'); 
-  
-              const yy  = await sdsClient?.request('Linkage');
-
-              console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));
-
-              var p = yy.entry[0].resource?.item[0].resource.reference
-              var r = p.split("/")
-              var y = r[1]
-              if (sdsFhirAccessDataObject) {
-
-                if (sdsFhirAccessDataObject.tokenResponse) {
-                  if (sdsFhirAccessDataObject.tokenResponse.patient) {
-                    sdsFhirAccessDataObject.tokenResponse.patient = y
-                    sdsClient = FHIR.client(sdsFhirAccessDataObject)
-                    return sdsClient
-                  }
-
-                }
-
-              }
-             
-
-            })
-            .catch((error) => {
-              console.error('getSupplementalDataClient Error creating Patient resource:', error);
-            });
-
-          
-
-        } else {
-          var p = linkages.entry[0].resource?.item[0].resource.reference
-          var r = p.split("/")
-          var y = r[1]
-          sdsFhirAccessDataObject.tokenResponse.patient = y
+      console.log('getSupplementalDataClient if (sdsClientId && sdsURL) == true; authorize in using client id')
+      const sdsFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(sdsURL)
+      if (sdsFhirAccessDataObject) {
           sdsClient = FHIR.client(sdsFhirAccessDataObject)
-          return sdsClient
-        }
-
-
-    
       }
+  } else if (authURL && sdsURL && sdsScope) {
+      console.log('getSupplementalDataClient else if (authURL && sdsURL && sdsScope) == true; authorize using existing token')
 
-      
-      // var resources: Resource[] = []
-      // resources = resources.concat(resourcesFrom(await sdsClient.request('Linkage')as fhirclient.JsonObject))
+      const authFhirAccessDataObject: fhirclient.ClientState | undefined =
+          await extractFhirAccessDataObjectIfGivenEndpointMatchesAnyPriorEndpoint(authURL)
 
-      // console.error('getSupplementalDataClient Linkage: ', JSON.stringify(resources))
-      // console.error('getSupplementalDataClient Linkage: ', JSON.stringify(resources))
-      // console.error('getSupplementalDataClient Linkage: ', JSON.stringify(resources))
-      // console.error('getSupplementalDataClient Linkage: ', JSON.stringify(resources))
-      // console.error('getSupplementalDataClient Linkage: ', JSON.stringify(resources))
-
-
-      // const patientResource  = {
-      //   resourceType: 'Patient'
-      //   // identifier: identifierArray,
-      // };
-      // sdsClient
-      // .create(patientResource)
-      // .then((response) => {
-      //   console.log('Patient resource created successfully:', response);
-      // })
-      // .catch((error) => {
-      //   console.error('Error creating Patient resource:', error);
-      // });
-    
-      console.error("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
-    }
-    else {
-      console.error("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
-    }
+      if (authFhirAccessDataObject) {
+          console.log("getSupplementalDataClient authFhirAccessDataObject is truthy")
+          // Replace the serverURL and client scope with Shared Data endpoint and scope
+          let sdsFhirAccessDataObject = authFhirAccessDataObject
+          sdsFhirAccessDataObject.serverUrl = sdsURL
+          sdsFhirAccessDataObject.scope = sdsScope
+          if (sdsFhirAccessDataObject.tokenResponse) {
+              sdsFhirAccessDataObject.tokenResponse.scope = sdsScope
+          }
+          // Connect to the client
+          let sdsClient: Client | undefined
+          sdsClient = FHIR.client(sdsFhirAccessDataObject)
+          const linkages = await sdsClient.request('Linkage');
+          if (sdsFhirAccessDataObject.tokenResponse) {
+              if (linkages.entry === undefined) {
+                  console.log('getSupplementalDataClient Create Patient:');
+                  const patientResource = {
+                      resourceType: 'Patient'
+                  };
+                  await sdsClient.create(patientResource).then(async (response) => {
+                          console.log('getSupplementalDataClient Patient resource created successfully:', response);
+                          console.log('getSupplementalDataClient start wait for patient create:');
+                          await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
+                          console.log('getSupplementalDataClient end wait for patient create:');
+                          const yy = await sdsClient?.request('Linkage');
+                          console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));                          
+                          var patientReference = yy.entry[0].resource?.item[0].resource.reference
+                          var identifier = patientReference.split("/")
+                          if (sdsFhirAccessDataObject) {
+                              if (sdsFhirAccessDataObject.tokenResponse) {
+                                  if (sdsFhirAccessDataObject.tokenResponse.patient) {
+                                      sdsFhirAccessDataObject.tokenResponse.patient = identifier[1]
+                                      sdsClient = FHIR.client(sdsFhirAccessDataObject)
+                                      return sdsClient
+                                  }
+                              }
+                          }
+                      })
+                      .catch((error) => {
+                          console.error('getSupplementalDataClient Error creating Patient resource:', error);
+                      });
+              } else {
+                  var patientReference = linkages.entry[0].resource?.item[0].resource.reference
+                  var identifier = patientReference.split("/")
+                  sdsFhirAccessDataObject.tokenResponse.patient = identifier[1]
+                  sdsClient = FHIR.client(sdsFhirAccessDataObject)
+                  return sdsClient
+              }
+          }
+          console.error("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
+      } else {
+          console.error("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
+      }
   }
 
   // TODO: Consider check here if SDS is empty and return undefined if so.
@@ -321,7 +270,7 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
   // This includes that knowledge in ProviderLogin w/o the additional logic it has now to determine that.
 
   console.error('getSupplementalDataClient End');
-  return sdsClienta
+  return sdsClient
 }
 
 // TODO: MULTI-PROVIDER: Call this with getFHIRData/remove duplicate code there. Or, have this be called first.
