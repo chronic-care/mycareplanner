@@ -12,6 +12,7 @@ context Patient
 define VitalSignsSummary: 
   (List {
     DE.ReportObservation(VitalSigns.BloodPressure, 'Blood Pressure'),
+    First(ReportHomeBP()),
     DE.ReportObservation(VitalSigns.BodyHeight, 'Height'),
     DE.ReportObservation(VitalSigns.BodyWeight, 'Weight'),
     DE.ReportObservation(VitalSigns.BodyMassIndex, 'BMI'),
@@ -23,7 +24,7 @@ define VitalSignsSummary:
 
 // Most recent FHIR Observation for each vital sign data element.
 define VitalSigns: {
-  BloodPressure: DE.MostRecent("Blood Pressure Observations"),
+  BloodPressure: DE.MostRecent("Blood pressure"),
   BodyHeight: DE.MostRecent("Body Height Observations"),
   BodyWeight: DE.MostRecent("Body Weight Observations"),
   BodyMassIndex: DE.MostRecent("Body Mass Index Observations"),
@@ -35,7 +36,7 @@ define VitalSigns: {
 
 // Vital Sign FHIR Observations sorted in descending order by issue date.
 
-define "Blood Pressure Observations":
+define "Blood pressure":
   DE.SelectByStatus([Observation: Cx."Blood pressure"])
 
 define "Body Temperature Observations":
@@ -58,3 +59,66 @@ define "Oxygen Saturation Observations":
 
 define "Respiratory Rate Observations":
   DE.SelectByStatus([Observation: Cx."Respiratory rate"])
+
+/*
+The following functions were added to support OHSU Epic data for Home Blood Pressure
+that are returned as separate observations.
+*/
+
+define "Systolic Blood Pressure":
+  SortDescending( [Observation: Cx."Systolic blood pressure"]
+    union [Observation: Cx."Epic Systolic blood pressure"])
+
+define "Diastolic Blood Pressure":
+  SortDescending([Observation: Cx."Diastolic blood pressure"]
+    union [Observation: Cx."Epic Diastolic blood pressure"])
+
+// Use when Systolic and Diastolic BP are reported as an independent Observations (not recommended)
+define "Combined Blood Pressure Observations":
+  "Systolic Blood Pressure" systolicBP
+      let DiastolicObs: MatchingDiastolic(systolicBP),
+          SystolicValue: Round((systolicBP.value as FHIR.Quantity).value),
+          DiastolicValue: Round((MatchingDiastolic(systolicBP).value as FHIR.Quantity).value),
+          ResultDate: DE.FindDate(systolicBP)
+    return {
+      "Date": ResultDate,
+      "Systolic": SystolicValue,
+      "Diastolic": DiastolicValue,
+      "Display": Coalesce(ToString(SystolicValue), '-') + '/' + Coalesce(ToString(DiastolicValue), '-') + ' mmHg',
+      "Performer": First(systolicBP.performer).display.value,
+      "Notes": DE.ToString(systolicBP.note) union DE.ToString(DiastolicObs.note),
+      "Provenance": DE.ReportProvenance(systolicBP)
+    }
+
+define function MatchingDiastolic(systolicBP FHIR.Observation):
+  First(
+    "Diastolic Blood Pressure" diastolicBP
+      where (diastolicBP.effective as FHIR.dateTime) = (systolicBP.effective as FHIR.dateTime)
+  )
+
+define function SortDescending(observations List<Observation>):
+  observations O
+    // Note: Cannot use FindDate() because execution engine cannot sort by result of a function.
+    sort by Coalesce(
+      (effective as FHIR.dateTime).value,
+      (effective as FHIR.instant).value,
+      (effective as FHIR.Period)."end".value,
+      (effective as FHIR.Period)."start".value) descending
+
+define function ReportHomeBP():
+  "Combined Blood Pressure Observations" bp
+    return {
+      DisplayName: 'Home Blood Pressure',
+      ConceptName: null,
+      Date: ToString(bp.Date),
+      ResultText: bp.Display,
+      ResultValue: null,
+      ResultUnits: null,
+      ReferenceRange: null,
+      Interpretation: null,
+      Flag: null,
+      Performer: bp.Performer,
+      Notes: bp.Notes,
+      Provenance: bp.Provenance,
+      LearnMore: null
+    }

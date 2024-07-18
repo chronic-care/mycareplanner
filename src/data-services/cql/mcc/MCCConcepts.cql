@@ -6,6 +6,8 @@ codesystem "LOINC": 'http://loinc.org'
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "Race": 'urn:oid:2.16.840.1.113883.6.238'
 
+codesystem "Epic": 'urn:oid:1.2.840.114350.1.13.135.3.7.2.707679'
+
 // ## Value sets ##
 
 // ******************************
@@ -238,6 +240,7 @@ code "Left (qualifier value)": '7771000' from "SNOMEDCT" display 'Left (qualifie
 code "Right (qualifier value)": '24028007' from "SNOMEDCT" display 'Right (qualifier value)'
 
 code "Blood pressure": '85354-9' from "LOINC" display 'Blood pressure systolic and diastolic'
+code "Blood pressure home reading": '72076-3' from "LOINC" display 'Blood pressure home reading'
 code "Systolic blood pressure": '8480-6' from "LOINC" display 'Systolic blood pressure'
 code "Diastolic blood pressure": '8462-4' from "LOINC" display 'Diastolic blood pressure'
 code "Heart rate": '8867-4' from "LOINC" display 'Heart rate'
@@ -249,3 +252,6 @@ code "Body height": '8302-2' from "LOINC" display 'Body height'
 code "Body weight": '29463-7' from "LOINC" display 'Body weight'
 code "Body mass index": '39156-5' from "LOINC" display 'Body mass index'
 code "Inhaled oxygen flow rate": '3151-8' from "LOINC" display 'Inhaled oxygen flow rate'
+
+code "Epic Systolic blood pressure": '7585' from "Epic" display 'Systolic blood pressure'
+code "Epic Diastolic blood pressure": '7586' from "Epic" display 'Diastolic blood pressure'

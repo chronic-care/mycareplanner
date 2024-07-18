@@ -28,7 +28,7 @@ const today: Date = new Date()
 const oneDay = 24 * 3600 * 1000
 // const threeMonthsAgo = new Date(today.getTime() - (365/4 * oneDay))
 // const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
-// const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
+const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
 // const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
 
@@ -144,8 +144,8 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   var resources: Resource[] = []
   // codes are ordered by preference for presentation: BP, Heart rate, O2 sat, temp, weight, height, BMI
   // const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
-  // codes are ordered by preference for presentation: BP, O2 sat, temp, weight, height
-  const vitalsCodes = ['85354-9', '59408-5', '8310-5', '29463-7', '8302-2']
+  // codes are ordered by preference for presentation: BP, O2 sat, temp, weight, height, BMI
+  const vitalsCodes = ['85354-9', '59408-5', '8310-5', '29463-7', '8302-2', '39156-5']
   const queryPaths = vitalsCodes.map(code => {
     // Issue: UCHealth returns 400 error if include both category and code.
     // return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_sort:desc=date&_count=1'
@@ -159,9 +159,13 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[2], onePageLimit) as fhirclient.JsonObject) as Observation[])
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[3], onePageLimit) as fhirclient.JsonObject) as Observation[])
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[4], onePageLimit) as fhirclient.JsonObject) as Observation[])
-  // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[5], onePageLimit) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[5], onePageLimit) as fhirclient.JsonObject) as Observation[] )
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[6], onePageLimit) as fhirclient.JsonObject) as Observation[] )
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[7], onePageLimit) as fhirclient.JsonObject) as Observation[] )
+
+  // One year of history for Home BP vitals, which are returned as separate systolic and diastolic Observation resources.
+  const homeBPPath = 'Observation?code=http://loinc.org|72076-3&date=' + getDateParameter(oneYearAgo) + provenanceSearch
+  resources = resources.concat(resourcesFrom(await client.patient.request(homeBPPath, onePageLimit) as fhirclient.JsonObject) as Observation[] )
 
   resources = resources.filter(v => v !== undefined)
   const vitals = resources.filter((item: any) => item?.resourceType === 'Observation') as Observation[]

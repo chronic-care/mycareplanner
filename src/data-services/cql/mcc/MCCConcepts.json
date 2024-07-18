@@ -1,12 +1,15 @@
 {
    "library" : {
+      "localId" : "0",
       "annotation" : [ {
+         "translatorVersion" : "3.10.0-SNAPSHOT",
          "translatorOptions" : "EnableAnnotations,EnableLocators,EnableResultTypes",
+         "signatureLevel" : "None",
          "type" : "CqlToElmInfo"
       }, {
          "type" : "Annotation",
          "s" : {
-            "r" : "160",
+            "r" : "371",
             "s" : [ {
                "value" : [ "","library MCCConcepts version '1.0.0'" ]
             } ]
@@ -22,13 +25,14 @@
       },
       "usings" : {
          "def" : [ {
+            "localId" : "1",
             "localIdentifier" : "System",
             "uri" : "urn:hl7-org:elm-types:r1"
          } ]
       },
       "codeSystems" : {
          "def" : [ {
-            "localId" : "1",
+            "localId" : "206",
             "locator" : "5:1-5:38",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
             "name" : "LOINC",
@@ -37,14 +41,14 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "1",
+                  "r" : "206",
                   "s" : [ {
-                     "value" : [ "// ## Code Systems ##\n","codesystem ","\"LOINC\"",": ","'http://loinc.org'" ]
+                     "value" : [ "// ## Code Systems ##\n\n","codesystem ","\"LOINC\"",": ","'http://loinc.org'" ]
                   } ]
                }
             } ]
          }, {
-            "localId" : "2",
+            "localId" : "207",
             "locator" : "6:1-6:47",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
             "name" : "SNOMEDCT",
@@ -53,14 +57,14 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "2",
+                  "r" : "207",
                   "s" : [ {
                      "value" : [ "","codesystem ","\"SNOMEDCT\"",": ","'http://snomed.info/sct'" ]
                   } ]
                }
             } ]
          }, {
-            "localId" : "3",
+            "localId" : "208",
             "locator" : "7:1-7:52",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
             "name" : "Race",
@@ -69,9 +73,25 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "3",
+                  "r" : "208",
                   "s" : [ {
                      "value" : [ "","codesystem ","\"Race\"",": ","'urn:oid:2.16.840.1.113883.6.238'" ]
+                  } ]
+               }
+            } ]
+         }, {
+            "localId" : "209",
+            "locator" : "9:1-9:65",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+            "name" : "Epic",
+            "id" : "urn:oid:1.2.840.114350.1.13.135.3.7.2.707679",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "209",
+                  "s" : [ {
+                     "value" : [ "","codesystem ","\"Epic\"",": ","'urn:oid:1.2.840.114350.1.13.135.3.7.2.707679'" ]
                   } ]
                }
             } ]
@@ -79,8 +99,8 @@
       },
       "valueSets" : {
          "def" : [ {
-            "localId" : "4",
-            "locator" : "18:1-18:100",
+            "localId" : "210",
+            "locator" : "20:1-20:100",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Arthritis Disorders",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.81",
@@ -88,15 +108,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "4",
+                  "r" : "210",
                   "s" : [ {
                      "value" : [ "// ## Value sets ##\n\n// ******************************\n// Condition value sets\n// ******************************\n\n//\n// Arthritis Conditions\n//\n","valueset ","\"Arthritis Disorders\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.81'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "5",
-            "locator" : "19:1-19:102",
+            "localId" : "211",
+            "locator" : "21:1-21:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Infectious Arthritis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.654",
@@ -104,15 +125,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "5",
+                  "r" : "211",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Infectious Arthritis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.654'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "6",
-            "locator" : "20:1-20:96",
+            "localId" : "212",
+            "locator" : "22:1-22:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Osteoarthritis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.648",
@@ -120,15 +142,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "6",
+                  "r" : "212",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Osteoarthritis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.648'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "7",
-            "locator" : "21:1-21:101",
+            "localId" : "213",
+            "locator" : "23:1-23:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Psoriatic Arthritis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.587",
@@ -136,15 +159,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "7",
+                  "r" : "213",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Psoriatic Arthritis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.587'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "8",
-            "locator" : "22:1-22:100",
+            "localId" : "214",
+            "locator" : "24:1-24:100",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Reactive Arthritis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.588",
@@ -152,15 +176,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "8",
+                  "r" : "214",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Reactive Arthritis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.588'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "9",
-            "locator" : "23:1-23:102",
+            "localId" : "215",
+            "locator" : "25:1-25:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Rheumatoid Arthritis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.651",
@@ -168,15 +193,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "9",
+                  "r" : "215",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Rheumatoid Arthritis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.651'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "10",
-            "locator" : "28:1-28:108",
+            "localId" : "216",
+            "locator" : "30:1-30:108",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Acute Coronary Syndromes",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.3157.2000.10",
@@ -184,15 +210,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "10",
+                  "r" : "216",
                   "s" : [ {
                      "value" : [ "//\n// Cardiovascular Conditions\n//\n","valueset ","\"Acute Coronary Syndromes\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.3157.2000.10'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "11",
-            "locator" : "29:1-29:109",
+            "localId" : "217",
+            "locator" : "31:1-31:109",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Acute Myocardial Infarction",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.666.5.3011",
@@ -200,15 +227,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "11",
+                  "r" : "217",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Acute Myocardial Infarction\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.666.5.3011'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "12",
-            "locator" : "30:1-30:128",
+            "localId" : "218",
+            "locator" : "32:1-32:128",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "American Heart Association Heart Failure Stage",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.581",
@@ -216,15 +244,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "12",
+                  "r" : "218",
                   "s" : [ {
                      "value" : [ "","valueset ","\"American Heart Association Heart Failure Stage\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.581'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "13",
-            "locator" : "31:1-31:90",
+            "localId" : "219",
+            "locator" : "33:1-33:90",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Aneurysm",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.627",
@@ -232,15 +261,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "13",
+                  "r" : "219",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Aneurysm\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.627'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "14",
-            "locator" : "32:1-32:88",
+            "localId" : "220",
+            "locator" : "34:1-34:88",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Angina",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.608",
@@ -248,15 +278,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "14",
+                  "r" : "220",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Angina\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.608'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "15",
-            "locator" : "33:1-33:96",
+            "localId" : "221",
+            "locator" : "35:1-35:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Aortic Disease",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.636",
@@ -264,15 +295,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "15",
+                  "r" : "221",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Aortic Disease\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.636'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "16",
-            "locator" : "34:1-34:91",
+            "localId" : "222",
+            "locator" : "36:1-36:91",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Arrhythmia",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.366",
@@ -280,15 +312,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "16",
+                  "r" : "222",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Arrhythmia\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.366'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "17",
-            "locator" : "35:1-35:120",
+            "localId" : "223",
+            "locator" : "37:1-37:120",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Atherosclerotic Cardiovascular Disease",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.584",
@@ -296,15 +329,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "17",
+                  "r" : "223",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Atherosclerotic Cardiovascular Disease\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.584'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "18",
-            "locator" : "36:1-36:96",
+            "localId" : "224",
+            "locator" : "38:1-38:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Cardiomyopathy",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.579",
@@ -312,15 +346,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "18",
+                  "r" : "224",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Cardiomyopathy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.579'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "19",
-            "locator" : "37:1-37:98",
+            "localId" : "225",
+            "locator" : "39:1-39:98",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Carotid Stenosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.639",
@@ -328,15 +363,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "19",
+                  "r" : "225",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Carotid Stenosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.639'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "20",
-            "locator" : "38:1-38:106",
+            "localId" : "226",
+            "locator" : "40:1-40:106",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Cerebrovascular Disease",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1524",
@@ -344,15 +380,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "20",
+                  "r" : "226",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Cerebrovascular Disease\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1524'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "21",
-            "locator" : "39:1-39:115",
+            "localId" : "227",
+            "locator" : "41:1-41:115",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Congestive heart failure Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.369",
@@ -360,15 +397,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "21",
+                  "r" : "227",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Congestive heart failure Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.369'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "22",
-            "locator" : "40:1-40:112",
+            "localId" : "228",
+            "locator" : "42:1-42:112",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Coronary Artery Disease No MI",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1540",
@@ -376,15 +414,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "22",
+                  "r" : "228",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Coronary Artery Disease No MI\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1540'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "23",
-            "locator" : "41:1-41:96",
+            "localId" : "229",
+            "locator" : "43:1-43:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Heart Failure",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1543",
@@ -392,15 +431,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "23",
+                  "r" : "229",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Heart Failure\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1543'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "24",
-            "locator" : "42:1-42:107",
+            "localId" : "230",
+            "locator" : "44:1-44:107",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension, Persistent",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1563",
@@ -408,15 +448,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "24",
+                  "r" : "230",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension, Persistent\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1563'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "25",
-            "locator" : "43:1-43:117",
+            "localId" : "231",
+            "locator" : "45:1-45:117",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension, Primary and Secondary",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.571",
@@ -424,15 +465,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "25",
+                  "r" : "231",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension, Primary and Secondary\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.571'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "26",
-            "locator" : "44:1-44:100",
+            "localId" : "232",
+            "locator" : "46:1-46:100",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension Stage",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.566",
@@ -440,15 +482,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "26",
+                  "r" : "232",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension Stage\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.566'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "27",
-            "locator" : "45:1-45:117",
+            "localId" : "233",
+            "locator" : "47:1-47:117",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension, Essential or Primary",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1484",
@@ -456,15 +499,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "27",
+                  "r" : "233",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension, Essential or Primary\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1484'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "28",
-            "locator" : "46:1-46:118",
+            "localId" : "234",
+            "locator" : "48:1-48:118",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension, Pulmonary Hypertension",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.569",
@@ -472,15 +516,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "28",
+                  "r" : "234",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension, Pulmonary Hypertension\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.569'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "29",
-            "locator" : "47:1-47:105",
+            "localId" : "235",
+            "locator" : "49:1-49:105",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertension, Secondary",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.642",
@@ -488,15 +533,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "29",
+                  "r" : "235",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertension, Secondary\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.642'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "30",
-            "locator" : "48:1-48:103",
+            "localId" : "236",
+            "locator" : "50:1-50:103",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Intracranial Stenosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.614",
@@ -504,15 +550,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "30",
+                  "r" : "236",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Intracranial Stenosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.614'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "31",
-            "locator" : "49:1-49:104",
+            "localId" : "237",
+            "locator" : "51:1-51:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Ischemic Heart Disease",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.615",
@@ -520,15 +567,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "31",
+                  "r" : "237",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Ischemic Heart Disease\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.615'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "32",
-            "locator" : "50:1-50:110",
+            "localId" : "238",
+            "locator" : "52:1-52:110",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Left Ventricular Hypertrophy",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.580",
@@ -536,15 +584,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "32",
+                  "r" : "238",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Left Ventricular Hypertrophy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.580'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "33",
-            "locator" : "51:1-51:126",
+            "localId" : "239",
+            "locator" : "53:1-53:126",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "NYHA Heart Failure Functional Classifications",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.27",
@@ -552,15 +601,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "33",
+                  "r" : "239",
                   "s" : [ {
                      "value" : [ "","valueset ","\"NYHA Heart Failure Functional Classifications\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.27'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "34",
-            "locator" : "52:1-52:110",
+            "localId" : "240",
+            "locator" : "54:1-54:110",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Peripheral Vascular Disease",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1488",
@@ -568,15 +618,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "34",
+                  "r" : "240",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Peripheral Vascular Disease\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1488'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "35",
-            "locator" : "53:1-53:128",
+            "localId" : "241",
+            "locator" : "55:1-55:128",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Postural tachycardia syndrome (POTS) Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.645",
@@ -584,15 +635,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "35",
+                  "r" : "241",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Postural tachycardia syndrome (POTS) Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.645'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "36",
-            "locator" : "54:1-54:97",
+            "localId" : "242",
+            "locator" : "56:1-56:97",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Pulmonary Edema",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.611",
@@ -600,15 +652,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "36",
+                  "r" : "242",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Pulmonary Edema\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.611'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "37",
-            "locator" : "55:1-55:106",
+            "localId" : "243",
+            "locator" : "57:1-57:106",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Stroke History",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.104.12.1017",
@@ -616,15 +669,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "37",
+                  "r" : "243",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Stroke History\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.104.12.1017'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "38",
-            "locator" : "60:1-60:102",
+            "localId" : "244",
+            "locator" : "62:1-62:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Acute Renal Failure",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1534",
@@ -632,15 +686,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "38",
+                  "r" : "244",
                   "s" : [ {
                      "value" : [ "//\n// Chronic Kidney Disease (CKD) Conditions\n//\n","valueset ","\"Acute Renal Failure\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1534'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "39",
-            "locator" : "61:1-61:115",
+            "localId" : "245",
+            "locator" : "63:1-63:115",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Chronic Kidney Disease All Stages",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.157",
@@ -648,15 +703,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "39",
+                  "r" : "245",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Chronic Kidney Disease All Stages\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.157'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "40",
-            "locator" : "62:1-62:116",
+            "localId" : "246",
+            "locator" : "64:1-64:116",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Chronic Kidney Disease Type or Cause",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.6",
@@ -664,15 +720,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "40",
+                  "r" : "246",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Chronic Kidney Disease Type or Cause\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.6'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "41",
-            "locator" : "72:1-72:102",
+            "localId" : "247",
+            "locator" : "74:1-74:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Acanthosis Nigricans",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.556",
@@ -680,15 +737,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "41",
+                  "r" : "247",
                   "s" : [ {
                      "value" : [ "//\n// Cognitive and Neurological Conditions\n//\n\n\n//\n// Diabetes Conditions\n//\n","valueset ","\"Acanthosis Nigricans\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.556'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "42",
-            "locator" : "73:1-73:112",
+            "localId" : "248",
+            "locator" : "75:1-75:112",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Amputated Limb (Not Traumatic)",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.563",
@@ -696,15 +754,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "42",
+                  "r" : "248",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Amputated Limb (Not Traumatic)\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.563'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "43",
-            "locator" : "74:1-74:101",
+            "localId" : "249",
+            "locator" : "76:1-76:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Blindness",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.115.12.1089",
@@ -712,15 +771,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "43",
+                  "r" : "249",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Blindness\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.115.12.1089'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "44",
-            "locator" : "75:1-75:101",
+            "localId" : "250",
+            "locator" : "77:1-77:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Cataract of the eye",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.498",
@@ -728,15 +788,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "44",
+                  "r" : "250",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Cataract of the eye\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.498'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "45",
-            "locator" : "76:1-76:92",
+            "localId" : "251",
+            "locator" : "78:1-78:92",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Cellulitis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.533",
@@ -744,15 +805,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "45",
+                  "r" : "251",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Cellulitis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.533'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "46",
-            "locator" : "77:1-77:94",
+            "localId" : "252",
+            "locator" : "79:1-79:94",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Charcot Foot",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.531",
@@ -760,15 +822,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "46",
+                  "r" : "252",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Charcot Foot\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.531'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "47",
-            "locator" : "78:1-78:120",
+            "localId" : "253",
+            "locator" : "80:1-80:120",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Complication due to Diabetes Mellitus",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1537",
@@ -776,15 +839,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "47",
+                  "r" : "253",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Complication due to Diabetes Mellitus\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1537'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "48",
-            "locator" : "79:1-79:95",
+            "localId" : "254",
+            "locator" : "81:1-81:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Coma",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.482",
@@ -792,15 +856,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "48",
+                  "r" : "254",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Coma\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.482'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "49",
-            "locator" : "80:1-80:95",
+            "localId" : "255",
+            "locator" : "82:1-82:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Foot",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.523",
@@ -808,15 +873,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "49",
+                  "r" : "255",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Foot\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.523'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "50",
-            "locator" : "81:1-81:101",
+            "localId" : "256",
+            "locator" : "83:1-83:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Foot Ulcer",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.526",
@@ -824,15 +890,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "50",
+                  "r" : "256",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Foot Ulcer\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.526'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "51",
-            "locator" : "82:1-82:123",
+            "localId" : "257",
+            "locator" : "84:1-84:123",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic hand/ Diabetic cheiroarthropathy",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.535",
@@ -840,15 +907,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "51",
+                  "r" : "257",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic hand/ Diabetic cheiroarthropathy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.535'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "52",
-            "locator" : "83:1-83:111",
+            "localId" : "258",
+            "locator" : "85:1-85:111",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Neuropathy Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.33",
@@ -856,15 +924,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "52",
+                  "r" : "258",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Neuropathy Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.33'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "53",
-            "locator" : "84:1-84:112",
+            "localId" : "259",
+            "locator" : "86:1-86:112",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Peripheral Angiopathy",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.492",
@@ -872,15 +941,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "53",
+                  "r" : "259",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Peripheral Angiopathy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.492'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "54",
-            "locator" : "85:1-85:101",
+            "localId" : "260",
+            "locator" : "87:1-87:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Diabetic Retinopathy",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.327",
@@ -888,15 +958,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "54",
+                  "r" : "260",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Diabetic Retinopathy\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.327'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "55",
-            "locator" : "86:1-86:105",
+            "localId" : "261",
+            "locator" : "88:1-88:105",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Dupuytren's Contracture",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.546",
@@ -904,15 +975,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "55",
+                  "r" : "261",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Dupuytren's Contracture\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.546'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "56",
-            "locator" : "87:1-87:128",
+            "localId" : "262",
+            "locator" : "89:1-89:128",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Emotional Distress caused by Chronic Condition",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.508",
@@ -920,15 +992,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "56",
+                  "r" : "262",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Emotional Distress caused by Chronic Condition\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.508'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "57",
-            "locator" : "88:1-88:104",
+            "localId" : "263",
+            "locator" : "90:1-90:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Eruptive Xanthomatosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.557",
@@ -936,15 +1009,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "57",
+                  "r" : "263",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Eruptive Xanthomatosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.557'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "58",
-            "locator" : "89:1-89:90",
+            "localId" : "264",
+            "locator" : "91:1-91:90",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Gangrene",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.543",
@@ -952,15 +1026,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "58",
+                  "r" : "264",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Gangrene\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.543'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "59",
-            "locator" : "90:1-90:101",
+            "localId" : "265",
+            "locator" : "92:1-92:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Gestational Diabetes",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.90",
@@ -968,15 +1043,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "59",
+                  "r" : "265",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Gestational Diabetes\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.90'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "60",
-            "locator" : "91:1-91:133",
+            "localId" : "266",
+            "locator" : "93:1-93:133",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hyperglycemic Hyperosmolar Nonketotic Syndrome HHNS",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.517",
@@ -984,15 +1060,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "60",
+                  "r" : "266",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hyperglycemic Hyperosmolar Nonketotic Syndrome HHNS\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.517'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "61",
-            "locator" : "92:1-92:106",
+            "localId" : "267",
+            "locator" : "94:1-94:106",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypoglycemia unawareness",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.514",
@@ -1000,15 +1077,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "61",
+                  "r" : "267",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypoglycemia unawareness\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.514'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "62",
-            "locator" : "93:1-93:100",
+            "localId" : "268",
+            "locator" : "95:1-95:100",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypoglycemic event",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.513",
@@ -1016,15 +1094,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "62",
+                  "r" : "268",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypoglycemic event\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.513'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "63",
-            "locator" : "94:1-94:94",
+            "localId" : "269",
+            "locator" : "96:1-96:94",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Ketoacidosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.520",
@@ -1032,15 +1111,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "63",
+                  "r" : "269",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Ketoacidosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.520'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "64",
-            "locator" : "95:1-95:125",
+            "localId" : "270",
+            "locator" : "97:1-97:125",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Maturity Onset Diabetes of the Young (MODY)",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.420",
@@ -1048,15 +1128,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "64",
+                  "r" : "270",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Maturity Onset Diabetes of the Young (MODY)\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.420'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "65",
-            "locator" : "96:1-96:118",
+            "localId" : "271",
+            "locator" : "98:1-98:118",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Necrobiosis Lipoidica (Skin Lesions)",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.540",
@@ -1064,15 +1145,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "65",
+                  "r" : "271",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Necrobiosis Lipoidica (Skin Lesions)\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.540'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "66",
-            "locator" : "97:1-97:95",
+            "localId" : "272",
+            "locator" : "99:1-99:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Periodontitis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.560",
@@ -1080,15 +1162,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "66",
+                  "r" : "272",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Periodontitis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.560'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "67",
-            "locator" : "98:1-98:115",
+            "localId" : "273",
+            "locator" : "100:1-100:115",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Prediabetes (borderline diabetes)",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.419",
@@ -1096,15 +1179,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "67",
+                  "r" : "273",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Prediabetes (borderline diabetes)\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.419'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "68",
-            "locator" : "99:1-99:97",
+            "localId" : "274",
+            "locator" : "101:1-101:97",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Rubeosis Iridis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.501",
@@ -1112,15 +1196,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "68",
+                  "r" : "274",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Rubeosis Iridis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.501'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "69",
-            "locator" : "100:1-100:116",
+            "localId" : "275",
+            "locator" : "102:1-102:116",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Scleroderma or Thick Skin Syndrome",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.549",
@@ -1128,15 +1213,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "69",
+                  "r" : "275",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Scleroderma or Thick Skin Syndrome\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.549'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "70",
-            "locator" : "101:1-101:107",
+            "localId" : "276",
+            "locator" : "103:1-103:107",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Type 1 Diabetes",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1020",
@@ -1144,15 +1230,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "70",
+                  "r" : "276",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Type 1 Diabetes\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1020'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "71",
-            "locator" : "102:1-102:108",
+            "localId" : "277",
+            "locator" : "104:1-104:108",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Type II Diabetes",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1021",
@@ -1160,15 +1247,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "71",
+                  "r" : "277",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Type II Diabetes\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.103.12.1021'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "72",
-            "locator" : "135:1-135:88",
+            "localId" : "278",
+            "locator" : "137:1-137:88",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Anxiety",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.52",
@@ -1176,15 +1264,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "72",
+                  "r" : "278",
                   "s" : [ {
                      "value" : [ "//\n// Digestive System/Gastrointestinal Conditions\n//\n\n//\n// Dissimilar Conditions\n//\n\n//\n// Functional Health Conditions\n//\n\n//\n// Genitourinary Conditions\n//\n\n//\n// Hormonal Conditions\n//\n\n//\n// Infectious Disease Conditions\n//\n\n//\n// Long Covid Diagnosis Condition\n//\n\n//\n// Mental Health Conditions\n//\n","valueset ","\"Anxiety\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1032.52'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "73",
-            "locator" : "136:1-136:96",
+            "localId" : "279",
+            "locator" : "138:1-138:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Bipolar Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.450",
@@ -1192,15 +1281,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "73",
+                  "r" : "279",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Bipolar Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.450'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "74",
-            "locator" : "137:1-137:99",
+            "localId" : "280",
+            "locator" : "139:1-139:99",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Depression Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.145",
@@ -1208,15 +1298,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "74",
+                  "r" : "280",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Depression Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.600.145'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "75",
-            "locator" : "138:1-138:95",
+            "localId" : "281",
+            "locator" : "140:1-140:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Dysthymia",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.67.1.101.1.254",
@@ -1224,15 +1315,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "75",
+                  "r" : "281",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Dysthymia\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.67.1.101.1.254'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "76",
-            "locator" : "139:1-139:112",
+            "localId" : "282",
+            "locator" : "141:1-141:112",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Experience of Traumatic Events",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.590",
@@ -1240,15 +1332,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "76",
+                  "r" : "282",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Experience of Traumatic Events\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.590'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "77",
-            "locator" : "140:1-140:95",
+            "localId" : "283",
+            "locator" : "142:1-142:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Grief or Loss",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.690",
@@ -1256,15 +1349,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "77",
+                  "r" : "283",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Grief or Loss\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.690'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "78",
-            "locator" : "141:1-141:108",
+            "localId" : "284",
+            "locator" : "143:1-143:108",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Major Depression",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.105.12.1007",
@@ -1272,15 +1366,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "78",
+                  "r" : "284",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Major Depression\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.105.12.1007'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "79",
-            "locator" : "142:1-142:104",
+            "localId" : "285",
+            "locator" : "144:1-144:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Post Partum Depression",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.681",
@@ -1288,15 +1383,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "79",
+                  "r" : "285",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Post Partum Depression\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.681'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "80",
-            "locator" : "143:1-143:116",
+            "localId" : "286",
+            "locator" : "145:1-145:116",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "PostTraumatic Stress Disorder PTSD",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.103",
@@ -1304,15 +1400,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "80",
+                  "r" : "286",
                   "s" : [ {
                      "value" : [ "","valueset ","\"PostTraumatic Stress Disorder PTSD\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.103'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "81",
-            "locator" : "144:1-144:102",
+            "localId" : "287",
+            "locator" : "146:1-146:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Psychological Trauma",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.687",
@@ -1320,15 +1417,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "81",
+                  "r" : "287",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Psychological Trauma\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.687'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "82",
-            "locator" : "145:1-145:102",
+            "localId" : "288",
+            "locator" : "147:1-147:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Psychotic Depression",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.678",
@@ -1336,15 +1434,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "82",
+                  "r" : "288",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Psychotic Depression\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.678'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "83",
-            "locator" : "146:1-146:109",
+            "localId" : "289",
+            "locator" : "148:1-148:109",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Seasonal Affective Disorder",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.684",
@@ -1352,15 +1451,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "83",
+                  "r" : "289",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Seasonal Affective Disorder\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.684'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "84",
-            "locator" : "147:1-147:94",
+            "localId" : "290",
+            "locator" : "149:1-149:94",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Suicide Risk",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.693",
@@ -1368,15 +1468,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "84",
+                  "r" : "290",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Suicide Risk\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.693'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "85",
-            "locator" : "156:1-156:123",
+            "localId" : "291",
+            "locator" : "158:1-158:123",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Alkaline Phosphatase Deficiency Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.93",
@@ -1384,15 +1485,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "85",
+                  "r" : "291",
                   "s" : [ {
                      "value" : [ "//\n// Musculoskeletal Conditions\n//\n\n//\n// Nutrition / Metabolic Conditions\n//\n","valueset ","\"Alkaline Phosphatase Deficiency Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.93'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "86",
-            "locator" : "157:1-157:98",
+            "localId" : "292",
+            "locator" : "159:1-159:98",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Anemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.53",
@@ -1400,15 +1502,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "86",
+                  "r" : "292",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Anemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.53'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "87",
-            "locator" : "158:1-158:111",
+            "localId" : "293",
+            "locator" : "160:1-160:111",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Familial Hypercholesterolemia",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1047.100",
@@ -1416,15 +1519,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "87",
+                  "r" : "293",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Familial Hypercholesterolemia\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1047.100'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "88",
-            "locator" : "159:1-159:86",
+            "localId" : "294",
+            "locator" : "161:1-161:86",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Gout",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.586",
@@ -1432,15 +1536,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "88",
+                  "r" : "294",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Gout\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.586'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "89",
-            "locator" : "160:1-160:105",
+            "localId" : "295",
+            "locator" : "162:1-162:105",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypercalcemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.60",
@@ -1448,15 +1553,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "89",
+                  "r" : "295",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypercalcemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.60'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "90",
-            "locator" : "161:1-161:104",
+            "localId" : "296",
+            "locator" : "163:1-163:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hyperkalemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.50",
@@ -1464,15 +1570,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "90",
+                  "r" : "296",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hyperkalemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.50'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "91",
-            "locator" : "162:1-162:106",
+            "localId" : "297",
+            "locator" : "164:1-164:106",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hyperlipidemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.73",
@@ -1480,15 +1587,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "91",
+                  "r" : "297",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hyperlipidemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.73'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "92",
-            "locator" : "163:1-163:109",
+            "localId" : "298",
+            "locator" : "165:1-165:109",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hyperphosphatemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.66",
@@ -1496,15 +1604,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "92",
+                  "r" : "298",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hyperphosphatemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.66'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "93",
-            "locator" : "164:1-164:102",
+            "localId" : "299",
+            "locator" : "166:1-166:102",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypertriglyceridemia",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.742",
@@ -1512,15 +1621,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "93",
+                  "r" : "299",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypertriglyceridemia\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.742'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "94",
-            "locator" : "165:1-165:105",
+            "localId" : "300",
+            "locator" : "167:1-167:105",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hyperuricemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.85",
@@ -1528,15 +1638,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "94",
+                  "r" : "300",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hyperuricemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.85'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "95",
-            "locator" : "166:1-166:107",
+            "localId" : "301",
+            "locator" : "168:1-168:107",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypoalbuminemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.47",
@@ -1544,15 +1655,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "95",
+                  "r" : "301",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypoalbuminemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.47'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "96",
-            "locator" : "167:1-167:104",
+            "localId" : "302",
+            "locator" : "169:1-169:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hypocalcemia Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.61",
@@ -1560,15 +1672,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "96",
+                  "r" : "302",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hypocalcemia Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.61'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "97",
-            "locator" : "168:1-168:105",
+            "localId" : "303",
+            "locator" : "170:1-170:105",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Malnutrition Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1517",
@@ -1576,15 +1689,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "97",
+                  "r" : "303",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Malnutrition Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1517'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "98",
-            "locator" : "169:1-169:110",
+            "localId" : "304",
+            "locator" : "171:1-171:110",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Metabolic Acidosis Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.70",
@@ -1592,15 +1706,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "98",
+                  "r" : "304",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Metabolic Acidosis Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.70'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "99",
-            "locator" : "170:1-170:101",
+            "localId" : "305",
+            "locator" : "172:1-172:101",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Metabolic syndrome",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1561",
@@ -1608,15 +1723,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "99",
+                  "r" : "305",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Metabolic syndrome\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1561'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "100",
-            "locator" : "171:1-171:99",
+            "localId" : "306",
+            "locator" : "173:1-173:99",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Obesity Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.36",
@@ -1624,15 +1740,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "100",
+                  "r" : "306",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Obesity Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.36'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "101",
-            "locator" : "172:1-172:112",
+            "localId" : "307",
+            "locator" : "174:1-174:112",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Vitamin D Deficiency Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.90",
@@ -1640,15 +1757,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "101",
+                  "r" : "307",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Vitamin D Deficiency Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.90'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "102",
-            "locator" : "177:1-177:104",
+            "localId" : "308",
+            "locator" : "179:1-179:104",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Chronic Pain Conditions",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.76",
@@ -1656,15 +1774,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "102",
+                  "r" : "308",
                   "s" : [ {
                      "value" : [ "//\n// Pain Conditions\n//\n","valueset ","\"Chronic Pain Conditions\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.76'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "103",
-            "locator" : "178:1-178:96",
+            "localId" : "309",
+            "locator" : "180:1-180:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Low Back Pain",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1558",
@@ -1672,15 +1791,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "103",
+                  "r" : "309",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Low Back Pain\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1558'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "104",
-            "locator" : "179:1-179:91",
+            "localId" : "310",
+            "locator" : "181:1-181:91",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Migraine",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1552",
@@ -1688,15 +1808,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "104",
+                  "r" : "310",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Migraine\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1552'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "105",
-            "locator" : "180:1-180:122",
+            "localId" : "311",
+            "locator" : "182:1-182:122",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Chronic Tension-type Headache diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1555",
@@ -1704,15 +1825,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "105",
+                  "r" : "311",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Chronic Tension-type Headache diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1555'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "106",
-            "locator" : "181:1-181:110",
+            "localId" : "312",
+            "locator" : "183:1-183:110",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Neuropathic Pain (Neuralgia)",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.663",
@@ -1720,15 +1842,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "106",
+                  "r" : "312",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Neuropathic Pain (Neuralgia)\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.663'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "107",
-            "locator" : "182:1-182:94",
+            "localId" : "313",
+            "locator" : "184:1-184:94",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Phantom Pain",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.669",
@@ -1736,15 +1859,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "107",
+                  "r" : "313",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Phantom Pain\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.669'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "108",
-            "locator" : "187:1-187:99",
+            "localId" : "314",
+            "locator" : "189:1-189:99",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Asthma Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1472",
@@ -1752,15 +1876,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "108",
+                  "r" : "314",
                   "s" : [ {
                      "value" : [ "//\n// Respiratory Conditions\n//\n","valueset ","\"Asthma Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1472'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "109",
-            "locator" : "188:1-188:107",
+            "localId" : "315",
+            "locator" : "190:1-190:107",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Bronchiectasis Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1463",
@@ -1768,15 +1893,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "109",
+                  "r" : "315",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Bronchiectasis Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1463'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "110",
-            "locator" : "189:1-189:137",
+            "localId" : "316",
+            "locator" : "191:1-191:137",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Chronic obstructive pulmonary disease (COPD) Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1466",
@@ -1784,15 +1910,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "110",
+                  "r" : "316",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Chronic obstructive pulmonary disease (COPD) Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1466'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "111",
-            "locator" : "190:1-190:118",
+            "localId" : "317",
+            "locator" : "192:1-192:118",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Interstitial lung disease Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1469",
@@ -1800,15 +1927,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "111",
+                  "r" : "317",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Interstitial lung disease Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1469'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "112",
-            "locator" : "191:1-191:111",
+            "localId" : "318",
+            "locator" : "193:1-193:111",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Pulmonary embolism Diagnosis",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1481",
@@ -1816,15 +1944,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "112",
+                  "r" : "318",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Pulmonary embolism Diagnosis\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.1481'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "113",
-            "locator" : "192:1-192:103",
+            "localId" : "319",
+            "locator" : "194:1-194:103",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Sleep Apnea Disorders",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.102",
@@ -1832,15 +1961,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "113",
+                  "r" : "319",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Sleep Apnea Disorders\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.102'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "114",
-            "locator" : "197:1-197:111",
+            "localId" : "320",
+            "locator" : "199:1-199:111",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Social Determinants of Health",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.788",
@@ -1848,15 +1978,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "114",
+                  "r" : "320",
                   "s" : [ {
                      "value" : [ "//\n// Social Determinants of Health Conditions\n//\n","valueset ","\"Social Determinants of Health\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.788'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "115",
-            "locator" : "203:1-203:99",
+            "localId" : "321",
+            "locator" : "205:1-205:99",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Total Cholesterol",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.139",
@@ -1864,15 +1995,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "115",
+                  "r" : "321",
                   "s" : [ {
                      "value" : [ "// ******************************\n// Lab result value sets\n// ******************************\n","valueset ","\"Total Cholesterol\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.139'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "116",
-            "locator" : "204:1-204:106",
+            "localId" : "322",
+            "locator" : "206:1-206:106",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "High Density Lipoprotein",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.135",
@@ -1880,15 +2012,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "116",
+                  "r" : "322",
                   "s" : [ {
                      "value" : [ "","valueset ","\"High Density Lipoprotein\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.135'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "117",
-            "locator" : "205:1-205:108",
+            "localId" : "323",
+            "locator" : "207:1-207:108",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Low Density Lipoprotein",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.117.1.7.1.215",
@@ -1896,15 +2029,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "117",
+                  "r" : "323",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Low Density Lipoprotein\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.117.1.7.1.215'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "118",
-            "locator" : "206:1-206:113",
+            "localId" : "324",
+            "locator" : "208:1-208:113",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Triglyceride Blood Serum Plasma",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.137",
@@ -1912,15 +2046,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "118",
+                  "r" : "324",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Triglyceride Blood Serum Plasma\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.137'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "119",
-            "locator" : "207:1-207:96",
+            "localId" : "325",
+            "locator" : "209:1-209:96",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Hemoglobin A1C",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.119",
@@ -1928,15 +2063,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "119",
+                  "r" : "325",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Hemoglobin A1C\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.119'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "120",
-            "locator" : "208:1-208:119",
+            "localId" : "326",
+            "locator" : "210:1-210:119",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Estimated Glomerular Filtration Rate",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.6929.3.1000",
@@ -1944,15 +2080,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "120",
+                  "r" : "326",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Estimated Glomerular Filtration Rate\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.6929.3.1000'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "121",
-            "locator" : "209:1-209:95",
+            "localId" : "327",
+            "locator" : "211:1-211:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Serum Albumin",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.151",
@@ -1960,15 +2097,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "121",
+                  "r" : "327",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Serum Albumin\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.151'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "122",
-            "locator" : "210:1-210:98",
+            "localId" : "328",
+            "locator" : "212:1-212:98",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Serum Creatinine",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.111",
@@ -1976,15 +2114,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "122",
+                  "r" : "328",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Serum Creatinine\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1222.111'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "123",
-            "locator" : "211:1-211:113",
+            "localId" : "329",
+            "locator" : "213:1-213:113",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Urine Albumin Creatinine Ratio",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.6929.2.1002",
@@ -1992,15 +2131,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "123",
+                  "r" : "329",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Urine Albumin Creatinine Ratio\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.6929.2.1002'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "124",
-            "locator" : "217:1-217:95",
+            "localId" : "330",
+            "locator" : "219:1-219:95",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "ACEis and ARBs",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1213.11",
@@ -2008,15 +2148,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "124",
+                  "r" : "330",
                   "s" : [ {
                      "value" : [ "// ******************************\n// Medication value sets\n// ******************************\n","valueset ","\"ACEis and ARBs\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1213.11'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "125",
-            "locator" : "218:1-218:114",
+            "localId" : "331",
+            "locator" : "220:1-220:114",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Erythropoiesis Stimulating Agent",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.307",
@@ -2024,15 +2165,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "125",
+                  "r" : "331",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Erythropoiesis Stimulating Agent\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.307'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "126",
-            "locator" : "219:1-219:97",
+            "localId" : "332",
+            "locator" : "221:1-221:97",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Iron Supplement",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.308",
@@ -2040,15 +2182,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "126",
+                  "r" : "332",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Iron Supplement\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.308'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "127",
-            "locator" : "220:1-220:99",
+            "localId" : "333",
+            "locator" : "222:1-222:99",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Phosphate Binders",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.305",
@@ -2056,15 +2199,16 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "127",
+                  "r" : "333",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Phosphate Binders\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.305'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          }, {
-            "localId" : "128",
-            "locator" : "221:1-221:91",
+            "localId" : "334",
+            "locator" : "223:1-223:91",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
             "name" : "Vitamin D",
             "id" : "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.306",
@@ -2072,18 +2216,19 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "128",
+                  "r" : "334",
                   "s" : [ {
                      "value" : [ "","valueset ","\"Vitamin D\"",": ","'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1196.306'" ]
                   } ]
                }
-            } ]
+            } ],
+            "codeSystem" : [ ]
          } ]
       },
       "codes" : {
          "def" : [ {
-            "localId" : "130",
-            "locator" : "234:1-234:90",
+            "localId" : "335",
+            "locator" : "236:1-236:90",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Black or African American",
             "id" : "2054-5",
@@ -2092,11 +2237,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "130",
+                  "r" : "335",
                   "s" : [ {
-                     "value" : [ "//Iron Supplement\n\n// ******************************\n// ## Individual codes ##\n// ******************************\n\n// list individual codes from code systems used directly in the CQL logic. Individual codes are used when there is\n// a single code from a particular vocabulary standard used to represent a clinical concept. It is considered\n// best-practice not to create value sets containing a single code.\n","code ","\"Black or African American\"",": ","'2054-5'"," from " ]
+                     "value" : [ "//Iron Supplement\n\n// ******************************\n// ## Individual codes ##\n// ******************************\n\n// list individual codes from code systems used directly in the CQL logic. Individual codes are used when there is\n// a single code from a particular vocabulary standard used to represent a clinical concept. It is considered\n// best-practice not to create value sets containing a single code.\n\n","code ","\"Black or African American\"",": ","'2054-5'"," from " ]
                   }, {
-                     "r" : "129",
+                     "r" : "336",
                      "s" : [ {
                         "value" : [ "\"Race\"" ]
                      } ]
@@ -2106,14 +2251,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "129",
-               "locator" : "234:49-234:54",
+               "localId" : "336",
+               "locator" : "236:49-236:54",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "Race"
             }
          }, {
-            "localId" : "132",
-            "locator" : "235:1-235:50",
+            "localId" : "337",
+            "locator" : "237:1-237:50",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "White",
             "id" : "2106-3",
@@ -2122,11 +2267,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "132",
+                  "r" : "337",
                   "s" : [ {
                      "value" : [ "","code ","\"White\"",": ","'2106-3'"," from " ]
                   }, {
-                     "r" : "131",
+                     "r" : "338",
                      "s" : [ {
                         "value" : [ "\"Race\"" ]
                      } ]
@@ -2136,14 +2281,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "131",
-               "locator" : "235:29-235:34",
+               "localId" : "338",
+               "locator" : "237:29-237:34",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "Race"
             }
          }, {
-            "localId" : "134",
-            "locator" : "237:1-237:89",
+            "localId" : "339",
+            "locator" : "239:1-239:89",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Left (qualifier value)",
             "id" : "7771000",
@@ -2152,11 +2297,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "134",
+                  "r" : "339",
                   "s" : [ {
                      "value" : [ "","code ","\"Left (qualifier value)\"",": ","'7771000'"," from " ]
                   }, {
-                     "r" : "133",
+                     "r" : "340",
                      "s" : [ {
                         "value" : [ "\"SNOMEDCT\"" ]
                      } ]
@@ -2166,14 +2311,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "133",
-               "locator" : "237:47-237:56",
+               "localId" : "340",
+               "locator" : "239:47-239:56",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "SNOMEDCT"
             }
          }, {
-            "localId" : "136",
-            "locator" : "238:1-238:92",
+            "localId" : "341",
+            "locator" : "240:1-240:92",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Right (qualifier value)",
             "id" : "24028007",
@@ -2182,11 +2327,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "136",
+                  "r" : "341",
                   "s" : [ {
                      "value" : [ "","code ","\"Right (qualifier value)\"",": ","'24028007'"," from " ]
                   }, {
-                     "r" : "135",
+                     "r" : "342",
                      "s" : [ {
                         "value" : [ "\"SNOMEDCT\"" ]
                      } ]
@@ -2196,14 +2341,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "135",
-               "locator" : "238:49-238:58",
+               "localId" : "342",
+               "locator" : "240:49-240:58",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "SNOMEDCT"
             }
          }, {
-            "localId" : "138",
-            "locator" : "240:1-240:93",
+            "localId" : "343",
+            "locator" : "242:1-242:93",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Blood pressure",
             "id" : "85354-9",
@@ -2212,11 +2357,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "138",
+                  "r" : "343",
                   "s" : [ {
                      "value" : [ "","code ","\"Blood pressure\"",": ","'85354-9'"," from " ]
                   }, {
-                     "r" : "137",
+                     "r" : "344",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2226,14 +2371,44 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "137",
-               "locator" : "240:39-240:45",
+               "localId" : "344",
+               "locator" : "242:39-242:45",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "140",
-            "locator" : "241:1-241:87",
+            "localId" : "345",
+            "locator" : "243:1-243:96",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Blood pressure home reading",
+            "id" : "72076-3",
+            "display" : "Blood pressure home reading",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "345",
+                  "s" : [ {
+                     "value" : [ "","code ","\"Blood pressure home reading\"",": ","'72076-3'"," from " ]
+                  }, {
+                     "r" : "346",
+                     "s" : [ {
+                        "value" : [ "\"LOINC\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Blood pressure home reading'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "346",
+               "locator" : "243:52-243:58",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "LOINC"
+            }
+         }, {
+            "localId" : "347",
+            "locator" : "244:1-244:87",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Systolic blood pressure",
             "id" : "8480-6",
@@ -2242,11 +2417,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "140",
+                  "r" : "347",
                   "s" : [ {
                      "value" : [ "","code ","\"Systolic blood pressure\"",": ","'8480-6'"," from " ]
                   }, {
-                     "r" : "139",
+                     "r" : "348",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2256,14 +2431,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "139",
-               "locator" : "241:47-241:53",
+               "localId" : "348",
+               "locator" : "244:47-244:53",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "142",
-            "locator" : "242:1-242:89",
+            "localId" : "349",
+            "locator" : "245:1-245:89",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Diastolic blood pressure",
             "id" : "8462-4",
@@ -2272,11 +2447,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "142",
+                  "r" : "349",
                   "s" : [ {
                      "value" : [ "","code ","\"Diastolic blood pressure\"",": ","'8462-4'"," from " ]
                   }, {
-                     "r" : "141",
+                     "r" : "350",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2286,14 +2461,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "141",
-               "locator" : "242:48-242:54",
+               "localId" : "350",
+               "locator" : "245:48-245:54",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "144",
-            "locator" : "243:1-243:61",
+            "localId" : "351",
+            "locator" : "246:1-246:61",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Heart rate",
             "id" : "8867-4",
@@ -2302,11 +2477,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "144",
+                  "r" : "351",
                   "s" : [ {
                      "value" : [ "","code ","\"Heart rate\"",": ","'8867-4'"," from " ]
                   }, {
-                     "r" : "143",
+                     "r" : "352",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2316,14 +2491,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "143",
-               "locator" : "243:34-243:40",
+               "localId" : "352",
+               "locator" : "246:34-246:40",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "146",
-            "locator" : "244:1-244:75",
+            "localId" : "353",
+            "locator" : "247:1-247:75",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Oxygen saturation",
             "id" : "2708-6",
@@ -2332,11 +2507,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "146",
+                  "r" : "353",
                   "s" : [ {
                      "value" : [ "","code ","\"Oxygen saturation\"",": ","'2708-6'"," from " ]
                   }, {
-                     "r" : "145",
+                     "r" : "354",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2346,14 +2521,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "145",
-               "locator" : "244:41-244:47",
+               "localId" : "354",
+               "locator" : "247:41-247:47",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "148",
-            "locator" : "245:1-245:107",
+            "localId" : "355",
+            "locator" : "248:1-248:107",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Pulse oximetry",
             "id" : "59408-5",
@@ -2362,11 +2537,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "148",
+                  "r" : "355",
                   "s" : [ {
                      "value" : [ "","code ","\"Pulse oximetry\"",": ","'59408-5'"," from " ]
                   }, {
-                     "r" : "147",
+                     "r" : "356",
                      "s" : [ {
                         "value" : [ "LOINC" ]
                      } ]
@@ -2376,14 +2551,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "147",
-               "locator" : "245:39-245:43",
+               "localId" : "356",
+               "locator" : "248:39-248:43",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "150",
-            "locator" : "246:1-246:73",
+            "localId" : "357",
+            "locator" : "249:1-249:73",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Respiratory rate",
             "id" : "9279-1",
@@ -2392,11 +2567,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "150",
+                  "r" : "357",
                   "s" : [ {
                      "value" : [ "","code ","\"Respiratory rate\"",": ","'9279-1'"," from " ]
                   }, {
-                     "r" : "149",
+                     "r" : "358",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2406,14 +2581,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "149",
-               "locator" : "246:40-246:46",
+               "localId" : "358",
+               "locator" : "249:40-249:46",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "152",
-            "locator" : "247:1-247:73",
+            "localId" : "359",
+            "locator" : "250:1-250:73",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Body temperature",
             "id" : "8310-5",
@@ -2422,11 +2597,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "152",
+                  "r" : "359",
                   "s" : [ {
                      "value" : [ "","code ","\"Body temperature\"",": ","'8310-5'"," from " ]
                   }, {
-                     "r" : "151",
+                     "r" : "360",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2436,14 +2611,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "151",
-               "locator" : "247:40-247:46",
+               "localId" : "360",
+               "locator" : "250:40-250:46",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "154",
-            "locator" : "248:1-248:63",
+            "localId" : "361",
+            "locator" : "251:1-251:63",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Body height",
             "id" : "8302-2",
@@ -2452,11 +2627,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "154",
+                  "r" : "361",
                   "s" : [ {
                      "value" : [ "","code ","\"Body height\"",": ","'8302-2'"," from " ]
                   }, {
-                     "r" : "153",
+                     "r" : "362",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2466,14 +2641,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "153",
-               "locator" : "248:35-248:41",
+               "localId" : "362",
+               "locator" : "251:35-251:41",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "156",
-            "locator" : "249:1-249:64",
+            "localId" : "363",
+            "locator" : "252:1-252:64",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Body weight",
             "id" : "29463-7",
@@ -2482,11 +2657,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "156",
+                  "r" : "363",
                   "s" : [ {
                      "value" : [ "","code ","\"Body weight\"",": ","'29463-7'"," from " ]
                   }, {
-                     "r" : "155",
+                     "r" : "364",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2496,14 +2671,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "155",
-               "locator" : "249:36-249:42",
+               "localId" : "364",
+               "locator" : "252:36-252:42",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "158",
-            "locator" : "250:1-250:72",
+            "localId" : "365",
+            "locator" : "253:1-253:72",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Body mass index",
             "id" : "39156-5",
@@ -2512,11 +2687,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "158",
+                  "r" : "365",
                   "s" : [ {
                      "value" : [ "","code ","\"Body mass index\"",": ","'39156-5'"," from " ]
                   }, {
-                     "r" : "157",
+                     "r" : "366",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2526,14 +2701,14 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "157",
-               "locator" : "250:40-250:46",
+               "localId" : "366",
+               "locator" : "253:40-253:46",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
             }
          }, {
-            "localId" : "160",
-            "locator" : "251:1-251:89",
+            "localId" : "367",
+            "locator" : "254:1-254:89",
             "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
             "name" : "Inhaled oxygen flow rate",
             "id" : "3151-8",
@@ -2542,11 +2717,11 @@
             "annotation" : [ {
                "type" : "Annotation",
                "s" : {
-                  "r" : "160",
+                  "r" : "367",
                   "s" : [ {
                      "value" : [ "","code ","\"Inhaled oxygen flow rate\"",": ","'3151-8'"," from " ]
                   }, {
-                     "r" : "159",
+                     "r" : "368",
                      "s" : [ {
                         "value" : [ "\"LOINC\"" ]
                      } ]
@@ -2556,10 +2731,70 @@
                }
             } ],
             "codeSystem" : {
-               "localId" : "159",
-               "locator" : "251:48-251:54",
+               "localId" : "368",
+               "locator" : "254:48-254:54",
                "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
                "name" : "LOINC"
+            }
+         }, {
+            "localId" : "369",
+            "locator" : "256:1-256:89",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Epic Systolic blood pressure",
+            "id" : "7585",
+            "display" : "Systolic blood pressure",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "369",
+                  "s" : [ {
+                     "value" : [ "","code ","\"Epic Systolic blood pressure\"",": ","'7585'"," from " ]
+                  }, {
+                     "r" : "370",
+                     "s" : [ {
+                        "value" : [ "\"Epic\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Systolic blood pressure'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "370",
+               "locator" : "256:50-256:55",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "Epic"
+            }
+         }, {
+            "localId" : "371",
+            "locator" : "257:1-257:91",
+            "resultTypeName" : "{urn:hl7-org:elm-types:r1}Code",
+            "name" : "Epic Diastolic blood pressure",
+            "id" : "7586",
+            "display" : "Diastolic blood pressure",
+            "accessLevel" : "Public",
+            "annotation" : [ {
+               "type" : "Annotation",
+               "s" : {
+                  "r" : "371",
+                  "s" : [ {
+                     "value" : [ "","code ","\"Epic Diastolic blood pressure\"",": ","'7586'"," from " ]
+                  }, {
+                     "r" : "372",
+                     "s" : [ {
+                        "value" : [ "\"Epic\"" ]
+                     } ]
+                  }, {
+                     "value" : [ " display ","'Diastolic blood pressure'" ]
+                  } ]
+               }
+            } ],
+            "codeSystem" : {
+               "localId" : "372",
+               "locator" : "257:51-257:56",
+               "resultTypeName" : "{urn:hl7-org:elm-types:r1}CodeSystem",
+               "name" : "Epic"
             }
          } ]
       }
