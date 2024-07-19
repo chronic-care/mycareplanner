@@ -916,7 +916,7 @@ class App extends React.Component<AppProps, AppState> {
                                         <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
                                             progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
                                             errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught}
-                                            canShareData={this.state.canShareData}
+                                            canShareData={this.state.canShareData} isLogout={this.state.isLogout}
                                             />
                                     </TabPanel>
                                     <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>

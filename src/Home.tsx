@@ -5,10 +5,11 @@ import { FHIRData } from './data-services/models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSummary';
 // import { Task } from './data-services/fhir-types/fhir-r4';
 // import { BusySpinner } from './components/busy-spinner/BusySpinner';
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress, styled } from '@mui/material';
 import { DeterminateProgress } from './components/determinate-progress/DeterminateProgress';
 import { ErrorMessage } from './components/error-message/ErrorMessage';
 import Modal from './components/modal/modal';
+import { deleteAllDataFromLocalForage } from './data-services/persistenceService';
 // import BusyGroup from './components/busy-spinner/BusyGroup';
 
 interface HomeProps {
@@ -25,11 +26,14 @@ interface HomeProps {
   userErrorMessage: string | undefined,
   developerErrorMessage: string | undefined,
   errorCaught: Error | string | unknown,
-  canShareData?: boolean
+  canShareData?: boolean,
+  isLogout: boolean,
 }
 
 interface HomeState {
   isModalVisible: boolean;
+  isLogout: boolean;
+  isLoggedOut: boolean;
 }
 
 export default class Home extends React.Component<HomeProps, HomeState> {
@@ -39,6 +43,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     this.state = {
       // isModalVisible: true
       isModalVisible: !sessionStorage.getItem('hasSeenModal'),
+      isLogout: this.props.isLogout,
+      isLoggedOut: false,
     };
     console.log('Initial isModalVisible:', this.state.isModalVisible);
   }
@@ -47,6 +53,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     // Set isModalVisible to true when the user clicks the X button
     console.log("closing modal here ....", this.state.isModalVisible)
     this.setState({ isModalVisible: false });
+  };
+
+  handleLogout = async () => {
+    if (!this.state.isLogout) {
+      this.setState({ isLogout: true });
+      sessionStorage.clear();
+      await deleteAllDataFromLocalForage();
+      this.setState({ isLoggedOut: true });
+    }
   };
 
   // TODO:MULTI-PROVIDER: Update view to itterate fhirDataCollection if needed
@@ -130,6 +145,15 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               errorType={this.props.errorType} userErrorMessage={this.props.userErrorMessage}
               developerErrorMessage={this.props.developerErrorMessage} errorCaught={this.props.errorCaught} />
 
+              <Link to="/logout" onClick={this.handleLogout} style={{ textDecoration: 'none', display: 'block' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+              >
+                LOG OUT
+              </Button>
+            </Link>
           </div>
           : <div>
 
@@ -148,7 +172,6 @@ export default class Home extends React.Component<HomeProps, HomeState> {
               state: { patientSummaries: this.props.patientSummaries, questionnaireId: 'caregiver-strain-questionnaire' }
             }} ><strong>Caregiver Strain Assessment</strong></Link><br />
 
-         
             {/* {(tasks === undefined)
                 ? <p>You have no tasks today!</p>
                 : <ul>
@@ -207,6 +230,16 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <h5 style={{ paddingTop: '20px' }}>Disclaimer</h5>
             <p>This application is provided for informational purposes only and does not constitute medical advice or professional services. The information provided should not be used for diagnosing or treating a health problem or disease, and those seeking personal medical advice should consult with a licensed physician. Always seek the advice of your doctor or other qualified health provider regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read in this application. If you think you may have a medical emergency, call 911 or go to the nearest emergency room immediately. No physician-patient relationship is created by this application or its use. Neither OHSU, nor its employees, nor any contributor to this application, makes any representations, express or implied, with respect to the information herein or to its use.</p>
+            <br></br>
+            <Link to="/logout" onClick={this.handleLogout} style={{ textDecoration: 'none', display: 'block' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ width: '100%', padding: '15px', fontSize: '16px' }}
+              >
+                LOG OUT
+              </Button>
+            </Link>
           </div>
         }
       </div>

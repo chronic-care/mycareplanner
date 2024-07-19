@@ -7,8 +7,7 @@ interface SessionTimeoutPageProps {
     isLoggedOut: boolean;
 }
 
-export const SessionTimeoutPage = ({ isLoggedOut }: SessionTimeoutPageProps) => {
-    if (isLoggedOut) {
+export const SessionTimeoutPage = () => {
         return (
             <div className="session-timeout-page">
                 <div className="confirmation-container">
@@ -18,6 +17,4 @@ export const SessionTimeoutPage = ({ isLoggedOut }: SessionTimeoutPageProps) => 
                 </div>
             </div>
         );
-    }
-    return null; 
 };
