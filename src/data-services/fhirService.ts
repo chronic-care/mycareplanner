@@ -30,7 +30,8 @@ const oneDay = 24 * 3600 * 1000
 // const sixMonthsAgo = new Date(today.getTime() - (365/2 * oneDay))
 const oneYearAgo = new Date(today.getTime() - (365 * oneDay))
 const threeYearsAgo = new Date(today.getTime() - (365 * oneDay * 3))
-// const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
+const fiveYearsAgo = new Date(today.getTime() - (365 * oneDay * 5))
+// const tenYearsAgo = new Date(today.getTime() - (365 * oneDay * 10))
 
 const provenanceSearch = '&_revinclude=Provenance:target'
 
@@ -53,7 +54,7 @@ const problemListPath = 'Condition?category=problem-list-item&clinical-status=ac
 const healthConcernPath = 'Condition?category=health-concern&clinical-status=active' + provenanceSearch
 
 const immunizationsPath = 'Immunization?status=completed' + provenanceSearch
-const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(threeYearsAgo) + provenanceSearch
+const labResultsPath = 'Observation?category=laboratory&date=' + getDateParameter(fiveYearsAgo) + provenanceSearch
 
 // Allscripts does not support both status and authoredon args
 // const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
