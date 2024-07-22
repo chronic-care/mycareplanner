@@ -177,13 +177,17 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
       data1: obs.ResultText,
       data2: displayDate(obs.Date),
     },
-    {
+  ];
+
+  if (obs.ReferenceRange !== null) {
+    const row: SummaryRowItem = {
       isHeader: false,
       twoColumns: true,
-      data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
+      data1: 'Range: ' + obs.ReferenceRange,
       data2: obs.Interpretation,
-    },
-  ];
+    }
+    rows.push(row)
+  }
 
   const notes: SummaryRowItems | undefined = obs.Notes?.map((note) => (
     {
