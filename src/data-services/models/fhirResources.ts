@@ -114,3 +114,17 @@ export function displayValue(obs: Observation): string | undefined {
 
   return display
 }
+
+export function displayTransmitter(prov: Provenance | undefined): string | undefined {
+  var display: string | undefined
+
+  prov?.agent?.forEach( agent => {
+    agent.type?.coding?.forEach( coding => {
+      if (coding.code === 'transmitter') {
+        display = agent.who?.display
+      }
+    })
+  })
+
+  return display
+}
