@@ -228,26 +228,27 @@ const buildRows = (cond: ConditionSummary, theSource?: string): SummaryRowItems 
     rows = rows.concat(notes)
   }
 
-  if (theSource) {
-    const source: SummaryRowItem = {
-      isHeader: false,
-      twoColumns: false,
-      data1: 'From ' + theSource,
-      data2: '',
-    }
-    rows.push(source)
-  }
-
   const provenance: SummaryRowItems | undefined = cond.Provenance?.map((provenance) => (
     {
       isHeader: false,
-      twoColumns: true,
+      twoColumns: false,
       data1: 'Source: ' + provenance.Transmitter ?? '',
       data2: provenance.Author ?? '',
     }
   ))
   if (provenance?.length) {
     rows = rows.concat(provenance)
+  }
+
+  const hasProvenance = cond.Provenance?.length ?? 0 > 0
+  if (theSource && !hasProvenance) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Source: ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   const categoryName: SummaryRowItem = {
