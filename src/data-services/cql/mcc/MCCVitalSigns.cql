@@ -67,13 +67,13 @@ that are returned as separate observations.
 
 define "Systolic Blood Pressure":
   SortDescending( [Observation: Cx."Systolic blood pressure"]
-    union [Observation: Cx."Epic POC Systolic blood pressure"]
-    union [Observation: Cx."Epic PROD Systolic blood pressure"])
+    union [Observation: Cx."Epic POC Home Systolic blood pressure"]
+    union [Observation: Cx."Epic PROD Home Systolic blood pressure"])
 
 define "Diastolic Blood Pressure":
   SortDescending([Observation: Cx."Diastolic blood pressure"]
-    union [Observation: Cx."Epic POC Diastolic blood pressure"]
-    union [Observation: Cx."Epic PROD Diastolic blood pressure"])
+    union [Observation: Cx."Epic POC Home Diastolic blood pressure"]
+    union [Observation: Cx."Epic PROD Home Diastolic blood pressure"])
 
 // Use when Systolic and Diastolic BP are reported as an independent Observations (not recommended)
 define "Combined Blood Pressure Observations":
