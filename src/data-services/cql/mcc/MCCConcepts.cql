@@ -6,7 +6,8 @@ codesystem "LOINC": 'http://loinc.org'
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "Race": 'urn:oid:2.16.840.1.113883.6.238'
 
-codesystem "Epic": 'urn:oid:1.2.840.114350.1.13.135.3.7.2.707679'
+codesystem "EpicPOC": 'urn:oid:1.2.840.114350.1.13.135.3.7.2.707679'
+codesystem "EpicPROD": 'urn:oid:1.2.840.114350.1.13.135.2.7.2.707679'
 
 // ## Value sets ##
 
@@ -330,5 +331,7 @@ code "Body weight": '29463-7' from "LOINC" display 'Body weight'
 code "Body mass index": '39156-5' from "LOINC" display 'Body mass index'
 code "Inhaled oxygen flow rate": '3151-8' from "LOINC" display 'Inhaled oxygen flow rate'
 
-code "Epic Systolic blood pressure": '7585' from "Epic" display 'Systolic blood pressure'
-code "Epic Diastolic blood pressure": '7586' from "Epic" display 'Diastolic blood pressure'
+code "Epic POC Systolic blood pressure": '7585' from "EpicPOC" display 'Systolic blood pressure'
+code "Epic POC Diastolic blood pressure": '7586' from "EpicPOC" display 'Diastolic blood pressure'
+code "Epic PROD Systolic blood pressure": '7585' from "EpicPROD" display 'Systolic blood pressure'
+code "Epic PROD Diastolic blood pressure": '7586' from "EpicPROD" display 'Diastolic blood pressure'
