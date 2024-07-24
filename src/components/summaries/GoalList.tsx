@@ -1,6 +1,7 @@
 import '../../Home.css';
 import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FHIRData } from '../../data-services/models/fhirResources';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
@@ -8,6 +9,7 @@ import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 import EditIcon from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
 
 interface GoalListProps {
   fhirDataCollection?: FHIRData[];
@@ -16,6 +18,7 @@ interface GoalListProps {
 }
 
 export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMatrix, canShareData }) => {
+  const history = useHistory();
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("GoalList component RENDERED!")
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
@@ -105,6 +108,18 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
     setSortedAndFilteredGoals(combinedGoals);
   };
 
+  const handleEditClick = (goal: GoalSummary) => {
+    history.push({
+      pathname: '/goal-edit',
+      state: {
+        goalData: goal,
+        prepopulatedDescription: goal.Description,
+        prepopulatedDate: goal.StartDate || null,
+        prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
+      }
+    });
+  };
+
   return (
     <div className="home-view">
       <div className="welcome">
@@ -119,9 +134,9 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
 
         {canShareData && (
           <p>
-            <Link to={{ pathname: '/goal-edit', state: { fhirDataCollection } }}>
+            <Button variant="contained" color="primary" onClick={() => handleEditClick({} as GoalSummary)}>
               Add a New Goal
-            </Link>
+            </Button>
           </p>
         )}
 
