@@ -1,28 +1,37 @@
  [
     {
+      "name": "MCC Develop Sandbox",
+      "config": {
+        "iss": "https://gw.interop.community/MCCDevelopment/data",
+        "redirectUri": "./index.html",
+        "clientId": "5fa54c47-ed80-405b-a0b7-611eee5d0159",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write patient/Provenance.read"
+      }
+    },
+    {
+      "name": "MCC Testing Sandbox",
+      "config": {
+        "iss": "https://gw.interop.community/MCCTesting/data",
+        "redirectUri": "./index.html",
+        "clientId": "5fa54c47-ed80-405b-a0b7-611eee5d0159",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write patient/Provenance.read"
+      }
+    },
+    {
+      "name": "MCC Staging Sandbox",
+      "config": {
+        "iss": "https://gw.interop.community/MCCStaging/data",
+        "redirectUri": "./index.html",
+        "clientId": "5fa54c47-ed80-405b-a0b7-611eee5d0159",
+        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/ServiceRequest.read patient/Task.read patient/Questionnaire.read patient/QuestionnaireResponse.write patient/Goal.write patient/MedicationRequest.write patient/Condition.write patient/Provenance.read"
+      }
+    },
+    {
       "name": "SDS: eCare Shared Data",
       "config": {
         "iss": "https://gw.interop.community/eCareSharedData/open/",
         "redirectUri": "./index.html",
         "scope": "launch/patient openid fhirUser patient/*.read patient/*.write"
       }
-    },
-    {
-      "name": "Test Data: Epic Sandbox",
-      "config": {
-        "iss": "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4",
-        "redirectUri": "./index.html",
-        "clientId": "821ea3c1-011f-4f70-a8ae-299043b7e0be",
-        "scope": "launch launch/patient openid fhirUser patient/Patient.read patient/Practitioner.read patient/RelatedPerson.read patient/Condition.read patient/DiagnosticReport.read patient/Observation.read patient/Procedure.read patient/CarePlan.read patient/CareTeam.read patient/Goal.read patient/Immunization.read patient/MedicationRequest.read patient/Medication.read patient/Provenance.read patient/Organization.read"
-      }
-    },
-    {
-      "name": "Test Data: Cerner Sandbox",
-      "config": {
-        "iss": "https://fhir-myrecord.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d",
-        "redirectUri": "./index.html",
-        "clientId": "3992b136-a2d8-47e5-9ea3-62663c0dc7dc",
-        "scope": "launch/patient openid fhirUser offline_access patient/Patient.read user/Practitioner.read user/Location.read user/Organization.read patient/CarePlan.read patient/CareTeam.read patient/Condition.read patient/Goal.read patient/Immunization.read patient/Observation.read patient/Procedure.read patient/MedicationRequest.read patient/RelatedPerson.read patient/ServiceRequest.read patient/Provenance.read"
-      }
-  }
+    }
 ]
