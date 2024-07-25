@@ -18,18 +18,24 @@ import { createSharedDataResource } from '../../data-services/fhirService';
 
 export default function GoalEditForm(formData?: EditFormData) {
   let history = useHistory()
-  const location = useLocation(); 
+  const location = useLocation();
   const prepopulatedDescription = (location.state as { prepopulatedDescription?: string })?.prepopulatedDescription ?? '';
-  const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null; 
-  const prepopulatedDueDate = (location.state as {prepopulatedDueDate?: Date})?.prepopulatedDueDate ?? null;
+  const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null;
+  const prepopulatedDueDate = (location.state as { prepopulatedDueDate?: Date })?.prepopulatedDueDate ?? null;
+  const incrementGoalCount = (location.state as { incrementGoalCount?: Function })?.incrementGoalCount ?? null;
   const [description, setDescription] = React.useState<string>(prepopulatedDescription);
   const [startDate, setStartDate] = React.useState<Date | null>(
     prepopulatedDate ? moment(prepopulatedDate).add(0, 'day').toDate() : null
   );
-  
+
   const [dueDate, setDueDate] = React.useState<Date | null>(
     prepopulatedDueDate ? moment(prepopulatedDueDate).add(0, 'day').toDate() : null
   );
+
+  // useEffect(() => {
+  // save should update this
+  //   incrementGoalCount()
+  // }, [?if WHAT changes, we increment above ?])
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
@@ -78,6 +84,8 @@ export default function GoalEditForm(formData?: EditFormData) {
     console.log('New Goal: ' + JSON.stringify(goal))
 
     createSharedDataResource(goal)
+
+    incrementGoalCount && incrementGoalCount()
 
     // update FHIRData shared state
 
