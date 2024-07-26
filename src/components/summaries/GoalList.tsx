@@ -26,19 +26,6 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
   const [sortedAndFilteredGoals, setSortedAndFilteredGoals] = useState<{ goal: GoalSummary, provider: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const [goalCount, setGoalCount] = useState<number>(0)
-  // callback for GoalEditForm
-  const incrementGoalCount = () => {
-    let newCount: number = goalCount
-    newCount++
-    setGoalCount(newCount)
-  }
-
-  useEffect(() => {
-    console.log("if goalCount was updated by GoalEditForm via save...reload the data")
-    applySortingAndFiltering();
-  }, [goalCount])
-
   useEffect(() => {
     applySortingAndFiltering();
   }, [goalSummaryMatrix, sortingOption, filteringOption]);
@@ -128,8 +115,7 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
         goalData: goal,
         prepopulatedDescription: goal.Description,
         prepopulatedDate: goal.StartDate || null,
-        prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null,
-        incrementGoalCount: incrementGoalCount
+        prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
       }
     });
   };

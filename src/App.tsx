@@ -625,6 +625,16 @@ class App extends React.Component<AppProps, AppState> {
         console.log('setSupplementalDataClient()')
         let client = await getSupplementalDataClient(patientId)
 
+        // wait for client to get online to fix refresh issue
+        var attempts = 0
+        while (!client) {
+            client = await getSupplementalDataClient(patientId);
+            attempts++;
+            if (attempts < 10) {
+            break;
+            }
+        }
+
         if (client) {
             // We have a valid client for the SDS, but, we don't know if it has any data yet
             // (or a valid patient / patient with data)
