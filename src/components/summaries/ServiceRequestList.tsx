@@ -1,7 +1,7 @@
 import '../../Home.css';
 import React, { FC, useState, useEffect } from 'react';
-import { FHIRData, displayTiming, displayConcept } from '../../data-services/models/fhirResources';
-import { ServiceRequest } from '../../data-services/fhir-types/fhir-r4';
+import { FHIRData, displayTiming, displayConcept, displayTransmitter } from '../../data-services/models/fhirResources';
+import { ServiceRequest, Provenance } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
@@ -17,7 +17,7 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
   const [filterOption, setFilterOption] = useState<string[]>([]);
-  const [sortedAndFilteredServiceRequests, setSortedAndFilteredServiceRequests] = useState<{ serviceRequest: ServiceRequest, provider: string }[]>([]);
+  const [sortedAndFilteredServiceRequests, setSortedAndFilteredServiceRequests] = useState<{ serviceRequest: ServiceRequest, provider: string, provenance?: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
@@ -65,12 +65,13 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
   const applySortingAndFiltering = () => {
     if (!fhirDataCollection) return;
 
-    let combinedServiceRequests: { serviceRequest: ServiceRequest, provider: string }[] = [];
+    let combinedServiceRequests: { serviceRequest: ServiceRequest, provider: string, provenance?: string }[] = [];
 
     fhirDataCollection.forEach((data, providerIndex) => {
       const providerName = data.serverName || 'Unknown';
       (data.serviceRequests || []).forEach(serviceRequest => {
-        combinedServiceRequests.push({ serviceRequest, provider: providerName });
+        let provenance = data.provenanceMap?.get("ServiceRequest/" + serviceRequest.id ?? 'missingId')?.[0]
+        combinedServiceRequests.push({ serviceRequest, provider: providerName, provenance: displayTransmitter(provenance) });
       });
     });
 
@@ -223,8 +224,8 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
         {sortedAndFilteredServiceRequests.length === 0 ? (
           <p>No records found.</p>
         ) : (
-          sortedAndFilteredServiceRequests.map(({ serviceRequest, provider }, index) => (
-            <Summary key={index} id={index} rows={buildRows(serviceRequest, provider)} />
+          sortedAndFilteredServiceRequests.map(({ serviceRequest, provider, provenance }, index) => (
+            <Summary key={index} id={index} rows={buildRows(serviceRequest, provider, provenance)} />
           ))
         )}
       </div>
@@ -232,7 +233,7 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
   );
 };
 
-const buildRows = (service: ServiceRequest, theSource?: string): SummaryRowItems => {
+const buildRows = (service: ServiceRequest, theSource?: string, provenance?: string): SummaryRowItems => {
   let rows: SummaryRowItems = [
     {
       isHeader: true,
@@ -271,14 +272,14 @@ const buildRows = (service: ServiceRequest, theSource?: string): SummaryRowItems
     rows = rows.concat(notes);
   }
 
-  if (theSource) {
-    const rowItem: SummaryRowItem = {
+  if (theSource || (provenance !== undefined)) {
+    const source: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
-      data1: "From " + theSource,
+      data1: 'Source: ' + (provenance !== undefined ? provenance : theSource),
       data2: '',
     };
-    rows.push(rowItem);
+    rows.push(source);
   }
 
   return rows;

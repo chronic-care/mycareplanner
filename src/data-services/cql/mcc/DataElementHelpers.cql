@@ -191,7 +191,7 @@ define function ReportObservation(o FHIR.Observation, displayName String):
       ResultUnits: (o.value as FHIR.Quantity).unit.value,
       ReferenceRange: ReferenceRange(o),
       Interpretation: Interpretation(o),
-      Flag: ReferenceRangeFlag(o),   // true if value out of range, else false
+      Flag: if (o.value is FHIR.Quantity) then ReferenceRangeFlag(o) else null,   // true if value out of range, else false
       Performer: First(o.performer).display.value,
       Notes: ToString(o.note),
       Provenance: ReportProvenance(o),
@@ -203,14 +203,12 @@ define function ResultText(o Observation):
   if o.code ~ "Blood pressure" then
     ToString(((singleton from (o.component C where (C.code ~ "Systolic blood pressure"))).value as FHIR.Quantity).value)
      + '/' + ToString(((singleton from (o.component C where (C.code ~ "Diastolic blood pressure"))).value as FHIR.Quantity).value) + ' mmHg'
-  else if o.value is FHIR.Quantity then
-    QuantityText(o.value as FHIR.Quantity)
-  else if o.value is CodeableConcept then
-    ConceptText(o.value as CodeableConcept)
-  else if o.value is FHIR.string then
-    o.value as FHIR.string
   else
-    null
+    Coalesce(
+      QuantityText(o.value as FHIR.Quantity),
+      ConceptText(o.value as CodeableConcept),
+      o.value as FHIR.string
+    )
 
 define function SelectByStatus(observations List<Observation>):
   observations Obs
@@ -253,7 +251,7 @@ define function ReferenceRangeFlag(o FHIR.Observation):
 define function Interpretation(o FHIR.Observation):
   if (o.interpretation is not null) then
     Coalesce(First(o.interpretation.text), First(First(o.interpretation).coding.display))
-  else if o.referenceRange is not null then
+  else if o.referenceRange is not null and (o.value is FHIR.Quantity) then
     // Derive interpretation from the reference range, return null if within normal range.
     if o.value.value < ReferenceRangeLow(o) then 'Low'
     else if o.value.value > ReferenceRangeHigh(o) then 'High'

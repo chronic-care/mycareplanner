@@ -77,9 +77,7 @@ export default function GoalEditForm(formData?: EditFormData) {
     }
     console.log('New Goal: ' + JSON.stringify(goal))
 
-    createSharedDataResource(goal)
-
-    // update FHIRData shared state
+    createSharedDataResource(goal,formData?.fhirDataCollection)
 
     history.goBack()
   };
@@ -155,3 +153,4 @@ export default function GoalEditForm(formData?: EditFormData) {
     </React.Fragment>
   );
 }
+

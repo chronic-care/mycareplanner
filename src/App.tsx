@@ -22,7 +22,10 @@ import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlSe
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
-import { isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints, isSavedTokenStillValid, getLauncherData } from './data-services/persistenceService'
+import {
+    isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints,
+    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId, deleteSessionId
+} from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
     getMedicationSummaries, getVitalSignSummaries
@@ -32,7 +35,7 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
-import { doLog, LogRequest } from './log/log-service'
+import { clearSession, doLog, initializeSession, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";
@@ -90,6 +93,7 @@ interface AppState {
 
     isActiveSession: boolean,
     isLogout: boolean,
+    sessionId: string | undefined,
 }
 
 type SummaryFunctionType = (fhirData?: FHIRData[]) =>
@@ -139,6 +143,7 @@ class App extends React.Component<AppProps, AppState> {
 
             isActiveSession: true,
             isLogout: false,
+            sessionId: undefined,
         }
 
         this.initializeSummaries()
@@ -156,6 +161,19 @@ class App extends React.Component<AppProps, AppState> {
             // await this.setSupplementalDataClient('somePatientId')
 
             try {
+                if(await isSessionId()){
+                    const retrievedSessionId = await getSessionId();
+                    if(retrievedSessionId){
+                        this.setState({ sessionId : retrievedSessionId });
+                    }
+                    console.log("I am in Retrieving the sessionID block ----------->",retrievedSessionId);
+                }
+                else{
+                    const sessionId = await initializeSession(); // Initialize session when the application is launched
+                    this.setState({ sessionId });
+                    saveSessionId(sessionId);
+                    console.log("I am in Creating the sessionID block ----------------->", sessionId)
+                }
                 console.log("Checking if this is a multi-select, single, or a loader...")
                 const selectedEndpoints: string[] | undefined = await getSelectedEndpoints()
                 if (selectedEndpoints && selectedEndpoints.length > 0) {
@@ -339,7 +357,7 @@ class App extends React.Component<AppProps, AppState> {
                 // TODO: convert this to use multi login code?
 
                 // Configure the SDS client to get FHIR Data
-                console.log('We can connect to the SDS, so, add it to loader (read) SDS data')
+                console.log('We can connect to the SDS, so, add it to launcher (read) SDS data')
                 const serverUrl = this.state.supplementalDataClient.state.serverUrl
                 const serverUrlFromEnvVar = process.env.REACT_APP_SHARED_DATA_ENDPOINT
                 console.log(`Dynamic SDS serverUrl (using this for now...): ${serverUrl}`)
@@ -352,7 +370,7 @@ class App extends React.Component<AppProps, AppState> {
                 this.resetErrorMessageState()
 
                 try {
-                // Use the SDS client to get FHIR Data
+                    // Use the SDS client to get FHIR Data
                     const sdsData: FHIRData = await getFHIRData(true, serverUrl, this.state.supplementalDataClient,
                         this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                     console.log('SDS data: ', sdsData)
@@ -540,6 +558,7 @@ class App extends React.Component<AppProps, AppState> {
                             event: 'Summaries Loading',
                             message: `Resource Count for ${key}: ${length}`,
                             resourceCount: length,
+                            sessionId: this.state.sessionId,
                         };
                         doLog(request)
                     }
@@ -606,6 +625,16 @@ class App extends React.Component<AppProps, AppState> {
         console.log('setSupplementalDataClient()')
         let client = await getSupplementalDataClient(patientId)
 
+        // wait for client to get online to fix refresh issue
+        var attempts = 0
+        while (!client) {
+            client = await getSupplementalDataClient(patientId);
+            attempts++;
+            if (attempts < 10) {
+            break;
+            }
+        }
+
         if (client) {
             // We have a valid client for the SDS, but, we don't know if it has any data yet
             // (or a valid patient / patient with data)
@@ -617,43 +646,43 @@ class App extends React.Component<AppProps, AppState> {
             // If we want to go further, and we get back a Patient, we can check that: "id": "patient-name",
             // If either of those fail, we don't load the SDS...
 
-            const sdsMessageSuffix = "The SDS client will not be used."
-            let isSDSReadError = false
-            let sdsPatient: Patient | undefined
-            if (client.patient.id !== null) {
-                console.log("client.patient.id !== null, using client.patient.read()")
-                try {
-                    sdsPatient = await client.patient.read() as Patient
-                    console.log("Valid ")
-                } catch (err) {
-                    console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
-                    isSDSReadError = true
-                }
-            } else {
-                console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
-                try {
-                    sdsPatient = await client.user.read() as Patient
-                } catch (err) {
-                    console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
-                    isSDSReadError = true
-                }
-            }
+            // const sdsMessageSuffix = "The SDS client will not be used."
+            // let isSDSReadError = false
+            // let sdsPatient: Patient | undefined
+            // if (client.patient.id !== null) {
+            //     console.error("setSupplementalDataClient client.patient.id !== null, using client.patient.read()")
+            //     try {
+            //         sdsPatient = await client.patient.read() as Patient
+            //         console.log("Valid ")
+            //     } catch (err) {
+            //         console.warn("Warning: SDS Patient cannot be read via client.patient.read(): " + sdsMessageSuffix)
+            //         isSDSReadError = true
+            //     }
+            // } else {
+            //     console.log("client.patient.id === null, using client.user.read() isntead of client.patient.read()")
+            //     try {
+            //         sdsPatient = await client.user.read() as Patient
+            //     } catch (err) {
+            //         console.warn("Warning: SDS Patient cannot be read via client.user.read(): " + sdsMessageSuffix)
+            //         isSDSReadError = true
+            //     }
+            // }
 
-            if (!isSDSReadError) {
-                console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
+            // if (!isSDSReadError) {
+            //     console.log("Valid SDS patient read: Using SDS client", sdsPatient ? sdsPatient : "unknown")
 
-                const stillValid = await isSavedTokenStillValid(client.state)
+            //     const stillValid = await isSavedTokenStillValid(client.state)
                 this.setState({ supplementalDataClient: client })
-                this.setState({ canShareData: stillValid })
+                this.setState({ canShareData: true })
 
-                console.log("***** PatientID = " + client.getPatientId() ?? "")
-                console.log("***** User ID = " + client.getUserId() ?? "")
-                console.log("***** Can share data = " + stillValid ?? "?")
-            } else {
-                console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
-                and not setting state for supplementalDataClient or canShareData`)
-                client = undefined
-            }
+            //     console.log("***** PatientID = " + client.getPatientId() ?? "")
+            //     console.log("***** User ID = " + client.getUserId() ?? "")
+            //     console.log("***** Can share data = " + stillValid ?? "?")
+            // } else {
+            //     console.warn(`Warning: Invalid SDS patient read: Overriding valid client to undefined
+            //     and not setting state for supplementalDataClient or canShareData`)
+            //     client = undefined
+            // }
 
         }
         return client
@@ -668,6 +697,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Patient information loading',
             page: 'Home',
             message: logMessage,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
         this.setState({ progressMessage: message })
@@ -720,13 +750,13 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ userErrorMessage: undefined })
     }
 
-    private handleLogout = () => {
+    private handleLogout = async () => {
         if (!this.state.isLogout) {
             this.setState({ isLogout: true })
-            sessionStorage.clear();
-            this.props.history.push('/logout');
+            sessionStorage.clear()
+            await deleteAllDataFromLocalForage()
+            this.props.history.push('/logout')
         }
-
     }
 
     updateLogMainTab = async (event: any, value: any) => {
@@ -741,6 +771,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
     }
@@ -758,6 +789,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
 
         doLog(request)
@@ -775,6 +807,7 @@ class App extends React.Component<AppProps, AppState> {
             event: 'Clicked',
             page: tab,
             message,
+            sessionId: this.state.sessionId,
         }
         doLog(request)
 
@@ -893,7 +926,7 @@ class App extends React.Component<AppProps, AppState> {
                                         <Home fhirDataCollection={this.state.fhirDataCollection} patientSummaries={this.state.patientSummaries} screenings={this.state.screenings}
                                             progressMessage={this.state.progressMessage} progressValue={this.state.progressValue} resourcesLoadedCount={this.state.resourcesLoadedCount}
                                             errorType={this.state.errorType} userErrorMessage={this.state.userErrorMessage} developerErrorMessage={this.state.developerErrorMessage} errorCaught={this.state.errorCaught}
-                                            canShareData={this.state.canShareData}
+                                            canShareData={this.state.canShareData} isLogout={this.state.isLogout}
                                             />
                                     </TabPanel>
                                     <TabPanel value="2" sx={{ padding: '0px 0px 100px' }}>

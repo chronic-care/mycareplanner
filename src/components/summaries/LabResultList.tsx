@@ -177,34 +177,51 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
       data1: obs.ResultText,
       data2: displayDate(obs.Date),
     },
-    {
-      isHeader: false,
-      twoColumns: true,
-      data1: obs.ReferenceRange === null ? '' : 'Range: ' + obs.ReferenceRange,
-      data2: obs.Interpretation,
-    },
   ];
 
-  if (theSource) {
-    const source: SummaryRowItem = {
+  if (obs.ReferenceRange !== null) {
+    const row: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: true,
+      data1: 'Range: ' + obs.ReferenceRange,
+      data2: obs.Interpretation,
+    }
+    rows.push(row)
+  }
+
+  const notes: SummaryRowItems | undefined = obs.Notes?.map((note) => (
+    {
       isHeader: false,
       twoColumns: false,
-      data1: 'From ' + theSource,
+      data1: 'Note: ' + note,
       data2: '',
-    };
-    rows.push(source);
+    }
+  ))
+  if (notes?.length) {
+    rows = rows.concat(notes)
   }
 
   const provenance: SummaryRowItems | undefined = obs.Provenance?.map((provenance) => (
     {
       isHeader: false,
-      twoColumns: true,
-      data1: 'Source: ' + (provenance.Transmitter ?? ''),
+      twoColumns: false,
+      data1: 'Source: ' + provenance.Transmitter ?? '',
       data2: provenance.Author ?? '',
     }
-  ));
+  ))
   if (provenance?.length) {
-    rows = rows.concat(provenance);
+    rows = rows.concat(provenance)
+  }
+
+  const hasProvenance = obs.Provenance?.length ?? 0 > 0
+  if (theSource && !hasProvenance) {
+    const source: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Source: ' + theSource,
+      data2: '',
+    }
+    rows.push(source)
   }
 
   return rows;

@@ -42,7 +42,7 @@ const extractConditionSummary = (fhirData?: FHIRData): ConditionSummary[] | unde
 
   // console.log("CQL Results in extractConditionSummary: " + JSON.stringify(extractedSummary))
   // console.log("ConditionSummary: ", extractedSummary.ConditionSummary)
-  return extractedSummary.ConditionSummary
+  return extractedSummary?.ConditionSummary
 }
 export const getConditionSummaries = (fhirDataCollection?: FHIRData[]): ConditionSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
@@ -68,7 +68,7 @@ const extractGoalSummary = (fhirData?: FHIRData): GoalSummary[] | undefined => {
 
   // console.log("CQL extractedSummary: ", extractedSummary)
   // console.log("CQL extractedSummary.GoalSummary: ", extractedSummary.GoalSummary)
-  return extractedSummary.GoalSummary
+  return extractedSummary?.GoalSummary
 }
 export const getGoalSummaries = (fhirDataCollection?: FHIRData[]): GoalSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
@@ -88,7 +88,7 @@ const extractLabResultSummary = (fhirData?: FHIRData): ObservationSummary[] | un
 
   // console.log("CQL Results in extractLabResultSummary: " + JSON.stringify(extractedSummary))
   // console.log("LabResultSummary: ", JSON.stringify(extractedSummary.LabResultSummary))
-  return extractedSummary.LabResultSummary
+  return extractedSummary?.LabResultSummary
 }
 export const getLabResultSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
@@ -108,7 +108,7 @@ const extractMedicationSummary = (fhirData?: FHIRData): MedicationSummary[] | un
 
   // console.log("CQL Results in extractMedicationSummary: " + JSON.stringify(extractedSummary))
   // console.log("MedicationSummary: ", JSON.stringify(extractedSummary.MedicationSummary))
-  return extractedSummary.MedicationSummary
+  return extractedSummary?.MedicationSummary
 }
 export const getMedicationSummaries = (fhirDataCollection?: FHIRData[]): MedicationSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
@@ -128,7 +128,7 @@ const extractVitalSignSummary = (fhirData?: FHIRData): ObservationSummary[] | un
 
   // console.log("CQL Results in extractVitalSignSummary: " + JSON.stringify(extractedSummary))
   // console.log("VitalSignsSummary: ", JSON.stringify(extractedSummary.VitalSignsSummary))
-  return extractedSummary.VitalSignsSummary
+  return extractedSummary?.VitalSignsSummary
 }
 export const getVitalSignSummaries = (fhirDataCollection?: FHIRData[]): ObservationSummary[][] | undefined => {
   if (fhirDataCollection === undefined) { return undefined }
@@ -142,11 +142,17 @@ export const getVitalSignSummaries = (fhirDataCollection?: FHIRData[]): Observat
 }
 
 const executeLibrary = (library: any, codeService: any, patientSource: any): any => {
-  const executor = new cql.Executor(library, codeService)
-  const results = executor.exec(patientSource)
-  // Note: This array index of 0 is not related to multi providers. It was setup this way prior to multi proviuders.
-  const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]]
-  // console.log("CQL Results in executeLibrary: ", JSON.stringify(extractedSummary));
+  try {
+    const executor = new cql.Executor(library, codeService)
+    const results = executor.exec(patientSource)
+    // Note: This array index of 0 is not related to multi providers. It was setup this way prior to multi proviuders.
+    const extractedSummary = results.patientResults[Object.keys(results.patientResults)[0]]
+    // console.log("CQL Results in executeLibrary: ", JSON.stringify(extractedSummary));
 
-  return extractedSummary
+    return extractedSummary
+  }
+  catch (err) {
+    console.log("Error executing CQL: " + err)
+    return undefined
+  }
 }

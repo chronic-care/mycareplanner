@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { FHIRData, displayDate, displayTransmitter } from '../../data-services/models/fhirResources';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { Immunization } from '../../data-services/fhir-types/fhir-r4';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -15,7 +15,7 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({ fhirDataCollection
   const [showModal, setShowModal] = useState<boolean>(false);
   const [sortOption, setSortOption] = useState<string>('');
   const [filterOption, setFilterOption] = useState<string[]>([]);
-  const [sortedAndFilteredImmunizations, setSortedAndFilteredImmunizations] = useState<{ immunization: Immunization, provider: string }[]>([]);
+  const [sortedAndFilteredImmunizations, setSortedAndFilteredImmunizations] = useState<{ immunization: Immunization, provider: string, provenance?: string }[]>([]);
   const [filteringOptions, setFilteringOptions] = useState<{ value: string; label: string }[]>([]);
 
   useEffect(() => {
@@ -63,12 +63,13 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({ fhirDataCollection
   const applySortingAndFiltering = () => {
     if (!fhirDataCollection) return;
 
-    let combinedImmunizations: { immunization: Immunization, provider: string }[] = [];
+    let combinedImmunizations: { immunization: Immunization, provider: string, provenance?: string }[] = [];
 
     fhirDataCollection.forEach((data, providerIndex) => {
       const providerName = data.serverName || 'Unknown';
       (data.immunizations || []).forEach(immunization => {
-        combinedImmunizations.push({ immunization, provider: providerName });
+        let provenance = data.provenanceMap?.get("Immunization/" + immunization.id ?? 'missingId')?.[0]
+        combinedImmunizations.push({ immunization, provider: providerName, provenance: displayTransmitter(provenance) });
       });
     });
 
@@ -150,8 +151,8 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({ fhirDataCollection
         {sortedAndFilteredImmunizations.length === 0 ? (
           <p>No records found.</p>
         ) : (
-          sortedAndFilteredImmunizations.map(({ immunization, provider }, index) => (
-            <Summary key={index} id={index} rows={buildRows(immunization, provider)} />
+          sortedAndFilteredImmunizations.map(({ immunization, provider, provenance }, index) => (
+            <Summary key={index} id={index} rows={buildRows(immunization, provider, provenance)} />
           ))
         )}
       </div>
@@ -159,7 +160,7 @@ export const ImmunizationList: FC<ImmunizationListProps> = ({ fhirDataCollection
   );
 };
 
-const buildRows = (imm: Immunization, theSource?: string): SummaryRowItems => {
+const buildRows = (imm: Immunization, theSource?: string, provenance?: string): SummaryRowItems => {
   let rows: SummaryRowItems = [
     {
       isHeader: true,
@@ -195,11 +196,11 @@ const buildRows = (imm: Immunization, theSource?: string): SummaryRowItems => {
     rows = rows.concat(notes);
   }
 
-  if (theSource) {
+  if (theSource || (provenance !== undefined)) {
     const source: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
-      data1: 'From ' + theSource,
+      data1: 'Source: ' + (provenance !== undefined ? provenance : theSource),
       data2: '',
     };
     rows.push(source);
