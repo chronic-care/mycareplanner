@@ -10,6 +10,7 @@ import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
+import GoalEditForm from '../edit-forms/GoalEditForm';
 
 interface GoalListProps {
   fhirDataCollection?: FHIRData[];
@@ -121,7 +122,10 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
   };
 
   return (
+   
+
     <div className="home-view">
+    
       <div className="welcome">
         <h4 className="title">Health Goals</h4>
 
