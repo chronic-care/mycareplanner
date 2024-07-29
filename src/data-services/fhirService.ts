@@ -851,14 +851,51 @@ const setAndLogNonTerminatingErrorMessageStateForResource = async (
   setAndLogErrorMessageState('Non-terminating', message.replaceAll('<RESOURCE_NAME>', resourceName),
     `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
 }
-
-export function createSharedDataResource(resource: Resource) {
+export function createSharedDataResource(resource: Resource, fhirDataCollection?: FHIRData[]) {
   return getSupplementalDataClient(null)
     .then((client: Client | undefined) => {
       // console.log('SDS client: ' + JSON.stringify(client))
       return client?.create(resource as fhirclient.FHIR.Resource)
     })
     .then((response) => {
+
+
+      if (resource.resourceType === "Goal") {
+          fhirDataCollection?.forEach(fhirData => {
+
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            console.error('fhirData : ' + fhirData.serverUrl) ;
+            console.error('fhirData : ' + fhirData.isSDS) ;
+            if (fhirData.isSDS) {
+              fhirData.goals?.push(resource as Goal);
+
+              console.error('fhirData : ' + JSON.stringify(fhirData.goals)) ;
+            }
+            // let index = selected.indexOf(value)
+            // if (index > -1) {
+            //     selected.splice(index, 1)
+            // }
+            // else {
+            //     selected.push(value)
+            // }
+        })
+        // this.setState({selectedOptions: selected})
+    // }    
+      }
+      console.error('SDS client: ' + JSON.stringify(fhirDataCollection)) ;
       return response
     }).catch(error => {
       console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
