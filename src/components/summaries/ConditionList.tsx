@@ -1,12 +1,14 @@
 import '../../Home.css';
 import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
 import { ConditionSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
+import { Button } from '@mui/material';
 
 interface ConditionListProps {
   fhirDataCollection?: FHIRData[];
@@ -15,6 +17,7 @@ interface ConditionListProps {
 }
 
 export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, conditionSummaryMatrix, canShareData }) => {
+  const history = useHistory();
   process.env.REACT_APP_DEBUG_LOG === "true" && console.log("ConditionList component RENDERED!")
   const [showModal, setShowModal] = useState(false);
   const [sortingOption, setSortingOption] = useState<string>('');
@@ -104,6 +107,15 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
     setSortedAndFilteredConditions(combinedConditions);
   };
 
+  function handleEditClick(condition: ConditionSummary): void {
+    history.push({
+      pathname: '/condition-edit',
+      state: {
+        condition: condition
+      }
+    });
+  }
+
   return (
     <div className="home-view">
       <div className="welcome">
@@ -118,9 +130,9 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
 
         {canShareData && (
           <p>
-            <Link to={{ pathname: '/condition-edit', state: { fhirDataCollection } }}>
+            <Button variant="contained" color="primary" onClick={() => handleEditClick({} as ConditionSummary)}>
               Add a Health Concern
-            </Link>
+            </Button>
           </p>
         )}
 
