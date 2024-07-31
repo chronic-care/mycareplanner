@@ -107,11 +107,12 @@ export const ConditionList: FC<ConditionListProps> = ({ fhirDataCollection, cond
     setSortedAndFilteredConditions(combinedConditions);
   };
 
-  function handleEditClick(condition: ConditionSummary): void {
+  function handleEditClick(condition: ConditionSummary, conditionSummaryMatrix?: ConditionSummary[][]): void {
     history.push({
       pathname: '/condition-edit',
       state: {
-        condition: condition
+        condition: condition,
+        conditionSummaryMatrix :conditionSummaryMatrix
       }
     });
   }
@@ -188,10 +189,11 @@ const buildRows = (cond: ConditionSummary, theSource?: string): SummaryRowItems 
   }
   rows.push(conditionName)
 
+
   const author: SummaryRowItem | undefined =
-    cond.Recorder === null && cond.Asserter === null
+    cond.Recorder == null && cond.Asserter == null
       ? undefined
-      : {
+      : { 
         isHeader: false,
         twoColumns: true,
         data1: 'Author: ' + (cond.Recorder ?? cond.Asserter ?? 'Unknown'),
@@ -213,8 +215,8 @@ const buildRows = (cond: ConditionSummary, theSource?: string): SummaryRowItems 
         isHeader: false,
         twoColumns: true,
         // Still need null checks as one item or the other could be null, just not both
-        data1: cond.RecordedDate === null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate),
-        data2: cond.AssertedDate === null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate),
+        data1: cond.RecordedDate == null ? '' : 'Recorded: ' + displayDate(cond.RecordedDate),
+        data2: cond.AssertedDate == null ? '' : 'Asserted: ' + displayDate(cond.AssertedDate),
       }
   if (recordedAndAssertedDates !== undefined) {
     rows.push(recordedAndAssertedDates)

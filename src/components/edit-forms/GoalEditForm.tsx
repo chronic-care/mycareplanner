@@ -12,7 +12,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { EditFormData } from '../../data-services/models/cqlSummary';
+import { EditFormData, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Goal } from '../../data-services/fhir-types/fhir-r4';
 import { createSharedDataResource } from '../../data-services/fhirService';
 
@@ -32,6 +32,7 @@ export default function GoalEditForm(formData?: EditFormData) {
   );
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
+  
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
   const fhirUser = formData?.supplementalDataClient?.getFhirUser()
   const userName: string | null = null   // TODO: find user with matching ID from formData?patientSummaries or CareTeam
@@ -78,6 +79,35 @@ export default function GoalEditForm(formData?: EditFormData) {
     console.log('New Goal: ' + JSON.stringify(goal))
 
     createSharedDataResource(goal,formData?.fhirDataCollection)
+
+    var gs: GoalSummary = {
+      Description: descriptionCodeable.text,
+
+      // Category?: string,
+      // Description: string,
+      // ExpressedBy: expressedByRef,
+      StartDate: startDate?.toISOString(),
+      Target: [],
+      LifecycleStatus: 'active',
+      AchievementStatus: achievementStatus.text
+      // Addresses?: DataElementSummary[],
+      // Notes?: string[],
+      // Provenance?: ProvenanceSummary[],
+      // LearnMore?: string
+
+
+    }
+
+    gs.Target?.push({} as GoalTarget);
+    if (gs.Target) {
+      gs.Target[0].DueDate = dueDate?.toISOString()
+    }
+    
+    
+    if (formData?.goalSummaryMatrix) {
+      formData?.goalSummaryMatrix[0].push(gs)
+    }
+   
 
     history.goBack()
   };
