@@ -821,9 +821,12 @@ class App extends React.Component<AppProps, AppState> {
             fhirDataCollection: this.state.fhirDataCollection,
             patientSummaries: this.state.patientSummaries,
             supplementalDataClient: this.state.supplementalDataClient,
-            canShareData: this.state.canShareData
+            canShareData: this.state.canShareData,
+            goalSummaryMatrix: this.state.goalSummaries,
+            conditionSummaryMatrix: this.state.conditionSummaries
         }
 
+        
         return (
             <div className="app">
 
