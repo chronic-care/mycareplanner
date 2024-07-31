@@ -11,7 +11,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { EditFormData } from '../../data-services/models/cqlSummary';
+import { ConditionSummary, EditFormData } from '../../data-services/models/cqlSummary';
 import { Condition } from '../../data-services/fhir-types/fhir-r4';
 import { createSharedDataResource } from '../../data-services/fhirService';
 
@@ -22,6 +22,7 @@ export default function ConditionEditForm(formData?: EditFormData) {
   const [onsetDate, setStartDate] = React.useState<Date | null>(null)
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
+
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
   const fhirUser = formData?.supplementalDataClient?.getFhirUser()
   const userName: string | null = null   // TODO: find user with matching ID from formData?patientSummaries or CareTeam
@@ -88,6 +89,18 @@ export default function ConditionEditForm(formData?: EditFormData) {
     console.log('New Condition: ' + JSON.stringify(condition))
 
     createSharedDataResource(condition)
+
+    var cs: ConditionSummary = {
+      ConceptName: description ?  description : '',
+      OnsetDate: onsetDate?.toISOString(),
+      RecordedDate: new Date().toISOString(),
+      Recorder: undefined,
+      Asserter: undefined
+    }
+
+    if (formData?.conditionSummaryMatrix) {
+      formData?.conditionSummaryMatrix[0].push(cs)
+    }
 
     // update FHIRData shared state
 

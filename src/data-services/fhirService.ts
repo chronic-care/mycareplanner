@@ -858,44 +858,14 @@ export function createSharedDataResource(resource: Resource, fhirDataCollection?
       return client?.create(resource as fhirclient.FHIR.Resource)
     })
     .then((response) => {
-
-
       if (resource.resourceType === "Goal") {
           fhirDataCollection?.forEach(fhirData => {
-
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
-            console.error('fhirData : ' + fhirData.serverUrl) ;
-            console.error('fhirData : ' + fhirData.isSDS) ;
             if (fhirData.isSDS) {
-              fhirData.goals?.push(resource as Goal);
-
-              console.error('fhirData : ' + JSON.stringify(fhirData.goals)) ;
+              // fhirData.goals?.push(resource as Goal);
             }
-            // let index = selected.indexOf(value)
-            // if (index > -1) {
-            //     selected.splice(index, 1)
-            // }
-            // else {
-            //     selected.push(value)
-            // }
-        })
-        // this.setState({selectedOptions: selected})
-    // }    
+        }
+        )
       }
-      console.error('SDS client: ' + JSON.stringify(fhirDataCollection)) ;
       return response
     }).catch(error => {
       console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
