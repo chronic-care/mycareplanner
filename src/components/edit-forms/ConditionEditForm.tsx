@@ -98,11 +98,22 @@ export default function ConditionEditForm(formData?: EditFormData) {
       Asserter: undefined
     }
 
-    if (formData?.conditionSummaryMatrix) {
-      formData?.conditionSummaryMatrix[0].push(cs)
+    if (formData?.setConditionSummaries && formData.conditionSummaryMatrix) {
+      // create a shallow copy
+      const updatedConditionSummaries: ConditionSummary[][] =
+        [...(formData.conditionSummaryMatrix ? formData.conditionSummaryMatrix : [])]
+      // update the copy
+      if (updatedConditionSummaries[0]) {
+        // add the new condition
+        updatedConditionSummaries[0].push(cs)
+      } else {
+        // if conditionSummaryMatrix is untruthy or has no subarrays,
+        // we create a summary as the only (first) ConditionSummary in the matrix
+        updatedConditionSummaries[0] = [cs]
+      }
+      // set the state using the callback
+      formData.setConditionSummaries(updatedConditionSummaries)
     }
-
-    // update FHIRData shared state
 
     history.goBack()
   };

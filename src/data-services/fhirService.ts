@@ -20,7 +20,7 @@ const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
 };
 
 
- 
+
 // TODO full date argument does not work correctly in Logica?  Use only yyyy-MM for now.
 // export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM-dd')}`;
 export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM')}`;
@@ -239,7 +239,7 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
                           await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
                           console.log('getSupplementalDataClient end wait for patient create:');
                           const yy = await sdsClient?.request('Linkage');
-                          console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));                          
+                    console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));
                           var patientReference = yy.entry[0].resource?.item[0].resource.reference
                           var identifier = patientReference.split("/")
                           if (sdsFhirAccessDataObject) {
@@ -610,7 +610,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   goals && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (goals?.length ?? 0) + ' Goals.', 50)
   console.log('Found ' + (goals?.length ?? 0) + ' Goals.')
-  
+
   curResourceName = 'Condition'
   let conditions: Condition[] | undefined
   setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 55)
@@ -851,23 +851,13 @@ const setAndLogNonTerminatingErrorMessageStateForResource = async (
   setAndLogErrorMessageState('Non-terminating', message.replaceAll('<RESOURCE_NAME>', resourceName),
     `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
 }
-export function createSharedDataResource(resource: Resource, fhirDataCollection?: FHIRData[]) {
+export function createSharedDataResource(resource: Resource) {
   return getSupplementalDataClient(null)
     .then((client: Client | undefined) => {
       // console.log('SDS client: ' + JSON.stringify(client))
       return client?.create(resource as fhirclient.FHIR.Resource)
     })
-    .then((response) => {
-      if (resource.resourceType === "Goal") {
-          fhirDataCollection?.forEach(fhirData => {
-            if (fhirData.isSDS) {
-              // fhirData.goals?.push(resource as Goal);
-            }
-        }
-        )
-      }
-      return response
-    }).catch(error => {
+    .catch(error => {
       console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return undefined
     })
@@ -927,4 +917,3 @@ export async function getSharedGoals(): Promise<Goal[]> {
 function delay(arg0: number) {
   throw new Error('Function not implemented.')
 }
-
