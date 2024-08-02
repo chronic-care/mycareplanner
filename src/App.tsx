@@ -616,6 +616,16 @@ class App extends React.Component<AppProps, AppState> {
         })
     }
 
+    // callback function to update goals from GoalEditForm
+    setGoalSummaries = (newGoalSummaries: GoalSummary[][]) => {
+        this.setState({ goalSummaries: newGoalSummaries })
+    }
+
+    // callback function to update conditions from ConditionEditForm
+    setConditionSummaries = (newConditionSummaries: ConditionSummary[][]) => {
+        this.setState({ conditionSummaries: newConditionSummaries })
+    }
+
     // TODO: Performance: Examine if we even need this callback or not as it may be called more than needed (before and after change vs just after):
     //       We can likely just put the code(or call to the function) in a componentDidUpdate fhirData state change check
     // callback function to update fhir data states and give ProviderLogin access to it
@@ -827,8 +837,13 @@ class App extends React.Component<AppProps, AppState> {
             fhirDataCollection: this.state.fhirDataCollection,
             patientSummaries: this.state.patientSummaries,
             supplementalDataClient: this.state.supplementalDataClient,
-            canShareData: this.state.canShareData
+            canShareData: this.state.canShareData,
+            goalSummaryMatrix: this.state.goalSummaries,
+            conditionSummaryMatrix: this.state.conditionSummaries,
+            setGoalSummaries: this.setGoalSummaries,
+            setConditionSummaries: this.setConditionSummaries
         }
+
 
         return (
             <div className="app">

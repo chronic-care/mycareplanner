@@ -12,26 +12,27 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { EditFormData } from '../../data-services/models/cqlSummary';
+import { EditFormData, GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Goal } from '../../data-services/fhir-types/fhir-r4';
 import { createSharedDataResource } from '../../data-services/fhirService';
 
 export default function GoalEditForm(formData?: EditFormData) {
   let history = useHistory()
-  const location = useLocation(); 
+  const location = useLocation();
   const prepopulatedDescription = (location.state as { prepopulatedDescription?: string })?.prepopulatedDescription ?? '';
-  const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null; 
+  const prepopulatedDate = (location.state as { prepopulatedDate?: Date })?.prepopulatedDate ?? null;
   const prepopulatedDueDate = (location.state as {prepopulatedDueDate?: Date})?.prepopulatedDueDate ?? null;
   const [description, setDescription] = React.useState<string>(prepopulatedDescription);
   const [startDate, setStartDate] = React.useState<Date | null>(
     prepopulatedDate ? moment(prepopulatedDate).add(0, 'day').toDate() : null
   );
-  
+
   const [dueDate, setDueDate] = React.useState<Date | null>(
     prepopulatedDueDate ? moment(prepopulatedDueDate).add(0, 'day').toDate() : null
   );
 
   const patientID = formData?.supplementalDataClient?.getPatientId()
+
   const patientName: string | null = null   // TODO: find patient with matching ID from formData?patientSummaries
   const fhirUser = formData?.supplementalDataClient?.getFhirUser()
   const userName: string | null = null   // TODO: find user with matching ID from formData?patientSummaries or CareTeam
@@ -77,7 +78,43 @@ export default function GoalEditForm(formData?: EditFormData) {
     }
     console.log('New Goal: ' + JSON.stringify(goal))
 
-    createSharedDataResource(goal,formData?.fhirDataCollection)
+    createSharedDataResource(goal)
+
+    var gs: GoalSummary = {
+      Description: descriptionCodeable.text,
+      // Category?: string,
+      // Description: string,
+      // ExpressedBy: expressedByRef,
+      StartDate: startDate?.toISOString(),
+      Target: [],
+      LifecycleStatus: 'active',
+      AchievementStatus: achievementStatus.text
+      // Addresses?: DataElementSummary[],
+      // Notes?: string[],
+      // Provenance?: ProvenanceSummary[],
+      // LearnMore?: string
+    }
+
+    gs.Target?.push({} as GoalTarget);
+    if (gs.Target) {
+      gs.Target[0].DueDate = dueDate?.toISOString()
+    }
+
+    if (formData?.setGoalSummaries && formData.goalSummaryMatrix) {
+      // create a shallow copy
+      const updatedGoalSummaries: GoalSummary[][] = [...(formData.goalSummaryMatrix ? formData.goalSummaryMatrix : [])]
+      // update the copy
+      if (updatedGoalSummaries[0]) {
+        // add the new goal
+        updatedGoalSummaries[0].push(gs)
+      } else {
+        // if goalSummaryMatrix is untruthy or has no subarrays,
+        // we create a summary as the only (first) GoalSummary in the matrix
+        updatedGoalSummaries[0] = [gs]
+      }
+      // set the state using the callback
+      formData.setGoalSummaries(updatedGoalSummaries)
+    }
 
     history.goBack()
   };
@@ -153,4 +190,3 @@ export default function GoalEditForm(formData?: EditFormData) {
     </React.Fragment>
   );
 }
-

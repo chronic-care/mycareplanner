@@ -2,7 +2,7 @@ import '../../Home.css';
 import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { FHIRData } from '../../data-services/models/fhirResources';
+import { displayDate, FHIRData } from '../../data-services/models/fhirResources';
 import { GoalSummary, GoalTarget } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -109,14 +109,15 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
     setSortedAndFilteredGoals(combinedGoals);
   };
 
-  const handleEditClick = (goal: GoalSummary) => {
+  const handleEditClick = (goal: GoalSummary,goalSummaryMatrix:GoalSummary[][]) => {
     history.push({
       pathname: '/goal-edit',
       state: {
         goalData: goal,
         prepopulatedDescription: goal.Description,
         prepopulatedDate: goal.StartDate || null,
-        prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null
+        prepopulatedDueDate: goal?.Target?.[0]?.DueDate || null,
+        goalSummaryMatrix : goalSummaryMatrix
       }
     });
   };
@@ -138,7 +139,7 @@ export const GoalList: FC<GoalListProps> = ({ fhirDataCollection, goalSummaryMat
 
         {canShareData && (
           <p>
-            <Button variant="contained" color="primary" onClick={() => handleEditClick({} as GoalSummary)}>
+            <Button variant="contained" color="primary" onClick={() => handleEditClick({} as GoalSummary,goalSummaryMatrix as GoalSummary[][])}>
               Add a New Goal
             </Button>
           </p>
@@ -197,7 +198,7 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
       isHeader: false,
       twoColumns: true,
       data1: goal.ExpressedBy,
-      data2: goal.StartDate === null ? '' : 'Start: ' + goal.StartDate,
+      data2: goal.StartDate === null ? '' : 'Start: ' + displayDate(goal.StartDate), 
     },
   ];
 //add "SDS Data" instead of "Data SDS"
@@ -340,7 +341,7 @@ const buildTargetValueAndDueDate = (curTarget: GoalTarget): SummaryRowItem => {
   return {
     isHeader: false,
     twoColumns: true,
-    data1: curTarget.TargetValue === null ? '' : 'Target: ' + curTarget.TargetValue,
-    data2: curTarget.DueDate === null ? '' : 'Due: ' + curTarget.DueDate,
+    data1: curTarget.TargetValue == null ? '' : 'Target: ' + curTarget.TargetValue,
+    data2: curTarget.DueDate === null ? '' : 'Due: ' + displayDate(curTarget.DueDate),
   };
 };

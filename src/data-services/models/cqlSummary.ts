@@ -12,7 +12,11 @@ export interface EditFormData {
   fhirDataCollection?: FHIRData[],
   patientSummaries?: PatientSummary[],
   supplementalDataClient?: Client,
-  canShareData?: boolean
+  canShareData?: boolean,
+  goalSummaryMatrix? : GoalSummary[][],
+  conditionSummaryMatrix?: ConditionSummary[][],
+  setGoalSummaries?: (newGoalSummaries: GoalSummary[][]) => void,
+  setConditionSummaries?: (newConditionSummaries: ConditionSummary[][]) => void
 }
 
 export interface SummaryData {
