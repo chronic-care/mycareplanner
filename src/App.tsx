@@ -4,7 +4,8 @@ import React from 'react';
 import { Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
-import { Patient, Task } from './data-services/fhir-types/fhir-r4';
+//import { Patient} from './data-services/fhir-types/fhir-r4';
+import {Task } from './data-services/fhir-types/fhir-r4';
 
 import HomeIcon from '@mui/icons-material/Home';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
@@ -22,9 +23,12 @@ import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlSe
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
+//import {isSavedTokenStillValid} from './data-services/persistenceService'
+
+//import {deleteSessionId} from './data-services/persistenceService'
 import {
     isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints,
-    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId, deleteSessionId
+    getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId
 } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
@@ -35,7 +39,9 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
-import { clearSession, doLog, initializeSession, LogRequest } from './log/log-service'
+
+//import { clearSession} from './log/log-service'
+import { doLog, initializeSession, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";

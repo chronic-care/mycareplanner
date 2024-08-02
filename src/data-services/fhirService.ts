@@ -914,6 +914,7 @@ export async function getSharedGoals(): Promise<Goal[]> {
 }
 
 
-function delay(arg0: number) {
-  throw new Error('Function not implemented.')
-}
+// function delay(arg0: number) {
+//   throw new Error('Function not implemented.')
+// }
+
