@@ -7,12 +7,12 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { FHIRData } from '../../data-services/models/fhirResources'
-import { ConditionSummary } from '../../data-services/models/cqlSummary'
+//import { ConditionSummary } from '../../data-services/models/cqlSummary'
 // import { getSupplementalDataClient } from '../../data-services/fhirService'
 // import Client from 'fhirclient/lib/Client'
-import { getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
-import { Practitioner } from '../../data-services/fhir-types/fhir-r4'
-import Client from 'fhirclient/lib/Client'
+//import { getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
+//import { Practitioner } from '../../data-services/fhir-types/fhir-r4'
+//import Client from 'fhirclient/lib/Client'
 interface ShareDataProps {
 
   fhirDataCollection?: FHIRData[]

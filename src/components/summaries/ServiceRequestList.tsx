@@ -1,7 +1,8 @@
 import '../../Home.css';
 import React, { FC, useState, useEffect } from 'react';
 import { FHIRData, displayTiming, displayConcept, displayTransmitter } from '../../data-services/models/fhirResources';
-import { ServiceRequest, Provenance } from '../../data-services/fhir-types/fhir-r4';
+//import { Provenance } from '../../data-services/fhir-types/fhir-r4';
+import { ServiceRequest } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
