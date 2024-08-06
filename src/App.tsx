@@ -66,6 +66,7 @@ import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
 import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
+import localforage from 'localforage';
 
 interface AppProps extends RouteComponentProps {
 }
@@ -158,6 +159,11 @@ class App extends React.Component<AppProps, AppState> {
     // TODO: Externalize everything we can out of componentDidMount into unique functions
     async componentDidMount() {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
+
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
+        document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
+
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
 
             // For Now, setting this right away so that it is not null.
@@ -350,6 +356,26 @@ class App extends React.Component<AppProps, AppState> {
     async componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): Promise<void> {
         // process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidUpdate()")
         this.setSummary(prevState)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+        document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    }
+
+    handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+        const tabHidden = await localforage.getItem('tabHidden');
+        if (tabHidden) {
+            await this.handleLogout();
+        }
+    }
+
+    handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+            localforage.setItem('tabHidden', true);
+        } else {
+            localforage.removeItem('tabHidden');
+        }
     }
 
     setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
