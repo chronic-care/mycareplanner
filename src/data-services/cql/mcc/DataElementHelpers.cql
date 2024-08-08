@@ -74,22 +74,24 @@ define function ProvenanceOf(resource Resource):
     where exists(P.target target
       where resource.id = GetId(target.reference))
 
+// Fix issue when Provenance from Cerner FHIR sandbox omits transmitter from Provenance
 define function ReportProvenance(resource Resource):
   (ProvenanceOf(resource)) P
-    return {
-      Transmitter: ProvenanceTransmitter(P),
-      Author: ProvenanceAuthor(P)
-    }
+    where ProvenanceTransmitter(P) is not null 
+      return {
+        Transmitter: ProvenanceTransmitter(P),
+        Author: ProvenanceAuthor(P)
+      }
 
 define function ProvenanceTransmitter(provenance Provenance):
-  (provenance.agent) A
+  First((provenance.agent) A
     where A.type.coding[0].code = 'transmitter'
-    return A.who.display.value
+    return A.who.display.value)
 
 define function ProvenanceAuthor(provenance Provenance):
-  (provenance.agent) A
+  First((provenance.agent) A
     where A.type.coding[0].code = 'author'
-    return A.who.display.value
+    return A.who.display.value)
 
 define function ReportConditions(conditions List<Condition>, category String, commonName String):
   conditions C
