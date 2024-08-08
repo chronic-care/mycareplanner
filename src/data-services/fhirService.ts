@@ -704,15 +704,11 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   socialHistory && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (socialHistory?.length ?? 0) + ' social history observations.', 90)
 
-  // We may need to comment this out due to a prior known issue of a 400 error from Epic.
-  // However, the loadFHIRQuery function should handle it regardless via it's catch and non-terminating error reporting/continuation.
-  // Thus, it has been converted and added back for testing purposes.
-
-  // Commented out on 28 March, 2024 because survey is not supported by any EHRs at this time.
-  const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
-    surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
-  surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-  // const surveyResults = undefined // required if we decide not to use the above code as was the case prior
+  // Commented out because survey is not supported by any EHRs at this time, and throws error in app for Cerner.
+  // const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
+  //   surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
+  // surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
+  const surveyResults = undefined // required if we decide not to use the above code
 
   curResourceName = 'Vitals'
   let vitalSigns: Observation[] | undefined
