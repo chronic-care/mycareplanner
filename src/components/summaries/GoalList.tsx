@@ -198,7 +198,7 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
       isHeader: false,
       twoColumns: true,
       data1: goal.ExpressedBy,
-      data2: goal.StartDate === null ? '' : 'Start: ' + displayDate(goal.StartDate), 
+      data2: goal.StartDate == null ? '' : 'Start: ' + displayDate(goal.StartDate), 
     },
   ];
 //add "SDS Data" instead of "Data SDS"
