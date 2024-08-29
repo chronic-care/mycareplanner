@@ -18,7 +18,7 @@ export function getLocalQuestionnaire(id: String) {
 
 export function getQuestionnaire(serverUrl: any, questionnaireID: string) {
     let url: string;
-    return getSupplementalDataClient(null)
+    return getSupplementalDataClient()
         .then((client: Client | undefined) => {
             if (client) {
                 url = client.state.serverUrl;
@@ -34,7 +34,7 @@ export function getQuestionnaire(serverUrl: any, questionnaireID: string) {
 }
 
 export function submitQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
-    return getSupplementalDataClient(null)
+    return getSupplementalDataClient()
         .then((client: Client | undefined) => {
             // @ts-ignore
             return client.create(questionnaireResponse)

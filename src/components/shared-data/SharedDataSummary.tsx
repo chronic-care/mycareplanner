@@ -12,7 +12,7 @@ export default function SharedDataSummary() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    let sdsClient = getSupplementalDataClient(null)
+    let sdsClient = getSupplementalDataClient()
     if (sdsClient !== undefined) {
       // Get and display Shared Data
     }
