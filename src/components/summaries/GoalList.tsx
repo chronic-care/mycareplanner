@@ -10,7 +10,7 @@ import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
 import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
-import GoalEditForm from '../edit-forms/GoalEditForm';
+//import GoalEditForm from '../edit-forms/GoalEditForm';
 
 interface GoalListProps {
   fhirDataCollection?: FHIRData[];
@@ -198,7 +198,7 @@ const buildRows = (goal: GoalSummary, theSource?: string): SummaryRowItems => {
       isHeader: false,
       twoColumns: true,
       data1: goal.ExpressedBy,
-      data2: goal.StartDate === null ? '' : 'Start: ' + displayDate(goal.StartDate), 
+      data2: goal.StartDate == null ? '' : 'Start: ' + displayDate(goal.StartDate), 
     },
   ];
 //add "SDS Data" instead of "Data SDS"

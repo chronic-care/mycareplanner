@@ -6,17 +6,103 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Client from 'fhirclient/lib/Client'
 
-export default function SharedDataSummary() {
+export default function UnSharedDataSummary() {
   let history = useHistory()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    let sdsClient = getSupplementalDataClient(null)
-    if (sdsClient !== undefined) {
+    getSupplementalDataClient().then(sdsClient => {
+      if (sdsClient) {
+        sdsClient.request('Linkage').then(linkages => {
+          console.error('asdfasdflinkagelinkagelinkage'+JSON.stringify(linkages));
+
+          console.error('linkages.entry'+JSON.stringify(linkages.entry));
+
+          linkages.entry.map((entry: any) => {
+
+            console.error(JSON.stringify(entry));
+
+          } );
+          // linkages.entry[0].resource?.item
+
+           })  ;
+      }
+    })
+
+      .catch(error => {
+        console.error(error.message);
+      });
+
+
+    // let sdsClient: Client | undefined = await getSupplementalDataClient()
+    // if (sdsClient) {
+      
+      // getSupplementalDataClient().then(sdsClient => {
+      //   if (sdsClient !== undefined) {
+      //   const linkages = await sdsClient.request('Linkage');
+
+      //   var resource = linkages.entry[0].resource;
+
+      //   resource.item.forEach((resource: any) => {  
+      //        console.log(JSON.stringify(resource));                
+         
+      //  })};
+      // }
+        // var patientReference = linkages.entry[0].resource?.item[0].resource.reference
+
+        // linkages.entry[0].resource.forEach(resource => {     
+          // console.log("Entered");  //This does ifre                       
+        //  
+      //  })}
+
+
+        // sdsClient.delete()
+        // }
+      }
+
+
+    // let sdsClient = getSupplementalDataClient()
+    // if (sdsClient !== undefined) {
+
+    //   const linkages =  sdsClient.request('Linkage');
+
+      // The HTTP requests would be
+      // 1…N.  Delete the patient for each foreign partition (other than the authorized partition)
+      //   1. HTTP DELETE /Patient/abc-123?_cascade=true
+      //   2. HTTP DELETE /Patient/def-456?_cascade=true
+      //   ...
+      //   3. HTTP DELETE /Patient/ghi-789?_cascade=true
+      
+      // N+1.  Delete the patient for the local partition
+      //   1. HTTP DELETE /Patient/9876-abcd-4567-uvwx?_cascade=true
+      
+      // N+2.  Delete the patient for the authorized foreign partition
+      //   1. HTTP DELETE /Patient/jkl-012?_cascade=true
+      
+      // N+3.  Schedule expunging deleted data
+      //   1. HTTP POST /$expunge
+      //       body: JSON
+      //       {
+      //         "resourceType": "parameters",
+      //         "parameter": [
+      //           {
+      //             “name”: “expungeDeletedResources”,
+      //             “value”: true
+      //           },
+      //           {
+      //             “name”: “cascade”,
+      //             “value": “delete”
+      //           }
+      //         ]
+      //       }
+
+
+
       // Get and display Shared Data
-    }
-  }
+    // }
+  // }
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
     history.goBack()

@@ -4,7 +4,8 @@ import React from 'react';
 import { Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { Tab, Box, Paper } from '@mui/material';
 import { TabList, TabPanel, TabContext } from '@mui/lab';
-import { Patient, Task } from './data-services/fhir-types/fhir-r4';
+//import { Patient} from './data-services/fhir-types/fhir-r4';
+import {Task } from './data-services/fhir-types/fhir-r4';
 
 import HomeIcon from '@mui/icons-material/Home';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
@@ -22,9 +23,12 @@ import { getPatientSummaries, executeScreenings } from './data-services/mpcCqlSe
 import { ScreeningDecision } from "./components/decision/ScreeningDecision";
 
 import { GoalSummary, ConditionSummary, MedicationSummary, ObservationSummary } from './data-services/models/cqlSummary';
+//import {isSavedTokenStillValid} from './data-services/persistenceService'
+
+//import {deleteSessionId} from './data-services/persistenceService'
 import {
     isEndpointStillAuthorized, getSelectedEndpoints, deleteSelectedEndpoints,
-    isSavedTokenStillValid, getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId, deleteSessionId
+    getLauncherData, deleteAllDataFromLocalForage, saveSessionId, isSessionId, getSessionId
 } from './data-services/persistenceService'
 import {
     getGoalSummaries, getLabResultSummaries, getConditionSummaries,
@@ -35,7 +39,9 @@ import {
     getMatchingProviderEndpointsFromUrl
 } from './data-services/providerEndpointService'
 
-import { clearSession, doLog, initializeSession, LogRequest } from './log/log-service'
+
+//import { clearSession} from './log/log-service'
+import { doLog, initializeSession, LogRequest } from './log/log-service'
 import { GoalList } from "./components/summaries/GoalList";
 import { ConditionList } from "./components/summaries/ConditionList";
 import { MedicationList } from "./components/summaries/MedicationList";
@@ -60,6 +66,7 @@ import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
 import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
+import localforage from 'localforage';
 
 interface AppProps extends RouteComponentProps {
 }
@@ -116,6 +123,9 @@ const tabList = {
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
 class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
+
+
+
         super(props);
 
         this.state = {
@@ -145,13 +155,18 @@ class App extends React.Component<AppProps, AppState> {
             isLogout: false,
             sessionId: undefined,
         }
-
+        const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
         this.initializeSummaries()
     }
 
     // TODO: Externalize everything we can out of componentDidMount into unique functions
     async componentDidMount() {
         process.env.REACT_APP_DEBUG_LOG === "true" && console.log("App.tsx componentDidMount()")
+
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
+        document.addEventListener('visibilitychange', this.handleVisibilityChange);
+
+
         if (process.env.REACT_APP_READY_FHIR_ON_APP_MOUNT === 'true' && !this.state.isLogout) {
 
             // For Now, setting this right away so that it is not null.
@@ -346,6 +361,26 @@ class App extends React.Component<AppProps, AppState> {
         this.setSummary(prevState)
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
+        document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    }
+
+    handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+        // const tabHidden = await localforage.getItem('tabHidden');
+        // if (tabHidden) {
+            // await this.handleyarn ();
+        // }
+    }
+
+    handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+            localforage.setItem('tabHidden', true);
+        } else {
+            localforage.removeItem('tabHidden');
+        }
+    }
+
     setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
 
         if (launcherPatientId) {
@@ -391,6 +426,7 @@ class App extends React.Component<AppProps, AppState> {
 
                     // Ensure the app doesn't try to use this invalid client
                     this.setState({ supplementalDataClient: undefined })
+
                     this.setState({ canShareData: false })
                     // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
                 }
@@ -407,6 +443,7 @@ class App extends React.Component<AppProps, AppState> {
 
                 // Ensure the app doesn't try to use this invalid client
                 this.setState({ supplementalDataClient: undefined })
+
                 this.setState({ canShareData: false })
                 // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
 
@@ -610,6 +647,16 @@ class App extends React.Component<AppProps, AppState> {
         })
     }
 
+    // callback function to update goals from GoalEditForm
+    setGoalSummaries = (newGoalSummaries: GoalSummary[][]) => {
+        this.setState({ goalSummaries: newGoalSummaries })
+    }
+
+    // callback function to update conditions from ConditionEditForm
+    setConditionSummaries = (newConditionSummaries: ConditionSummary[][]) => {
+        this.setState({ conditionSummaries: newConditionSummaries })
+    }
+
     // TODO: Performance: Examine if we even need this callback or not as it may be called more than needed (before and after change vs just after):
     //       We can likely just put the code(or call to the function) in a componentDidUpdate fhirData state change check
     // callback function to update fhir data states and give ProviderLogin access to it
@@ -622,13 +669,13 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setSupplementalDataClient = async (patientId: string): Promise<Client | undefined> => {
-        console.log('setSupplementalDataClient()')
-        let client = await getSupplementalDataClient(patientId)
+
+        let client = await getSupplementalDataClient()
 
         // wait for client to get online to fix refresh issue
         var attempts = 0
         while (!client) {
-            client = await getSupplementalDataClient(patientId);
+            client = await getSupplementalDataClient();
             attempts++;
             if (attempts < 10) {
             break;
@@ -752,10 +799,10 @@ class App extends React.Component<AppProps, AppState> {
 
     private handleLogout = async () => {
         if (!this.state.isLogout) {
-            this.setState({ isLogout: true })
-            sessionStorage.clear()
-            await deleteAllDataFromLocalForage()
-            this.props.history.push('/logout')
+            // this.setState({ isLogout: true })
+            // sessionStorage.clear()
+            // await deleteAllDataFromLocalForage()
+            // this.props.history.push('/logout')
         }
     }
 
@@ -823,10 +870,12 @@ class App extends React.Component<AppProps, AppState> {
             supplementalDataClient: this.state.supplementalDataClient,
             canShareData: this.state.canShareData,
             goalSummaryMatrix: this.state.goalSummaries,
-            conditionSummaryMatrix: this.state.conditionSummaries
+            conditionSummaryMatrix: this.state.conditionSummaries,
+            setGoalSummaries: this.setGoalSummaries,
+            setConditionSummaries: this.setConditionSummaries
         }
 
-        
+
         return (
             <div className="app">
 
@@ -834,13 +883,7 @@ class App extends React.Component<AppProps, AppState> {
                     onLogout={this.handleLogout}
                     isLoggedOut={this.state.isLogout}
                 /> */}
-                <SessionTimeOutHandler
-                    onActive={() => { this.setState({ isActiveSession: true }) }}
-                    onIdle={() => { this.setState({ isActiveSession: false }) }}
-                    onLogout={this.handleLogout}
-                    isLoggedOut={this.state.isLogout}
-                    timeOutInterval={+process.env.REACT_APP_CLIENT_IDLE_TIMEOUT!}
-                />
+          
 
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}

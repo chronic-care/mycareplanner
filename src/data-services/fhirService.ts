@@ -20,7 +20,7 @@ const resourcesFrom = (response: fhirclient.JsonObject): Resource[] => {
 };
 
 
- 
+
 // TODO full date argument does not work correctly in Logica?  Use only yyyy-MM for now.
 // export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM-dd')}`;
 export const getDateParameter = (d: Date): string => `ge${format(d, 'yyyy-MM')}`;
@@ -188,7 +188,7 @@ export const supplementalDataIsAvailable = (): Boolean => {
     && sdsScope !== undefined && sdsScope?.length > 0
 }
 
-export const getSupplementalDataClient = async (patientId2: string | null): Promise < Client | undefined > => {
+export const getSupplementalDataClient = async (): Promise < Client | undefined > => {
   console.log('getSupplementalDataClient Start');
   let sdsClient: Client | undefined
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
@@ -239,7 +239,7 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
                           await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec
                           console.log('getSupplementalDataClient end wait for patient create:');
                           const yy = await sdsClient?.request('Linkage');
-                          console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));                          
+                    console.log('getSupplementalDataClient Patient resource created linkage :' + JSON.stringify(yy));
                           var patientReference = yy.entry[0].resource?.item[0].resource.reference
                           var identifier = patientReference.split("/")
                           if (sdsFhirAccessDataObject) {
@@ -265,7 +265,7 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
           }
           console.error("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
       } else {
-          console.error("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
+          console.log("getSupplementalDataClient() authFhirAccessDataObject is currently null, cannot connect to client")
       }
   }
 
@@ -274,7 +274,6 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
   // The program will always know at the most root level that this SDS is not useful, which may be better.
   // This includes that knowledge in ProviderLogin w/o the additional logic it has now to determine that.
 
-  console.error('getSupplementalDataClient End');
   return sdsClient
 }
 
@@ -610,7 +609,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   goals && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (goals?.length ?? 0) + ' Goals.', 50)
   console.log('Found ' + (goals?.length ?? 0) + ' Goals.')
-  
+
   curResourceName = 'Condition'
   let conditions: Condition[] | undefined
   setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 55)
@@ -704,15 +703,11 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   socialHistory && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (socialHistory?.length ?? 0) + ' social history observations.', 90)
 
-  // We may need to comment this out due to a prior known issue of a 400 error from Epic.
-  // However, the loadFHIRQuery function should handle it regardless via it's catch and non-terminating error reporting/continuation.
-  // Thus, it has been converted and added back for testing purposes.
-
-  // Commented out on 28 March, 2024 because survey is not supported by any EHRs at this time.
-  const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
-    surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
-  surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
-  // const surveyResults = undefined // required if we decide not to use the above code as was the case prior
+  // Commented out because survey is not supported by any EHRs at this time, and throws error in app for Cerner.
+  // const surveyResults: Observation[] | undefined = await loadFHIRQuery<Observation>('Obs Survey', 'Observation',
+  //   surveyResultsPath, true, client, clientScope, 93, setAndLogProgressState, setAndLogErrorMessageState)
+  // surveyResults && setResourcesLoadedCountState(++resourcesLoadedCount)
+  const surveyResults = undefined // required if we decide not to use the above code
 
   curResourceName = 'Vitals'
   let vitalSigns: Observation[] | undefined
@@ -851,60 +846,53 @@ const setAndLogNonTerminatingErrorMessageStateForResource = async (
   setAndLogErrorMessageState('Non-terminating', message.replaceAll('<RESOURCE_NAME>', resourceName),
     `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
 }
-export function createSharedDataResource(resource: Resource, fhirDataCollection?: FHIRData[]) {
-  return getSupplementalDataClient(null)
+export function createSharedDataResource(resource: Resource) {
+  return getSupplementalDataClient()
+  
     .then((client: Client | undefined) => {
       // console.log('SDS client: ' + JSON.stringify(client))
       return client?.create(resource as fhirclient.FHIR.Resource)
     })
-    .then((response) => {
-      if (resource.resourceType === "Goal") {
-          fhirDataCollection?.forEach(fhirData => {
-            if (fhirData.isSDS) {
-              // fhirData.goals?.push(resource as Goal);
-            }
-        }
-        )
-      }
-      return response
-    }).catch(error => {
+    .catch(error => {
       console.log('Cannot create shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
       return undefined
     })
 }
 
 
-export function updateSharedDataResource(resource: Resource,serverUrl?: string ) {
-  return getSupplementalDataClient(null)
-    .then((client: Client | undefined) => {
+export function updateSharedDataResource(  client : Client, resource: Resource,serverUrl?: string ) {
+
+  // return 
+    // .then((client: Client | undefined) => {
       try {
         if (serverUrl) {
           const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
-          const fhirHeaders = new Headers(); //
-          fhirHeaders.append('X-Partition-Name',serverUrl);
+          const fhirHeaders ={
+            'X-Partition-Name' :  serverUrl
+          };  
           fhirHeaderRequestOption.headers = fhirHeaders;
           return client?.update(resource as fhirclient.FHIR.Resource,fhirHeaderRequestOption)
         } else {
           return client?.update(resource as fhirclient.FHIR.Resource)
         }
       }
-      catch (err) {
-        console.error("Error updating shared data resource: " + JSON.stringify(resource))
+      catch (err) {     
         console.error("Error updating shared data resource: " + JSON.stringify(err))
+        return undefined
       }
-    })
-    .then((response) => {
-      return response
-    }).catch(error => {
-      console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
-      return undefined
-    })
+    // })
+    // .then((response) => {
+      // return response
+    // }).catch(error => {
+      // console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      // return undefined
+    // })
 }
 
 export async function getSharedGoals(): Promise<Goal[]> {
   console.log("getSharedGoals()")
   var resources: Resource[] = []
-  var client = await getSupplementalDataClient(null)
+  var client = await getSupplementalDataClient()
   // console.log("Patient.id = " + client?.patient.id)
   await client?.patient.read()
   try {
@@ -924,7 +912,7 @@ export async function getSharedGoals(): Promise<Goal[]> {
 }
 
 
-function delay(arg0: number) {
-  throw new Error('Function not implemented.')
-}
+// function delay(arg0: number) {
+//   throw new Error('Function not implemented.')
+// }
 

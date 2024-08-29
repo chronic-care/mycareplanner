@@ -5,7 +5,8 @@ import { FHIRData } from './data-services/models/fhirResources';
 import { PatientSummary, ScreeningSummary } from './data-services/models/cqlSummary';
 // import { Task } from './data-services/fhir-types/fhir-r4';
 // import { BusySpinner } from './components/busy-spinner/BusySpinner';
-import { Button, CircularProgress, styled } from '@mui/material';
+//import { styled } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { DeterminateProgress } from './components/determinate-progress/DeterminateProgress';
 import { ErrorMessage } from './components/error-message/ErrorMessage';
 import Modal from './components/modal/modal';
@@ -68,7 +69,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
   // TODO:MULTI-PROVIDER: Change patient name list to provider name and display single patient name at top
   public render(): JSX.Element {
 
-    const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT
+    //const sdsurl = process.env.REACT_APP_SHARED_DATA_ENDPOINT
 
 
     let fhirDataCollection = this.props.fhirDataCollection
@@ -202,28 +203,26 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
             <div>
 
-                <p>
+                <div>
                   <h5 style={{ paddingTop: '20px' }}>Add a health record account</h5>
                   <Link to={{ pathname: '/provider-login', state: { fhirDataCollection: this.props.fhirDataCollection } }}>Login to additional healthcare provider accounts</Link>
-                </p>
+                </div>
 
             </div>
-
-
             <div>
-              { this.props.canShareData  ? (
-                <p>
+            { this.props.canShareData  ? (
+                <div>
                   <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
-                  <Link to={{ pathname: '/share-data' }}>Share your health data</Link></p>
-              ) : (<p></p>)}
+                  <Link to={{ pathname: '/share-data' }}>Share your health data</Link></div>
+                ) : (<p></p>)}
             </div>
 
 
             <div>
               { this.props.canShareData  ? (
-                <p>
+                <div>
                   <h5 style={{ paddingTop: '20px' }}>Withdraw your health data</h5>
-                  <Link to={{ pathname: '/unshare-data' }}>Opt out of sharing your health data</Link></p>
+                  <Link to={{ pathname: '/unshare-data' }}>Opt out of sharing your health data</Link></div>
               ) : (<p></p>)}
             </div>
 

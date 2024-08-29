@@ -14,7 +14,9 @@ export interface EditFormData {
   supplementalDataClient?: Client,
   canShareData?: boolean,
   goalSummaryMatrix? : GoalSummary[][],
-  conditionSummaryMatrix?: ConditionSummary[][]
+  conditionSummaryMatrix?: ConditionSummary[][],
+  setGoalSummaries?: (newGoalSummaries: GoalSummary[][]) => void,
+  setConditionSummaries?: (newConditionSummaries: ConditionSummary[][]) => void
 }
 
 export interface SummaryData {
