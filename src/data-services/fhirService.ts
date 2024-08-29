@@ -188,7 +188,7 @@ export const supplementalDataIsAvailable = (): Boolean => {
     && sdsScope !== undefined && sdsScope?.length > 0
 }
 
-export const getSupplementalDataClient = async (patientId2: string | null): Promise < Client | undefined > => {
+export const getSupplementalDataClient = async (): Promise < Client | undefined > => {
   console.log('getSupplementalDataClient Start');
   let sdsClient: Client | undefined
   const authURL = process.env.REACT_APP_SHARED_DATA_AUTH_ENDPOINT
@@ -265,7 +265,7 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
           }
           console.error("getSupplementalDataClient FHIR.client(sdsFhirAccessDataObject) sdsClient = ", sdsClient)
       } else {
-          console.error("getSupplementalDataClient() authFhirAccessDataObject is null, cannot connect to client")
+          console.log("getSupplementalDataClient() authFhirAccessDataObject is currently null, cannot connect to client")
       }
   }
 
@@ -274,7 +274,6 @@ export const getSupplementalDataClient = async (patientId2: string | null): Prom
   // The program will always know at the most root level that this SDS is not useful, which may be better.
   // This includes that knowledge in ProviderLogin w/o the additional logic it has now to determine that.
 
-  console.error('getSupplementalDataClient End');
   return sdsClient
 }
 
@@ -848,7 +847,8 @@ const setAndLogNonTerminatingErrorMessageStateForResource = async (
     `Failure in getFHIRData retrieving ${resourceName} data.`, errorCaught)
 }
 export function createSharedDataResource(resource: Resource) {
-  return getSupplementalDataClient(null)
+  return getSupplementalDataClient()
+  
     .then((client: Client | undefined) => {
       // console.log('SDS client: ' + JSON.stringify(client))
       return client?.create(resource as fhirclient.FHIR.Resource)
@@ -860,37 +860,39 @@ export function createSharedDataResource(resource: Resource) {
 }
 
 
-export function updateSharedDataResource(resource: Resource,serverUrl?: string ) {
-  return getSupplementalDataClient(null)
-    .then((client: Client | undefined) => {
+export function updateSharedDataResource(  client : Client, resource: Resource,serverUrl?: string ) {
+
+  // return 
+    // .then((client: Client | undefined) => {
       try {
         if (serverUrl) {
           const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
-          const fhirHeaders = new Headers(); //
-          fhirHeaders.append('X-Partition-Name',serverUrl);
+          const fhirHeaders ={
+            'X-Partition-Name' :  serverUrl
+          };  
           fhirHeaderRequestOption.headers = fhirHeaders;
           return client?.update(resource as fhirclient.FHIR.Resource,fhirHeaderRequestOption)
         } else {
           return client?.update(resource as fhirclient.FHIR.Resource)
         }
       }
-      catch (err) {
-        console.error("Error updating shared data resource: " + JSON.stringify(resource))
+      catch (err) {     
         console.error("Error updating shared data resource: " + JSON.stringify(err))
+        return undefined
       }
-    })
-    .then((response) => {
-      return response
-    }).catch(error => {
-      console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
-      return undefined
-    })
+    // })
+    // .then((response) => {
+      // return response
+    // }).catch(error => {
+      // console.log('Cannot update shared data resource: ' + resource.resourceType + '/' + resource.id + ' error: ', error)
+      // return undefined
+    // })
 }
 
 export async function getSharedGoals(): Promise<Goal[]> {
   console.log("getSharedGoals()")
   var resources: Resource[] = []
-  var client = await getSupplementalDataClient(null)
+  var client = await getSupplementalDataClient()
   // console.log("Patient.id = " + client?.patient.id)
   await client?.patient.read()
   try {

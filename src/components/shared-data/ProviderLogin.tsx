@@ -69,7 +69,7 @@ export default function ProviderLogin(props: Props) {
   useEffect(() => {
     const fetchSdsClient = async () => {
       try {
-        let sdsClient: Client | undefined = await getSupplementalDataClient(null)
+        let sdsClient: Client | undefined = await getSupplementalDataClient()
         if (sdsClient) {
           const sdsMessageSuffix = "The SDS client will not be used."
           let isSDSReadError = false

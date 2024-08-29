@@ -209,14 +209,12 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                 </div>
 
             </div>
-
-
             <div>
-              { this.props.canShareData  ? (
+            { this.props.canShareData  ? (
                 <div>
                   <h5 style={{ paddingTop: '20px' }}>Share your health data</h5>
                   <Link to={{ pathname: '/share-data' }}>Share your health data</Link></div>
-              ) : (<p></p>)}
+                ) : (<p></p>)}
             </div>
 
 

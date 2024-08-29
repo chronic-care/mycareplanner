@@ -123,6 +123,9 @@ const tabList = {
 // TODO: Convert this to a hook based function component so it easier to profile for performance, analyze, and integrate
 class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
+
+
+
         super(props);
 
         this.state = {
@@ -152,7 +155,7 @@ class App extends React.Component<AppProps, AppState> {
             isLogout: false,
             sessionId: undefined,
         }
-
+        const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
         this.initializeSummaries()
     }
 
@@ -364,10 +367,10 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-        const tabHidden = await localforage.getItem('tabHidden');
-        if (tabHidden) {
-            await this.handleLogout();
-        }
+        // const tabHidden = await localforage.getItem('tabHidden');
+        // if (tabHidden) {
+            // await this.handleyarn ();
+        // }
     }
 
     handleVisibilityChange = () => {
@@ -423,6 +426,7 @@ class App extends React.Component<AppProps, AppState> {
 
                     // Ensure the app doesn't try to use this invalid client
                     this.setState({ supplementalDataClient: undefined })
+
                     this.setState({ canShareData: false })
                     // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
                 }
@@ -439,6 +443,7 @@ class App extends React.Component<AppProps, AppState> {
 
                 // Ensure the app doesn't try to use this invalid client
                 this.setState({ supplementalDataClient: undefined })
+
                 this.setState({ canShareData: false })
                 // TODO: What other issues might this cause... leftover localForage in getFhirData, etc.?
 
@@ -664,13 +669,13 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setSupplementalDataClient = async (patientId: string): Promise<Client | undefined> => {
-        console.log('setSupplementalDataClient()')
-        let client = await getSupplementalDataClient(patientId)
+
+        let client = await getSupplementalDataClient()
 
         // wait for client to get online to fix refresh issue
         var attempts = 0
         while (!client) {
-            client = await getSupplementalDataClient(patientId);
+            client = await getSupplementalDataClient();
             attempts++;
             if (attempts < 10) {
             break;
@@ -794,10 +799,10 @@ class App extends React.Component<AppProps, AppState> {
 
     private handleLogout = async () => {
         if (!this.state.isLogout) {
-            this.setState({ isLogout: true })
-            sessionStorage.clear()
-            await deleteAllDataFromLocalForage()
-            this.props.history.push('/logout')
+            // this.setState({ isLogout: true })
+            // sessionStorage.clear()
+            // await deleteAllDataFromLocalForage()
+            // this.props.history.push('/logout')
         }
     }
 
@@ -878,13 +883,7 @@ class App extends React.Component<AppProps, AppState> {
                     onLogout={this.handleLogout}
                     isLoggedOut={this.state.isLogout}
                 /> */}
-                <SessionTimeOutHandler
-                    onActive={() => { this.setState({ isActiveSession: true }) }}
-                    onIdle={() => { this.setState({ isActiveSession: false }) }}
-                    onLogout={this.handleLogout}
-                    isLoggedOut={this.state.isLogout}
-                    timeOutInterval={+process.env.REACT_APP_CLIENT_IDLE_TIMEOUT!}
-                />
+          
 
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
