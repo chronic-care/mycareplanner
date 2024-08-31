@@ -158,7 +158,7 @@ export default function ProviderLogin(props: Props) {
           }
 
         } else {
-          console.log("This endpoint is NOT authorized")
+          console.log("This endpoint is NOT authorized (ProviderLogin.tsx)")
           console.log("curEndpoint issServerUrl " + issServerUrl + " at index " + i +
             " and count " + (i + 1) + "/" + endpointsLength +
             " is NOT authorized.", curEndpoint)

@@ -67,6 +67,7 @@ import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
 import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
 import localforage from 'localforage';
+import AuthDialog from './components/modal/AuthDialog';
 
 interface AppProps extends RouteComponentProps {
 }
@@ -101,6 +102,10 @@ interface AppState {
     isActiveSession: boolean,
     isLogout: boolean,
     sessionId: string | undefined,
+
+    isAuthDialogOpen: boolean
+    isAuthorizeSelected: null | boolean
+    currentUnauthorizedEndpoint: ProviderEndpoint | null
 }
 
 type SummaryFunctionType = (fhirData?: FHIRData[]) =>
@@ -154,6 +159,10 @@ class App extends React.Component<AppProps, AppState> {
             isActiveSession: true,
             isLogout: false,
             sessionId: undefined,
+
+            isAuthDialogOpen: false,
+            isAuthorizeSelected: null,
+            currentUnauthorizedEndpoint: null
         }
         const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
         this.initializeSummaries()
@@ -280,8 +289,9 @@ class App extends React.Component<AppProps, AppState> {
                                         await this.loadSelectedEndpoints(endpointsToAuthorize)
                                     }
                                 } else {
-                                    console.log("This endpoint is NOT authorized")
-                                    console.log("curEndpoint issServerUrl " + issServerUrl + " at index " + i + " and count " + (i + 1) + "/" + endpointsLength +
+                                    console.log("This endpoint is NOT authorized (App.tsx)")
+                                    console.log("curEndpoint issServerUrl " + issServerUrl +
+                                        " at index " + i + " and count " + (i + 1) + "/" + endpointsLength +
                                         " is NOT authorized.", curEndpoint)
 
                                     // !FUNCTION DIFF!: NO need to save selected endpoints as they were already saved by ProviderLogin version of the code
@@ -301,17 +311,52 @@ class App extends React.Component<AppProps, AppState> {
                                     // console.log("selectedEndpointsToSave: ", JSON.stringify(selectedEndpointsToSave))
                                     // saveSelectedEndpoints(selectedEndpointsToSave)
 
-                                    console.log("Reauthorizing curEndpoint.config!:", curEndpoint.config!)
-                                    // The following authorization will exit the application. Therefore, if it's not the last index,
-                                    // then we will have more endpoints to authorize when we return, on load
-                                    if (isLastIndex) {
-                                        console.log("Authorizing last index")
+
+                                    // Before we leave the app to authorize, we require the user to agree that they want to.
+                                    // There are rare cases where they cannot successfully authorize, and this allows them to skip it in such cases
+                                    // See https://app.zenhub.com/workspaces/mcc-ecare-plan-6194203d780ab80016c8ac35/issues/gh/chronic-care/mcc-project/405
+                                    // Flow
+                                    // Ask the user to agree to authorization for a given endpoint
+                                    // If the user says yes:
+                                    // -Navigate externally and attempt to authorize (normal flow)
+                                    // If the user says no:
+                                    // -skip authorization and continue the loop instead
+                                    // Note: Did not remove selected endpoint from list (curEndpoint.config)
+                                    // as it ends up being removed through normal logic anyway
+
+                                    // Open the Auth Dialog and Wait for the user's decision
+                                    this.openAuthDialog(curEndpoint)
+                                    await new Promise<void>((resolve) => {
+                                        const checkUserDecision = () => {
+                                            if (this.state.isAuthorizeSelected !== null) { // null is the default
+                                                // User has made a decision
+                                                resolve()
+                                            } else {
+                                                // Check again in 50ms
+                                                setTimeout(checkUserDecision, 50)
+                                            }
+                                        };
+                                        checkUserDecision()
+                                    })
+
+                                    if (this.state.isAuthorizeSelected) {
+                                        console.log("Reauthorizing curEndpoint.config!:", curEndpoint.config!)
+                                        // The following authorization will exit the application. Therefore, if it's not the last index,
+                                        // then we will have more endpoints to authorize when we return, on load
+                                        if (isLastIndex) {
+                                            console.log("Authorizing last index")
+                                        } else {
+                                            console.log("Not last index, Authorizing index " + i)
+                                        }
+                                        this.handleAuthDialogClose()
+                                        FHIR.oauth2.authorize(curEndpoint.config!)
+                                        break
                                     } else {
-                                        console.log("Not last index, Authorizing index " + i)
+                                        console.log("User does not agree to authorization. Skipping authorization...")
+                                        this.handleAuthDialogClose()
+                                        continue
                                     }
 
-                                    FHIR.oauth2.authorize(curEndpoint.config!)
-                                    break
                                 } // end not authorized case
                             } else {
                                 throw new Error("Cannot create client and persist fhir client states and therefore cannot check authorization")
@@ -379,6 +424,24 @@ class App extends React.Component<AppProps, AppState> {
         } else {
             localforage.removeItem('tabHidden');
         }
+    }
+
+    openAuthDialog = (curEndpoint: ProviderEndpoint) => {
+        this.setState({ isAuthDialogOpen: true, currentUnauthorizedEndpoint: curEndpoint })
+    }
+
+    handleAuthDialogClose = () => {
+        this.setState({ isAuthDialogOpen: false, currentUnauthorizedEndpoint: null })
+    }
+
+    handleAuthorizeSelected = () => {
+        console.log('handleAuthorizeSelected()')
+        this.setState({ isAuthorizeSelected: true })
+    }
+
+    handleSkipAuthSelected = () => {
+        console.log('handleSkipAuthSelected()')
+        this.setState({ isAuthorizeSelected: false })
     }
 
     setLoadAndMergeSDSIfAvailable = async (launcherPatientId: string | undefined, launcherData: FHIRData) => {
@@ -879,11 +942,19 @@ class App extends React.Component<AppProps, AppState> {
         return (
             <div className="app">
 
+                <AuthDialog
+                    open={this.state.isAuthDialogOpen}
+                    currentUnauthorizedEndpoint={this.state.currentUnauthorizedEndpoint}
+                    handleClose={this.handleAuthDialogClose}
+                    handleAuthorizeSelected={this.handleAuthorizeSelected}
+                    handleSkipSelected={this.handleSkipAuthSelected}
+                />
+
                 {/* <SessionExpiredHandler
                     onLogout={this.handleLogout}
                     isLoggedOut={this.state.isLogout}
                 /> */}
-          
+
 
                 <header className="app-header" style={{ padding: '10px 16px 0px 16px' }}>
                     {/* <img className="mypain-header-logo" src={`${process.env.PUBLIC_URL}/assets/images/mpc-logo.png`} alt="MyPreventiveCare"/> */}
