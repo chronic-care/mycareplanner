@@ -34,6 +34,18 @@
     }
   ],
   "item": [
+		{
+			"linkId": "ach-housing",
+			"code": [
+				{
+					"code": "no-code",
+					"display": "No code"
+				}
+			],
+			"text": "Living Situation",
+			"type": "group",
+			"required": true,
+			"item": [
     {
       "linkId": "124296",
       "code": [
@@ -142,7 +154,20 @@
           }
         }
       ]
-    },
+    }
+  ]},
+  {
+    "linkId": "ach-food",
+    "code": [
+      {
+        "code": "no-code",
+        "display": "No code"
+      }
+    ],
+    "text": "Food",
+    "type": "group",
+    "required": true,
+    "item": [
     {
       "linkId": "123821",
       "code": [
@@ -216,7 +241,20 @@
           }
         }
       ]
-    },
+    }
+    ]},
+    {
+      "linkId": "ach-other-risks",
+      "code": [
+        {
+          "code": "no-code",
+          "display": "No code"
+        }
+      ],
+      "text": "Other Risks",
+      "type": "group",
+      "required": true,
+      "item": [
     {
       "linkId": "123823",
       "code": [
@@ -283,7 +321,20 @@
           }
         }
       ]
-    },
+    }
+  ]},
+  {
+    "linkId": "ach-safety",
+    "code": [
+      {
+        "code": "no-code",
+        "display": "No code"
+      }
+    ],
+    "text": "Safety",
+    "type": "group",
+    "required": true,
+    "item": [
     {
       "linkId": "123825",
       "code": [
@@ -487,11 +538,7 @@
           }
         }
       ]
-    },
-    {
-      "linkId": "123829",
-      "text": "Safety total score",
-      "type": "decimal"
     }
   ]
 }
+]}
