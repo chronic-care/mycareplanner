@@ -1,7 +1,7 @@
 {
     "resourceType": "Questionnaire",
     "id": "questionnaire-caregiver-strain-index",
-    "url": "http://hl7.org/Questionnaire/caregiver-strain-index",
+    "url": "http://hl7.org/fhir/us/mcc/Questionnaire/caregiver-strain-index",
     "name": "Caregiver_Strain_Index",
     "title": "Caregiver Strain Index",
     "status": "draft",
