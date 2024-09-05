@@ -1,0 +1,544 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "96777-8",
+  "meta": {
+    "versionId": "7",
+    "lastUpdated": "2024-08-06T21:03:46.493+00:00",
+    "source": "#WEjguR255B3Y7qmH"
+  },
+  "url": "http://loinc.org/q/96777-8",
+  "name": "Accountable_health_communities_health_related_social_needs_screening_tool",
+  "title": "Accountable health communities health-related social needs screening tool",
+  "status": "draft",
+  "subjectType": [
+    "Patient"
+  ],
+  "publisher": "Regenstrief Institute, Inc.",
+  "contact": [
+    {
+      "name": "Regenstrief Institute, Inc.",
+      "telecom": [
+        {
+          "system": "url",
+          "value": "http://loinc.org"
+        }
+      ]
+    }
+  ],
+  "copyright": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee. All rights reserved. LOINC is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.\r\nCopyright © 2005 Kevin Sherin, M.D. Used with permission",
+  "code": [
+    {
+      "system": "http://loinc.org",
+      "code": "96777-8",
+      "display": "Accountable health communities health-related social needs screening tool"
+    }
+  ],
+  "item": [
+		{
+			"linkId": "ach-housing",
+			"code": [
+				{
+					"code": "no-code",
+					"display": "No code"
+				}
+			],
+			"text": "Living Situation",
+			"type": "group",
+			"required": true,
+			"item": [
+    {
+      "linkId": "124296",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "71802-3",
+          "display": "What is your living situation today?"
+        }
+      ],
+      "prefix": "1",
+      "text": "What is your living situation today?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31993-1",
+            "display": "I have a steady place to live"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31994-9",
+            "display": "I have a place to live today, but I am worried about losing it in the future"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31995-6",
+            "display": "I do not have a steady place to live (I am temporarily staying with others, in a hotel, in a shelter, living outside on the street, on a beach, in a car, abandoned building, bus or train station, or in a park)"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123820",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "96778-6",
+          "display": "Think about the place you live. Do you have problems with any of the following?"
+        }
+      ],
+      "prefix": "2",
+      "text": "Think about the place you live. Do you have problems with any of the following?",
+      "type": "choice",
+      "repeats": true,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31996-4",
+            "display": "Pests such as bugs, ants, or mice"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA28580-1",
+            "display": "Mold"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31997-2",
+            "display": "Lead paint or pipes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31998-0",
+            "display": "Lack of heat"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA31999-8",
+            "display": "Oven or stove not working"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA32000-4",
+            "display": "Smoke detectors missing or not working"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA32001-2",
+            "display": "Water leaks"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA9-3",
+            "display": "None of the above"
+          }
+        }
+      ]
+    }
+  ]},
+  {
+    "linkId": "ach-food",
+    "code": [
+      {
+        "code": "no-code",
+        "display": "No code"
+      }
+    ],
+    "text": "Food",
+    "type": "group",
+    "required": true,
+    "item": [
+    {
+      "linkId": "123821",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "88122-7",
+          "display": "Within the past 12 months, you worried that your food would run out before you got money to buy more"
+        }
+      ],
+      "prefix": "3",
+      "text": "Within the past 12 months, you worried that your food would run out before you got money to buy more",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA28397-0",
+            "display": "Often true"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6729-3",
+            "display": "Sometimes true"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA28398-8",
+            "display": "Never true"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123822",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "88123-5",
+          "display": "Within the past 12 months, the food you bought just didn't last and you didn't have money to get more"
+        }
+      ],
+      "prefix": "4",
+      "text": "Within the past 12 months, the food you bought just didn't last and you didn't have money to get more",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA28397-0",
+            "display": "Often true"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6729-3",
+            "display": "Sometimes true"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA28398-8",
+            "display": "Never true"
+          }
+        }
+      ]
+    }
+    ]},
+    {
+      "linkId": "ach-other-risks",
+      "code": [
+        {
+          "code": "no-code",
+          "display": "No code"
+        }
+      ],
+      "text": "Other Risks",
+      "type": "group",
+      "required": true,
+      "item": [
+    {
+      "linkId": "123823",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "93030-5",
+          "display": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work or from getting things needed for daily living?"
+        }
+      ],
+      "prefix": "5",
+      "text": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work or from getting things needed for daily living?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA33-6",
+            "display": "Yes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA32-8",
+            "display": "No"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123824",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "96779-4",
+          "display": "In the past 12 months has the electric, gas, oil, or water company threatened to shut off services in your home?"
+        }
+      ],
+      "prefix": "6",
+      "text": "In the past 12 months has the electric, gas, oil, or water company threatened to shut off services in your home?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA33-6",
+            "display": "Yes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA32-8",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA32002-0",
+            "display": "Already shut off"
+          }
+        }
+      ]
+    }
+  ]},
+  {
+    "linkId": "ach-safety",
+    "code": [
+      {
+        "code": "no-code",
+        "display": "No code"
+      }
+    ],
+    "text": "Safety",
+    "type": "group",
+    "required": true,
+    "item": [
+    {
+      "linkId": "123825",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "95618-5",
+          "display": "How often does anyone, including family and friends, physically hurt you?"
+        }
+      ],
+      "prefix": "7",
+      "text": "How often does anyone, including family and friends, physically hurt you?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6270-8",
+            "display": "Never"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10066-1",
+            "display": "Rarely"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10082-8",
+            "display": "Sometimes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA16644-9",
+            "display": "Fairly often"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6482-9",
+            "display": "Frequently"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123826",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "95617-7",
+          "display": "How often does anyone, including family and friends, insult or talk down to you?"
+        }
+      ],
+      "prefix": "8",
+      "text": "How often does anyone, including family and friends, insult or talk down to you?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6270-8",
+            "display": "Never"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10066-1",
+            "display": "Rarely"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10082-8",
+            "display": "Sometimes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA16644-9",
+            "display": "Fairly often"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6482-9",
+            "display": "Frequently"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123827",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "95616-9",
+          "display": "How often does anyone, including family and friends, threaten you with harm?"
+        }
+      ],
+      "prefix": "9",
+      "text": "How often does anyone, including family and friends, threaten you with harm?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6270-8",
+            "display": "Never"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10066-1",
+            "display": "Rarely"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10082-8",
+            "display": "Sometimes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA16644-9",
+            "display": "Fairly often"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6482-9",
+            "display": "Frequently"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "123828",
+      "code": [
+        {
+          "system": "http://loinc.org",
+          "code": "95615-1",
+          "display": "How often does anyone, including family and friends, scream or curse at you?"
+        }
+      ],
+      "prefix": "10",
+      "text": "How often does anyone, including family and friends, scream or curse at you?",
+      "type": "choice",
+      "repeats": false,
+      "answerOption": [
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6270-8",
+            "display": "Never"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10066-1",
+            "display": "Rarely"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA10082-8",
+            "display": "Sometimes"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA16644-9",
+            "display": "Fairly often"
+          }
+        },
+        {
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LA6482-9",
+            "display": "Frequently"
+          }
+        }
+      ]
+    }
+  ]
+}
+]}

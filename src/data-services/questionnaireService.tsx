@@ -36,6 +36,7 @@ export function getQuestionnaire(serverUrl: any, questionnaireID: string) {
 export function submitQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
     return getSupplementalDataClient()
         .then((client: Client | undefined) => {
+            // console.log(JSON.stringify(questionnaireResponse))
             // @ts-ignore
             return client.create(questionnaireResponse)
         })
