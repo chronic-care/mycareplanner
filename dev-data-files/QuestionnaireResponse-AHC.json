@@ -3,89 +3,18 @@
     "status": "completed",
     "item": [
         {
-            "linkId": "ach-safety",
-            "text": "Safety",
+            "linkId": "ach-housing",
+            "text": "Living Situation",
             "item": [
                 {
-                    "linkId": "123825",
-                    "text": "7: How often does anyone, including family and friends, physically hurt you?",
+                    "linkId": "124296",
+                    "text": "1: What is your living situation today?",
                     "answer": [
                         {
                             "valueCoding": {
                                 "system": "http://loinc.org",
-                                "code": "LA10066-1",
-                                "display": "Rarely"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "linkId": "123826",
-                    "text": "8: How often does anyone, including family and friends, insult or talk down to you?",
-                    "answer": [
-                        {
-                            "valueCoding": {
-                                "system": "http://loinc.org",
-                                "code": "LA10082-8",
-                                "display": "Sometimes"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "linkId": "123828",
-                    "text": "10: How often does anyone, including family and friends, scream or curse at you?",
-                    "answer": [
-                        {
-                            "valueCoding": {
-                                "system": "http://loinc.org",
-                                "code": "LA6482-9",
-                                "display": "Frequently"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "linkId": "123827",
-                    "text": "9: How often does anyone, including family and friends, threaten you with harm?",
-                    "answer": [
-                        {
-                            "valueCoding": {
-                                "system": "http://loinc.org",
-                                "code": "LA10082-8",
-                                "display": "Sometimes"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "linkId": "ach-other-risks",
-            "text": "Other Risks",
-            "item": [
-                {
-                    "linkId": "123823",
-                    "text": "5: In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work or from getting things needed for daily living?",
-                    "answer": [
-                        {
-                            "valueCoding": {
-                                "system": "http://loinc.org",
-                                "code": "LA33-6",
-                                "display": "Yes"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "linkId": "123824",
-                    "text": "6: In the past 12 months has the electric, gas, oil, or water company threatened to shut off services in your home?",
-                    "answer": [
-                        {
-                            "valueCoding": {
-                                "system": "http://loinc.org",
-                                "code": "LA32-8",
-                                "display": "No"
+                                "code": "LA31995-6",
+                                "display": "I do not have a steady place to live (I am temporarily staying with others, in a hotel, in a shelter, living outside on the street, on a beach, in a car, abandoned building, bus or train station, or in a park)"
                             }
                         }
                     ]
@@ -125,18 +54,18 @@
             ]
         },
         {
-            "linkId": "ach-housing",
-            "text": "Living Situation",
+            "linkId": "ach-safety",
+            "text": "Safety",
             "item": [
                 {
-                    "linkId": "124296",
-                    "text": "1: What is your living situation today?",
+                    "linkId": "123827",
+                    "text": "9: How often does anyone, including family and friends, threaten you with harm?",
                     "answer": [
                         {
                             "valueCoding": {
                                 "system": "http://loinc.org",
-                                "code": "LA31994-9",
-                                "display": "I have a place to live today, but I am worried about losing it in the future"
+                                "code": "LA10082-8",
+                                "display": "Sometimes"
                             }
                         }
                     ]
@@ -144,9 +73,18 @@
             ]
         }
     ],
+    "questionnaire": "http://loinc.org/q/96777-8",
     "subject": {},
     "author": {},
-    "authored": "2024-09-05T09:34:52-06:00",
+    "authored": "2024-09-05T13:32:23-06:00",
+    "_questionnaire": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/display",
+                "valueString": "AHC Health Related Social Needs Screening"
+            }
+        ]
+    },
     "meta": {
         "versionId": "7",
         "lastUpdated": "2024-08-06T21:03:46.493+00:00",

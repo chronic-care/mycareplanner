@@ -1,0 +1,106 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed",
+    "item": [
+        {
+            "linkId": "physical-function",
+            "text": "Physical Function",
+            "item": [
+                {
+                    "linkId": "47202",
+                    "text": "Are you able to do chores such as vacuuming or yard work?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13921-4",
+                                "display": "Without any difficulty"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47204",
+                    "text": "Are you able to go for a walk of at least 15 minutes?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13919-8",
+                                "display": "With much difficulty"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "anxiety",
+            "text": "Anxiety",
+            "item": [
+                {
+                    "linkId": "47207",
+                    "text": "In the past 7 days - I found it hard to focus on anything other than my anxiety",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10044-8",
+                                "display": "Often"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47209",
+                    "text": "In the past 7 days - I felt uneasy",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA9933-8",
+                                "display": "Always"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "pain-intensity",
+            "text": "Pain Intensity",
+            "item": [
+                {
+                    "linkId": "47230",
+                    "text": "In the past 7 days - How would you rate your pain on average?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10138-8",
+                                "display": "6"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "questionnaire": "http://loinc.org/q/62337-1",
+    "subject": {},
+    "author": {},
+    "authored": "2024-09-05T13:34:36-06:00",
+    "_questionnaire": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/display",
+                "valueString": "PROMIS item bank - 29 profile"
+            }
+        ]
+    },
+    "meta": {
+        "versionId": "4",
+        "lastUpdated": "2022-04-13T19:47:22.495+00:00",
+        "source": "#4Q75pMeTbscwKKwf"
+    }
+}
