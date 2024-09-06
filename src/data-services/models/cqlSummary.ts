@@ -117,5 +117,11 @@ export interface ObservationSummary {
   Performer?: string,
   Notes?: string[],
   Provenance?: ProvenanceSummary[],
-  LearnMore?: string
+  LearnMore?: string,
+  History?: ObservationHistory[]
+}
+
+export interface ObservationHistory {
+  Date?: string,
+  ResultText: string,
 }

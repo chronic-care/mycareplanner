@@ -1,6 +1,6 @@
 import '../../Home.css';
 import React, { FC, useState, useEffect } from 'react';
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { FHIRData, displayDate, displayDateTime } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
@@ -169,7 +169,7 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
       isHeader: false,
       twoColumns: true,
       data1: obs.ResultText,
-      data2: displayDate(obs.Date),
+      data2: obs.DisplayName == 'Home Blood Pressure' ? displayDateTime(obs.Date) : displayDate(obs.Date),
     },
     {
       isHeader: false,
@@ -212,6 +212,18 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
       data2: '',
     }
     rows.push(source)
+  }
+
+  const history: SummaryRowItems | undefined = obs.History?.map((history) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: history.ResultText,
+      data2: obs.DisplayName == 'Home Blood Pressure' ? displayDateTime(history.Date) : displayDate(history.Date),
+    }
+  ))
+  if (history?.length) {
+    rows = rows.concat(history)
   }
 
   return rows;
