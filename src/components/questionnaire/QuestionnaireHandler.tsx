@@ -190,6 +190,13 @@ export class QuestionnaireHandler extends React.Component<QuestionnaireHandlerPr
         resourceType: state.questionnaireResponse.resourceType,
         authored: this.getCurrentDate(),
         status: "completed",
+        questionnaire: this.state.selectedQuestionnaire?.url ?? "unknown",
+        _questionnaire: {
+          "extension" : [{
+            "url" : "http://hl7.org/fhir/StructureDefinition/display",
+            "valueString" : this.state.selectedQuestionnaire?.title ?? "Assessment"
+          }]
+        },
         meta: this.state.selectedQuestionnaire?.meta,
         item: state.questionnaireResponse.item
       };

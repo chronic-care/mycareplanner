@@ -146,12 +146,12 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   // codes are ordered by preference for presentation: BP, Heart rate, O2 sat, temp, weight, height, BMI
   // const vitalsCodes = ['85354-9', '8867-4', '59408-5', '2708-6', '8310-5', '29463-7', '8302-2', '39156-5']
   // codes are ordered by preference for presentation: BP, O2 sat, temp, weight, height, BMI
-  const vitalsCodes = ['85354-9', '59408-5', '8310-5', '29463-7', '8302-2', '39156-5']
+  const vitalsCodes = ['85354-9', '8867-4', '59408-5', '8310-5', '29463-7', '8302-2', '39156-5']
   const queryPaths = vitalsCodes.map(code => {
     // Issue: UCHealth returns 400 error if include both category and code.
     // return 'Observation?category=vital-signs&code=http://loinc.org|' + code + '&_sort:desc=date&_count=1'
     // return 'Observation?code=http://loinc.org|' + code + '&_sort:desc=date&_count=1' + provenanceSearch
-    return 'Observation?code=http://loinc.org|' + code + '&_count=5' + provenanceSearch
+    return 'Observation?code=http://loinc.org|' + code + '&_count=10' + provenanceSearch
   })
 
   // await can be used only at top-level within a function, cannot use queryPaths.forEach()
@@ -161,7 +161,7 @@ export async function getVitalSigns(client: Client): Promise<Observation[]> {
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[3], onePageLimit) as fhirclient.JsonObject) as Observation[])
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[4], onePageLimit) as fhirclient.JsonObject) as Observation[])
   resources = resources.concat(resourcesFrom(await client.patient.request(queryPaths[5], onePageLimit) as fhirclient.JsonObject) as Observation[] )
-  // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[6], onePageLimit) as fhirclient.JsonObject) as Observation[] )
+  resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[6], onePageLimit) as fhirclient.JsonObject) as Observation[] )
   // resources = resources.concat( resourcesFrom(await client.patient.request(queryPaths[7], onePageLimit) as fhirclient.JsonObject) as Observation[] )
 
   // One year of history for Home BP vitals, which are returned as separate systolic and diastolic Observation resources.

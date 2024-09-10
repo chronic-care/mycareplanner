@@ -11,28 +11,16 @@ context Patient
 // View summary tuple for each vital sign data element
 define VitalSignsSummary: 
   (List {
-    DE.ReportObservation(VitalSigns.BloodPressure, 'Blood Pressure'),
-    First(ReportHomeBP()),
-    DE.ReportObservation(VitalSigns.BodyHeight, 'Height'),
-    DE.ReportObservation(VitalSigns.BodyWeight, 'Weight'),
-    DE.ReportObservation(VitalSigns.BodyMassIndex, 'BMI'),
-    DE.ReportObservation(VitalSigns.BodyTemperature, 'Temperature'),
-    DE.ReportObservation(VitalSigns.HeartRate, 'Heart Rate'),
-    DE.ReportObservation(VitalSigns.OxygenSaturation, 'Oxygen Saturation'),
-    DE.ReportObservation(VitalSigns.RespiratoryRate, 'Respiratory Rate')
+    DE.ReportHistory("Blood pressure", 'Blood Pressure'),
+    ReportHomeBP,
+    DE.ReportHistory("Body Height Observations", 'Height'),
+    DE.ReportHistory("Body Weight Observations", 'Weight'),
+    DE.ReportHistory("Body Mass Index Observations", 'BMI'),
+    DE.ReportHistory("Body Temperature Observations", 'Temperature'),
+    DE.ReportHistory("Heart Rate Observations", 'Heart Rate'),
+    DE.ReportHistory("Oxygen Saturation Observations", 'Oxygen Saturation'),
+    DE.ReportHistory("Respiratory Rate Observations", 'Respiratory Rate')
   }) Result where Result is not null
-
-// Most recent FHIR Observation for each vital sign data element.
-define VitalSigns: {
-  BloodPressure: DE.MostRecent("Blood pressure"),
-  BodyHeight: DE.MostRecent("Body Height Observations"),
-  BodyWeight: DE.MostRecent("Body Weight Observations"),
-  BodyMassIndex: DE.MostRecent("Body Mass Index Observations"),
-  BodyTemperature: DE.MostRecent("Body Temperature Observations"),
-  HeartRate: DE.MostRecent("Heart Rate Observations"),
-  OxygenSaturation: DE.MostRecent("Oxygen Saturation Observations"),
-  RespiratoryRate: DE.MostRecent("Respiratory Rate Observations")
-}
 
 // Vital Sign FHIR Observations sorted in descending order by issue date.
 
@@ -66,12 +54,12 @@ that are returned as separate observations.
 */
 
 define "Systolic Blood Pressure":
-  SortDescending( [Observation: Cx."Systolic blood pressure"]
+  DE.SortDescending( [Observation: Cx."Systolic blood pressure"]
     union [Observation: Cx."Epic POC Home Systolic blood pressure"]
     union [Observation: Cx."Epic PROD Home Systolic blood pressure"])
 
 define "Diastolic Blood Pressure":
-  SortDescending([Observation: Cx."Diastolic blood pressure"]
+  DE.SortDescending([Observation: Cx."Diastolic blood pressure"]
     union [Observation: Cx."Epic POC Home Diastolic blood pressure"]
     union [Observation: Cx."Epic PROD Home Diastolic blood pressure"])
 
@@ -98,17 +86,8 @@ define function MatchingDiastolic(systolicBP FHIR.Observation):
       where (diastolicBP.effective as FHIR.dateTime) = (systolicBP.effective as FHIR.dateTime)
   )
 
-define function SortDescending(observations List<Observation>):
-  observations O
-    // Note: Cannot use FindDate() because execution engine cannot sort by result of a function.
-    sort by Coalesce(
-      (effective as FHIR.dateTime).value,
-      (effective as FHIR.instant).value,
-      (effective as FHIR.Period)."end".value,
-      (effective as FHIR.Period)."start".value) descending
-
-define function ReportHomeBP():
-  "Combined Blood Pressure Observations" bp
+define ReportHomeBP:
+  FirstHomeBP bp
     return {
       DisplayName: 'Home Blood Pressure',
       ConceptName: null,
@@ -122,5 +101,20 @@ define function ReportHomeBP():
       Performer: bp.Performer,
       Notes: bp.Notes,
       Provenance: bp.Provenance,
-      LearnMore: null
+      LearnMore: null,
+      History: HomeBPHistory
     }
+
+define HomeBPHistory:
+  RemainingHomeBP bp
+    return {
+      Date: ToString(bp.Date),
+      ResultText: bp.Display
+    }
+
+define FirstHomeBP:
+  First("Combined Blood Pressure Observations")
+
+define RemainingHomeBP:
+  "Combined Blood Pressure Observations" bp
+    where bp.Date != FirstHomeBP.Date

@@ -139,12 +139,6 @@ define function ReportMedication(medReq MedicationRequest, category String):
     LearnMore: LearnMoreURL(medReq.medication as CodeableConcept)
   }
 
-define function ReportMostRecentResult(observations List<Observation>):
-  ReportObservation(MostRecent(observations), null)
-
-define function ReportMostRecentResult(observations List<Observation>, displayName String):
-  ReportObservation(MostRecent(observations), displayName)
-
 // BUG: this works in VSCode but returns null in JavaScript execution.
 // define function SelectActiveConditions(conditions List<Condition>):
 //   conditions Cond
@@ -181,23 +175,34 @@ define function FindObservations(code FHIR.CodeableConcept):
         or exists o.component c
           where c.code ~ FHIRHelpers.ToCode(code.coding[0])
 
-define function ReportObservation(o FHIR.Observation, displayName String):
-  if o is null then null
+define function ReportHistory(observations List<Observation>, displayName String):
+  if not exists observations then null
   else
-    {
-      DisplayName: displayName,                                   // patient-friendly display name
-      ConceptName:   ConceptText(o.code),                         // display nanme from code
-      Date:   ToString(FindDate(o)),
-      ResultText: ResultText(o),         // result value with units
-      ResultValue: if (o.value as FHIR.Quantity) is not null then System.Quantity { value: (o.value as FHIR.Quantity).value}.value else null,
-      ResultUnits: (o.value as FHIR.Quantity).unit.value,
-      ReferenceRange: ReferenceRange(o),
-      Interpretation: Interpretation(o),
-      Flag: if (o.value is FHIR.Quantity) then ReferenceRangeFlag(o) else null,   // true if value out of range, else false
-      Performer: First(o.performer).display.value,
-      Notes: ToString(o.note),
-      Provenance: ReportProvenance(o),
-      LearnMore: LearnMoreURL(o.code)
+    ReportObservations(MostRecent(observations), SortDescending(observations), displayName)
+
+define function ReportObservations(o Observation, history List<Observation>, displayName String):
+  {
+    DisplayName: displayName,                                   // patient-friendly display name
+    ConceptName:   ConceptText(o.code),                         // display nanme from code
+    Date:   ToString(FindDate(o)),
+    ResultText: ResultText(o),         // result value with units
+    ResultValue: if (o.value as FHIR.Quantity) is not null then System.Quantity { value: (o.value as FHIR.Quantity).value}.value else null,
+    ResultUnits: (o.value as FHIR.Quantity).unit.value,
+    ReferenceRange: ReferenceRange(o),
+    Interpretation: Interpretation(o),
+    Flag: if (o.value is FHIR.Quantity) then ReferenceRangeFlag(o) else null,   // true if value out of range, else false
+    Performer: First(o.performer).display.value,
+    Notes: ToString(o.note),
+    Provenance: ReportProvenance(o),
+    LearnMore: LearnMoreURL(o.code),
+    History: ReportObservationHistory(history except {o})
+  }
+
+define function ReportObservationHistory(observations List<Observation>):
+  observations obs
+    return {
+      Date: ToString(FindDate(obs)),
+      ResultText: ResultText(obs)
     }
 
 define function ResultText(o Observation):
@@ -217,16 +222,17 @@ define function SelectByStatus(observations List<Observation>):
 	where Obs.status in {'final', 'amended', 'corrected', 'preliminary'}
 
 define function MostRecent(observations List<Observation>):
-  First(
-    observations O
-      // Note: Cannot use FindDate() because execution engine cannot sort by result of a function.
-      sort by Coalesce(
-        (effective as FHIR.dateTime).value,
-        (effective as FHIR.instant).value,
-        (effective as FHIR.Period)."end".value,
-        (effective as FHIR.Period)."start".value,
-        issued.value) descending
-  )
+  First(SortDescending(observations))
+
+define function SortDescending(observations List<Observation>):
+  observations O
+    // Note: Cannot use FindDate() because execution engine cannot sort by result of a function.
+    sort by Coalesce(
+      (effective as FHIR.dateTime).value,
+      (effective as FHIR.instant).value,
+      (effective as FHIR.Period)."end".value,
+      (effective as FHIR.Period)."start".value,
+      issued.value) descending
 
 define function IssuedWithin(observations List<Observation>, lookback System.Quantity):
   observations O

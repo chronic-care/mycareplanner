@@ -1,0 +1,63 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed",
+    "item": [
+        {
+            "linkId": "q1",
+            "text": "Sleep is disturbed (e.g., because . . . is in and out of bed or wanders around at night)",
+            "answer": [
+                {
+                    "valueBoolean": true
+                }
+            ]
+        },
+        {
+            "linkId": "q2",
+            "text": "It is inconvenient (e.g., because helping takes so much time or it’s a long drive over to help)",
+            "answer": [
+                {
+                    "valueBoolean": false
+                }
+            ]
+        },
+        {
+            "linkId": "q3",
+            "text": "It is a physical strain (e.g., because of lifting in and out of a chair; effort or concentration is required)",
+            "answer": [
+                {
+                    "valueBoolean": true
+                }
+            ]
+        },
+        {
+            "linkId": "q4",
+            "text": "It is confining (e.g., helping restricts free time or cannot go visiting)",
+            "answer": [
+                {
+                    "valueBoolean": true
+                }
+            ]
+        },
+        {
+            "linkId": "q6",
+            "text": "There have been changes in personal plans (e.g., had to turn down a job; could not go on vacation)",
+            "answer": [
+                {
+                    "valueBoolean": false
+                }
+            ]
+        }
+    ],
+    "questionnaire": "http://hl7.org/fhir/us/mcc/Questionnaire/caregiver-strain-index",
+    "subject": {},
+    "author": {},
+    "authored": "2024-09-05T13:57:36-06:00",
+    "_questionnaire": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/display",
+                "valueString": "Caregiver Strain Index"
+            }
+        ]
+    }
+}

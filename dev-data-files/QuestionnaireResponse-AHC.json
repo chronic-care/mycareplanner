@@ -1,0 +1,93 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed",
+    "item": [
+        {
+            "linkId": "ach-housing",
+            "text": "Living Situation",
+            "item": [
+                {
+                    "linkId": "124296",
+                    "text": "1: What is your living situation today?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA31995-6",
+                                "display": "I do not have a steady place to live (I am temporarily staying with others, in a hotel, in a shelter, living outside on the street, on a beach, in a car, abandoned building, bus or train station, or in a park)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "ach-food",
+            "text": "Food",
+            "item": [
+                {
+                    "linkId": "123821",
+                    "text": "3: Within the past 12 months, you worried that your food would run out before you got money to buy more",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA6729-3",
+                                "display": "Sometimes true"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "123822",
+                    "text": "4: Within the past 12 months, the food you bought just didn't last and you didn't have money to get more",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA28397-0",
+                                "display": "Often true"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "ach-safety",
+            "text": "Safety",
+            "item": [
+                {
+                    "linkId": "123827",
+                    "text": "9: How often does anyone, including family and friends, threaten you with harm?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10082-8",
+                                "display": "Sometimes"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "questionnaire": "http://loinc.org/q/96777-8",
+    "subject": {},
+    "author": {},
+    "authored": "2024-09-05T13:32:23-06:00",
+    "_questionnaire": {
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/StructureDefinition/display",
+                "valueString": "AHC Health Related Social Needs Screening"
+            }
+        ]
+    },
+    "meta": {
+        "versionId": "7",
+        "lastUpdated": "2024-08-06T21:03:46.493+00:00",
+        "source": "#WEjguR255B3Y7qmH"
+    }
+}

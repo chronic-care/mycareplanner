@@ -224,5 +224,17 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
     rows.push(source)
   }
 
+  const history: SummaryRowItems | undefined = obs.History?.map((history) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: history.ResultText,
+      data2: displayDate(history.Date),
+    }
+  ))
+  if (history?.length) {
+    rows = rows.concat(history)
+  }
+
   return rows;
 }
