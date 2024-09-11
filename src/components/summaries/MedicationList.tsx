@@ -170,20 +170,28 @@ const buildRows = (med: MedicationSummary, theSource?: string): SummaryRowItems 
             (event) => { event.preventDefault(); window.open(med.LearnMore); }
           }><i>Learn&nbsp;More</i>
         </Link>,
-    },
-    {
+    }
+  ]
+
+  if (med.Requester || med.AuthoredOn) {
+    const requester: SummaryRowItem = {
       isHeader: false,
       twoColumns: true,
-      data1: displayDate(med.AuthoredOn),
-      data2: 'By: ' + (med.Requester ?? 'Unknown'),
-    },
-    {
+      data1: med.AuthoredOn ? 'Ordered On: ' + displayDate(med.AuthoredOn) : '',
+      data2: med.Requester ? 'By: ' + (med.Requester) : '',
+    }
+    rows.push(requester)
+  }
+
+  if (med.DosageInstruction) {
+    const requester: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
       data1: med.DosageInstruction,
       data2: '',
-    },
-  ];
+    }
+    rows.push(requester)
+  }
 
   const notes: SummaryRowItems | undefined = med.Notes?.map((note) => (
     {

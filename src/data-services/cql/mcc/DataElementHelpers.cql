@@ -131,7 +131,7 @@ define function ReportMedication(medReq MedicationRequest, category String):
     Category: category,
     ConceptName: Coalesce(ConceptText(medReq.medication as CodeableConcept), (medReq.medication as Reference).display.value),
     AuthoredOn: ToString(medReq.authoredOn),
-    Requester: medReq.requester.display.value,
+    Requester: Coalesce(FullName(ResolvePractitioner(medReq.requester)), medReq.requester.display.value),
     // DosageInstruction: Coalesce(First(medReq.dosageInstruction).text.value, First(medReq.dosageInstruction).patientInstruction.value),
     DosageInstruction: First(medReq.dosageInstruction).patientInstruction.value,
     Notes: ToString(medReq.note),
@@ -174,6 +174,12 @@ define function FindObservations(code FHIR.CodeableConcept):
       where o.code ~ FHIRHelpers.ToCode(code.coding[0])
         or exists o.component c
           where c.code ~ FHIRHelpers.ToCode(code.coding[0])
+
+define function ReportMostRecentResult(observations List<Observation>):
+  ReportObservations(MostRecent(observations), observations, null)
+
+define function ReportMostRecentResult(observations List<Observation>, displayName String):
+  ReportObservations(MostRecent(observations), observations, displayName)
 
 define function ReportHistory(observations List<Observation>, displayName String):
   if not exists observations then null
@@ -293,6 +299,35 @@ define function FindOnsetDate(Cond Condition):
 /*
  * General FHIR data helpers.
  */
+
+// Returns full name preferring 'official' use, if available.
+define function FullName(practitioner Practitioner):
+  ( Coalesce(GetNameUse(practitioner, 'official'),
+    GetNameUse(practitioner, 'usual'),
+    practitioner.name[0]) ) Name
+  return Coalesce(Name.text.value,
+   (Combine(Name.given G return G.value, ' ') + ' ' + Name.family.value)
+  )
+
+define function GetNameUse(practitioner Practitioner, use String):
+  First((practitioner.name N where N.use.value = use) Name
+    return Name
+  )
+
+// Returns the first Practitioner, or null
+define function FirstPractitioner(references List<Reference>):
+  First(ResolvePractitioners(references))
+
+define function ResolvePractitioners(references List<Reference>):
+  flatten( references ref
+    return [Practitioner] resource
+      where resource.id = GetId(ref.reference)
+  )
+
+define function ResolvePractitioner(ref Reference):
+  First( [Practitioner] resource
+    where resource.id = GetId(ref.reference)
+  )
 
 define function GetId(uri String ):
   Last(Split(uri, '/'))

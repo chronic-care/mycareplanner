@@ -3,7 +3,7 @@ import cql from 'cql-execution';
 // @ts-ignore
 import cqlfhir from 'cql-exec-fhir';
 
-import { Resource } from './fhir-types/fhir-r4';
+import { Resource, Practitioner } from './fhir-types/fhir-r4';
 import { FHIRData } from './models/fhirResources';
 import { ConditionSummary, GoalSummary, MedicationSummary, ObservationSummary } from './models/cqlSummary';
 
@@ -15,6 +15,10 @@ function getBundleEntries(resources?: Resource[]) {
 }
 
 function getPatientSource(data: FHIRData): unknown {
+  const practitioners: Practitioner[] = []
+  data.resourceRequesters?.forEach((practitioner, id) =>
+    practitioners.concat(practitioner)
+  )
   const fhirBundle = {
     resourceType: 'Bundle',
     entry: [{ resource: data.patient }, { resource: data.patientPCP },
@@ -26,6 +30,7 @@ function getPatientSource(data: FHIRData): unknown {
     ...getBundleEntries(data.surveyResults),
     ...getBundleEntries(data.goals),
     ...getBundleEntries(data.provenance),
+    ...getBundleEntries(practitioners),
     ]
   }
 

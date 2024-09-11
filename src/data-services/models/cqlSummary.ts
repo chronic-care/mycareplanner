@@ -99,6 +99,7 @@ export interface MedicationSummary {
   AuthoredOn?: string,
   Requester?: string,
   DosageInstruction?: string,
+  Reason?: string,
   Notes?: string[],
   Provenance?: ProvenanceSummary[],
   LearnMore?: string
