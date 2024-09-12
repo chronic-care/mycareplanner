@@ -134,10 +134,26 @@ define function ReportMedication(medReq MedicationRequest, category String):
     Requester: Coalesce(FullName(ResolvePractitioner(medReq.requester)), medReq.requester.display.value),
     // DosageInstruction: Coalesce(First(medReq.dosageInstruction).text.value, First(medReq.dosageInstruction).patientInstruction.value),
     DosageInstruction: First(medReq.dosageInstruction).patientInstruction.value,
+    Reasons: MedicationReasons(medReq),
     Notes: ToString(medReq.note),
     Provenance: ReportProvenance(medReq),
     LearnMore: LearnMoreURL(medReq.medication as CodeableConcept)
   }
+
+define function MedicationReasons(medReq MedicationRequest):
+  ConceptDisplayNames(medReq.reasonCode)
+    union ReferenceDisplayNames(medReq.reasonReference)
+
+define function ConceptDisplayNames(codeables List<CodeableConcept>):
+  codeables codeable
+    return ConceptText(codeable)
+
+define function ReferenceDisplayNames(references List<Reference>):
+  references ref
+    return ReferenceDisplayName(ref)
+
+define function ReferenceDisplayName(ref Reference):
+  Coalesce( DisplayName(ResolveCondition(ref)), DisplayName(ResolveObservation(ref)), ref.display.value )
 
 // BUG: this works in VSCode but returns null in JavaScript execution.
 // define function SelectActiveConditions(conditions List<Condition>):
@@ -326,6 +342,28 @@ define function ResolvePractitioners(references List<Reference>):
 
 define function ResolvePractitioner(ref Reference):
   First( [Practitioner] resource
+    where resource.id = GetId(ref.reference)
+  )
+
+define function ResolveCondition(ref Reference):
+  First( [Condition] resource
+    where resource.id = GetId(ref.reference)
+  )
+
+define function ResolveObservation(ref Reference):
+  First( [Observation] resource
+    where resource.id = GetId(ref.reference)
+  )
+
+/// Returns a list of FHIR Resources, possibly of mixed types
+define function ResolveResources(references List<Reference>):
+  flatten( references ref
+    return [Resource] resource
+      where resource.id = GetId(ref.reference)
+  )
+
+define function ResolveResource(ref Reference):
+  First( [Resource] resource
     where resource.id = GetId(ref.reference)
   )
 

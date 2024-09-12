@@ -193,6 +193,18 @@ const buildRows = (med: MedicationSummary, theSource?: string): SummaryRowItems 
     rows.push(requester)
   }
 
+  const reasons: SummaryRowItems | undefined = med.Reasons?.map((reason) => (
+    {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Reason: ' + reason,
+      data2: '',
+    }
+  ));
+  if (reasons?.length) {
+    rows = rows.concat(reasons);
+  }
+
   const notes: SummaryRowItems | undefined = med.Notes?.map((note) => (
     {
       isHeader: false,
