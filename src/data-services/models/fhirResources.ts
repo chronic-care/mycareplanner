@@ -14,6 +14,7 @@ export interface FHIRData {
   carePlans?: CarePlan[],
   careTeams?: CareTeam[],
   careTeamMembers?: Map<string,Practitioner>,
+  resourceRequesters?: Map<string,Practitioner>,
   // careTeamPhotos?: Binary[],
   conditions?: Condition[],
   diagnosticReports?: DiagnosticReport[],

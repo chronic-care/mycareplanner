@@ -60,15 +60,18 @@ const labResultsPath = 'Observation?category=laboratory&date=' + getDateParamete
 // const medicationRequestPath = 'MedicationRequest?status=active&authoredon=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const medicationRequestActivePath = 'MedicationRequest?status=active' + provenanceSearch
 const medicationRequestInactivePath = 'MedicationRequest?status=on-hold,cancelled,completed,stopped&_count=10' + provenanceSearch
+const medicationRequesterInclude = '&_include=MedicationRequest:requester'
 
 const serviceRequestPath = 'ServiceRequest?status=active' + provenanceSearch
+const serviceRequesterInclude = '&_include=ServiceRequest:requester'
+
 const proceduresTimePath = 'Procedure?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const proceduresCountPath = 'Procedure?_count=100' + provenanceSearch
 const diagnosticReportPath = 'DiagnosticReport?date=' + getDateParameter(threeYearsAgo) + provenanceSearch
 const socialHistoryPath = 'Observation?category=social-history' + provenanceSearch
 
 /// category=survey returns 400 error from Epic, so include another category recognized by Epic
-const surveyResultsPath = 'Observation?category=survey,functional-mental-status' + provenanceSearch
+// const surveyResultsPath = 'Observation?category=survey,functional-mental-status' + provenanceSearch
 
 const fhirOptions: fhirclient.FhirOptions = {
   // no page limit, fetch all pages and results.
@@ -568,6 +571,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   let curResourceName: string = "Unknown"
 
   var careTeamMembers = new Map<string, Practitioner>()
+  var resourceRequesters = new Map<string, Practitioner>()
 
   if (patientPCP?.id !== undefined) {
     careTeamMembers.set(patientPCP?.id!, patientPCP!)
@@ -661,14 +665,24 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   labResults && setResourcesLoadedCountState(++resourcesLoadedCount)
   setAndLogProgressState('Found ' + (labResults?.length ?? 0) + ' lab results.', 75)
 
+  // Retrieve MedicationRequest and included requester Practitioner resources.
   curResourceName = 'Medication Request'
   let medications: MedicationRequest[] | undefined
   setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 80)
   try {
     if (hasScope(clientScope, 'MedicationRequest.read')) {
       // fetch all active meds
+      const _medicationRequestActivePath = medicationRequestActivePath + (supportsInclude ? medicationRequesterInclude : '')
       let medicationRequestData: Resource[] | undefined =
-        resourcesFrom(await client.patient.request(medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
+        resourcesFrom(await client.patient.request(_medicationRequestActivePath, fhirOptions) as fhirclient.JsonObject)
+      const medPractitioners =
+      medicationRequestData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
+      medPractitioners?.forEach((pract: Practitioner) => {
+        if (pract.id !== undefined && resourceRequesters.get(pract.id!) === undefined) {
+          resourceRequesters.set(pract.id!, pract)
+        }
+      })
+
       setAndLogProgressState('Found ' + (medicationRequestData?.length ?? 0) + ' active medication requests.', 81)
       // medicationRequestData && setResourcesLoadedCountState(++resourcesLoadedCount)
 
@@ -693,10 +707,38 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     medications && setResourcesLoadedCountState(++resourcesLoadedCount)
   }
 
-  const serviceRequests: ServiceRequest[] | undefined = await loadFHIRQuery<ServiceRequest>('ServiceRequest', 'ServiceRequest',
-    serviceRequestPath, true, client, clientScope, 85, setAndLogProgressState, setAndLogErrorMessageState)
-  serviceRequests && setResourcesLoadedCountState(++resourcesLoadedCount)
-  setAndLogProgressState('Found ' + (serviceRequests?.length ?? 0) + ' ServiceRequests.', 85)
+  // const serviceRequests: ServiceRequest[] | undefined = await loadFHIRQuery<ServiceRequest>('ServiceRequest', 'ServiceRequest',
+  //   _serviceRequestPath, true, client, clientScope, 85, setAndLogProgressState, setAndLogErrorMessageState)
+  // serviceRequests && setResourcesLoadedCountState(++resourcesLoadedCount)
+  // setAndLogProgressState('Found ' + (serviceRequests?.length ?? 0) + ' ServiceRequests.', 85)
+
+  // Retrieve ServiceRequest and included requester Practitioner resources.
+  curResourceName = 'Service Request'
+  setAndLogProgressState(`${curResourceName} request: ` + new Date().toLocaleTimeString(), 85)
+  let serviceRequests: ServiceRequest[] | undefined
+  try {
+    if (hasScope(clientScope, 'ServiceRequest.read')) {
+      const _serviceRequestPath = serviceRequestPath + (supportsInclude ? serviceRequesterInclude : '')
+      let serviceRequestData: Resource[] | undefined =
+        resourcesFrom(await client.patient.request(_serviceRequestPath, fhirOptions) as fhirclient.JsonObject)
+      serviceRequests = serviceRequestData?.filter((item: any) => item.resourceType === 'ServiceRequest') as ServiceRequest[]
+      recordProvenance(serviceRequestData)
+      const serviceRequestPractitioners =
+        serviceRequestData?.filter((item: any) => item.resourceType === 'Practitioner') as Practitioner[]
+      serviceRequestPractitioners?.forEach((pract: Practitioner) => {
+        if (pract.id !== undefined && resourceRequesters.get(pract.id!) === undefined) {
+          resourceRequesters.set(pract.id!, pract)
+        }
+      })
+      setAndLogProgressState('Found ' + (serviceRequests?.length ?? 0) + ' ServiceRequests.', 85)
+    } else {
+      serviceRequests = undefined
+    }
+  } catch (err) {
+    setAndLogNonTerminatingErrorMessageStateForResource(curResourceName, err, setAndLogErrorMessageState)
+  } finally {
+    serviceRequests && setResourcesLoadedCountState(++resourcesLoadedCount)
+  }
 
   const socialHistory: Observation[] | undefined = await loadFHIRQuery<Observation>('SocialHistory', 'Observation',
     socialHistoryPath, true, client, clientScope, 90, setAndLogProgressState, setAndLogErrorMessageState)
@@ -785,6 +827,11 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
   )
   */
 
+  console.log("Resource requesters dictionary values: " + resourceRequesters?.size ?? 0)
+  // resourceRequesters?.forEach((practitioner, id) =>
+  //   console.log(JSON.stringify(practitioner))
+  // )
+
   // Reset progress as sometimes React isn't fast enough on next load
   setAndLogProgressState('', 0)
   setResourcesLoadedCountState(0)
@@ -794,6 +841,7 @@ const getFHIRQueries = async (client: Client, clientScope: string | undefined,
     carePlans,
     careTeams,
     careTeamMembers,
+    resourceRequesters,
     conditions,
     diagnosticReports,
     goals,

@@ -1,6 +1,6 @@
 import '../../Home.css';
 import React, { FC, useState, useEffect } from 'react';
-import { FHIRData, displayTiming, displayConcept, displayTransmitter } from '../../data-services/models/fhirResources';
+import { FHIRData, displayDate, displayConcept, displayTransmitter } from '../../data-services/models/fhirResources';
 //import { Provenance } from '../../data-services/fhir-types/fhir-r4';
 import { ServiceRequest } from '../../data-services/fhir-types/fhir-r4';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
@@ -105,11 +105,11 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
           let trimmedFinalDateA: string | null = null;
         let trimmedFinalDateB: string | null = null;
 
-        const dateA = a.serviceRequest.occurrenceTiming ?? "";
-        const dateB = b.serviceRequest.occurrenceTiming ?? "";
+        const dateA = a.serviceRequest.authoredOn ?? "";
+        const dateB = b.serviceRequest.authoredOn ?? "";
 
         if (dateA) {
-          const parsedDateA = displayTiming(dateA);
+          const parsedDateA = displayDate(dateA);
           const indexA = parsedDateA?.search('until');
           if (indexA !== -1 && parsedDateA) {
             trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
@@ -118,7 +118,7 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
         }
 
         if (dateB) {
-          const parsedDateB = displayTiming(dateB);
+          const parsedDateB = displayDate(dateB);
           const indexB = parsedDateB?.search('until');
           if (indexB !== -1 && parsedDateB) {
             trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
@@ -142,11 +142,11 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
           let trimmedFinalDateA: string | null = null;
           let trimmedFinalDateB: string | null = null;
   
-          const dateA = a.serviceRequest.occurrenceTiming ?? "";
-          const dateB = b.serviceRequest.occurrenceTiming ?? "";
+          const dateA = a.serviceRequest.authoredOn ?? "";
+          const dateB = b.serviceRequest.authoredOn ?? "";
   
           if (dateA) {
-            const parsedDateA = displayTiming(dateA);
+            const parsedDateA = displayDate(dateA);
             const indexA = parsedDateA?.search('until');
             if (indexA !== -1 && parsedDateA) {
               trimmedFinalDateA = convertDateFormat(String(parsedDateA).slice(0, indexA));
@@ -155,7 +155,7 @@ export const ServiceRequestList: FC<ServiceRequestListProps> = ({ fhirDataCollec
           }
   
           if (dateB) {
-            const parsedDateB = displayTiming(dateB);
+            const parsedDateB = displayDate(dateB);
             const indexB = parsedDateB?.search('until');
             if (indexB !== -1 && parsedDateB) {
               trimmedFinalDateB = convertDateFormat(String(parsedDateB).slice(0, indexB));
@@ -241,26 +241,48 @@ const buildRows = (service: ServiceRequest, theSource?: string, provenance?: str
       twoColumns: false,
       data1: displayConcept(service.code) ?? "No description",
       data2: '',
-    },
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: service.requester === undefined ? '' : 'Requested by: ' + service.requester?.display,
-      data2: '',
-    },
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: service.occurrenceTiming === undefined ? '' : 'Scheduled on ' + displayTiming(service.occurrenceTiming),
-      data2: '',
-    },
-    {
-      isHeader: false,
-      twoColumns: false,
-      data1: service.reasonCode === undefined ? '' : 'Reason: ' + displayConcept(service.reasonCode?.[0]),
-      data2: '',
     }
   ];
+
+  if (service.requester?.display) {
+    const row: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Requested by: ' + service.requester?.display,
+      data2: '',
+    }
+    rows.push(row)
+  }
+
+  if (service.authoredOn) {
+    const row: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Ordered On: ' + displayDate(service.authoredOn),
+      data2: '',
+    }
+    rows.push(row)
+  }
+
+  if (service.reasonCode && service.reasonCode[0]) {
+    const row: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Reason: ' + displayConcept(service.reasonCode[0]),
+      data2: '',
+    }
+    rows.push(row)
+  }
+
+  if (service.reasonReference && service.reasonReference[0].display) {
+    const row: SummaryRowItem = {
+      isHeader: false,
+      twoColumns: false,
+      data1: 'Reason: ' + service.reasonReference?.[0].display ?? '',
+      data2: '',
+    }
+    rows.push(row)
+  }
 
   const notes: SummaryRowItems | undefined = service.note?.map((note, idx) => ({
     isHeader: false,
