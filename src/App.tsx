@@ -164,8 +164,8 @@ class App extends React.Component<AppProps, AppState> {
             isAuthorizeSelected: null,
             currentUnauthorizedEndpoint: null
         }
-        // const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
-        // this.initializeSummaries()
+        const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
+        this.initializeSummaries()
 
          // Load external navigation state from local storage
         const externalNavigationState = localStorage.getItem("isExternalNavigation");
@@ -742,6 +742,15 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({ goalSummaries: newGoalSummaries })
     }
 
+    setLogout = () => {
+    
+        this.setState({ isLogout: true });
+        sessionStorage.clear();
+        deleteAllDataFromLocalForage();
+        this.props.history.push('/logout')
+        // this.setState({ isLoggedOut: true });
+    }
+
     // callback function to update conditions from ConditionEditForm
     setConditionSummaries = (newConditionSummaries: ConditionSummary[][]) => {
         this.setState({ conditionSummaries: newConditionSummaries })
@@ -890,8 +899,8 @@ class App extends React.Component<AppProps, AppState> {
     private handleLogout = async () => {
         if (!this.state.isLogout) {
             // Clear session storage or perform other logout logic here
-            console.log('Logging out and clearing session');
-            this.setState({ isLogout: true });
+            // console.log('Logging out and clearing session');
+            // this.setState({ isLogout: true });
             // this.setState({ isLogout: true })
             // sessionStorage.clear()
             // await deleteAllDataFromLocalForage()
@@ -1025,9 +1034,9 @@ class App extends React.Component<AppProps, AppState> {
                     </Route>
                     <Route path="/unshare-data">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
-                            <UnShareData fhirDataCollection={this.state.fhirDataCollection}  />
+                            <UnShareData fhirDataCollection={this.state.fhirDataCollection} setLogout={this.setLogout}    />
                         </SessionProtected>
-                    </Route>
+                    </Route>    
                     <Route path="/shared-data-summary">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <SharedDataSummary />

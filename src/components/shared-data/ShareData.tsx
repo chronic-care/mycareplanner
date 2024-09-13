@@ -1,18 +1,12 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-// import FHIR from 'fhirclient'
-
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { FHIRData } from '../../data-services/models/fhirResources'
-//import { ConditionSummary } from '../../data-services/models/cqlSummary'
-// import { getSupplementalDataClient } from '../../data-services/fhirService'
-// import Client from 'fhirclient/lib/Client'
 import { getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
 import { Practitioner } from '../../data-services/fhir-types/fhir-r4'
-//import Client from 'fhirclient/lib/Client'
 interface ShareDataProps {
 
   fhirDataCollection?: FHIRData[]
@@ -37,48 +31,40 @@ export default function ShareData(props: ShareDataProps) {
             practitioners.push(value);
         });
 
-        if (!fhirData.isSDS) {
-
-          // console.error("handleSubmit  ")
-
-          // Promise.all(practitioners.map(practitioner => updateSharedDataResource(practitioner,fhirData.serverUrl))).then(resource => {
-
-            // updateSharedDataResource(fhirData.patient!,fhirData.serverUrl).then(( ) => {
-
-            if (fhirData.conditions) {
-              Promise.all(fhirData.conditions!.map(condition => updateSharedDataResource(sdsClient,condition,fhirData.serverUrl))).then(() => { }  );
-            }
-             
-            if (fhirData.goals) {
-              Promise.all(fhirData.goals!.map(goal => updateSharedDataResource(sdsClient,goal,fhirData.serverUrl))).then(() => { }  );
-            }
+          if (!fhirData.isSDS) {
+            Promise.resolve(updateSharedDataResource(sdsClient, fhirData.patient!, fhirData.serverUrl)).then(() => {
+              if (fhirData.conditions) {
+                Promise.all(fhirData.conditions!.map(condition => updateSharedDataResource(sdsClient, condition, fhirData.serverUrl))).then(() => { });
+              }            
+              if (fhirData.goals) {
+                Promise.all(fhirData.goals!.map(goal => updateSharedDataResource(sdsClient, goal, fhirData.serverUrl))).then(() => { });
+              }             
               if (fhirData.immunizations) {
-              Promise.all(fhirData.immunizations!.map(immunization => updateSharedDataResource(sdsClient,immunization,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.immunizations!.map(immunization => updateSharedDataResource(sdsClient, immunization, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.medications) {
-              Promise.all(fhirData.medications!.map(medication => updateSharedDataResource(sdsClient,medication,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.medications!.map(medication => updateSharedDataResource(sdsClient, medication, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.serviceRequests) {
-              Promise.all(fhirData.serviceRequests!.map(serviceRequest => updateSharedDataResource(sdsClient,serviceRequest,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.serviceRequests!.map(serviceRequest => updateSharedDataResource(sdsClient, serviceRequest, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.procedures) {
-              Promise.all(fhirData.procedures!.map(procedure => updateSharedDataResource(sdsClient,procedure,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.procedures!.map(procedure => updateSharedDataResource(sdsClient, procedure, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.labResults) {
-              Promise.all(fhirData.labResults!.map(labResult => updateSharedDataResource(sdsClient,labResult,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.labResults!.map(labResult => updateSharedDataResource(sdsClient, labResult, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.vitalSigns) {
-              Promise.all(fhirData.vitalSigns!.map(vitalSign => updateSharedDataResource(sdsClient,vitalSign,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.vitalSigns!.map(vitalSign => updateSharedDataResource(sdsClient, vitalSign, fhirData.serverUrl))).then(() => { });
               }
               if (fhirData.socialHistory) {
-              Promise.all(fhirData.socialHistory!.map(socialHistory => updateSharedDataResource(sdsClient,socialHistory,fhirData.serverUrl))).then(() => { }  );
+                Promise.all(fhirData.socialHistory!.map(socialHistory => updateSharedDataResource(sdsClient, socialHistory, fhirData.serverUrl))).then(() => { });
               }
+            });
               // Promise.all(fhirData.surveyResults!.map(surveyResult => updateSharedDataResource(surveyResult,fhirData.serverUrl))).then(() => { }  );
-        }
-            })
-          
-          // });
-        // });
+            }
+          }
+        )
       }
     })
       .catch(error => {
