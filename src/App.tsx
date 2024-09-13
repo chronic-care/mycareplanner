@@ -103,8 +103,8 @@ interface AppState {
     isLogout: boolean,
     sessionId: string | undefined,
 
-    isAuthDialogOpen: boolean
-    isAuthorizeSelected: null | boolean
+    isAuthDialogOpen: boolean,
+    isAuthorizeSelected: null | boolean,
     currentUnauthorizedEndpoint: ProviderEndpoint | null
 }
 
@@ -164,9 +164,16 @@ class App extends React.Component<AppProps, AppState> {
             isAuthorizeSelected: null,
             currentUnauthorizedEndpoint: null
         }
-        const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
-        this.initializeSummaries()
+        // const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
+        // this.initializeSummaries()
+
+         // Load external navigation state from local storage
+        const externalNavigationState = localStorage.getItem("isExternalNavigation");
+        this.isExternalNavigation = externalNavigationState === "true"; // Initialize external navigation state
     }
+
+        // New state for tracking external navigation
+        isExternalNavigation: boolean = false;
 
     // TODO: Externalize everything we can out of componentDidMount into unique functions
     async componentDidMount() {
@@ -411,12 +418,28 @@ class App extends React.Component<AppProps, AppState> {
         document.removeEventListener('visibilitychange', this.handleVisibilityChange);
     }
 
+    // Handle beforeunload event
     handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-        // const tabHidden = await localforage.getItem('tabHidden');
-        // if (tabHidden) {
-            // await this.handleyarn ();
-        // }
-    }
+        if (!this.isExternalNavigation) {
+            // If not navigating externally, proceed with logout
+            await this.handleLogout();
+        } else {
+            // Reset the external navigation state after the page reload
+            localStorage.removeItem("isExternalNavigation");
+        }
+    };
+
+    // Set state to indicate external navigation is happening
+    markExternalNavigation = () => {
+        this.isExternalNavigation = true;
+        localStorage.setItem("isExternalNavigation", "true"); // Persist state across multiple auth
+    };
+
+    // Reset external navigation state
+    resetExternalNavigation = () => {
+        this.isExternalNavigation = false;
+        localStorage.setItem("isExternalNavigation", "false");
+    };
 
     handleVisibilityChange = () => {
         if (document.visibilityState === 'hidden') {
@@ -427,11 +450,12 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     openAuthDialog = (curEndpoint: ProviderEndpoint) => {
-        this.setState({ isAuthDialogOpen: true, currentUnauthorizedEndpoint: curEndpoint })
+        this.setState({ isAuthDialogOpen: true, currentUnauthorizedEndpoint: curEndpoint });
     }
 
     handleAuthDialogClose = () => {
-        this.setState({ isAuthDialogOpen: false, currentUnauthorizedEndpoint: null })
+        this.setState({ isAuthDialogOpen: false, currentUnauthorizedEndpoint: null });
+        this.resetExternalNavigation(); // Reset navigation state if auth dialog is closed
     }
 
     handleAuthorizeSelected = () => {
@@ -536,6 +560,8 @@ class App extends React.Component<AppProps, AppState> {
 
             let index: number = 0
             for (const curSelectedEndpoint of endpointsToLoad) {
+                // Set the state to indicate external navigation is happening before each authorization
+                this.markExternalNavigation();
                 console.log('curSelectedEndpoint #' + (index + 1) + ' at index: ' + index + ' with value:', curSelectedEndpoint)
 
                 // Resetting state to undefined for loader and error message reset have to happen after each index is loaded
@@ -595,6 +621,7 @@ class App extends React.Component<AppProps, AppState> {
                     this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
                 console.log('sdsData', fhirDataFromStoredEndpoint)
                 fhirDataFromStoredEndpoint.serverName = selectedEndpoint.name
+                this.resetExternalNavigation();
             } else {
                 fhirDataFromStoredEndpoint = await getFHIRData(true, issServerUrl!, null,
                     this.setAndLogProgressState, this.setResourcesLoadedCountState, this.setAndLogErrorMessageState)
@@ -862,6 +889,9 @@ class App extends React.Component<AppProps, AppState> {
 
     private handleLogout = async () => {
         if (!this.state.isLogout) {
+            // Clear session storage or perform other logout logic here
+            console.log('Logging out and clearing session');
+            this.setState({ isLogout: true });
             // this.setState({ isLogout: true })
             // sessionStorage.clear()
             // await deleteAllDataFromLocalForage()

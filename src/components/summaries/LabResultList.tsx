@@ -7,6 +7,8 @@ import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Grid } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface LabResultListProps {
   fhirDataCollection?: FHIRData[];
@@ -155,7 +157,6 @@ export const LabResultList: FC<LabResultListProps> = ({ fhirDataCollection, labR
       </div>
     </div>
   );
-
 }
 
 const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems => {
@@ -224,16 +225,45 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
     rows.push(source)
   }
 
-  const history: SummaryRowItems | undefined = obs.History?.map((history) => (
+  const history: SummaryRowItems | undefined = obs.History?.map((historyItem, index) => (
     {
       isHeader: false,
       twoColumns: true,
-      data1: history.ResultText,
-      data2: displayDate(history.Date),
+      data1: historyItem.ResultText,
+      data2: displayDate(historyItem.Date),
     }
-  ))
+  ));
+
   if (history?.length) {
-    rows = rows.concat(history)
+    // Insert accordion for history items within the same row
+    const accordion = (
+      <Accordion key="history-accordion" style={{ boxShadow: 'none', margin: '0', padding: '0' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="body2">History of Labs</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            {history.map((historyItem, index) => (
+              <React.Fragment key={index}>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{historyItem.data1}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{historyItem.data2}</Typography>
+                </Grid>
+              </React.Fragment>
+            ))}
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    );
+
+    rows.push({
+      isHeader: false,
+      twoColumns: false,
+      data1: accordion,
+      data2: '',
+    });
   }
 
   return rows;
