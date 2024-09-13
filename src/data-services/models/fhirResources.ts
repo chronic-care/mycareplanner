@@ -14,6 +14,7 @@ export interface FHIRData {
   carePlans?: CarePlan[],
   careTeams?: CareTeam[],
   careTeamMembers?: Map<string,Practitioner>,
+  resourceRequesters?: Map<string,Practitioner>,
   // careTeamPhotos?: Binary[],
   conditions?: Condition[],
   diagnosticReports?: DiagnosticReport[],
@@ -56,6 +57,28 @@ export function displayDate(dateString?: string): string | undefined {
         year: "numeric",
         month: "short",
         day: "2-digit"
+      })
+  }
+}
+
+export function displayDateTime(dateString?: string): string | undefined {
+  if (dateString === undefined || dateString === null) {
+    return undefined
+  }
+  else {
+    // If time is not included, then parse only Year Month Day parts
+    // In JavaScript, January is 0. Subtract 1 from month Int.
+    var parts = dateString!.split('-');
+    var jsDate: Date = (dateString?.includes('T'))
+      ? new Date(dateString!)
+      : new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+
+    return jsDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
       })
   }
 }

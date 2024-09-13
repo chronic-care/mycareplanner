@@ -1,0 +1,258 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "status": "completed",
+    "item": [
+        {
+            "linkId": "physical-function",
+            "text": "Physical Function",
+            "item": [
+                {
+                    "linkId": "47202",
+                    "text": "Are you able to do chores such as vacuuming or yard work?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13918-0",
+                                "display": "With a little difficulty"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47203",
+                    "text": "Are you able to go up and down stairs at a normal pace?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13919-8",
+                                "display": "With much difficulty"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47204",
+                    "text": "Are you able to go for a walk of at least 15 minutes?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13912-3",
+                                "display": "Unable to do"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47205",
+                    "text": "Are you able to run errands and shop?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13919-8",
+                                "display": "With much difficulty"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "anxiety",
+            "text": "Anxiety",
+            "item": [
+                {
+                    "linkId": "47206",
+                    "text": "In the past 7 days - I felt fearful",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10082-8",
+                                "display": "Sometimes"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47207",
+                    "text": "In the past 7 days - I found it hard to focus on anything other than my anxiety",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10044-8",
+                                "display": "Often"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "depression",
+            "text": "Depression",
+            "item": [
+                {
+                    "linkId": "47210",
+                    "text": "In the past 7 days - I felt worthless",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10066-1",
+                                "display": "Rarely"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47211",
+                    "text": "In the past 7 days - I felt helpless",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10082-8",
+                                "display": "Sometimes"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47213",
+                    "text": "In the past 7 days - I felt hopeless",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10066-1",
+                                "display": "Rarely"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "social-participation",
+            "text": "Ability to Participate in Social Roles and Activities",
+            "item": [
+                {
+                    "linkId": "47222",
+                    "text": "In the past 7 days - I am satisfied with how much work I can do (include work at home)",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13863-8",
+                                "display": "A little bit"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47224",
+                    "text": "In the past 7 days - I am satisfied with my ability to do regular personal and household responsibilities",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13902-4",
+                                "display": "Quite a bit"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "pain-interference",
+            "text": "Pain Interference",
+            "item": [
+                {
+                    "linkId": "47226",
+                    "text": "In the past 7 days - How much did pain interfere with your day to day activities?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13902-4",
+                                "display": "Quite a bit"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47227",
+                    "text": "In the past 7 days - How much did pain interfere with work around the home?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13914-9",
+                                "display": "Very much"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47228",
+                    "text": "In the past 7 days - How much did pain interfere with your ability to participate in social activities?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13914-9",
+                                "display": "Very much"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "linkId": "47229",
+                    "text": "In the past 7 days - How much did pain interfere with your household chores?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA13909-9",
+                                "display": "Somewhat"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "linkId": "pain-intensity",
+            "text": "Pain Intensity",
+            "item": [
+                {
+                    "linkId": "47230",
+                    "text": "In the past 7 days - How would you rate your pain on average?",
+                    "answer": [
+                        {
+                            "valueCoding": {
+                                "system": "http://loinc.org",
+                                "code": "LA10138-8",
+                                "display": "6"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "subject": {},
+    "author": {},
+    "authored": "2024-09-04T16:09:43-06:00",
+    "meta": {
+        "versionId": "4",
+        "lastUpdated": "2022-04-13T19:47:22.495+00:00",
+        "source": "#4Q75pMeTbscwKKwf"
+    }
+}

@@ -1,11 +1,13 @@
 import '../../Home.css';
 import React, { FC, useState, useEffect } from 'react';
-import { FHIRData, displayDate } from '../../data-services/models/fhirResources';
+import { FHIRData, displayDate, displayDateTime } from '../../data-services/models/fhirResources';
 import { ObservationSummary } from '../../data-services/models/cqlSummary';
 import { Summary, SummaryRowItem, SummaryRowItems } from './Summary';
 import { BusySpinner } from '../busy-spinner/BusySpinner';
 import { SortModal } from '../sort-modal/sortModal';
 import { SortOnlyModal } from '../sort-only-modal/sortOnlyModal';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Grid } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface VitalsListProps {
   fhirDataCollection?: FHIRData[];
@@ -169,7 +171,7 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
       isHeader: false,
       twoColumns: true,
       data1: obs.ResultText,
-      data2: displayDate(obs.Date),
+      data2: obs.DisplayName == 'Home Blood Pressure' ? displayDateTime(obs.Date) : displayDate(obs.Date),
     },
     {
       isHeader: false,
@@ -203,15 +205,56 @@ const buildRows = (obs: ObservationSummary, theSource?: string): SummaryRowItems
     rows = rows.concat(provenance)
   }
 
-  const hasProvenance = obs.Provenance?.length ?? 0 > 0
+  const hasProvenance = obs.Provenance?.length ?? 0 > 0;
   if (theSource && !hasProvenance) {
     const source: SummaryRowItem = {
       isHeader: false,
       twoColumns: false,
       data1: 'Source: ' + theSource,
       data2: '',
+    };
+    rows.push(source);
+  }
+
+  const history: SummaryRowItems | undefined = obs.History?.map((historyItem, index) => (
+    {
+      isHeader: false,
+      twoColumns: true,
+      data1: historyItem.ResultText,
+      data2: obs.DisplayName == 'Home Blood Pressure' ? displayDateTime(historyItem.Date) : displayDate(historyItem.Date),
     }
-    rows.push(source)
+  ));
+
+  if (history?.length) {
+    // Insert accordion for history items within the same row
+    const accordion = (
+      <Accordion key="history-accordion" style={{ boxShadow: 'none', margin: '0', padding: '0' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="body2">History of Vitals</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        <Grid container spacing={2}>
+            {history.map((historyItem, index) => (
+              <React.Fragment key={index}>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{historyItem.data1}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{historyItem.data2}</Typography>
+                </Grid>
+              </React.Fragment>
+            ))}
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    );
+
+    rows.push({
+      isHeader: false,
+      twoColumns: false,
+      data1: accordion,
+      data2: '',
+    });
   }
 
   return rows;
