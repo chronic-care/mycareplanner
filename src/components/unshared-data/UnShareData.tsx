@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
-// import FHIR from 'fhirclient'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -8,21 +7,20 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { FHIRData } from '../../data-services/models/fhirResources'
 import { getSupplementalDataClient } from '../../data-services/fhirService'
-//import { ConditionSummary } from '../../data-services/models/cqlSummary'
-// import { getSupplementalDataClient } from '../../data-services/fhirService'
-// import Client from 'fhirclient/lib/Client'
-//import { getSupplementalDataClient, updateSharedDataResource } from '../../data-services/fhirService';
-//import { Practitioner } from '../../data-services/fhir-types/fhir-r4'
-//import Client from 'fhirclient/lib/Client'
+import { fhirclient } from 'fhirclient/lib/types'
 interface ShareDataProps {
 
-  fhirDataCollection?: FHIRData[]
+  fhirDataCollection?: FHIRData[],
+  setLogout?: () => void,
+  
  
 }
 
 interface IDogForm {
   dog?: String
 }
+
+
 
 export default function UnShareData(props: ShareDataProps) {
 
@@ -31,108 +29,83 @@ export default function UnShareData(props: ShareDataProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
    
-
-
-    var parameters: { name: string; value: any }[] = [];
-    // { name: string; value: string }
-    
-    parameters.push(  {
-      name: 'cascade',
-      value: 'delete'
-    }     );
-
-
-    
-
-    // {
-    //   "resourceType": "parameters",
-    //   "parameter": [
-    //     {
-    //       “name”: “url”,
-    //       “value”: “/Patient/abc-123"
-    //     },
-    //     {
-    //       “name”: “url”,
-    //       “value”: “/Patient/def-456"
-    //     },
-    //     ...
-    //     {
-    //       “name”: “url”,
-    //       “value”: “/Patient/ghi-789"
-    //     },
-    //     {
-    //       “name”: “url”,
-    //       “value”: “/Patient/9876-abcd-4567-uvwx"
-    //     },
-    //     {
-    //       “name”: “url”,
-    //       “value”: “/Patient/jkl-012"
-    //     },
-    //     {
-    //       “name”: “cascade”,
-    //       “value": “delete”
-    //     }
-    //   ]
-    // }
-
-
     event.preventDefault();
     getSupplementalDataClient().then(sdsClient => {
       if (sdsClient) {
         sdsClient.request('Linkage').then(linkages => {
-          console.error('asdfasdflinkagelinkagelinkage'+JSON.stringify(linkages));
 
-          console.error('linkages.entry'+JSON.stringify(linkages.entry));
+          var deleteSet = new Set();
 
           linkages.entry.map((entry: any) => {
+            entry.resource.item.map((item: any) => {
+              if (!deleteSet.has(item.resource.reference)) {
+                deleteSet.add(item.resource.reference)
+                console.info('delete resources for ' + item.resource.reference);
+                sdsClient.delete(item.resource.reference + '?_cascade=delete');
+              }
+            })
+          });
+        });
 
-            console.error(JSON.stringify(entry));
+        sdsClient.request('Linkage').then(linkages => {
 
-            entry.resource.item.map((item:any) => {
+          var expungeSet = new Set();
 
-              console.error(JSON.stringify(item.resource.reference));
+          linkages.entry.map((entry: any) => {
+            entry.resource.item.map((item: any) => {     
+              if (!expungeSet.has(item.resource.reference)) {
+                expungeSet.add(item.resource.reference)
+                console.info('delete resources for ' + item.resource.reference);
 
-             
+                const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
+                fhirHeaderRequestOption.method = 'POST';
+                fhirHeaderRequestOption.url =item.resource.reference + '/$expunge';
 
-              parameters.push(  {
-                name: '“url”',
-                value: item.resource.reference
-              }     );
+                const expungeParams = {
+                  resourceType: "Parameters",
+                  parameter: [
+                      {
+                          name: "expungeDeletedResources",
+                          valueBoolean: true
+                      },
+                      {
+                          name: "expungeDeletedResources",
+                          valueBoolean: true
+                      },
+                      {
+                          name: "_cascade",
+                          valueString: "delete"
+                      }
+                  ]
+              };
 
-             
+              const fhirHeaders ={
+                'Content-Type' : 'application/json'
+              };  
 
+              fhirHeaderRequestOption.headers =fhirHeaders;
 
-            } )
+              fhirHeaderRequestOption.body = JSON.stringify(expungeParams);
+                sdsClient.request(fhirHeaderRequestOption);
+              }
+            })
+          });
+        });
 
-          } );
-          // linkages.entry[0].resource?.item
-          console.error('parameters'+JSON.stringify(parameters));
-
-          // jsonObject['parameters'].
-          //  = parameters
-
-          var jsonObject = { resourceType: "parameters", parameters: parameters };
-
-    console.error('jsonObject'+JSON.stringify(jsonObject));
-    console.error('jsonObject'+JSON.stringify(jsonObject));
-    console.error('jsonObject'+JSON.stringify(jsonObject));
-    console.error('jsonObject'+JSON.stringify(jsonObject));
-
-          console.error('jsonObject'+JSON.stringify(jsonObject));
-
-
-
-
-           })  ;
       }
-    })
 
+      if (props.setLogout) {
+        props.setLogout();
+      }
+
+    })
       .catch(error => {
         console.error(error.message);
       });
     
 
-    
+   
+      
     history.goBack()
   }
 
@@ -151,9 +124,24 @@ export default function UnShareData(props: ShareDataProps) {
 
           <Grid item xs={12}>
             <Typography variant="body1" gutterBottom>
-            You may choose to withdraw your data. Selecting this option will delete all of your health information from this application and the database.
-          </Typography>
+            Your participation in this research study is voluntary.
            
+          </Typography>
+
+          <Typography variant="body1" gutterBottom>
+          When you click “Withdraw Data” your data will be withdrawn from the study and you will be logged out of the application.
+           
+          </Typography>
+
+          <Typography variant="body1" gutterBottom>
+          Please contact us if you would like to rejoin the study in the future.   
+           
+          </Typography>
+
+
+         
+
+
           </Grid>
 
           <Grid item xs={12} sm={6}>
