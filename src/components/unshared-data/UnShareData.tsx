@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { FHIRData } from '../../data-services/models/fhirResources'
 import { getSupplementalDataClient } from '../../data-services/fhirService'
 import { fhirclient } from 'fhirclient/lib/types'
+import Client from 'fhirclient/lib/Client'
 interface ShareDataProps {
 
   fhirDataCollection?: FHIRData[],
@@ -20,93 +21,86 @@ interface IDogForm {
   dog?: String
 }
 
+function deleteThePatient(sdsClient : Client, patientId : string) {
+  console.info('Start delete resources for ' + patientId);
+  
+  sdsClient.delete(patientId + '?_cascade=delete')
+    .then(() => {
+      console.info('Done delete resources for ' + patientId);
+    })
+    .catch(err => {
+      console.error('Error deleting resources for ' + patientId, err);
+    });
+}
 
-
+ 
 export default function UnShareData(props: ShareDataProps) {
 
   let history = useHistory()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-
-   
-    event.preventDefault();
     getSupplementalDataClient().then(sdsClient => {
       if (sdsClient) {
         sdsClient.request('Linkage').then(linkages => {
-
           var deleteSet = new Set();
-
           linkages.entry.map((entry: any) => {
             entry.resource.item.map((item: any) => {
               if (!deleteSet.has(item.resource.reference)) {
                 deleteSet.add(item.resource.reference)
-                console.info('delete resources for ' + item.resource.reference);
-                sdsClient.delete(item.resource.reference + '?_cascade=delete');
+                deleteThePatient(sdsClient, item.resource.reference);
               }
-            })
+            });
           });
-        });
-
-        sdsClient.request('Linkage').then(linkages => {
 
           var expungeSet = new Set();
 
           linkages.entry.map((entry: any) => {
-            entry.resource.item.map((item: any) => {     
+            entry.resource.item.map((item: any) => {
               if (!expungeSet.has(item.resource.reference)) {
                 expungeSet.add(item.resource.reference)
-                console.info('delete resources for ' + item.resource.reference);
-
                 const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
                 fhirHeaderRequestOption.method = 'POST';
-                fhirHeaderRequestOption.url =item.resource.reference + '/$expunge';
-
+                fhirHeaderRequestOption.url = item.resource.reference + '/$expunge';
                 const expungeParams = {
                   resourceType: "Parameters",
                   parameter: [
-                      {
-                          name: "expungeDeletedResources",
-                          valueBoolean: true
-                      },
-                      {
-                          name: "expungeDeletedResources",
-                          valueBoolean: true
-                      },
-                      {
-                          name: "_cascade",
-                          valueString: "delete"
-                      }
+                    {
+                      name: "expungeDeletedResources",
+                      valueBoolean: true
+                    },
+                    {
+                      name: "expungeDeletedResources",
+                      valueBoolean: true
+                    },
+                    {
+                      name: "_cascade",
+                      valueString: "delete"
+                    }
                   ]
-              };
+                };
 
-              const fhirHeaders ={
-                'Content-Type' : 'application/json'
-              };  
 
-              fhirHeaderRequestOption.headers =fhirHeaders;
-
-              fhirHeaderRequestOption.body = JSON.stringify(expungeParams);
-                sdsClient.request(fhirHeaderRequestOption);
+                const fhirHeaders = {
+                  'Content-Type': 'application/json',
+                  'X-Partition-Name': item.resource.extension[0].valueUrl
+                };
+                fhirHeaderRequestOption.headers = fhirHeaders;
+                fhirHeaderRequestOption.body = JSON.stringify(expungeParams);
+                Promise.resolve(sdsClient.request(fhirHeaderRequestOption));
               }
-            })
+            });
           });
         });
-
       }
-
-      if (props.setLogout) {
-        props.setLogout();
-      }
-
-    })
-      .catch(error => {
-        console.error(error.message);
-      });
     
+    }).catch(error => {
+      console.error(error.message);
+    });      
 
-   
-      
-    history.goBack()
+    if (props.setLogout) {
+      props.setLogout();
+    }
+    // history.goBack()
   }
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {
