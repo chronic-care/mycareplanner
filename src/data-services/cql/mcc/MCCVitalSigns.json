@@ -511,6 +511,58 @@
                   }
                } ],
                "relationship" : [ ],
+               "where" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "name" : "SystolicValue",
+                              "type" : "QueryLetRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  }, {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "name" : "DiastolicValue",
+                              "type" : "QueryLetRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  } ]
+               },
                "return" : {
                   "annotation" : [ ],
                   "expression" : {
@@ -887,6 +939,22 @@
                } ],
                "let" : [ ],
                "relationship" : [ ],
+               "where" : {
+                  "type" : "Not",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "Display",
+                        "scope" : "bp",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }
+                  }
+               },
                "return" : {
                   "annotation" : [ ],
                   "expression" : {
@@ -940,6 +1008,22 @@
                } ],
                "let" : [ ],
                "relationship" : [ ],
+               "where" : {
+                  "type" : "Not",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "Display",
+                        "scope" : "bp",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }
+                  }
+               },
                "return" : {
                   "annotation" : [ ],
                   "expression" : {

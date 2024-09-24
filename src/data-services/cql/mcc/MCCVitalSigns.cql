@@ -70,6 +70,7 @@ define "Combined Blood Pressure Observations":
           SystolicValue: Round((systolicBP.value as FHIR.Quantity).value),
           DiastolicValue: Round((MatchingDiastolic(systolicBP).value as FHIR.Quantity).value),
           ResultDate: DE.FindDate(systolicBP)
+      where (ToString(SystolicValue) is not null or ToString(DiastolicValue) is not null)
     return {
       "Date": ResultDate,
       "Systolic": SystolicValue,
@@ -88,6 +89,7 @@ define function MatchingDiastolic(systolicBP FHIR.Observation):
 
 define ReportHomeBP:
   FirstHomeBP bp
+    where bp.Display is not null
     return {
       DisplayName: 'Home Blood Pressure',
       ConceptName: null,
@@ -107,6 +109,7 @@ define ReportHomeBP:
 
 define HomeBPHistory:
   RemainingHomeBP bp
+    where bp.Display is not null
     return {
       Date: ToString(bp.Date),
       ResultText: bp.Display
