@@ -65,7 +65,6 @@ import UnShareData from "./components/unshared-data/UnShareData";
 import SharedDataSummary from "./components/shared-data/SharedDataSummary";
 import SessionProtected from './components/session-timeout/SessionProtected';
 import { SessionTimeoutPage } from './components/session-timeout/SessionTimeoutPage';
-import SessionTimeOutHandler from './components/session-timeout/SessionTimeoutHandler';
 import localforage from 'localforage';
 import AuthDialog from './components/modal/AuthDialog';
 
@@ -164,7 +163,7 @@ class App extends React.Component<AppProps, AppState> {
             isAuthorizeSelected: null,
             currentUnauthorizedEndpoint: null
         }
-        const tempSDSClient1 =  this.setSupplementalDataClient('launcherPatientId')
+        this.setSupplementalDataClient('launcherPatientId')
         this.initializeSummaries()
 
          // Load external navigation state from local storage
@@ -342,7 +341,7 @@ class App extends React.Component<AppProps, AppState> {
                                                 // Check again in 50ms
                                                 setTimeout(checkUserDecision, 50)
                                             }
-                                        };
+                                        }
                                         checkUserDecision()
                                     })
 
@@ -743,7 +742,6 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     setLogout = () => {
-    
         this.setState({ isLogout: true });
         sessionStorage.clear();
         deleteAllDataFromLocalForage();
@@ -1036,7 +1034,7 @@ class App extends React.Component<AppProps, AppState> {
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <UnShareData fhirDataCollection={this.state.fhirDataCollection} setLogout={this.setLogout}    />
                         </SessionProtected>
-                    </Route>    
+                    </Route>
                     <Route path="/shared-data-summary">
                         <SessionProtected isLoggedIn={!this.state.isLogout}>
                             <SharedDataSummary />

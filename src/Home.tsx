@@ -37,6 +37,8 @@ interface HomeState {
   isLoggedOut: boolean;
 }
 
+const IS_DISPLAY_SDS_IN_ENDPOINT_CONNECTION_LIST: boolean = false
+
 export default class Home extends React.Component<HomeProps, HomeState> {
 
   constructor(props: HomeProps) {
@@ -105,22 +107,42 @@ export default class Home extends React.Component<HomeProps, HomeState> {
                   <><b>{patients[0]?.fullName}</b> <span>(age {patients[0]?.age})</span></>
                   :
                   <ol>
+
                     {patients.map((curPatient, index) => {
-                      // only display (unique) patients that aren't from SDS
-                      // if (fhirDataCollection && (!fhirDataCollection[index].isSDS)) {
+                      // TODO: Consider adding an isLauncher option to identify launcher vs SDS (need to add to datatype first)
+
+                      const fhirDataAtIndex = fhirDataCollection && fhirDataCollection[index]
+                      const isSDS = fhirDataAtIndex?.isSDS
+
+                      if (!IS_DISPLAY_SDS_IN_ENDPOINT_CONNECTION_LIST && fhirDataAtIndex && isSDS) {
+                        // Log SDS info with index for debugging
+                        console.log(`SDS for ${curPatient?.fullName} ${fhirDataAtIndex.serverName} at index ${index}`)
+                        // Ensures no <li> is rendered for SDS when the flag is false
+                        return null
+                      }
+
                       return (
                         <li key={index}>
                           {
-                            fhirDataCollection && fhirDataCollection[index] && fhirDataCollection[index]?.isSDS ?
-                              <><b>SDS for {curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </> :
-                              (fhirDataCollection && fhirDataCollection[index]) &&
-                              <><b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataCollection[index].serverName} </>
-                            // TODO: Consider adding an isLauncher option (need to add to datatype first)
+                            fhirDataAtIndex && (
+                              isSDS
+                                ? (
+                                  IS_DISPLAY_SDS_IN_ENDPOINT_CONNECTION_LIST &&
+                                  <>
+                                    <b>SDS for {curPatient?.fullName}</b> {fhirDataAtIndex.serverName}
+                                  </>
+                                )
+                                : (
+                                  <>
+                                    <b>{curPatient?.fullName}</b> (age {curPatient?.age}) {fhirDataAtIndex.serverName}
+                                  </>
+                                )
+                            )
                           }
                         </li>
                       )
-                      // }
                     })}
+
                   </ol>
               }
             </div>
