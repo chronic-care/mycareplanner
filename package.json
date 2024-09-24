@@ -1,6 +1,6 @@
 {
     "name": "mycareplanner",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "private": true,
     "homepage": "https://chronic-care.github.io/mycareplanner",
     "dependencies": {
