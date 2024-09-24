@@ -1,16 +1,30 @@
 {
    "library" : {
       "annotation" : [ {
-         "translatorOptions" : "EnableAnnotations,EnableLocators,EnableResultTypes",
+         "translatorVersion" : "3.10.0",
+         "translatorOptions" : "DisableListDemotion,DisableListPromotion",
+         "signatureLevel" : "Overloads",
          "type" : "CqlToElmInfo"
       }, {
-         "type" : "Annotation",
-         "s" : {
-            "r" : "56",
-            "s" : [ {
-               "value" : [ "","library MCCMedications version '0.1.0'" ]
-            } ]
-         }
+         "message" : "You used a string literal: [ACEis and ARBs] here that matches an identifier in scope: [ACEis and ARBs]. Did you mean to use the identifier instead?",
+         "errorType" : "semantic",
+         "errorSeverity" : "warning",
+         "type" : "CqlToElmError"
+      }, {
+         "message" : "You used a string literal: [Erythropoiesis Stimulating Agent] here that matches an identifier in scope: [Erythropoiesis Stimulating Agent]. Did you mean to use the identifier instead?",
+         "errorType" : "semantic",
+         "errorSeverity" : "warning",
+         "type" : "CqlToElmError"
+      }, {
+         "message" : "You used a string literal: [Phosphate Binders] here that matches an identifier in scope: [Phosphate Binders]. Did you mean to use the identifier instead?",
+         "errorType" : "semantic",
+         "errorSeverity" : "warning",
+         "type" : "CqlToElmError"
+      }, {
+         "message" : "You used a string literal: [Vitamin D] here that matches an identifier in scope: [Vitamin D]. Did you mean to use the identifier instead?",
+         "errorType" : "semantic",
+         "errorSeverity" : "warning",
+         "type" : "CqlToElmError"
       } ],
       "identifier" : {
          "id" : "MCCMedications",
@@ -23,1626 +37,1020 @@
       "usings" : {
          "def" : [ {
             "localIdentifier" : "System",
-            "uri" : "urn:hl7-org:elm-types:r1"
+            "uri" : "urn:hl7-org:elm-types:r1",
+            "annotation" : [ ]
          }, {
-            "localId" : "1",
-            "locator" : "3:1-3:26",
             "localIdentifier" : "FHIR",
             "uri" : "http://hl7.org/fhir",
             "version" : "4.0.1",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "1",
-                  "s" : [ {
-                     "value" : [ "","using " ]
-                  }, {
-                     "s" : [ {
-                        "value" : [ "FHIR" ]
-                     } ]
-                  }, {
-                     "value" : [ " version ","'4.0.1'" ]
-                  } ]
-               }
-            } ]
+            "annotation" : [ ]
          } ]
       },
       "includes" : {
          "def" : [ {
-            "localId" : "2",
-            "locator" : "5:1-5:35",
             "localIdentifier" : "FHIRHelpers",
             "path" : "FHIRHelpers",
             "version" : "4.0.1",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "2",
-                  "s" : [ {
-                     "value" : [ "","include " ]
-                  }, {
-                     "s" : [ {
-                        "value" : [ "FHIRHelpers" ]
-                     } ]
-                  }, {
-                     "value" : [ " version ","'4.0.1'" ]
-                  } ]
-               }
-            } ]
+            "annotation" : [ ]
          }, {
-            "localId" : "3",
-            "locator" : "6:1-6:36",
             "localIdentifier" : "DE",
             "path" : "DataElementHelpers",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "3",
-                  "s" : [ {
-                     "value" : [ "","include " ]
-                  }, {
-                     "s" : [ {
-                        "value" : [ "DataElementHelpers" ]
-                     } ]
-                  }, {
-                     "value" : [ " called ","DE" ]
-                  } ]
-               }
-            } ]
+            "annotation" : [ ]
          }, {
-            "localId" : "4",
-            "locator" : "7:1-7:29",
             "localIdentifier" : "Cx",
             "path" : "MCCConcepts",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "4",
-                  "s" : [ {
-                     "value" : [ "","include " ]
-                  }, {
-                     "s" : [ {
-                        "value" : [ "MCCConcepts" ]
-                     } ]
-                  }, {
-                     "value" : [ " called ","Cx" ]
-                  } ]
-               }
-            } ]
+            "annotation" : [ ]
          } ]
       },
       "contexts" : {
          "def" : [ {
-            "locator" : "9:1-9:15",
-            "name" : "Patient"
+            "name" : "Patient",
+            "annotation" : [ ]
          } ]
       },
       "statements" : {
          "def" : [ {
-            "locator" : "9:1-9:15",
             "name" : "Patient",
             "context" : "Patient",
+            "annotation" : [ ],
             "expression" : {
                "type" : "SingletonFrom",
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : {
-                  "locator" : "9:1-9:15",
                   "dataType" : "{http://hl7.org/fhir}Patient",
                   "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
-                  "type" : "Retrieve"
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
                }
             }
          }, {
-            "localId" : "15",
-            "locator" : "25:1-27:39",
             "name" : "ActiveMedications",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "15",
-                  "s" : [ {
-                     "value" : [ "","define ","ActiveMedications",":\n  " ]
-                  }, {
-                     "r" : "14",
-                     "s" : [ {
-                        "s" : [ {
-                           "r" : "9",
-                           "s" : [ {
-                              "r" : "8",
-                              "s" : [ {
-                                 "value" : [ "(" ]
-                              }, {
-                                 "r" : "8",
-                                 "s" : [ {
-                                    "r" : "6",
-                                    "s" : [ {
-                                       "value" : [ "DE" ]
-                                    } ]
-                                 }, {
-                                    "value" : [ "." ]
-                                 }, {
-                                    "r" : "8",
-                                    "s" : [ {
-                                       "value" : [ "SelectActiveMedications","(" ]
-                                    }, {
-                                       "r" : "7",
-                                       "s" : [ {
-                                          "value" : [ "[","MedicationRequest","]" ]
-                                       } ]
-                                    }, {
-                                       "value" : [ ")" ]
-                                    } ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           }, {
-                              "value" : [ " ","M" ]
-                           } ]
-                        } ]
-                     }, {
-                        "value" : [ "\n    " ]
-                     }, {
-                        "r" : "13",
-                        "s" : [ {
-                           "value" : [ "sort by " ]
-                        }, {
-                           "r" : "12",
-                           "s" : [ {
-                              "r" : "11",
-                              "s" : [ {
-                                 "r" : "10",
-                                 "s" : [ {
-                                    "value" : [ "authoredOn" ]
-                                 } ]
-                              }, {
-                                 "value" : [ "." ]
-                              }, {
-                                 "r" : "11",
-                                 "s" : [ {
-                                    "value" : [ "value" ]
-                                 } ]
-                              } ]
-                           }, {
-                              "value" : [ " descending" ]
-                           } ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "14",
-               "locator" : "26:3-27:39",
                "type" : "Query",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
                "source" : [ {
-                  "localId" : "9",
-                  "locator" : "26:3-26:53",
                   "alias" : "M",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
+                  "annotation" : [ ],
                   "expression" : {
-                     "localId" : "8",
-                     "locator" : "26:3-26:51",
                      "name" : "SelectActiveMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}MedicationRequest",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "7",
-                        "locator" : "26:31-26:49",
                         "dataType" : "{http://hl7.org/fhir}MedicationRequest",
                         "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
                         "type" : "Retrieve",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ],
+                        "include" : [ ],
+                        "codeFilter" : [ ],
+                        "dateFilter" : [ ],
+                        "otherFilter" : [ ]
                      } ]
                   }
                } ],
+               "let" : [ ],
                "relationship" : [ ],
                "sort" : {
-                  "localId" : "13",
-                  "locator" : "27:5-27:39",
+                  "annotation" : [ ],
                   "by" : [ {
-                     "localId" : "12",
-                     "locator" : "27:13-27:39",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
                      "direction" : "descending",
                      "type" : "ByExpression",
+                     "annotation" : [ ],
                      "expression" : {
-                        "localId" : "11",
-                        "locator" : "27:13-27:28",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}DateTime",
                         "path" : "value",
                         "type" : "Property",
+                        "annotation" : [ ],
                         "source" : {
-                           "localId" : "10",
-                           "locator" : "27:13-27:22",
-                           "resultTypeName" : "{http://hl7.org/fhir}dateTime",
                            "name" : "authoredOn",
-                           "type" : "IdentifierRef"
+                           "type" : "IdentifierRef",
+                           "annotation" : [ ]
                         }
                      }
                   } ]
                }
             }
          }, {
-            "localId" : "19",
-            "locator" : "12:1-13:63",
             "name" : "MedicationSummary",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "19",
-                  "s" : [ {
-                     "value" : [ "// View summary tuple for each MedicationRequest data element.\n","define ","MedicationSummary",":\n  " ]
-                  }, {
-                     "r" : "18",
-                     "s" : [ {
-                        "r" : "5",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "18",
-                        "s" : [ {
-                           "value" : [ "ReportMedications","(" ]
-                        }, {
-                           "r" : "16",
-                           "s" : [ {
-                              "value" : [ "ActiveMedications" ]
-                           } ]
-                        }, {
-                           "value" : [ ", " ]
-                        }, {
-                           "r" : "17",
-                           "s" : [ {
-                              "value" : [ "'Active Medications'" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "type" : "TupleTypeSpecifier",
-                  "element" : [ {
-                     "name" : "Category",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "ConceptName",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "AuthoredOn",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "Requester",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}string",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "DosageInstruction",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}string",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "Notes",
-                     "elementType" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }
-                  }, {
-                     "name" : "LearnMore",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  } ]
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "18",
-               "locator" : "13:3-13:63",
                "name" : "ReportMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "type" : "TupleTypeSpecifier",
-                     "element" : [ {
-                        "name" : "Category",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "ConceptName",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "AuthoredOn",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "Requester",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}string",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "DosageInstruction",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}string",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "Notes",
-                        "elementType" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{urn:hl7-org:elm-types:r1}String",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
-                     }, {
-                        "name" : "LearnMore",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     } ]
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "16",
-                  "locator" : "13:24-13:40",
                   "name" : "ActiveMedications",
                   "type" : "ExpressionRef",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }
+                  "annotation" : [ ]
                }, {
-                  "localId" : "17",
-                  "locator" : "13:43-13:62",
-                  "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
                   "value" : "Active Medications",
-                  "type" : "Literal"
+                  "type" : "Literal",
+                  "annotation" : [ ]
                } ]
             }
          }, {
-            "localId" : "24",
-            "locator" : "31:1-32:70",
             "name" : "ACEis and ARBs",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "24",
-                  "s" : [ {
-                     "value" : [ "// FHIR MedicationRequest resources with active status.\n","define ","\"ACEis and ARBs\"",":\n  " ]
-                  }, {
-                     "r" : "23",
-                     "s" : [ {
-                        "r" : "21",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "23",
-                        "s" : [ {
-                           "value" : [ "SelectActiveMedications","(" ]
-                        }, {
-                           "r" : "22",
-                           "s" : [ {
-                              "value" : [ "[","MedicationRequest",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"ACEis and ARBs\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "23",
-               "locator" : "32:3-32:70",
                "name" : "SelectActiveMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "22",
-                  "locator" : "32:30-32:69",
-                  "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                  "codeProperty" : "medication",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "32:50-32:68",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "ACEis and ARBs",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "codeProperty" : "medication",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "ACEis and ARBs",
+                        "libraryName" : "Cx",
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "MR",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ {
+                        "alias" : "M",
+                        "type" : "With",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Medication",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Medication",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        },
+                        "suchThat" : {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Equal",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToString",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{http://hl7.org/fhir}string",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "id",
+                                    "scope" : "M",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Last",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "source" : {
+                                    "type" : "Split",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "stringToSplit" : {
+                                       "name" : "ToString",
+                                       "libraryName" : "FHIRHelpers",
+                                       "type" : "FunctionRef",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{http://hl7.org/fhir}string",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "medication.reference",
+                                          "scope" : "MR",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       } ]
+                                    },
+                                    "separator" : {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "/",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "InValueSet",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Concept",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "code" : {
+                                 "name" : "ToConcept",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "code",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              },
+                              "valueset" : {
+                                 "name" : "ACEis and ARBs",
+                                 "libraryName" : "Cx",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  } ]
                } ]
             }
          }, {
-            "localId" : "32",
-            "locator" : "34:1-35:88",
             "name" : "Erythropoiesis Stimulating Agent",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "32",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Erythropoiesis Stimulating Agent\"",":\n  " ]
-                  }, {
-                     "r" : "31",
-                     "s" : [ {
-                        "r" : "29",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "31",
-                        "s" : [ {
-                           "value" : [ "SelectActiveMedications","(" ]
-                        }, {
-                           "r" : "30",
-                           "s" : [ {
-                              "value" : [ "[","MedicationRequest",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Erythropoiesis Stimulating Agent\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "31",
-               "locator" : "35:3-35:88",
                "name" : "SelectActiveMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "30",
-                  "locator" : "35:30-35:87",
-                  "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                  "codeProperty" : "medication",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "35:50-35:86",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Erythropoiesis Stimulating Agent",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "codeProperty" : "medication",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Erythropoiesis Stimulating Agent",
+                        "libraryName" : "Cx",
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "MR",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ {
+                        "alias" : "M",
+                        "type" : "With",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Medication",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Medication",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        },
+                        "suchThat" : {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Equal",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToString",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{http://hl7.org/fhir}string",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "id",
+                                    "scope" : "M",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Last",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "source" : {
+                                    "type" : "Split",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "stringToSplit" : {
+                                       "name" : "ToString",
+                                       "libraryName" : "FHIRHelpers",
+                                       "type" : "FunctionRef",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{http://hl7.org/fhir}string",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "medication.reference",
+                                          "scope" : "MR",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       } ]
+                                    },
+                                    "separator" : {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "/",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "InValueSet",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Concept",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "code" : {
+                                 "name" : "ToConcept",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "code",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              },
+                              "valueset" : {
+                                 "name" : "Erythropoiesis Stimulating Agent",
+                                 "libraryName" : "Cx",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  } ]
                } ]
             }
          }, {
-            "localId" : "40",
-            "locator" : "37:1-38:71",
             "name" : "Iron Supplement",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "40",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Iron Supplement\"",":\n  " ]
-                  }, {
-                     "r" : "39",
-                     "s" : [ {
-                        "r" : "37",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "39",
-                        "s" : [ {
-                           "value" : [ "SelectActiveMedications","(" ]
-                        }, {
-                           "r" : "38",
-                           "s" : [ {
-                              "value" : [ "[","MedicationRequest",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Iron Supplement\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "39",
-               "locator" : "38:3-38:71",
                "name" : "SelectActiveMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "38",
-                  "locator" : "38:30-38:70",
-                  "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                  "codeProperty" : "medication",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "38:50-38:69",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Iron Supplement",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "codeProperty" : "medication",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Iron Supplement",
+                        "libraryName" : "Cx",
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "MR",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ {
+                        "alias" : "M",
+                        "type" : "With",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Medication",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Medication",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        },
+                        "suchThat" : {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Equal",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToString",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{http://hl7.org/fhir}string",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "id",
+                                    "scope" : "M",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Last",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "source" : {
+                                    "type" : "Split",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "stringToSplit" : {
+                                       "name" : "ToString",
+                                       "libraryName" : "FHIRHelpers",
+                                       "type" : "FunctionRef",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{http://hl7.org/fhir}string",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "medication.reference",
+                                          "scope" : "MR",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       } ]
+                                    },
+                                    "separator" : {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "/",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "InValueSet",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Concept",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "code" : {
+                                 "name" : "ToConcept",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "code",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              },
+                              "valueset" : {
+                                 "name" : "Iron Supplement",
+                                 "libraryName" : "Cx",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  } ]
                } ]
             }
          }, {
-            "localId" : "48",
-            "locator" : "40:1-41:73",
             "name" : "Phosphate Binders",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "48",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Phosphate Binders\"",":\n  " ]
-                  }, {
-                     "r" : "47",
-                     "s" : [ {
-                        "r" : "45",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "47",
-                        "s" : [ {
-                           "value" : [ "SelectActiveMedications","(" ]
-                        }, {
-                           "r" : "46",
-                           "s" : [ {
-                              "value" : [ "[","MedicationRequest",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Phosphate Binders\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "47",
-               "locator" : "41:3-41:73",
                "name" : "SelectActiveMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "46",
-                  "locator" : "41:30-41:72",
-                  "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                  "codeProperty" : "medication",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "41:50-41:71",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Phosphate Binders",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "codeProperty" : "medication",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Phosphate Binders",
+                        "libraryName" : "Cx",
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "MR",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ {
+                        "alias" : "M",
+                        "type" : "With",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Medication",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Medication",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        },
+                        "suchThat" : {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Equal",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToString",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{http://hl7.org/fhir}string",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "id",
+                                    "scope" : "M",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Last",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "source" : {
+                                    "type" : "Split",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "stringToSplit" : {
+                                       "name" : "ToString",
+                                       "libraryName" : "FHIRHelpers",
+                                       "type" : "FunctionRef",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{http://hl7.org/fhir}string",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "medication.reference",
+                                          "scope" : "MR",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       } ]
+                                    },
+                                    "separator" : {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "/",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "InValueSet",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Concept",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "code" : {
+                                 "name" : "ToConcept",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "code",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              },
+                              "valueset" : {
+                                 "name" : "Phosphate Binders",
+                                 "libraryName" : "Cx",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  } ]
                } ]
             }
          }, {
-            "localId" : "56",
-            "locator" : "43:1-44:65",
             "name" : "Vitamin D",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "56",
-                  "s" : [ {
-                     "value" : [ "","define ","\"Vitamin D\"",":\n  " ]
-                  }, {
-                     "r" : "55",
-                     "s" : [ {
-                        "r" : "53",
-                        "s" : [ {
-                           "value" : [ "DE" ]
-                        } ]
-                     }, {
-                        "value" : [ "." ]
-                     }, {
-                        "r" : "55",
-                        "s" : [ {
-                           "value" : [ "SelectActiveMedications","(" ]
-                        }, {
-                           "r" : "54",
-                           "s" : [ {
-                              "value" : [ "[","MedicationRequest",": " ]
-                           }, {
-                              "s" : [ {
-                                 "value" : [ "Cx",".","\"Vitamin D\"" ]
-                              } ]
-                           }, {
-                              "value" : [ "]" ]
-                           } ]
-                        }, {
-                           "value" : [ ")" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "name" : "{http://hl7.org/fhir}MedicationRequest",
-                  "type" : "NamedTypeSpecifier"
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "55",
-               "locator" : "44:3-44:65",
                "name" : "SelectActiveMedications",
                "libraryName" : "DE",
                "type" : "FunctionRef",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier"
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : [ {
-                  "localId" : "54",
-                  "locator" : "44:30-44:64",
-                  "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                  "codeProperty" : "medication",
-                  "codeComparator" : "in",
-                  "type" : "Retrieve",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}MedicationRequest",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  },
-                  "codes" : {
-                     "locator" : "44:50-44:63",
-                     "resultTypeName" : "{urn:hl7-org:elm-types:r1}ValueSet",
-                     "name" : "Vitamin D",
-                     "libraryName" : "Cx",
-                     "type" : "ValueSetRef"
-                  }
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "codeProperty" : "medication",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Vitamin D",
+                        "libraryName" : "Cx",
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "MR",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ {
+                        "alias" : "M",
+                        "type" : "With",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Medication",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Medication",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        },
+                        "suchThat" : {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Equal",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToString",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{http://hl7.org/fhir}string",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "id",
+                                    "scope" : "M",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Last",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "source" : {
+                                    "type" : "Split",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "stringToSplit" : {
+                                       "name" : "ToString",
+                                       "libraryName" : "FHIRHelpers",
+                                       "type" : "FunctionRef",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{http://hl7.org/fhir}string",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "medication.reference",
+                                          "scope" : "MR",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       } ]
+                                    },
+                                    "separator" : {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "/",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "InValueSet",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Concept",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "code" : {
+                                 "name" : "ToConcept",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "code",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              },
+                              "valueset" : {
+                                 "name" : "Vitamin D",
+                                 "libraryName" : "Cx",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ]
+                  } ]
                } ]
             }
          }, {
-            "localId" : "62",
-            "locator" : "16:1-23:3",
             "name" : "MCCMedicationSummary",
             "context" : "Patient",
             "accessLevel" : "Public",
-            "annotation" : [ {
-               "type" : "Annotation",
-               "s" : {
-                  "r" : "62",
-                  "s" : [ {
-                     "value" : [ "// View summary tuple for each MedicationRequest data element, grouped by MCC value sets.\n","define ","MCCMedicationSummary",":\n  " ]
-                  }, {
-                     "r" : "61",
-                     "s" : [ {
-                        "value" : [ "flatten " ]
-                     }, {
-                        "r" : "60",
-                        "s" : [ {
-                           "value" : [ "{\n    " ]
-                        }, {
-                           "r" : "27",
-                           "s" : [ {
-                              "r" : "20",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "27",
-                              "s" : [ {
-                                 "value" : [ "ReportMedications","(" ]
-                              }, {
-                                 "r" : "25",
-                                 "s" : [ {
-                                    "value" : [ "\"ACEis and ARBs\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "26",
-                                 "s" : [ {
-                                    "value" : [ "'ACEis and ARBs'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "35",
-                           "s" : [ {
-                              "r" : "28",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "35",
-                              "s" : [ {
-                                 "value" : [ "ReportMedications","(" ]
-                              }, {
-                                 "r" : "33",
-                                 "s" : [ {
-                                    "value" : [ "\"Erythropoiesis Stimulating Agent\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "34",
-                                 "s" : [ {
-                                    "value" : [ "'Erythropoiesis Stimulating Agent'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "43",
-                           "s" : [ {
-                              "r" : "36",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "43",
-                              "s" : [ {
-                                 "value" : [ "ReportMedications","(" ]
-                              }, {
-                                 "r" : "41",
-                                 "s" : [ {
-                                    "value" : [ "\"Iron Supplement\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "42",
-                                 "s" : [ {
-                                    "value" : [ "'IronSupplement'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "51",
-                           "s" : [ {
-                              "r" : "44",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "51",
-                              "s" : [ {
-                                 "value" : [ "ReportMedications","(" ]
-                              }, {
-                                 "r" : "49",
-                                 "s" : [ {
-                                    "value" : [ "\"Phosphate Binders\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "50",
-                                 "s" : [ {
-                                    "value" : [ "'Phosphate Binders'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ ",\n    " ]
-                        }, {
-                           "r" : "59",
-                           "s" : [ {
-                              "r" : "52",
-                              "s" : [ {
-                                 "value" : [ "DE" ]
-                              } ]
-                           }, {
-                              "value" : [ "." ]
-                           }, {
-                              "r" : "59",
-                              "s" : [ {
-                                 "value" : [ "ReportMedications","(" ]
-                              }, {
-                                 "r" : "57",
-                                 "s" : [ {
-                                    "value" : [ "\"Vitamin D\"" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ", " ]
-                              }, {
-                                 "r" : "58",
-                                 "s" : [ {
-                                    "value" : [ "'Vitamin D'" ]
-                                 } ]
-                              }, {
-                                 "value" : [ ")" ]
-                              } ]
-                           } ]
-                        }, {
-                           "value" : [ "\n  }" ]
-                        } ]
-                     } ]
-                  } ]
-               }
-            } ],
-            "resultTypeSpecifier" : {
-               "type" : "ListTypeSpecifier",
-               "elementType" : {
-                  "type" : "TupleTypeSpecifier",
-                  "element" : [ {
-                     "name" : "Category",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "ConceptName",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "AuthoredOn",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "Requester",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}string",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "DosageInstruction",
-                     "elementType" : {
-                        "name" : "{http://hl7.org/fhir}string",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  }, {
-                     "name" : "Notes",
-                     "elementType" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }
-                  }, {
-                     "name" : "LearnMore",
-                     "elementType" : {
-                        "name" : "{urn:hl7-org:elm-types:r1}String",
-                        "type" : "NamedTypeSpecifier"
-                     }
-                  } ]
-               }
-            },
+            "annotation" : [ ],
             "expression" : {
-               "localId" : "61",
-               "locator" : "17:3-23:3",
                "type" : "Flatten",
-               "resultTypeSpecifier" : {
-                  "type" : "ListTypeSpecifier",
-                  "elementType" : {
-                     "type" : "TupleTypeSpecifier",
-                     "element" : [ {
-                        "name" : "Category",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "ConceptName",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "AuthoredOn",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "Requester",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}string",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "DosageInstruction",
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}string",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     }, {
-                        "name" : "Notes",
-                        "elementType" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{urn:hl7-org:elm-types:r1}String",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
-                     }, {
-                        "name" : "LearnMore",
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier"
-                        }
-                     } ]
-                  }
-               },
+               "annotation" : [ ],
+               "signature" : [ ],
                "operand" : {
-                  "localId" : "60",
-                  "locator" : "17:11-23:3",
                   "type" : "List",
-                  "resultTypeSpecifier" : {
-                     "type" : "ListTypeSpecifier",
-                     "elementType" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     }
-                  },
+                  "annotation" : [ ],
                   "element" : [ {
-                     "localId" : "27",
-                     "locator" : "18:5-18:60",
                      "name" : "ReportMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "25",
-                        "locator" : "18:26-18:41",
                         "name" : "ACEis and ARBs",
                         "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ]
                      }, {
-                        "localId" : "26",
-                        "locator" : "18:44-18:59",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "ACEis and ARBs",
-                        "type" : "Literal"
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   }, {
-                     "localId" : "35",
-                     "locator" : "19:5-19:96",
                      "name" : "ReportMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "33",
-                        "locator" : "19:26-19:59",
                         "name" : "Erythropoiesis Stimulating Agent",
                         "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ]
                      }, {
-                        "localId" : "34",
-                        "locator" : "19:62-19:95",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Erythropoiesis Stimulating Agent",
-                        "type" : "Literal"
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   }, {
-                     "localId" : "43",
-                     "locator" : "20:5-20:61",
                      "name" : "ReportMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "41",
-                        "locator" : "20:26-20:42",
                         "name" : "Iron Supplement",
                         "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ]
                      }, {
-                        "localId" : "42",
-                        "locator" : "20:45-20:60",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "IronSupplement",
-                        "type" : "Literal"
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   }, {
-                     "localId" : "51",
-                     "locator" : "21:5-21:66",
                      "name" : "ReportMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "49",
-                        "locator" : "21:26-21:44",
                         "name" : "Phosphate Binders",
                         "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ]
                      }, {
-                        "localId" : "50",
-                        "locator" : "21:47-21:65",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Phosphate Binders",
-                        "type" : "Literal"
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   }, {
-                     "localId" : "59",
-                     "locator" : "22:5-22:50",
                      "name" : "ReportMedications",
                      "libraryName" : "DE",
                      "type" : "FunctionRef",
-                     "resultTypeSpecifier" : {
-                        "type" : "ListTypeSpecifier",
-                        "elementType" : {
-                           "type" : "TupleTypeSpecifier",
-                           "element" : [ {
-                              "name" : "Category",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "ConceptName",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "AuthoredOn",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Requester",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "DosageInstruction",
-                              "elementType" : {
-                                 "name" : "{http://hl7.org/fhir}string",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           }, {
-                              "name" : "Notes",
-                              "elementType" : {
-                                 "type" : "ListTypeSpecifier",
-                                 "elementType" : {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier"
-                                 }
-                              }
-                           }, {
-                              "name" : "LearnMore",
-                              "elementType" : {
-                                 "name" : "{urn:hl7-org:elm-types:r1}String",
-                                 "type" : "NamedTypeSpecifier"
-                              }
-                           } ]
-                        }
-                     },
+                     "annotation" : [ ],
+                     "signature" : [ ],
                      "operand" : [ {
-                        "localId" : "57",
-                        "locator" : "22:26-22:36",
                         "name" : "Vitamin D",
                         "type" : "ExpressionRef",
-                        "resultTypeSpecifier" : {
-                           "type" : "ListTypeSpecifier",
-                           "elementType" : {
-                              "name" : "{http://hl7.org/fhir}MedicationRequest",
-                              "type" : "NamedTypeSpecifier"
-                           }
-                        }
+                        "annotation" : [ ]
                      }, {
-                        "localId" : "58",
-                        "locator" : "22:39-22:49",
-                        "resultTypeName" : "{urn:hl7-org:elm-types:r1}String",
                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
                         "value" : "Vitamin D",
-                        "type" : "Literal"
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   } ]
                }
