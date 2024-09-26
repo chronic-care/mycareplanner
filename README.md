@@ -14,4 +14,4 @@ This code is under active development for pilot testing with patients and caregi
 
 ## Application Overview and Architecture
 
-* Coming soon
+* Additional, more general documentation is included in the [mcc-project](https://github.com/chronic-care/mcc-project) repository README.
