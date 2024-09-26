@@ -1,6 +1,4 @@
-# MyCarePlanner SMART on FHIR app
-
-## Development Details
+# Edit, Update and Compile CQL Source Files
 
 This web application design approach, including embedded use of Clinical Quality Language (CQL), was inspired by an open source AHRQ project for Chronic Pain Management. It may be helpful to review that project's design and documentation for ideas on future evolution and enhancement of this eCare Plan app. That chronic pain management app has continued to evolve in parallel with this work over several years. For example, the use of a Gradle script to simplify compilation of CQL to ELM was a recent addition to the chronic pain app repository and was copied into this repo.
 

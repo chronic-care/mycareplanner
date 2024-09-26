@@ -1,6 +1,4 @@
-# MyCarePlanner SMART on FHIR app
-
-## Development Details
+# Build this JavaScript React web application
 
 ## Major dependencies
 * node.js
