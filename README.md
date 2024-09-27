@@ -1,3 +1,6 @@
+![alt text](https://github.com/chronic-care/mcc-project/blob/main/documentation/myCarePlanner.png?raw=true)
+***
+
 # MyCarePlanner SMART on FHIR app
 MyCarePlanner is a standards-based web application platform for patients and caregivers to engage in their care planning for multiple chronic conditions (MCC). The application is designed to be a proof-of-concept application to enable goal-oriented care planning. Patients and caregivers are granted the ability to write information into the application to share with their providers and see their health data from all their providers in one place.
 
