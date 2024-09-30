@@ -15,6 +15,9 @@ To learn more about the e-Care Plan Project for MCC, visit: https://ecareplan.ah
 * [How to build this JavaScript React web application](documentation/developer-build.md)
 * [How to edit and compile CQL files](documentation/developer-cql.md)
 
-## Application Overview and Architecture
-
-* Additional, more general documentation is included in the [mcc-project](https://github.com/chronic-care/mcc-project) repository README.
+## Informational Links
+- [MCC eCare Applications README](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/README.md)
+- [eCare System Architecture](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/ecare-architecture.md)
+- [Security Considerations](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/security-considerations.md)
+- [Adopter Questions](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/adopter-questions.md)
+- [Application UI Designs](https://github.com/chronic-care/mcc-project/tree/bf39d326e9c5c8a739e09fe6de9a1db166709245/ui-designs)
