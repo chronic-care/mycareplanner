@@ -49,7 +49,7 @@ export const buildAvailableEndpoints = (endpointsToAdd?: ProviderEndpoint[]): Pr
   }
 
   if (process.env.REACT_APP_SHARED_DATA_ENDPOINT && process.env.REACT_APP_SHARED_DATA_SCOPE
-    && !process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
+    && process.env.REACT_APP_SHARED_DATA_CLIENT_ID) {
     console.log("Adding SDS without clientId to availableEndpoints")
     availableEndpoints = availableEndpoints.concat(
       {

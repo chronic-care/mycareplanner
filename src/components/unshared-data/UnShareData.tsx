@@ -1,3 +1,5 @@
+
+import FHIR from 'fhirclient'
 import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -9,98 +11,197 @@ import { FHIRData } from '../../data-services/models/fhirResources'
 import { getSupplementalDataClient } from '../../data-services/fhirService'
 import { fhirclient } from 'fhirclient/lib/types'
 import Client from 'fhirclient/lib/Client'
+import { getFHIRAccessData } from '../../data-services/persistenceService'
 interface ShareDataProps {
-
   fhirDataCollection?: FHIRData[],
-  setLogout?: () => void,
+  setLogout?: () => void, 
+}
+
+
+async function deleteThePatient(sdsClient: Client, patientId: string) {
+  console.debug('Start delete resources for ' + patientId);
   
- 
+  try {
+    await sdsClient.delete(patientId + '?_cascade=delete');
+    console.debug('Done delete resources for ' + patientId);
+    return true;
+  } catch (err) {
+    console.debug('Error deleting resources for ' + patientId, err);
+    return false;
+  }
 }
 
-interface IDogForm {
-  dog?: String
-}
+async function expungeThePatient(sdsClient: Client, patientId: string, partitionUrl: string) {
 
-function deleteThePatient(sdsClient : Client, patientId : string) {
-  console.info('Start delete resources for ' + patientId);
+  const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
+  fhirHeaderRequestOption.method = 'POST';
+  fhirHeaderRequestOption.url = patientId + '/$expunge';
   
-  sdsClient.delete(patientId + '?_cascade=delete')
-    .then(() => {
-      console.info('Done delete resources for ' + patientId);
-    })
-    .catch(err => {
-      console.error('Error deleting resources for ' + patientId, err);
-    });
+  const expungeParams = {
+    resourceType: "Parameters",
+    parameter: [
+      {
+        name: "expungeDeletedResources",
+        valueBoolean: true
+      },
+      {
+        name: "expungeDeletedResources",
+        valueBoolean: true
+      },
+      {
+        name: "_cascade",
+        valueString: "delete"
+      }
+    ]
+  };
+
+  const fhirHeaders = {
+    'Content-Type': 'application/json',
+    'X-Partition-Name': partitionUrl
+  };
+
+  fhirHeaderRequestOption.headers = fhirHeaders;
+  fhirHeaderRequestOption.body = JSON.stringify(expungeParams);
+
+  console.debug('Start expunge for ' + patientId);
+
+  try {
+    await sdsClient.request(fhirHeaderRequestOption);
+    console.debug('Done expunge resources for ' + patientId);
+    return true;
+  } catch (err) {
+    console.debug('Error expunging resources for ' + patientId, err);
+    return false;
+  }
 }
 
- 
+async function delete3rdPartyPatient(sdsClient: Client, patientId: string, partitionUrl: string) {
+
+  const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
+  fhirHeaderRequestOption.method = 'DELETE';
+  fhirHeaderRequestOption.url = patientId + '?_cascade=delete';
+  
+  const fhirHeaders = {
+    'Content-Type': 'application/json',
+    'X-Partition-Name': partitionUrl
+  };
+
+  fhirHeaderRequestOption.headers = fhirHeaders;
+  
+  console.debug('Start delete for ' + patientId);
+
+  try {
+    await sdsClient.request(fhirHeaderRequestOption);
+    console.debug('Done delete resources for ' + patientId);
+    return true;
+  } catch (err) {
+    console.debug('Error deleting resources for ' + patientId, err);
+    return false;
+  }
+}
+
+
+
+const LF_ID = '-MCP'
+const fcAllStatesKey = 'fhir-client-states-array' + LF_ID
 export default function UnShareData(props: ShareDataProps) {
 
   let history = useHistory()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    getSupplementalDataClient().then(sdsClient => {
+    event.preventDefault();
+
+    
+    getSupplementalDataClient().then(async sdsClient => {
+
+      const arrayOfFhirAccessDataObjects: Array<fhirclient.ClientState> =
+      await getFHIRAccessData(fcAllStatesKey) as Array<fhirclient.ClientState>
+
+      let authorizedUrl = arrayOfFhirAccessDataObjects[0].serverUrl;
+    
       if (sdsClient) {
-        sdsClient.request('Linkage').then(linkages => {
-          var deleteSet = new Set();
-          linkages.entry.map((entry: any) => {
-            entry.resource.item.map((item: any) => {
-              if (!deleteSet.has(item.resource.reference)) {
-                deleteSet.add(item.resource.reference)
-                deleteThePatient(sdsClient, item.resource.reference);
+        sdsClient.request('Linkage?item=Patient/' + sdsClient.patient.id).then(async linkages => {
+          var deleteSet = new Set();  
+          // let tehAuthorizedUrl =  props.fhirDataCollection ?  props.fhirDataCollection[0].serverUrl : 'error';     
+          deleteSet.add(authorizedUrl)
+          for (const entry of linkages.entry) {
+            for (const item of entry.resource.item) {
+             
+                if (item.type === 'alternate') {
+                  if (!deleteSet.has( item.resource.extension[0].valueUrl)) {
+                  deleteSet.add(item.resource.extension[0].valueUrl)
+                  console.debug('Start UnShareData unauthorized foreign '+item.resource.reference + "  " + item.resource.extension[0].valueUrl);
+                  await delete3rdPartyPatient(sdsClient, item.resource.reference,item.resource.extension[0].valueUrl);
+                  console.debug('End UnShareData unauthorized foreign '+item.resource.reference + "  " + item.resource.extension[0].valueUrl);
+                }
               }
-            });
-          });
+            }
+          }
+
+          for (const entry of linkages.entry) {
+            for (const item of entry.resource.item) {                     
+                if (item.type === 'source') {
+                  if (!deleteSet.has(item.resource.extension[0].valueUrl)) {       
+                  deleteSet.add(item.resource.extension[0].valueUrl)
+                  console.debug('Start UnShareData local sds '+item.resource.reference + "  " + item.resource.extension[0].valueUrl);
+                  await deleteThePatient(sdsClient, item.resource.reference);
+                  console.debug('End UnShareData local sds '+item.resource.reference + "  " + item.resource.extension[0].valueUrl);
+                }
+              }
+            }
+          }
+
+          for (const entry of linkages.entry) {
+            for (const item of entry.resource.item) {
+            
+                if (item.type === 'alternate') {
+                  if (item.resource.extension[0].valueUrl===authorizedUrl) {
+                  console.debug('Start UnShareData authorized '+item.resource.reference  + "  " + item.resource.extension[0].valueUrl);
+                  await delete3rdPartyPatient(sdsClient, item.resource.reference,item.resource.extension[0].valueUrl);
+                  console.debug('End UnShareData authorized '+item.resource.reference  + "  " + item.resource.extension[0].valueUrl);
+                }
+              }
+            }
+          }
 
           var expungeSet = new Set();
 
-          linkages.entry.map((entry: any) => {
-            entry.resource.item.map((item: any) => {
+          for (const entry of linkages.entry) {
+            for (const item of entry.resource.item) {
               if (!expungeSet.has(item.resource.reference)) {
-                expungeSet.add(item.resource.reference)
-                const fhirHeaderRequestOption = {} as fhirclient.RequestOptions;
-                fhirHeaderRequestOption.method = 'POST';
-                fhirHeaderRequestOption.url = item.resource.reference + '/$expunge';
-                const expungeParams = {
-                  resourceType: "Parameters",
-                  parameter: [
-                    {
-                      name: "expungeDeletedResources",
-                      valueBoolean: true
-                    },
-                    {
-                      name: "expungeDeletedResources",
-                      valueBoolean: true
-                    },
-                    {
-                      name: "_cascade",
-                      valueString: "delete"
-                    }
-                  ]
-                };
-
-
-                const fhirHeaders = {
-                  'Content-Type': 'application/json',
-                  'X-Partition-Name': item.resource.extension[0].valueUrl
-                };
-                fhirHeaderRequestOption.headers = fhirHeaders;
-                fhirHeaderRequestOption.body = JSON.stringify(expungeParams);
-                Promise.resolve(sdsClient.request(fhirHeaderRequestOption));
+                if (item.type === 'alternate') {
+                  expungeSet.add(item.resource.reference)
+                  await expungeThePatient(sdsClient  , item.resource.reference,item.resource.extension[0].valueUrl);
+                               
               }
-            });
-          });
+              }
+            }
+          }
+
+          for (const entry of linkages.entry) {
+            for (const item of entry.resource.item) {
+              if (!expungeSet.has(item.resource.reference)) {
+                if (item.type === 'source') {
+                  expungeSet.add(item.resource.reference)
+                  await expungeThePatient(sdsClient  , item.resource.reference,item.resource.extension[0].valueUrl);                              
+              }
+              }
+            }
+          }
+
         });
       }
     
     }).catch(error => {
       console.error(error.message);
-    });      
+    }).finally( () => {
+      if (props.setLogout) {
+        props.setLogout();
+      }
+    });
 
-    if (props.setLogout) {
-      props.setLogout();
-    }
-    // history.goBack()
+  
+    history.goBack()
   }
 
   const handleReset = (event: React.FormEvent<HTMLFormElement>) => {

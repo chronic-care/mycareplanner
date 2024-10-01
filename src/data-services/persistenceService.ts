@@ -58,7 +58,7 @@ const isFHIRAccessData = async (key: string): Promise<boolean> => {
   }
 }
 
-const getFHIRAccessData = async (key: string): Promise<any> => {
+export const getFHIRAccessData = async (key: string): Promise<any> => {
   try {
     const isData: boolean = await isFHIRAccessData(key)
     if (isData) {
