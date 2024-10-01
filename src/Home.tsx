@@ -81,6 +81,9 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
     const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'true'
 
+    const unshare = process.env.REACT_APP_UNSHARE === 'true'
+    
+
     return (
       <div className="home-view">
         {hhsBanner && (<Modal isVisible={this.state.isModalVisible} closeModal={this.closeModal} />)}
@@ -245,7 +248,7 @@ export default class Home extends React.Component<HomeProps, HomeState> {
 
 
             <div>
-              { this.props.canShareData  ? (
+              { this.props.canShareData  && unshare ? (
                 <div>
                   <h5 style={{ paddingTop: '20px' }}>Withdraw your health data</h5>
                   <Link to={{ pathname: '/unshare-data' }}>Opt out of sharing your health data</Link></div>
