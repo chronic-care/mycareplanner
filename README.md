@@ -14,7 +14,7 @@ To learn more about the e-Care Plan Project for MCC, visit: https://ecareplan.ah
 
 * [How to build this JavaScript React web application](documentation/developer-build.md)
 * [How to edit and compile CQL files](documentation/developer-cql.md)
-* [Query logic](documentation/query-logic)
+* [Query logic](documentation/query-logic.md)
 
 ## Informational Links
 - [MCC eCare Applications README](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/README.md)
