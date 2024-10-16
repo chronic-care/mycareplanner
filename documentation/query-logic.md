@@ -1,4 +1,4 @@
-#### MyCarePlanner
+# MyCarePlanner
 
 **Care Plan \> Goals**
 
@@ -105,7 +105,7 @@
 * Notes  
   * Epic only supports FHIR search for “longitudinal” care teams. Although Epic specifications also describe “Episode” care teams, these can only be retrieved using specific, known resource IDs.
 
-##### Use of FHIR Search Parameters
+## Use of FHIR Search Parameters
 
 **\_count=x**
 
