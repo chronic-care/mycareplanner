@@ -18,7 +18,7 @@ To learn more about the e-Care Plan Project for MCC, visit: https://ecareplan.ah
 
 ## Informational Links
 - [MCC eCare Applications README](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/README.md)
-- [eCare System Architecture](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/ecare-architecture.md)
-- [Security Considerations](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/security-considerations.md)
+- [eCare System Architecture](https://github.com/chronic-care/mcc-project/blob/0960c4f5057295b1dcbcb607b08b7e4575e81371/documentation/ecare-architecture.md)
+- [Security Considerations](https://github.com/chronic-care/mcc-project/blob/0960c4f5057295b1dcbcb607b08b7e4575e81371/documentation/security-considerations.md)
 - [Adopter Questions](https://github.com/chronic-care/mcc-project/blob/bf39d326e9c5c8a739e09fe6de9a1db166709245/documentation/adopter-questions.md)
 - [Application UI Designs](https://github.com/chronic-care/mcc-project/tree/bf39d326e9c5c8a739e09fe6de9a1db166709245/ui-designs)
