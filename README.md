@@ -22,3 +22,4 @@ To learn more about the e-Care Plan Project for MCC, visit: https://ecareplan.ah
 - [Security Considerations](https://github.com/chronic-care/mcc-project/blob/main/documentation/security-considerations.md)
 - [Adopter Questions](https://github.com/chronic-care/mcc-project/blob/main/documentation/adopter-questions.md)
 - [Application UI Designs](https://github.com/chronic-care/mcc-project/tree/main/ui-designs)
+- [Future Recommendations for eCare](https://github.com/chronic-care/mcc-project/blob/main/documentation/future-recommendations.md)
