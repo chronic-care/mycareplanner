@@ -12,6 +12,7 @@ import { getSupplementalDataClient } from '../../data-services/fhirService'
 import { fhirclient } from 'fhirclient/lib/types'
 import Client from 'fhirclient/lib/Client'
 import { getFHIRAccessData } from '../../data-services/persistenceService'
+import { OperationOutcome } from '../../data-services/fhir-types/fhir-r4'
 interface ShareDataProps {
   fhirDataCollection?: FHIRData[],
   setLogout?: () => void, 
@@ -20,9 +21,12 @@ interface ShareDataProps {
 
 async function deleteThePatient(sdsClient: Client, patientId: string) {
   console.debug('Start delete resources for ' + patientId);
-  
-  try {
-    await sdsClient.delete(patientId + '?_cascade=delete');
+
+  try {  
+    var response = await sdsClient.delete(patientId + '?_cascade=delete');
+    while (response == null || (!JSON.stringify(response).includes('SUCCESSFUL_DELETE'))) {
+      response = await sdsClient.delete(patientId + '?_cascade=delete');
+    }
     console.debug('Done delete resources for ' + patientId);
     return true;
   } catch (err) {
@@ -39,20 +43,20 @@ async function expungeThePatient(sdsClient: Client, patientId: string, partition
   
   const expungeParams = {
     resourceType: "Parameters",
-    parameter: [
-      {
-        name: "expungeDeletedResources",
-        valueBoolean: true
-      },
-      {
-        name: "expungeDeletedResources",
-        valueBoolean: true
-      },
-      {
-        name: "_cascade",
-        valueString: "delete"
-      }
-    ]
+    parameter: [      
+          {
+            "name": "limit",
+            "valueInteger": 999999
+          },
+          {
+            "name": "expungeDeletedResources",
+            "valueBoolean": true
+          },
+          {
+            "name": "expungePreviousVersions",
+            "valueBoolean": true
+          }
+        ]    
   };
 
   const fhirHeaders = {
@@ -81,17 +85,17 @@ async function delete3rdPartyPatient(sdsClient: Client, patientId: string, parti
   fhirHeaderRequestOption.method = 'DELETE';
   fhirHeaderRequestOption.url = patientId + '?_cascade=delete';
   
-  const fhirHeaders = {
+  const fhirHeaders = { 
     'Content-Type': 'application/json',
     'X-Partition-Name': partitionUrl
   };
-
-  fhirHeaderRequestOption.headers = fhirHeaders;
-  
+  fhirHeaderRequestOption.headers = fhirHeaders;  
   console.debug('Start delete for ' + patientId);
-
   try {
-    await sdsClient.request(fhirHeaderRequestOption);
+    var response = await sdsClient.request(fhirHeaderRequestOption);
+    while (response == null || (!JSON.stringify(response).includes('SUCCESSFUL_DELETE'))) {
+      response = await sdsClient.request(fhirHeaderRequestOption);
+    }
     console.debug('Done delete resources for ' + patientId);
     return true;
   } catch (err) {
