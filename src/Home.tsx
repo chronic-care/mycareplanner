@@ -82,8 +82,9 @@ export default class Home extends React.Component<HomeProps, HomeState> {
     const hhsBanner = process.env.REACT_APP_HHS_BANNER === 'true'
 
     const unshare = process.env.REACT_APP_UNSHARE === 'true'
-    
 
+    const toupp = process.env.REACT_APP_TOUPP_URL
+  
     return (
       <div className="home-view">
         {hhsBanner && (<Modal isVisible={this.state.isModalVisible} closeModal={this.closeModal} />)}
@@ -91,7 +92,8 @@ export default class Home extends React.Component<HomeProps, HomeState> {
           {
             (this.props.errorType !== 'Terminating') &&
             <>
-              <h4 className="title" style={{ textAlign: 'center' }}>Welcome to My Care Planner!</h4>
+              <h4 className="title" style={{ textAlign: 'center' }}>Welcome to My Care Planner!</h4>        
+              {(toupp) ? <a  style={{ textAlign: 'center' }} href={toupp}  target="_blank" rel="noopener noreferrer" >Terms of Use and Privacy Policy</a> : ''}
               <p>My Care Planner is a tool to help you and your care team work together to keep you healthy. It is a completely personalized way to see what steps you’ve already taken and what else you can do to check for and prevent illnesses.</p>
             </>
           }
